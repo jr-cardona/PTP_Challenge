@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Client;
+use App\Http\Requests\SaveClientRequest;
+use App\Http\Requests\SaveInvoiceRequest;
 use Illuminate\Http\Request;
 
 class ClientController extends Controller
@@ -21,9 +23,9 @@ class ClientController extends Controller
         ]);
     }
 
-    public function store(Request $request)
+    public function store(SaveClientRequest $request)
     {
-        Client::create($request->all());
+        Client::create($request->validated());
 
         return redirect()->route('clients.index')->with('message', 'Cliente creado satisfactoriamente');
     }
@@ -42,9 +44,9 @@ class ClientController extends Controller
         ]);
     }
 
-    public function update(Request $request, Client $client)
+    public function update(SaveClientRequest $request, Client $client)
     {
-        $client->update($request->all());
+        $client->update($request->validated());
 
         return redirect()->route('clients.show', $client)->with('message', 'Cliente actualizado satisfactoriamente');
     }
