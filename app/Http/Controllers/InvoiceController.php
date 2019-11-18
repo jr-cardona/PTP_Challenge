@@ -28,7 +28,7 @@ class InvoiceController extends Controller
     {
         Invoice::create($request->validated());
 
-        return redirect('/invoices')->with('message', 'Factura creada satisfactoriamente');
+        return redirect()->route('invoices.index')->with('message', 'Factura creada satisfactoriamente');
     }
 
     public function show(Invoice $invoice)
