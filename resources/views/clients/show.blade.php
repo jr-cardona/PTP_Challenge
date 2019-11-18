@@ -22,7 +22,6 @@
 
                     <td class="table-dark" style="width: 15%; text-align: right">Modificado:</td>
                     <td>{{ $client->updated_at }}</td>
-
                 </tr>
                 <tr>
                     <td class="table-dark" style="width: 15%; text-align: right">Número telefónico:</td>
