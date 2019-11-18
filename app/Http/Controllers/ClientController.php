@@ -3,83 +3,58 @@
 namespace App\Http\Controllers;
 
 use App\Client;
+use App\Http\Requests\SaveClientRequest;
+use App\Http\Requests\SaveInvoiceRequest;
 use Illuminate\Http\Request;
 
 class ClientController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function index()
     {
-        //
+        return view('clients.index', [
+            'clients' => Client::all()
+        ]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function create()
     {
-        //
+        return view('clients.create', [
+            'client' => new Client
+        ]);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
+    public function store(SaveClientRequest $request)
     {
-        //
+        Client::create($request->validated());
+
+        return redirect()->route('clients.index')->with('message', 'Cliente creado satisfactoriamente');
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Client  $client
-     * @return \Illuminate\Http\Response
-     */
     public function show(Client $client)
     {
-        //
+        return view('clients.show', [
+            'client' => $client
+        ]);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Client  $client
-     * @return \Illuminate\Http\Response
-     */
     public function edit(Client $client)
     {
-        //
+        return view('clients.edit', [
+            'client' => $client
+        ]);
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Client  $client
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, Client $client)
+    public function update(SaveClientRequest $request, Client $client)
     {
-        //
+        $client->update($request->validated());
+
+        return redirect()->route('clients.show', $client)->with('message', 'Cliente actualizado satisfactoriamente');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Client  $client
-     * @return \Illuminate\Http\Response
-     */
     public function destroy(Client $client)
     {
-        //
+        $client->delete();
+
+        return redirect('/clients')->with('message', 'Cliente eliminado satisfactoriamente');
     }
 }
