@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Client;
+use App\Http\Requests\SaveInvoiceRequest;
 use App\Invoice;
 use Illuminate\Http\Request;
 
@@ -23,9 +24,9 @@ class InvoiceController extends Controller
         ]);
     }
 
-    public function store(Request $request)
+    public function store(SaveInvoiceRequest $request)
     {
-        Invoice::create($request->all());
+        Invoice::create($request->validated());
 
         return redirect('/invoices')->with('message', 'Factura creada satisfactoriamente');
     }
@@ -45,9 +46,9 @@ class InvoiceController extends Controller
         ]);
     }
 
-    public function update(Request $request, Invoice $invoice)
+    public function update(SaveInvoiceRequest $request, Invoice $invoice)
     {
-        $invoice->update($request->all());
+        $invoice->update($request->validated());
 
         return redirect()->route('invoices.show', $invoice)->with('message', 'Factura actualizada satisfactoriamente');
     }
