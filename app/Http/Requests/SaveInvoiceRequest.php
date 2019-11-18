@@ -15,13 +15,14 @@ class SaveInvoiceRequest extends FormRequest
     {
         return [
             'number' => 'required|numeric',
-            'expedition_date' => 'required|date',
-            'due_date' => 'required|date',
-            'invoice_date' => 'required|date',
+            'issued_at' => 'required|date',
+            'overdued_at' => 'required|date',
+            'received_at' => 'date',
             'vat' => 'required|numeric',
             'total' => 'required|numeric',
             'status' => 'required',
             'client_id' => 'required',
+            'description' => 'max:255'
         ];
     }
 }

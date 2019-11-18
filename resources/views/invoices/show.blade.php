@@ -11,7 +11,7 @@
             <table class="table border-rounded table-sm">
                 <tr>
                     <td class="table-dark" style="width: 15%; text-align: right">Fecha de facturación:</td>
-                    <td>{{ $invoice->invoice_date }}</td>
+                    <td>{{ $invoice->received_at }}</td>
 
                     <td class="table-dark" style="width: 15%; text-align: right">Estado:</td>
                     <td>{{ $invoice->status }}</td>
@@ -25,10 +25,10 @@
                 </tr>
                 <tr>
                     <td class="table-dark" style="width: 15%; text-align: right">Fecha de expedición:</td>
-                    <td>{{ $invoice->expedition_date }}</td>
+                    <td>{{ $invoice->issued_at }}</td>
 
                     <td class="table-dark" style="width: 15%; text-align: right">Fecha de vencimiento:</td>
-                    <td>{{ $invoice->due_date }}</td>
+                    <td>{{ $invoice->overdued_at }}</td>
                 </tr>
                 <tr>
                     <td class="table-dark" style="width: 15%; text-align: right">IVA:</td>

@@ -32,8 +32,8 @@
                             Factura de venta No. {{ $invoice->number }}
                         </a>
                     </td>
-                    <td>{{ $invoice->expedition_date }}</td>
-                    <td>{{ $invoice->due_date }}</td>
+                    <td>{{ $invoice->issued_at }}</td>
+                    <td>{{ $invoice->overdued_at }}</td>
                     <td>${{ $invoice->total }}</td>
                     <td>{{ $invoice->status }}</td>
                     <td>

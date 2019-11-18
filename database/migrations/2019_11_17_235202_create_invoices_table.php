@@ -11,13 +11,14 @@ class CreateInvoicesTable extends Migration
         Schema::create('invoices', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->timestamps();
-            $table->dateTime('expedition_date');
-            $table->dateTime('due_date');
-            $table->dateTime('invoice_date');
+            $table->dateTime('issued_at');
+            $table->dateTime('overdued_at');
+            $table->dateTime('received_at')->nullable();
             $table->unsignedInteger('number')->unique();
             $table->float('vat')->unsigned();
             $table->double('total');
             $table->string('status');
+            $table->string('description')->nullable();
             $table->unsignedBigInteger('client_id');
             $table->unsignedBigInteger('provider_id')->nullable();
             $table->foreign('client_id')->references('id')->on('clients')->onDelete('cascade');
