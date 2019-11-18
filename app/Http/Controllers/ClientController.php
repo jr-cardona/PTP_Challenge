@@ -55,6 +55,6 @@ class ClientController extends Controller
     {
         $client->delete();
 
-        return redirect('/clients')->with('message', 'Cliente eliminado satisfactoriamente');
+        return redirect()->route('clients.index')->with('message', 'Cliente eliminado satisfactoriamente');
     }
 }

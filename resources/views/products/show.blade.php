@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('title', 'Ver Cliente')
+@section('title', 'Ver Producto')
 @section('content')
     <div class="card">
         <div class="card-header">
@@ -18,10 +18,10 @@
                 </tr>
                 <tr>
                     <td class="table-dark" style="width: 15%; text-align: right">Creado:</td>
-                    <td>{{ $client->created_at }}</td>
+                    <td>{{ $product->created_at }}</td>
 
                     <td class="table-dark" style="width: 15%; text-align: right">Modificado:</td>
-                    <td>{{ $client->updated_at }}</td>
+                    <td>{{ $product->updated_at }}</td>
                 </tr>
             </table>
         </div>

@@ -15,7 +15,7 @@ class SaveProductRequest extends FormRequest
     {
         return [
             'name' => 'required|max:20',
-            'description' => 'required|max:255',
+            'description' => 'max:255',
         ];
     }
 }
