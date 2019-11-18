@@ -3,7 +3,7 @@
 @section('content')
     <div class="row">
         <div class="col">
-            <h1>Clientes</h1>
+            <h1>Productos</h1>
         </div>
     </div>
     <div class="row">
@@ -15,12 +15,11 @@
     <table class="table border-rounded table-striped">
         <thead class="thead-dark">
             <tr style="text-align: center;">
-                <th scope="col">Documento</th>
-                <th scope="col" nowrap>Nombre</th>
-                <th scope="col">Dirección</th>
-                <th scope="col">Correo electrónico</th>
-                <th scope="col">Celular</th>
-                <th scope="col">Opciones</th>
+                <th scope="col">Nombre</th>
+                <th scope="col">Descripción</th>
+                <th scope="col" nowrap>Fecha de creación</th>
+                <th scope="col" nowrap>Fecha de modificación</th>
+
             </tr>
         </thead>
         <tbody>

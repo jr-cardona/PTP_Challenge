@@ -3,7 +3,7 @@
 @section('content')
     <div class="card">
         <div class="card-header">
-            <h1>Cliente: {{ $product->id }}</h1>
+            <h1>Producto: {{ $product->id }}</h1>
         </div>
         <div class="card-body">
             @include('products._buttons')
@@ -15,6 +15,13 @@
 
                     <td class="table-dark" style="width: 15%; text-align: right">Descripción:</td>
                     <td>{{ $product->description }}</td>
+                </tr>
+                <tr>
+                    <td class="table-dark" style="width: 15%; text-align: right">Creado:</td>
+                    <td>{{ $client->created_at }}</td>
+
+                    <td class="table-dark" style="width: 15%; text-align: right">Modificado:</td>
+                    <td>{{ $client->updated_at }}</td>
                 </tr>
             </table>
         </div>
