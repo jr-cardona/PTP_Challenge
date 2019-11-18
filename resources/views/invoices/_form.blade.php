@@ -1,16 +1,6 @@
 @csrf
 <div class="row">
     <div class="col">
-        <label for="number">Número de factura</label>
-        <input type="text" name="number" id="number" value="{{ old('number', $invoice->number) }}"
-               class="form-control @error('number') is-invalid @enderror">
-        @error('number')
-            <span class="invalid-feedback" role="alert">
-                <strong>{{ $message }}</strong>
-            </span>
-        @enderror
-    </div>
-    <div class="col">
         <label for="received_at">Fecha de Recibo</label>
         <input type="date" name="received_at" id="received_at" value="{{ old('received_at', $invoice->received_at) }}"
                class="form-control @error('received_at') is-invalid @enderror">

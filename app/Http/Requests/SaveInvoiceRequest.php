@@ -14,7 +14,6 @@ class SaveInvoiceRequest extends FormRequest
     public function rules()
     {
         return [
-            'number' => 'required|numeric',
             'issued_at' => 'required|date',
             'overdued_at' => 'required|date',
             'received_at' => 'date',

@@ -3,7 +3,7 @@
 @section('content')
     <div class="card">
         <div class="card-header">
-            <h1>Factura de venta No. {{ $invoice->number }}</h1>
+            <h1>Factura de venta No. {{ $invoice->id }}</h1>
         </div>
         <div class="card-body">
             @include('invoices._buttons')
