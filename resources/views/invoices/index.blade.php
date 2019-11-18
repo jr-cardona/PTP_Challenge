@@ -37,7 +37,7 @@
                     <td>${{ $invoice->total }}</td>
                     <td>{{ $invoice->status }}</td>
                     <td>
-                        <a href="{{ route('clients.show', $client) }}" target="_blank">
+                        <a href="{{ route('clients.show', $invoice->client) }}" target="_blank">
                             {{ $invoice->client->name }}
                         </a>
                     </td>

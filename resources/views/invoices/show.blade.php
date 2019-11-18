@@ -40,7 +40,7 @@
                 <tr>
                     <td class="table-dark" style="width: 15%; text-align: right">Cliente:</td>
                     <td>
-                        <a href="{{ route('clients.show', $client) }}" target="_blank">
+                        <a href="{{ route('clients.show', $invoice->client) }}" target="_blank">
                             {{ $invoice->client->name }}
                         </a>
                     </td>

@@ -14,7 +14,7 @@ class SaveInvoiceRequest extends FormRequest
     public function rules()
     {
         return [
-            'number' => 'required|unique:invoices|numeric',
+            'number' => 'required|numeric',
             'expedition_date' => 'required|date',
             'due_date' => 'required|date',
             'invoice_date' => 'required|date',

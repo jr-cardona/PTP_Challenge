@@ -1,4 +1,4 @@
-<a href="{{ route('invoice.edit', $invoice) }}" class="btn btn-primary">
+<a href="{{ route('invoices.edit', $invoice) }}" class="btn btn-primary">
     Editar
 </a>
 <a href="#" onclick="document.getElementById('delete-invoices').submit()" class="btn btn-danger">

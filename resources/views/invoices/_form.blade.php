@@ -12,7 +12,7 @@
     </div>
     <div class="col">
         <label for="invoice_date">Fecha de Facturación</label>
-        <input type="date" name="invoice_date" id="invoice_date" value="{{ old('invoice_date', $invoice->invoice_date) }}"
+        <input type="datetime" name="invoice_date" id="invoice_date" value="{{ old('invoice_date', $invoice->invoice_date) }}"
                class="form-control @error('invoice_date') is-invalid @enderror">
         @error('invoice_date')
             <span class="invalid-feedback" role="alert">
@@ -22,7 +22,7 @@
     </div>
     <div class="col">
         <label for="expedition_date">Fecha de Expedición</label>
-        <input type="date" name="expedition_date" id="expedition_date" value="{{ old('expedition_date', $invoice->expedition_date) }}"
+        <input type="datetime" name="expedition_date" id="expedition_date" value="{{ old('expedition_date', $invoice->expedition_date) }}"
                class="form-control @error('expedition_date') is-invalid @enderror">
         @error('expedition_date')
             <span class="invalid-feedback" role="alert">
@@ -32,7 +32,7 @@
     </div>
     <div class="col">
         <label for="due_date">Fecha de Vencimiento</label>
-        <input type="date" name="due_date" id="due_date" value="{{ old('due_date', $invoice->due_date) }}"
+        <input type="datetime" name="due_date" id="due_date" value="{{ old('due_date', $invoice->due_date) }}"
                class="form-control @error('due_date') is-invalid @enderror">
         @error('due_date')
             <span class="invalid-feedback" role="alert">

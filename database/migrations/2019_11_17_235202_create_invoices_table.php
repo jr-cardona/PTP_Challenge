@@ -21,7 +21,6 @@ class CreateInvoicesTable extends Migration
             $table->unsignedBigInteger('client_id');
             $table->unsignedBigInteger('provider_id')->nullable();
             $table->foreign('client_id')->references('id')->on('clients')->onDelete('cascade');
-            $table->foreign('provider_id')->references('id')->on('providers')->onDelete('cascade');
             $table->softDeletes();
         });
     }
