@@ -2,7 +2,7 @@
 <div class="row">
     <div class="col">
         <label for="received_at">Fecha de Recibo</label>
-        <input type="date" name="received_at" id="received_at" value="{{ old('received_at', $invoice->received_at) }}"
+        <input type="date" name="received_at" id="received_at" value="{{ date_format(new DateTime(old('received_at', $invoice->received_at)), 'Y-m-d') }}"
                class="form-control @error('received_at') is-invalid @enderror">
         @error('received_at')
             <span class="invalid-feedback" role="alert">
@@ -12,7 +12,7 @@
     </div>
     <div class="col">
         <label for="issued_at">Fecha de Expedición</label>
-        <input type="date" name="issued_at" id="issued_at" value="{{ old('issued_at', $invoice->issued_at) }}"
+        <input type="date" name="issued_at" id="issued_at" value="{{ date_format(new DateTime(old('issued_at', $invoice->issued_at)), 'Y-m-d') }}"
                class="form-control @error('issued_at') is-invalid @enderror">
         @error('issued_at')
             <span class="invalid-feedback" role="alert">
@@ -22,7 +22,7 @@
     </div>
     <div class="col">
         <label for="overdued_at">Fecha de Vencimiento</label>
-        <input type="date" name="overdued_at" id="overdued_at" value="{{ old('overdued_at', $invoice->overdued_at) }}"
+        <input type="date" name="overdued_at" id="overdued_at" value="{{ date_format(new DateTime(old('overdued_at', $invoice->overdued_at)), 'Y-m-d') }}"
                class="form-control @error('overdued_at') is-invalid @enderror">
         @error('overdued_at')
             <span class="invalid-feedback" role="alert">

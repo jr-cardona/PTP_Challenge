@@ -10,8 +10,8 @@
             <p></p>
             <table class="table border-rounded table-sm">
                 <tr>
-                    <td class="table-dark" style="width: 15%; text-align: right">Fecha de facturación:</td>
-                    <td>{{ $invoice->received_at }}</td>
+                    <td class="table-dark" style="width: 15%; text-align: right">Fecha de recibo:</td>
+                    <td>{{ $invoice->received_at == '' ? "Sin fecha" : $invoice->received_at }}</td>
 
                     <td class="table-dark" style="width: 15%; text-align: right">Estado:</td>
                     <td>{{ $invoice->status }}</td>
@@ -38,6 +38,9 @@
                     <td class="phone">${{ $invoice->total }}</td>
                 </tr>
                 <tr>
+                    <td class="table-dark" style="width: 15%; text-align: right">Descripción:</td>
+                    <td>{{ $invoice->description }}</td>
+
                     <td class="table-dark" style="width: 15%; text-align: right">Cliente:</td>
                     <td>
                         <a href="{{ route('clients.show', $invoice->client) }}" target="_blank">
