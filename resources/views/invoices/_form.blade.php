@@ -1,40 +1,30 @@
 @csrf
 <div class="row">
     <div class="col">
-        <label for="number">Número de factura</label>
-        <input type="text" name="number" id="number" value="{{ old('number', $invoice->number) }}"
-               class="form-control @error('number') is-invalid @enderror">
-        @error('number')
+        <label for="received_at">Fecha de Recibo</label>
+        <input type="date" name="received_at" id="received_at" value="{{ date_format(new DateTime(old('received_at', $invoice->received_at)), 'Y-m-d') }}"
+               class="form-control @error('received_at') is-invalid @enderror">
+        @error('received_at')
             <span class="invalid-feedback" role="alert">
                 <strong>{{ $message }}</strong>
             </span>
         @enderror
     </div>
     <div class="col">
-        <label for="invoice_date">Fecha de Facturación</label>
-        <input type="datetime" name="invoice_date" id="invoice_date" value="{{ old('invoice_date', $invoice->invoice_date) }}"
-               class="form-control @error('invoice_date') is-invalid @enderror">
-        @error('invoice_date')
+        <label for="issued_at">Fecha de Expedición</label>
+        <input type="date" name="issued_at" id="issued_at" value="{{ date_format(new DateTime(old('issued_at', $invoice->issued_at)), 'Y-m-d') }}"
+               class="form-control @error('issued_at') is-invalid @enderror">
+        @error('issued_at')
             <span class="invalid-feedback" role="alert">
                 <strong>{{ $message }}</strong>
             </span>
         @enderror
     </div>
     <div class="col">
-        <label for="expedition_date">Fecha de Expedición</label>
-        <input type="datetime" name="expedition_date" id="expedition_date" value="{{ old('expedition_date', $invoice->expedition_date) }}"
-               class="form-control @error('expedition_date') is-invalid @enderror">
-        @error('expedition_date')
-            <span class="invalid-feedback" role="alert">
-                <strong>{{ $message }}</strong>
-            </span>
-        @enderror
-    </div>
-    <div class="col">
-        <label for="due_date">Fecha de Vencimiento</label>
-        <input type="datetime" name="due_date" id="due_date" value="{{ old('due_date', $invoice->due_date) }}"
-               class="form-control @error('due_date') is-invalid @enderror">
-        @error('due_date')
+        <label for="overdued_at">Fecha de Vencimiento</label>
+        <input type="date" name="overdued_at" id="overdued_at" value="{{ date_format(new DateTime(old('overdued_at', $invoice->overdued_at)), 'Y-m-d') }}"
+               class="form-control @error('overdued_at') is-invalid @enderror">
+        @error('overdued_at')
             <span class="invalid-feedback" role="alert">
                 <strong>{{ $message }}</strong>
             </span>
@@ -89,6 +79,20 @@
         </select>
         @error('client_id')
             <span class="invalid-feedback" role="alert">
+                <strong>{{ $message }}</strong>
+            </span>
+        @enderror
+    </div>
+</div>
+<br>
+<div class="row">
+    <div class="col">
+        <label for="description">Descripción</label>
+        <textarea name="description" id="description" class="form-control @error('description') is-invalid @enderror">
+            {{ old('description', $invoice->description) }}
+        </textarea>
+        @error('description')
+        <span class="invalid-feedback" role="alert">
                 <strong>{{ $message }}</strong>
             </span>
         @enderror
