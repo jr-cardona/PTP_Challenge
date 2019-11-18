@@ -11,4 +11,9 @@ class Client extends Model
     public function invoices(){
         return $this->hasMany(Invoice::class);
     }
+
+    public function setEmailAttribute($value)
+    {
+        $this->attributes['email'] = strtolower($value);
+    }
 }
