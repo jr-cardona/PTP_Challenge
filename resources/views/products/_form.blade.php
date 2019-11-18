@@ -12,8 +12,9 @@
     </div>
     <div class="col">
         <label for="description">Descripción</label>
-        <textarea name="description" id="description" value="{{ old('description', $product->description) }}"
-                  class="form-control @error('description') is-invalid @enderror"></textarea>
+        <textarea name="description" id="description" class="form-control @error('description') is-invalid @enderror">
+            {{ old('description', $product->description) }}
+        </textarea>
         @error('description')
             <span class="invalid-feedback" role="alert">
                 <strong>{{ $message }}</strong>

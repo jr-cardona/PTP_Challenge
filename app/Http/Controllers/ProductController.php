@@ -54,6 +54,6 @@ class ProductController extends Controller
     {
         $product->delete();
 
-        return redirect('/products')->with('message', 'Producto eliminado satisfactoriamente');
+        return redirect()->route('products.index')->with('message', 'Producto eliminado satisfactoriamente');
     }
 }
