@@ -3,7 +3,7 @@
 @section('content')
     <div class="card">
         <div class="card-header">
-            <h1>Producto: {{ $product->id }}</h1>
+            <h1>{{ $product->name }}</h1>
         </div>
         <div class="card-body">
             @include('products._buttons')

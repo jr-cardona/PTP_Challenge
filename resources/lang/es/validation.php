@@ -192,6 +192,6 @@ return [
         'vat'                   => 'iva',
         'total'                 => 'valor total',
         'status'                => 'estado',
-        'client_id'             => 'cliente (ID)',
+        'client_id'             => 'cliente',
     ],
 ];
