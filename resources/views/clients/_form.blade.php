@@ -28,7 +28,8 @@
             <option value="TI" {{ old('type_document', $client->type_document) == "TI" ? 'selected' : '' }}>Tarjeta de identidad</option>
             <option value="CC" {{ old('type_document', $client->type_document) == "CC" ? 'selected' : '' }}>Cédula de ciudadanía</option>
             <option value="NIT" {{ old('type_document', $client->type_document) == "NIT" ? 'selected' : '' }}>NIT</option>
-            <option value="PS" {{ old('type_document', $client->type_document) == "PS" ? 'selected' : '' }}>Pasaporte</option>
+            <option value="TP" {{ old('type_document', $client->type_document) == "TP" ? 'selected' : '' }}>Pasaporte</option>
+            <option value="CE" {{ old('type_document', $client->type_document) == "CE" ? 'selected' : '' }}>Cédula de extranjería</option>
         </select>
         @error('type_document')
             <span class="invalid-feedback" role="alert">
