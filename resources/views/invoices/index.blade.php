@@ -29,11 +29,11 @@
                 <tr style="text-align: center">
                     <td>
                         <a href="{{ route('invoices.show', $invoice) }}" target="_blank">
-                            Factura de venta No. {{ $invoice->number }}
+                            Factura de venta No. {{ $invoice->id }}
                         </a>
                     </td>
-                    <td>{{ $invoice->expedition_date }}</td>
-                    <td>{{ $invoice->due_date }}</td>
+                    <td>{{ $invoice->issued_at }}</td>
+                    <td>{{ $invoice->overdued_at }}</td>
                     <td>${{ $invoice->total }}</td>
                     <td>{{ $invoice->status }}</td>
                     <td>

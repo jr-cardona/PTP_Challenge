@@ -186,12 +186,12 @@ return [
         'phone_number'          => 'número telefónico',
         'cell_phone_number'     => 'número de celular',
         'number'                => 'número de factura',
-        'invoice_date'          => 'fecha de facturación',
-        'expedition_date'       => 'fecha de expedición',
-        'due_date'              => 'fecha de vencimiento',
+        'received_at'           => 'fecha de facturación',
+        'issued_at'             => 'fecha de expedición',
+        'overdued_at'           => 'fecha de vencimiento',
         'vat'                   => 'iva',
         'total'                 => 'valor total',
         'status'                => 'estado',
-        'client_id'             => 'cliente (ID)'
+        'client_id'             => 'cliente',
     ],
 ];

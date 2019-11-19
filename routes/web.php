@@ -9,6 +9,10 @@ Route::resource('/clientes', 'ClientController')
     ->names('clients')
     ->parameters(['clientes' => 'client']);
 
+Route::resource('/productos', 'ProductController')
+    ->names('products')
+    ->parameters(['productos' => 'product']);
+
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');

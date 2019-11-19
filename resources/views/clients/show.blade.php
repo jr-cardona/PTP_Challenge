@@ -3,7 +3,7 @@
 @section('content')
     <div class="card">
         <div class="card-header">
-            <h1>Cliente: {{ $client->id }}</h1>
+            <h1>{{ $client->name }}</h1>
         </div>
         <div class="card-body">
             @include('clients._buttons')
@@ -22,7 +22,6 @@
 
                     <td class="table-dark" style="width: 15%; text-align: right">Modificado:</td>
                     <td>{{ $client->updated_at }}</td>
-
                 </tr>
                 <tr>
                     <td class="table-dark" style="width: 15%; text-align: right">Número telefónico:</td>
@@ -48,7 +47,7 @@
                                 @foreach($client->invoices as $invoice)
                                     <li>
                                         <a href="{{ route('invoices.show', $invoice) }}" target="_blank">
-                                            Factura de venta No. {{ $invoice->number }}
+                                            Factura de venta No. {{ $invoice->id }}
                                         </a>
                                     </li>
                                 @endforeach

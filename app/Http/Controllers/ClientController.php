@@ -9,6 +9,11 @@ use Illuminate\Http\Request;
 
 class ClientController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+
     public function index()
     {
         return view('clients.index', [
@@ -55,6 +60,6 @@ class ClientController extends Controller
     {
         $client->delete();
 
-        return redirect('/clients')->with('message', 'Cliente eliminado satisfactoriamente');
+        return redirect()->route('clients.index')->with('message', 'Cliente eliminado satisfactoriamente');
     }
 }
