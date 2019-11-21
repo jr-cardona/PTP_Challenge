@@ -6,6 +6,7 @@ use Illuminate\Foundation\Http\FormRequest;
 
 class SaveClientRequest extends FormRequest
 {
+
     public function authorize()
     {
         return true;
@@ -13,6 +14,7 @@ class SaveClientRequest extends FormRequest
 
     public function rules()
     {
+        $clientID = isset($this->client) ? $this->client->id : null;
         return [
             'sic_code' => 'required|numeric|min:8',
             'type_document' => 'required',
@@ -20,7 +22,7 @@ class SaveClientRequest extends FormRequest
             'phone_number' => 'numeric|digits:7|nullable',
             'cell_phone_number' => 'numeric|required|digits:10',
             'address' => 'required',
-            'email' => 'required|email|string|max:100',
+            'email' => 'required|email|string|max:100|unique:clients,email,'.$clientID,
         ];
     }
 }
