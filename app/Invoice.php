@@ -13,9 +13,6 @@ class Invoice extends Model
     }
 
     public function products(){
-<<<<<<< Updated upstream
-        return $this->belongsToMany(Product::class);
-=======
         return $this->belongsToMany(Product::class)->withTimestamps()->withPivot('quantity', 'unit_price', 'total_price');
     }
 
@@ -27,7 +24,6 @@ class Invoice extends Model
         }else{
             return 0;
         }
->>>>>>> Stashed changes
     }
 
     public function getDateAttribute($date){

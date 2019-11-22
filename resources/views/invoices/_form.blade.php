@@ -44,21 +44,7 @@
         @enderror
     </div>
     <div class="col">
-<<<<<<< Updated upstream
-        <label for="total">Valor total</label>
-        <input type="number" name="total" id="total" value="{{ old('total', $invoice->total) }}"
-        class="form-control @error('total') is-invalid @enderror">
-        @error('total')
-            <span class="invalid-feedback" role="alert">
-                <strong>{{ $message }}</strong>
-            </span>
-        @enderror
-    </div>
-    <div class="col">
-        <label for="status">Estado</label>
-=======
         <label for="status" class="required">Estado</label>
->>>>>>> Stashed changes
         <select id="status" name="status" class="form-control @error('status') is-invalid @enderror">
             <option value="">--</option>
             <option value="Paid" {{ old('status', $invoice->status) == "Paid" ? 'selected' : '' }}>Pagada</option>

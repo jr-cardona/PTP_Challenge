@@ -32,17 +32,10 @@
                 </tr>
                 <tr>
                     <td class="table-dark" style="width: 15%; text-align: right">IVA:</td>
-<<<<<<< Updated upstream
                     <td class="phone">{{ $invoice->vat }}</td>
 
                     <td class="table-dark" style="width: 15%; text-align: right">Valor total:</td>
-                    <td class="phone">${{ $invoice->total }}</td>
-=======
-                    <td style="width: 25%">{{ $invoice->vat }}%</td>
-
-                    <td class="table-dark" style="width: 15%; text-align: right">Valor total:</td>
                     <td style="width: 25%">${{ number_format($invoice->getTotalAttribute(), 2) }}</td>
->>>>>>> Stashed changes
                 </tr>
                 <tr>
                     <td class="table-dark" style="width: 15%; text-align: right">Descripción:</td>
@@ -57,8 +50,6 @@
                 </tr>
             </table>
         </div>
-<<<<<<< Updated upstream
-=======
         <div id="details" class="col-md-12">
             <table class="table">
                 <thead>
@@ -100,7 +91,6 @@
                 </tbody>
             </table>
         </div>
->>>>>>> Stashed changes
         <a href="{{ route('invoices.createDetail', $invoice) }}" class="btn btn-success">
             Agregar Detalle
         </a>
