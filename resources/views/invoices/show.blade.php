@@ -32,10 +32,10 @@
                 </tr>
                 <tr>
                     <td class="table-dark" style="width: 15%; text-align: right">IVA:</td>
-                    <td class="phone">{{ $invoice->vat }}</td>
+                    <td class="phone">{{ $invoice->vat }}%</td>
 
                     <td class="table-dark" style="width: 15%; text-align: right">Valor total:</td>
-                    <td class="phone">${{ $invoice->total }}</td>
+                    <td class="phone">${{ $invoice->getTotalAttribute() }}</td>
                 </tr>
                 <tr>
                     <td class="table-dark" style="width: 15%; text-align: right">Descripción:</td>
@@ -48,6 +48,47 @@
                         </a>
                     </td>
                 </tr>
+            </table>
+        </div>
+        <div id="details" class="col-md-12" style="margin-top:10px">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th class="text-center">CÓDIGO</th>
+                        <th class="text-center">NOMBRE</th>
+                        <th class="text-center">CANTIDAD</th>
+                        <th>DESCRIPCIÓN</th>
+                        <th class="text-right">PRECIO UNITARIO</th>
+                        <th class="text-right">PRECIO TOTAL</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{ $subtotal = 0 }}
+                    {{ $iva = $invoice->vat / 100 }}
+                    @foreach($invoice->products as $product)
+                        <tr>
+                            <td class="text-center">{{ $product->id }}</td>
+                            <td class="text-center">{{ $product->name }}</td>
+                            <td class="text-center">{{ $product->pivot->quantity }}</td>
+                            <td>{{ $product->description }}</td>
+                            <td class="text-right">${{ number_format($product->pivot->unit_price, 2) }}</td>
+                            <td class="text-right">${{ number_format($product->pivot->total_price, 2) }}</td>
+                        </tr>
+                        {{ $subtotal += $product->pivot->total_price }}
+                   @endforeach
+                    <tr>
+                        <td class="text-right" colspan="5">SUBTOTAL</td>
+                        <td class="text-right">${{ number_format($subtotal, 2) }}</td>
+                    </tr>
+                    <tr>
+                        <td class="text-right" colspan="5">IVA ({{ $invoice->vat }})% </td>
+                        <td class="text-right">${{ number_format($subtotal * $iva, 2) }}</td>
+                    </tr>
+                    <tr>
+                        <td class="text-right" colspan="5">GRAN TOTAL</td>
+                        <td class="text-right">${{ number_format($subtotal * ($iva + 1), 2) }}</td>
+                    </tr>
+                </tbody>
             </table>
         </div>
         <a href="{{ route('invoices.createDetail', $invoice) }}" class="btn btn-success">

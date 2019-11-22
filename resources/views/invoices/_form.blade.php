@@ -44,16 +44,6 @@
         @enderror
     </div>
     <div class="col">
-        <label for="total">Valor total</label>
-        <input type="number" name="total" id="total" value="{{ old('total', $invoice->total) }}"
-        class="form-control @error('total') is-invalid @enderror">
-        @error('total')
-            <span class="invalid-feedback" role="alert">
-                <strong>{{ $message }}</strong>
-            </span>
-        @enderror
-    </div>
-    <div class="col">
         <label for="status">Estado</label>
         <select id="status" name="status" class="form-control @error('status') is-invalid @enderror">
             <option value="">--</option>

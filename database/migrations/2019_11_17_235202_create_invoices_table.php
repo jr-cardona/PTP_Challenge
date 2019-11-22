@@ -15,7 +15,7 @@ class CreateInvoicesTable extends Migration
             $table->dateTime('overdued_at');
             $table->dateTime('received_at')->nullable();
             $table->float('vat')->unsigned();
-            $table->double('total');
+            $table->double('total')->unsigned()->default(0);
             $table->string('status');
             $table->string('description')->nullable();
             $table->unsignedBigInteger('client_id');

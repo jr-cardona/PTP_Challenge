@@ -1,6 +1,7 @@
 <?php
 Route::get('/', 'HomeController@index');
 Route::get('/facturas/{invoice}/detalle', 'InvoiceController@createDetail')->name('invoices.createDetail');
+Route::post('/facturas/detalle', 'InvoiceController@storeDetail')->name('invoices.storeDetail');
 
 Route::resource('/facturas', 'InvoiceController')
     ->names('invoices')

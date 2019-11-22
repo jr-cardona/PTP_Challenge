@@ -4,14 +4,15 @@ namespace App\Http\Controllers;
 
 use App\Client;
 use App\Invoice;
+use App\Product;
 use App\Http\Requests\SaveInvoiceRequest;
-
+use Illuminate\Http\Request;
 
 class InvoiceController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth');
+        //$this->middleware('auth');
     }
 
     public function index()
@@ -68,6 +69,19 @@ class InvoiceController extends Controller
     public function createDetail(Invoice $invoice){
         return view('invoices.details.create', [
             'invoice' => $invoice,
+            'products' => Product::all()
         ]);
+    }
+
+    public function storeDetail()
+    {
+        $invoice = Invoice::find(request('invoice_id'));
+        $invoice->products()->attach(request('product_id'), [
+            'quantity' => request('quantity'),
+            'unit_price' => request('unit_price'),
+            'total_price' => request('quantity') * request('unit_price')
+        ]);
+
+        return redirect()->route('invoices.show', $invoice)->with('message', 'Detalle creado satisfactoriamente');
     }
 }
