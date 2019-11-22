@@ -11,38 +11,38 @@
             <table class="table border-rounded table-sm">
                 <tr>
                     <td class="table-dark" style="width: 15%; text-align: right">Fecha de recibo:</td>
-                    <td>{{ $invoice->received_at == '' ? "Sin fecha" : $invoice->received_at }}</td>
+                    <td style="width: 25%">{{ $invoice->received_at == '' ? "Sin fecha" : $invoice->received_at }}</td>
 
                     <td class="table-dark" style="width: 15%; text-align: right">Estado:</td>
-                    <td>{{ $invoice->status }}</td>
+                    <td style="width: 25%">{{ $invoice->status }}</td>
                 </tr>
                 <tr>
-                    <td class="table-dark" style="width: 15%; text-align: right">Creado:</td>
-                    <td>{{ $invoice->created_at }}</td>
+                    <td class="table-dark" style="width: 15%; text-align: right">Fecha de creación:</td>
+                    <td style="width: 25%">{{ $invoice->created_at }}</td>
 
-                    <td class="table-dark" style="width: 15%; text-align: right">Modificado:</td>
-                    <td>{{ $invoice->updated_at }}</td>
+                    <td class="table-dark" style="width: 15%; text-align: right">Fecha de modificación:</td>
+                    <td style="width: 25%">{{ $invoice->updated_at }}</td>
                 </tr>
                 <tr>
                     <td class="table-dark" style="width: 15%; text-align: right">Fecha de expedición:</td>
-                    <td>{{ $invoice->issued_at }}</td>
+                    <td style="width: 25%">{{ $invoice->issued_at }}</td>
 
                     <td class="table-dark" style="width: 15%; text-align: right">Fecha de vencimiento:</td>
-                    <td>{{ $invoice->overdued_at }}</td>
+                    <td style="width: 25%">{{ $invoice->overdued_at }}</td>
                 </tr>
                 <tr>
                     <td class="table-dark" style="width: 15%; text-align: right">IVA:</td>
-                    <td class="phone">{{ $invoice->vat }}%</td>
+                    <td style="width: 25%">{{ $invoice->vat }}%</td>
 
                     <td class="table-dark" style="width: 15%; text-align: right">Valor total:</td>
-                    <td class="phone">${{ $invoice->getTotalAttribute() }}</td>
+                    <td style="width: 25%">${{ number_format($invoice->getTotalAttribute(), 2) }}</td>
                 </tr>
                 <tr>
                     <td class="table-dark" style="width: 15%; text-align: right">Descripción:</td>
-                    <td>{{ $invoice->description }}</td>
+                    <td style="width: 25%";>{{ $invoice->description }}</td>
 
                     <td class="table-dark" style="width: 15%; text-align: right">Cliente:</td>
-                    <td>
+                    <td style="width: 25%">
                         <a href="{{ route('clients.show', $invoice->client) }}" target="_blank">
                             {{ $invoice->client->name }}
                         </a>
@@ -50,7 +50,7 @@
                 </tr>
             </table>
         </div>
-        <div id="details" class="col-md-12" style="margin-top:10px">
+        <div id="details" class="col-md-12">
             <table class="table">
                 <thead>
                     <tr>

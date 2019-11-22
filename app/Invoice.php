@@ -18,9 +18,19 @@ class Invoice extends Model
 
     public function getTotalAttribute(){
         if (isset($this->products[0])){
-            return $this->products[0]->pivot->where('invoice_id', $this->id)->sum('total_price') * ($this->vat / 100 + 1);
+            return $this->products[0]->pivot
+                    ->where('invoice_id', $this->id)
+                    ->sum('total_price') * ($this->vat / 100 + 1);
         }else{
             return 0;
+        }
+    }
+
+    public function getDateAttribute($date){
+        if (! empty($date)){
+            return date_format(date_create($date), 'Y-m-d\TH:i:s');
+        }else{
+            return "";
         }
     }
 }

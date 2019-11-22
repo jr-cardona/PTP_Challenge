@@ -2,7 +2,7 @@
 <div class="row">
     <div class="col">
         <label for="received_at">Fecha de Recibo</label>
-        <input type="date" name="received_at" id="received_at" value="{{ date_format(new DateTime(old('received_at', $invoice->received_at)), 'Y-m-d') }}"
+        <input type="datetime-local" name="received_at" id="received_at" value="{{ old('received_at', $invoice->getDateAttribute($invoice->received_at)) }}"
                class="form-control @error('received_at') is-invalid @enderror">
         @error('received_at')
             <span class="invalid-feedback" role="alert">
@@ -11,8 +11,8 @@
         @enderror
     </div>
     <div class="col">
-        <label for="issued_at">Fecha de Expedición</label>
-        <input type="date" name="issued_at" id="issued_at" value="{{ date_format(new DateTime(old('issued_at', $invoice->issued_at)), 'Y-m-d') }}"
+        <label for="issued_at" class="required">Fecha de Expedición</label>
+        <input type="datetime-local" name="issued_at" id="issued_at" value="{{ old('issued_at', $invoice->getDateAttribute($invoice->received_at)) }}"
                class="form-control @error('issued_at') is-invalid @enderror">
         @error('issued_at')
             <span class="invalid-feedback" role="alert">
@@ -21,8 +21,8 @@
         @enderror
     </div>
     <div class="col">
-        <label for="overdued_at">Fecha de Vencimiento</label>
-        <input type="date" name="overdued_at" id="overdued_at" value="{{ date_format(new DateTime(old('overdued_at', $invoice->overdued_at)), 'Y-m-d') }}"
+        <label for="overdued_at" class="required">Fecha de Vencimiento</label>
+        <input type="datetime-local" name="overdued_at" id="overdued_at" value="{{ old('overdued_at', $invoice->getDateAttribute($invoice->received_at)) }}"
                class="form-control @error('overdued_at') is-invalid @enderror">
         @error('overdued_at')
             <span class="invalid-feedback" role="alert">
@@ -34,7 +34,7 @@
 <br>
 <div class="row">
     <div class="col">
-        <label for="vat">IVA</label>
+        <label for="vat" class="required">IVA (%)</label>
         <input type="number" step="0.01" name="vat" id="vat" value="{{ old('vat', $invoice->vat) }}"
                class="form-control @error('vat') is-invalid @enderror">
         @error('vat')
@@ -44,7 +44,7 @@
         @enderror
     </div>
     <div class="col">
-        <label for="status">Estado</label>
+        <label for="status" class="required">Estado</label>
         <select id="status" name="status" class="form-control @error('status') is-invalid @enderror">
             <option value="">--</option>
             <option value="Paid" {{ old('status', $invoice->status) == "Paid" ? 'selected' : '' }}>Pagada</option>
@@ -58,7 +58,7 @@
         @enderror
     </div>
     <div class="col">
-        <label for="client_id">Cliente</label>
+        <label for="client_id" class="required">Cliente</label>
         <select type="text" name="client_id" id="client_id" class="form-control @error('client_id') is-invalid @enderror">
             <option value="">--</option>
             @foreach($clients as $client)

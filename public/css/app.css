@@ -11100,3 +11100,9 @@ a.text-dark:focus {
   }
 }
 
+.required:after{
+    content:'*';
+    color:red;
+    padding-left:5px;
+}
+

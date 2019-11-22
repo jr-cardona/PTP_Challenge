@@ -15,9 +15,9 @@ class SaveInvoiceRequest extends FormRequest
     {
         return [
             'issued_at' => 'required|date',
-            'overdued_at' => 'required|date',
+            'overdued_at' => 'required|date|after:issued_at',
             'received_at' => 'nullable|date',
-            'vat' => 'required|numeric',
+            'vat' => 'required|numeric|between:0,100',
             'status' => 'required',
             'client_id' => 'required',
             'description' => 'max:255'
