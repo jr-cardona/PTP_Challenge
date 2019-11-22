@@ -32,7 +32,7 @@
                 </tr>
                 <tr>
                     <td class="table-dark" style="width: 15%; text-align: right">IVA:</td>
-                    <td class="phone">{{ $invoice->vat }}</td>
+                    <td style="width: 25%">{{ $invoice->vat }}%</td>
 
                     <td class="table-dark" style="width: 15%; text-align: right">Valor total:</td>
                     <td style="width: 25%">${{ number_format($invoice->getTotalAttribute(), 2) }}</td>

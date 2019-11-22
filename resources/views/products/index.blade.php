@@ -15,6 +15,7 @@
     <table class="table border-rounded table-striped">
         <thead class="thead-dark">
             <tr style="text-align: center;">
+                <th scope="col">Código</th>
                 <th scope="col">Nombre</th>
                 <th scope="col">Descripción</th>
                 <th scope="col" nowrap>Fecha de creación</th>
@@ -26,6 +27,7 @@
         <tbody>
             @foreach($products as $product)
                 <tr style="text-align: center;">
+                    <td>{{ $product->id }}</td>
                     <td>
                         <a href="{{ route('products.show', $product) }}" target="_blank">
                             {{ $product->name }}
