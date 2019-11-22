@@ -10,39 +10,39 @@
             <p></p>
             <table class="table border-rounded table-sm">
                 <tr>
-                    <td class="table-dark" style="width: 15%; text-align: right">Fecha de recibo:</td>
-                    <td style="width: 25%">{{ $invoice->received_at == '' ? "Sin fecha" : $invoice->received_at }}</td>
+                    <td class="table-dark td-title">Fecha de recibo:</td>
+                    <td class="td-content">{{ $invoice->received_at == '' ? "Sin fecha" : $invoice->received_at }}</td>
 
-                    <td class="table-dark" style="width: 15%; text-align: right">Estado:</td>
-                    <td style="width: 25%">{{ $invoice->status }}</td>
+                    <td class="table-dark td-title">Estado:</td>
+                    <td class="td-content">{{ $invoice->status }}</td>
                 </tr>
                 <tr>
-                    <td class="table-dark" style="width: 15%; text-align: right">Fecha de creación:</td>
-                    <td style="width: 25%">{{ $invoice->created_at }}</td>
+                    <td class="table-dark td-title">Fecha de creación:</td>
+                    <td class="td-content">{{ $invoice->created_at }}</td>
 
-                    <td class="table-dark" style="width: 15%; text-align: right">Fecha de modificación:</td>
-                    <td style="width: 25%">{{ $invoice->updated_at }}</td>
+                    <td class="table-dark td-title">Fecha de modificación:</td>
+                    <td class="td-content">{{ $invoice->updated_at }}</td>
                 </tr>
                 <tr>
-                    <td class="table-dark" style="width: 15%; text-align: right">Fecha de expedición:</td>
-                    <td style="width: 25%">{{ $invoice->issued_at }}</td>
+                    <td class="table-dark td-title">Fecha de expedición:</td>
+                    <td class="td-content">{{ $invoice->issued_at }}</td>
 
-                    <td class="table-dark" style="width: 15%; text-align: right">Fecha de vencimiento:</td>
-                    <td style="width: 25%">{{ $invoice->overdued_at }}</td>
+                    <td class="table-dark td-title">Fecha de vencimiento:</td>
+                    <td class="td-content">{{ $invoice->overdued_at }}</td>
                 </tr>
                 <tr>
-                    <td class="table-dark" style="width: 15%; text-align: right">IVA:</td>
-                    <td style="width: 25%">{{ $invoice->vat }}%</td>
+                    <td class="table-dark td-title">IVA:</td>
+                    <td class="td-content">{{ $invoice->vat }}%</td>
 
-                    <td class="table-dark" style="width: 15%; text-align: right">Valor total:</td>
-                    <td style="width: 25%">${{ number_format($invoice->getTotalAttribute(), 2) }}</td>
+                    <td class="table-dark td-title">Valor total:</td>
+                    <td class="td-content">${{ number_format($invoice->getTotalAttribute(), 2) }}</td>
                 </tr>
                 <tr>
-                    <td class="table-dark" style="width: 15%; text-align: right">Descripción:</td>
-                    <td style="width: 25%";>{{ $invoice->description }}</td>
+                    <td class="table-dark td-title">Descripción:</td>
+                    <td class="td-content";>{{ $invoice->description }}</td>
 
-                    <td class="table-dark" style="width: 15%; text-align: right">Cliente:</td>
-                    <td style="width: 25%">
+                    <td class="table-dark td-title">Cliente:</td>
+                    <td class="td-content">
                         <a href="{{ route('clients.show', $invoice->client) }}" target="_blank">
                             {{ $invoice->client->name }}
                         </a>
@@ -56,37 +56,34 @@
                     <tr>
                         <th class="text-center">CÓDIGO</th>
                         <th class="text-center">NOMBRE</th>
+                        <th class="text-center">DESCRIPCIÓN</th>
                         <th class="text-center">CANTIDAD</th>
-                        <th>DESCRIPCIÓN</th>
                         <th class="text-right">PRECIO UNITARIO</th>
                         <th class="text-right">PRECIO TOTAL</th>
                     </tr>
                 </thead>
                 <tbody>
-                    {{ $subtotal = 0 }}
-                    {{ $iva = $invoice->vat / 100 }}
                     @foreach($invoice->products as $product)
                         <tr>
                             <td class="text-center">{{ $product->id }}</td>
                             <td class="text-center">{{ $product->name }}</td>
+                            <td class="text-center">{{ $product->description }}</td>
                             <td class="text-center">{{ $product->pivot->quantity }}</td>
-                            <td>{{ $product->description }}</td>
                             <td class="text-right">${{ number_format($product->pivot->unit_price, 2) }}</td>
                             <td class="text-right">${{ number_format($product->pivot->total_price, 2) }}</td>
                         </tr>
-                        {{ $subtotal += $product->pivot->total_price }}
                    @endforeach
                     <tr>
                         <td class="text-right" colspan="5">SUBTOTAL</td>
-                        <td class="text-right">${{ number_format($subtotal, 2) }}</td>
+                        <td class="text-right">${{ number_format($invoice->getSubtotalAttribute(), 2) }}</td>
                     </tr>
                     <tr>
                         <td class="text-right" colspan="5">IVA ({{ $invoice->vat }})% </td>
-                        <td class="text-right">${{ number_format($subtotal * $iva, 2) }}</td>
+                        <td class="text-right">${{ number_format($invoice->getIvaAmountAttribute(), 2) }}</td>
                     </tr>
                     <tr>
                         <td class="text-right" colspan="5">GRAN TOTAL</td>
-                        <td class="text-right">${{ number_format($subtotal * ($iva + 1), 2) }}</td>
+                        <td class="text-right">${{ number_format($invoice->getTotalAttribute(), 2) }}</td>
                     </tr>
                 </tbody>
             </table>

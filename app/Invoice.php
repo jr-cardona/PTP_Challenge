@@ -16,14 +16,22 @@ class Invoice extends Model
         return $this->belongsToMany(Product::class)->withTimestamps()->withPivot('quantity', 'unit_price', 'total_price');
     }
 
-    public function getTotalAttribute(){
+    public function getSubtotalAttribute(){
         if (isset($this->products[0])){
             return $this->products[0]->pivot
-                    ->where('invoice_id', $this->id)
-                    ->sum('total_price') * ($this->vat / 100 + 1);
+                ->where('invoice_id', $this->id)
+                ->sum('total_price');
         }else{
             return 0;
         }
+    }
+
+    public function getIvaAmountAttribute(){
+        return $this->getSubtotalAttribute() * $this->vat / 100;
+    }
+
+    public function getTotalAttribute(){
+        return $this->getSubtotalAttribute() + $this->getIvaAmountAttribute();
     }
 
     public function getDateAttribute($date){

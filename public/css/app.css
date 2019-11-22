@@ -11106,3 +11106,11 @@ a.text-dark:focus {
     padding-left:5px;
 }
 
+.td-title{
+    width: 15%;
+    text-align: right;
+}
+
+.td-content{
+    width: 25%;
+}

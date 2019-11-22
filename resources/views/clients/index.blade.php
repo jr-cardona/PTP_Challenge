@@ -14,7 +14,7 @@
     <br>
     <table class="table border-rounded table-striped">
         <thead class="thead-dark">
-            <tr style="text-align: center;">
+            <tr class="text-center">
                 <th scope="col">Documento</th>
                 <th scope="col" nowrap>Nombre</th>
                 <th scope="col">Dirección</th>
@@ -25,7 +25,7 @@
         </thead>
         <tbody>
             @foreach($clients as $client)
-                <tr style="text-align: center;">
+                <tr class="text-center">
                     <td>
                         <a href="{{ route('clients.show', $client) }}" target="_blank">
                             {{ $client->type_document }} {{ $client->sic_code }}
@@ -35,7 +35,7 @@
                     <td>{{ $client->address }}</td>
                     <td>{{ $client->email }}</td>
                     <td>{{ $client->cell_phone_number }}</td>
-                    <td style="text-align: center">
+                    <td class="text-center">
                         @include('clients._buttons')
                     </td>
                 </tr>

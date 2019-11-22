@@ -14,19 +14,19 @@
     <br>
     <table class="table border-rounded table-striped">
         <thead class="thead-dark">
-            <tr style="text-align: center">
+            <tr class="text-center">
                 <th scope="col">Título</th>
                 <th scope="col" nowrap>Fecha de expedición</th>
                 <th scope="col" nowrap>Fecha de vencimiento</th>
                 <th scope="col">Valor total</th>
                 <th scope="col">Estado</th>
                 <th scope="col">Cliente</th>
-                <th scope="col" style="text-align: center">Opciones</th>
+                <th scope="col">Opciones</th>
             </tr>
         </thead>
         <tbody>
             @foreach($invoices as $invoice)
-                <tr style="text-align: center">
+                <tr class="text-center">
                     <td>
                         <a href="{{ route('invoices.show', $invoice) }}" target="_blank">
                             Factura de venta No. {{ $invoice->id }}
