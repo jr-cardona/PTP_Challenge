@@ -3,9 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Client;
-use App\Http\Requests\SaveInvoiceRequest;
 use App\Invoice;
-use Illuminate\Http\Request;
+use App\Http\Requests\SaveInvoiceRequest;
+
 
 class InvoiceController extends Controller
 {
@@ -63,5 +63,11 @@ class InvoiceController extends Controller
         $invoice->delete();
 
         return redirect()->route('invoices.index')->with('message', 'Factura eliminada satisfactoriamente');
+    }
+
+    public function createDetail(Invoice $invoice){
+        return view('invoices.details.create', [
+            'invoice' => $invoice,
+        ]);
     }
 }

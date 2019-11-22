@@ -50,5 +50,8 @@
                 </tr>
             </table>
         </div>
+        <a href="{{ route('invoices.createDetail', $invoice) }}" class="btn btn-success">
+            Agregar Detalle
+        </a>
     </div>
 @endsection
