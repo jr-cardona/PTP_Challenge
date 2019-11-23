@@ -20,7 +20,7 @@
                 <th scope="col">Descripción</th>
                 <th scope="col" nowrap>Fecha de creación</th>
                 <th scope="col" nowrap>Fecha de modificación</th>
-                <th scope="col" nowrap>Opciones</th>
+                <th scope="col" nowrap colspan="2">Opciones</th>
 
             </tr>
         </thead>
@@ -36,9 +36,7 @@
                     <td>{{ $product->description }}</td>
                     <td>{{ $product->created_at }}</td>
                     <td>{{ $product->updated_at }}</td>
-                    <td style="text-align: center">
-                        @include('products._buttons')
-                    </td>
+                    @include('products._buttons')
                 </tr>
             @endforeach
         </tbody>

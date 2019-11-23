@@ -6,7 +6,9 @@
             <h1>Factura de venta No. {{ $invoice->id }}</h1>
         </div>
         <div class="card-body">
-            @include('invoices._buttons')
+            <div class="btn-group">
+                @include('invoices._buttons')
+            </div>
             <p></p>
             <table class="table border-rounded table-sm">
                 <tr>

@@ -20,7 +20,7 @@
                 <th scope="col">Dirección</th>
                 <th scope="col">Correo electrónico</th>
                 <th scope="col">Celular</th>
-                <th scope="col">Opciones</th>
+                <th scope="col" colspan="2">Opciones</th>
             </tr>
         </thead>
         <tbody>
@@ -35,9 +35,7 @@
                     <td>{{ $client->address }}</td>
                     <td>{{ $client->email }}</td>
                     <td>{{ $client->cell_phone_number }}</td>
-                    <td class="text-center">
-                        @include('clients._buttons')
-                    </td>
+                    @include('clients._buttons')
                 </tr>
             @endforeach
         </tbody>
