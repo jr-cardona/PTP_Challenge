@@ -19,7 +19,7 @@ class SaveInvoiceRequest extends FormRequest
             'received_at' => 'nullable|date',
             'vat' => 'required|numeric|between:0,100',
             'status' => 'required',
-            'client_id' => 'required',
+            'client_id' => 'required|numeric|exists:clients,id',
             'description' => 'max:255'
         ];
     }
