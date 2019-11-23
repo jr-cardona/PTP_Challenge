@@ -12,7 +12,7 @@
     </div>
     <div class="col">
         <label for="issued_at" class="required">Fecha de Expedición</label>
-        <input type="datetime-local" name="issued_at" id="issued_at" value="{{ old('issued_at', $invoice->getDateAttribute($invoice->received_at)) }}"
+        <input type="datetime-local" name="issued_at" id="issued_at" value="{{ old('issued_at', $invoice->getDateAttribute($invoice->issued_at)) }}"
                class="form-control @error('issued_at') is-invalid @enderror">
         @error('issued_at')
             <span class="invalid-feedback" role="alert">
@@ -22,7 +22,7 @@
     </div>
     <div class="col">
         <label for="overdued_at" class="required">Fecha de Vencimiento</label>
-        <input type="datetime-local" name="overdued_at" id="overdued_at" value="{{ old('overdued_at', $invoice->getDateAttribute($invoice->received_at)) }}"
+        <input type="datetime-local" name="overdued_at" id="overdued_at" value="{{ old('overdued_at', $invoice->getDateAttribute($invoice->overdued_at)) }}"
                class="form-control @error('overdued_at') is-invalid @enderror">
         @error('overdued_at')
             <span class="invalid-feedback" role="alert">
