@@ -60,6 +60,7 @@
                         <th class="text-center">CANTIDAD</th>
                         <th class="text-right">PRECIO UNITARIO</th>
                         <th class="text-right">PRECIO TOTAL</th>
+                        <th class="text-center"></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -71,6 +72,17 @@
                             <td class="text-center">{{ $product->pivot->quantity }}</td>
                             <td class="text-right">${{ number_format($product->pivot->unit_price, 2) }}</td>
                             <td class="text-right">${{ number_format($product->pivot->total_price, 2) }}</td>
+                            <td class="text-center">
+                                <a href="{{ route('invoices.editDetail', $invoice, $product) }}">
+                                    <i class="fa fa-edit"></i>
+                                </a>
+                                <a href="#" onclick="document.getElementById('delete-detail').submit()">
+                                    <i class="fa fa-trash"></i>
+                                </a>
+                                <form id="delete-detail" method="POST" action="{{ route('invoices.destroyDetail', $invoice, $product->pivot->id) }}" class="d-none">
+                                    @csrf @method('DELETE')
+                                </form>
+                            </td>
                         </tr>
                    @endforeach
                     <tr>

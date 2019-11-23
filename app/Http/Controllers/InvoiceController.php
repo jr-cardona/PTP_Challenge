@@ -73,9 +73,8 @@ class InvoiceController extends Controller
         ]);
     }
 
-    public function storeDetail()
+    public function storeDetail(Invoice $invoice)
     {
-        $invoice = Invoice::find(request('invoice_id'));
         $invoice->products()->attach(request('product_id'), [
             'quantity' => request('quantity'),
             'unit_price' => request('unit_price'),
@@ -83,5 +82,22 @@ class InvoiceController extends Controller
         ]);
 
         return redirect()->route('invoices.show', $invoice)->with('message', 'Detalle creado satisfactoriamente');
+    }
+
+    public function editDetail(Invoice $invoice){
+        
+    }
+
+    public function updateDetail(Invoice $invoice){
+        $attributes = [
+            'quantity' => request('quantity'),
+            'unit_price' => request('unit_price'),
+            'total_price' => request('quantity') * request('unit_price')
+        ];
+        $invoice->products()->updateExistingPivot(request('product_id'), $attributes);
+    }
+
+    public function destroyDetail(Invoice $invoice, Product $product){
+        $invoice->products()->detach($product->id);
     }
 }

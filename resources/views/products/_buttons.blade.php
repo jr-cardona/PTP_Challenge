@@ -7,3 +7,4 @@
 <form id="delete-product" method="POST" action="{{ route('products.destroy', $product) }}" class="d-none">
     @csrf @method('DELETE')
 </form>
+
