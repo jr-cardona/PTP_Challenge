@@ -75,13 +75,13 @@
                             <td class="text-right">${{ number_format($product->pivot->unit_price, 2) }}</td>
                             <td class="text-right">${{ number_format($product->pivot->total_price, 2) }}</td>
                             <td class="text-center">
-                                <a href="{{ route('invoices.editDetail', $invoice, $product) }}">
+                                <a href="{{ route('invoiceDetails.edit', [$invoice, $product]) }}">
                                     <i class="fa fa-edit"></i>
                                 </a>
                                 <a href="#" onclick="document.getElementById('delete-detail').submit()">
                                     <i class="fa fa-trash"></i>
                                 </a>
-                                <form id="delete-detail" method="POST" action="{{ route('invoices.destroyDetail', $invoice, $product->pivot->id) }}" class="d-none">
+                                <form id="delete-detail" method="POST" action="" class="d-none">
                                     @csrf @method('DELETE')
                                 </form>
                             </td>
@@ -102,7 +102,7 @@
                 </tbody>
             </table>
         </div>
-        <a href="{{ route('invoices.createDetail', $invoice) }}" class="btn btn-success">
+        <a href="{{ route('invoiceDetails.create', $invoice) }}" class="btn btn-success">
             Agregar Detalle
         </a>
     </div>

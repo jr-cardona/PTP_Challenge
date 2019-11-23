@@ -1,11 +1,10 @@
 <?php
 Route::get('/', 'HomeController@index');
 
-Route::get('/facturas/{invoice}/detalle', 'InvoiceController@createDetail')->name('invoices.createDetail');
-Route::post('/facturas/{invoice}', 'InvoiceController@storeDetail')->name('invoices.storeDetail');
-Route::get('/facturas/{invoice}/detalle/editar', 'InvoiceController@editDetail')->name('invoices.editDetail');
-Route::put('/facturas/{invoice}/detalle', 'InvoiceController@updateDetail')->name('invoices.updateDetail');
-Route::delete('/facturas/{invoice}/detalle/', 'InvoiceController@destroyDetail')->name('invoices.destroyDetail');
+Route::resource('/facturas/{invoice}/producto', 'InvoiceProductController')
+    ->except('index', 'show')
+    ->names('invoiceDetails')
+    ->parameters(['producto' => 'product']);
 
 Route::resource('/facturas', 'InvoiceController')
     ->names('invoices')

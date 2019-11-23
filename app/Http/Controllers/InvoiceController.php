@@ -66,13 +66,6 @@ class InvoiceController extends Controller
         return redirect()->route('invoices.index')->with('message', 'Factura eliminada satisfactoriamente');
     }
 
-    public function createDetail(Invoice $invoice){
-        return view('invoices.details.create', [
-            'invoice' => $invoice,
-            'products' => Product::all()
-        ]);
-    }
-
     public function storeDetail(Invoice $invoice)
     {
         $invoice->products()->attach(request('product_id'), [
@@ -85,16 +78,11 @@ class InvoiceController extends Controller
     }
 
     public function editDetail(Invoice $invoice){
-        
+
     }
 
     public function updateDetail(Invoice $invoice){
-        $attributes = [
-            'quantity' => request('quantity'),
-            'unit_price' => request('unit_price'),
-            'total_price' => request('quantity') * request('unit_price')
-        ];
-        $invoice->products()->updateExistingPivot(request('product_id'), $attributes);
+
     }
 
     public function destroyDetail(Invoice $invoice, Product $product){
