@@ -8,7 +8,7 @@
     </div>
     <div class="row">
         <div class="col">
-            <a class="btn btn-primary" href="{{ route('invoices.create') }}">Crear nueva factura</a>
+            <a class="btn btn-success" href="{{ route('invoices.create') }}">Crear nueva factura</a>
         </div>
     </div>
     <br>

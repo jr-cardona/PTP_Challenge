@@ -22,7 +22,7 @@
                     <td class="table-dark td-title">Fecha de creación:</td>
                     <td class="td-content">{{ $invoice->created_at }}</td>
 
-                    <td class="table-dark td-title">Fecha de modificación:</td>
+                    <td class="table-dark td-title" nowrap>Fecha de modificación:</td>
                     <td class="td-content">{{ $invoice->updated_at }}</td>
                 </tr>
                 <tr>
@@ -81,7 +81,7 @@
                                 <a href="#" onclick="document.getElementById('delete-detail').submit()">
                                     <i class="fa fa-trash"></i>
                                 </a>
-                                <form id="delete-detail" method="POST" action="" class="d-none">
+                                <form id="delete-detail" method="POST" action="{{ route('invoiceDetails.destroy', [$invoice, $product]) }}" class="d-none">
                                     @csrf @method('DELETE')
                                 </form>
                             </td>

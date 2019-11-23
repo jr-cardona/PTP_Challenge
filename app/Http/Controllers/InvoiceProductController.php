@@ -48,8 +48,10 @@ class InvoiceProductController extends Controller
         return redirect()->route('invoices.show', $invoice)->with('message', 'Detalle actualizado satisfactoriamente');
     }
 
-    public function destroy($id)
+    public function destroy(Invoice $invoice, Product $product)
     {
-        //
+        $invoice->products()->detach($product->id);
+
+        return redirect()->route('invoices.show', $invoice)->with('message', 'Detalle actualizado satisfactoriamente');
     }
 }
