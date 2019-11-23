@@ -21,7 +21,7 @@
                 <th scope="col">Valor total</th>
                 <th scope="col">Estado</th>
                 <th scope="col">Cliente</th>
-                <th scope="col">Opciones</th>
+                <th scope="col" colspan="2">Opciones</th>
             </tr>
         </thead>
         <tbody>
@@ -41,9 +41,7 @@
                             {{ $invoice->client->name }}
                         </a>
                     </td>
-                    <td>
-                        @include('invoices._buttons')
-                    </td>
+                    @include('invoices._buttons')
                 </tr>
             @endforeach
         </tbody>

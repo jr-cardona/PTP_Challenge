@@ -1,7 +1,7 @@
 @csrf
 <div class="row">
     <div class="col">
-        <label for="name">Nombre</label>
+        <label for="name" class="required">Nombre</label>
         <input type="text" name="name" id="name" value="{{ old('name', $product->name) }}"
                class="form-control @error('name') is-invalid @enderror">
         @error('name')
