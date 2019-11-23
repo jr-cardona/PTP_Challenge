@@ -11107,10 +11107,18 @@ a.text-dark:focus {
 }
 
 .td-content{
+<<<<<<< HEAD
     width: 15%;
 }
 
 .td-title{
     width: 10%;
+=======
+    width: 25%;
+}
+
+.td-title{
+    width: 15%;
+>>>>>>> 93dfbbf4872a57f077739a604409a7c898885ad7
     text-align: right;
 }
