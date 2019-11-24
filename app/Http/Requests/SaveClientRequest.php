@@ -19,7 +19,7 @@ class SaveClientRequest extends FormRequest
             'sic_code' => [
                 'required',
                 'numeric',
-                'min:8',
+                'digits_between:8,12',
                 Rule::unique('clients')->ignore($this->route('client'))
             ],
             'type_document' => 'required',

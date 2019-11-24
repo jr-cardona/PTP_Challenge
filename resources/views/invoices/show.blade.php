@@ -41,7 +41,7 @@
                 </tr>
                 <tr>
                     <td class="table-dark td-title">Descripción:</td>
-                    <td class="td-content";>{{ $invoice->description }}</td>
+                    <td class="td-content">{{ $invoice->description }}</td>
 
                     <td class="table-dark td-title">Cliente:</td>
                     <td class="td-content">
@@ -63,6 +63,7 @@
                         <th class="text-right">PRECIO UNITARIO</th>
                         <th class="text-right">PRECIO TOTAL</th>
                         <th class="text-center"></th>
+                        <th></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -74,15 +75,15 @@
                             <td class="text-center">{{ $product->pivot->quantity }}</td>
                             <td class="text-right">${{ number_format($product->pivot->unit_price, 2) }}</td>
                             <td class="text-right">${{ number_format($product->pivot->total_price, 2) }}</td>
-                            <td class="text-center">
+                            <td class="td-button">
                                 <a href="{{ route('invoiceDetails.edit', [$invoice, $product]) }}">
                                     <i class="fa fa-edit"></i>
                                 </a>
-                                <a href="#" onclick="document.getElementById('delete-detail').submit()">
-                                    <i class="fa fa-trash"></i>
-                                </a>
-                                <form id="delete-detail" method="POST" action="{{ route('invoiceDetails.destroy', [$invoice, $product]) }}" class="d-none">
+                            </td>
+                            <td class="td-button">
+                                <form id="delete-detail" method="POST" action="{{ route('invoiceDetails.destroy', [$invoice, $product]) }}">
                                     @csrf @method('DELETE')
+                                    <button type="submit"><i class="fa fa-trash"></i></button>
                                 </form>
                             </td>
                         </tr>

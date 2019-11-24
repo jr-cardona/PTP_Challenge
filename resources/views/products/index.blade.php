@@ -8,7 +8,7 @@
     </div>
     <div class="row">
         <div class="col">
-            <a class="btn btn-primary" href="{{ route('products.create') }}">Crear nuevo producto</a>
+            <a class="btn btn-success" href="{{ route('products.create') }}">Crear nuevo producto</a>
         </div>
     </div>
     <br>

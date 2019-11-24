@@ -11099,26 +11099,3 @@ a.text-dark:focus {
     border-color: #dee2e6;
   }
 }
-
-.required:after{
-    content:'*';
-    color:red;
-    padding-left:5px;
-}
-
-.td-content{
-<<<<<<< HEAD
-    width: 15%;
-}
-
-.td-title{
-    width: 10%;
-=======
-    width: 25%;
-}
-
-.td-title{
-    width: 15%;
->>>>>>> 93dfbbf4872a57f077739a604409a7c898885ad7
-    text-align: right;
-}

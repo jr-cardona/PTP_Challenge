@@ -34,7 +34,7 @@
                     </td>
                     <td>{{ $invoice->issued_at }}</td>
                     <td>{{ $invoice->overdued_at }}</td>
-                    <td>${{ $invoice->getTotalAttribute() }}</td>
+                    <td>${{ number_format($invoice->getTotalAttribute(), 2) }}</td>
                     <td>{{ $invoice->status }}</td>
                     <td>
                         <a href="{{ route('clients.show', $invoice->client) }}" target="_blank">

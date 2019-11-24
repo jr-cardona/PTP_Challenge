@@ -4,26 +4,35 @@ namespace App\Http\Controllers;
 
 use App\Product;
 use App\Invoice;
-use Illuminate\Http\Request;
+use App\Http\Requests\SaveInvoiceDetailRequest;
+use Illuminate\Support\Facades\DB;
 
 class InvoiceProductController extends Controller
 {
 
     public function create(Invoice $invoice)
     {
-        return view('invoices.details.create', [
-            'invoice' => $invoice,
-            'products' => Product::all()
-        ]);
+        $products = DB::table('products')
+            ->whereNotExists(function ($query) use ($invoice) {
+                $query->select(DB::raw('invoice_product.id'))
+                    ->from('invoice_product')
+                    ->whereRaw('invoice_product.product_id = products.id and invoice_product.invoice_id ='.$invoice->id);
+            })
+            ->get();
+        if (isset($products)){
+            return view('invoices.details.create', [
+                'invoice' => $invoice,
+                'products' => $products
+            ]);
+        }
+        else{
+            return redirect()->route('invoices.show', $invoice)->with('message', 'No hay productos disponibles para agregar');
+        }
     }
 
-    public function store(Invoice $invoice)
+    public function store(Invoice $invoice, SaveInvoiceDetailRequest $request)
     {
-        $invoice->products()->attach(request('product_id'), [
-            'quantity' => request('quantity'),
-            'unit_price' => request('unit_price'),
-            'total_price' => request('quantity') * request('unit_price')
-        ]);
+        $invoice->products()->attach(request('product_id'), $request->validated());
 
         return redirect()->route('invoices.show', $invoice)->with('message', 'Detalle creado satisfactoriamente');
     }
@@ -52,6 +61,6 @@ class InvoiceProductController extends Controller
     {
         $invoice->products()->detach($product->id);
 
-        return redirect()->route('invoices.show', $invoice)->with('message', 'Detalle actualizado satisfactoriamente');
+        return redirect()->route('invoices.show', $invoice)->with('message', 'Detalle eliminado satisfactoriamente');
     }
 }

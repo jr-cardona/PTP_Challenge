@@ -14,10 +14,10 @@ class SaveInvoiceDetailRequest extends FormRequest
     public function rules()
     {
         return [
-            'invoice_id' => 'required',
             'product_id' => 'required',
-            'price' => 'required|numeric',
-            'quantity' => 'required|numeric'
+            'quantity' => 'required|numeric',
+            'unit_price' => 'required|numeric',
+            'total_price' => ''
         ];
     }
 }
