@@ -74,7 +74,7 @@
                             <td class="text-center">{{ $product->description }}</td>
                             <td class="text-center">{{ $product->pivot->quantity }}</td>
                             <td class="text-right">${{ number_format($product->pivot->unit_price, 2) }}</td>
-                            <td class="text-right">${{ number_format($product->pivot->total_price, 2) }}</td>
+                            <td class="text-right">${{ number_format($product->pivot->unit_price * $product->pivot->quantity, 2) }}</td>
                             <td class="td-button">
                                 <a href="{{ route('invoiceDetails.edit', [$invoice, $product]) }}">
                                     <i class="fa fa-edit"></i>

@@ -15,7 +15,11 @@
                             {{ $product->id }}
                         </span>
                     </div>
-                    @include('invoices.details._form')
+                    @include('invoices.details._form',
+                        ['quantity' => $invoice->products->find($product->id)->pivot->quantity,
+                        'unit_price' => $invoice->products->find($product->id)->pivot->unit_price
+                        ]
+                    )
                 </div>
             </form>
         </div>

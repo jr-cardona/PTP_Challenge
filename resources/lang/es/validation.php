@@ -193,5 +193,8 @@ return [
         'total'                 => 'valor total',
         'status'                => 'estado',
         'client_id'             => 'cliente',
+        'quantity'              => 'cantidad',
+        'unit_price'            => 'precio unitario',
+        'product_id'            => 'producto'
     ],
 ];

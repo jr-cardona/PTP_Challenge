@@ -4,7 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Product;
 use App\Invoice;
-use App\Http\Requests\SaveInvoiceDetailRequest;
+use App\Http\Requests\StoreInvoiceDetailRequest;
+use App\Http\Requests\UpdateInvoiceDetailRequest;
 use Illuminate\Support\Facades\DB;
 
 class InvoiceProductController extends Controller
@@ -19,7 +20,7 @@ class InvoiceProductController extends Controller
                     ->whereRaw('invoice_product.product_id = products.id and invoice_product.invoice_id ='.$invoice->id);
             })
             ->get();
-        if (isset($products)){
+        if (isset($products[0])){
             return view('invoices.details.create', [
                 'invoice' => $invoice,
                 'products' => $products
@@ -30,7 +31,7 @@ class InvoiceProductController extends Controller
         }
     }
 
-    public function store(Invoice $invoice, SaveInvoiceDetailRequest $request)
+    public function store(Invoice $invoice, StoreInvoiceDetailRequest $request)
     {
         $invoice->products()->attach(request('product_id'), $request->validated());
 
@@ -45,14 +46,9 @@ class InvoiceProductController extends Controller
         ]);
     }
 
-    public function update(Invoice $invoice, Product $product)
+    public function update(Invoice $invoice, Product $product, UpdateInvoiceDetailRequest $request)
     {
-        $attributes = [
-            'quantity' => request('quantity'),
-            'unit_price' => request('unit_price'),
-            'total_price' => request('quantity') * request('unit_price')
-        ];
-        $invoice->products()->updateExistingPivot($product->id, $attributes);
+        $invoice->products()->updateExistingPivot($product->id, $request->validated());
 
         return redirect()->route('invoices.show', $invoice)->with('message', 'Detalle actualizado satisfactoriamente');
     }

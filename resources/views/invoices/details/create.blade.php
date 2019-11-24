@@ -23,7 +23,7 @@
                             </span>
                         @enderror
                     </div>
-                    @include('invoices.details._form')
+                    @include('invoices.details._form', ['quantity' => "", 'unit_price' => ""])
             </form>
         </div>
     </div>
