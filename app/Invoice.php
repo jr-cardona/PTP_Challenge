@@ -19,6 +19,10 @@ class Invoice extends Model
         return $this->belongsToMany(Product::class)->withTimestamps()->withPivot('quantity', 'unit_price');
     }
 
+    public function state(){
+        return $this->belongsTo(State::class);
+    }
+
     public function getSubtotalAttribute(){
         $subtotal = 0;
         foreach($this->products as $product){

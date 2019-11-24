@@ -18,7 +18,7 @@ class SaveInvoiceRequest extends FormRequest
             'overdued_at' => 'required|date|after:issued_at',
             'received_at' => 'nullable|date',
             'vat' => 'required|numeric|between:0,100',
-            'status' => 'required',
+            'state_id' => 'required',
             'client_id' => 'required|numeric|exists:clients,id',
             'description' => 'max:255'
         ];

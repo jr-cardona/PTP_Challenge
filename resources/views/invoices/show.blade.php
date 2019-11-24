@@ -16,7 +16,7 @@
                     <td class="td-content">{{ $invoice->received_at == '' ? "Sin fecha" : $invoice->received_at }}</td>
 
                     <td class="table-dark td-title">Estado:</td>
-                    <td class="td-content">{{ $invoice->status }}</td>
+                    <td class="td-content">{{ $invoice->state->name }}</td>
                 </tr>
                 <tr>
                     <td class="table-dark td-title">Fecha de creación:</td>

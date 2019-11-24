@@ -16,7 +16,7 @@
                     <td class="td-content">{{ $client->name }}</td>
 
                     <td class="table-dark td-title">Documento:</td>
-                    <td class="td-content">{{ $client->type_document }} {{ $client->sic_code }}</td>
+                    <td class="td-content">{{ $client->type_document->name }} {{ $client->document }}</td>
                 </tr>
                 <tr>
                     <td class="table-dark td-title">Creado:</td>

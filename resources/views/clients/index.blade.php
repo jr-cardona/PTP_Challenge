@@ -28,7 +28,7 @@
                 <tr class="text-center">
                     <td>
                         <a href="{{ route('clients.show', $client) }}" target="_blank">
-                            {{ $client->type_document }} {{ $client->sic_code }}
+                            {{ $client->type_document->name }} {{ $client->document }}
                         </a>
                     </td>
                     <td>{{ $client->name }}</td>

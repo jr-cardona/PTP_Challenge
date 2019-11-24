@@ -36,7 +36,7 @@
     <div class="col">
         <label for="vat" class="required">IVA (%)</label>
         <input type="number" step="0.01" name="vat" id="vat" value="{{ old('vat', $invoice->vat) }}"
-               class="form-control @error('vat') is-invalid @enderror">
+               class="form-control @error('vat') is-invalid @enderror" placeholder="Ingresa el IVA">
         @error('vat')
             <span class="invalid-feedback" role="alert">
                 <strong>{{ $message }}</strong>
@@ -44,14 +44,16 @@
         @enderror
     </div>
     <div class="col">
-        <label for="status" class="required">Estado</label>
-        <select id="status" name="status" class="form-control @error('status') is-invalid @enderror">
-            <option value="">--</option>
-            <option value="Paid" {{ old('status', $invoice->status) == "Paid" ? 'selected' : '' }}>Pagada</option>
-            <option value="Draft" {{ old('status', $invoice->status) == "Draft" ? 'selected' : '' }}>Borrador</option>
-            <option value="Pending" {{ old('status', $invoice->status) == "Pending" ? 'selected' : '' }}>Pendiente</option>
+        <label for="state_id" class="required">Estado</label>
+        <select id="state_id" name="state_id" class="form-control @error('state_id') is-invalid @enderror">
+            <option value="">Selecciona el estado</option>
+            @foreach($states as $state)
+                <option value="{{ $state->id }}" {{old('state_id', $invoice->state_id) == $state->id ? 'selected' : ''}}>
+                    {{ $state->name }}
+                </option>
+            @endforeach
         </select>
-        @error('status')
+        @error('state_id')
             <span class="invalid-feedback" role="alert">
                 <strong>{{ $message }}</strong>
             </span>
@@ -60,7 +62,7 @@
     <div class="col">
         <label for="client_id" class="required">Cliente</label>
         <select type="text" name="client_id" id="client_id" class="form-control @error('client_id') is-invalid @enderror">
-            <option value="">--</option>
+            <option value="">Selecciona el cliente</option>
             @foreach($clients as $client)
                 <option value="{{ $client->id }}" {{ old('client_id', $invoice->client_id) == $client->id ? 'selected' : '' }}>
                     {{ $client->name }}

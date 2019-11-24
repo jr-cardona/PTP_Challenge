@@ -15,11 +15,10 @@ class CreateInvoicesTable extends Migration
             $table->dateTime('overdued_at');
             $table->dateTime('received_at')->nullable();
             $table->float('vat')->unsigned();
-            $table->double('total')->unsigned()->default(0);
-            $table->string('status');
             $table->string('description')->nullable();
+            $table->unsignedInteger('state_id');
             $table->unsignedInteger('client_id');
-            $table->unsignedInteger('provider_id')->nullable();
+            $table->foreign('state_id')->references('id')->on('states')->onDelete('cascade');
             $table->foreign('client_id')->references('id')->on('clients')->onDelete('cascade');
             $table->softDeletes();
         });

@@ -11,13 +11,14 @@ class CreateClientsTable extends Migration
         Schema::create('clients', function (Blueprint $table) {
             $table->increments('id');
             $table->timestamps();
-            $table->string('sic_code')->unique();
-            $table->string('type_document');
+            $table->string('document')->unique();
+            $table->unsignedInteger('type_document_id');
             $table->string('name');
             $table->string('phone_number')->nullable();
             $table->string('cell_phone_number');
             $table->string('address');
             $table->string('email')->unique();
+            $table->foreign('type_document_id')->references('id')->on('type_documents')->onDelete('cascade');
             $table->softDeletes();
         });
     }

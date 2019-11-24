@@ -16,13 +16,13 @@ class SaveClientRequest extends FormRequest
     public function rules()
     {
         return [
-            'sic_code' => [
+            'document' => [
                 'required',
                 'numeric',
                 'digits_between:8,12',
                 Rule::unique('clients')->ignore($this->route('client'))
             ],
-            'type_document' => 'required',
+            'type_document_id' => 'required',
             'name' => 'required|string|max:50',
             'phone_number' => 'numeric|digits:7|nullable',
             'cell_phone_number' => 'required|numeric||digits:10',

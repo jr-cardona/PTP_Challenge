@@ -1,10 +1,10 @@
 <?php
 Route::get('/', 'HomeController@index');
 
-Route::resource('/facturas/{invoice}/producto', 'InvoiceProductController')
+Route::resource('/facturas/{invoice}/detalle', 'InvoiceProductController')
     ->except('index', 'show')
     ->names('invoiceDetails')
-    ->parameters(['producto' => 'product']);
+    ->parameters(['detalle' => 'product']);
 
 Route::resource('/facturas', 'InvoiceController')
     ->names('invoices')
