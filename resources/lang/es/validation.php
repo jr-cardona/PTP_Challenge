@@ -181,8 +181,8 @@ return [
         'title'                 => 'título',
         'username'              => 'usuario',
         'year'                  => 'año',
-        'sic_code'              => 'número de documento',
-        'type_document'         => 'tipo de documento',
+        'document'              => 'número de documento',
+        'type_document_id'      => 'tipo de documento',
         'phone_number'          => 'número telefónico',
         'cell_phone_number'     => 'número de celular',
         'number'                => 'número de factura',
@@ -191,7 +191,10 @@ return [
         'overdued_at'           => 'fecha de vencimiento',
         'vat'                   => 'iva',
         'total'                 => 'valor total',
-        'status'                => 'estado',
+        'state_id'                => 'estado',
         'client_id'             => 'cliente',
+        'quantity'              => 'cantidad',
+        'unit_price'            => 'precio unitario',
+        'product_id'            => 'producto'
     ],
 ];

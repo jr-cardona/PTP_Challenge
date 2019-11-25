@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\State;
 use App\Client;
-use App\Http\Requests\SaveInvoiceRequest;
 use App\Invoice;
-use Illuminate\Http\Request;
+use App\Product;
+use App\Http\Requests\SaveInvoiceRequest;
 
 class InvoiceController extends Controller
 {
@@ -16,8 +17,9 @@ class InvoiceController extends Controller
 
     public function index()
     {
+        $invoices = Invoice::paginate(10);
         return view('invoices.index', [
-            'invoices' => Invoice::all()
+            'invoices' => $invoices
         ]);
     }
 
@@ -25,7 +27,8 @@ class InvoiceController extends Controller
     {
         return view('invoices.create', [
             'invoice' => new Invoice,
-            'clients' => Client::all()
+            'clients' => Client::all(),
+            'states' => State::all()
         ]);
     }
 
@@ -47,7 +50,8 @@ class InvoiceController extends Controller
     {
         return view('invoices.edit', [
             'invoice' => $invoice,
-            'clients' => Client::all()
+            'clients' => Client::all(),
+            'states' => State::all()
         ]);
     }
 
@@ -63,5 +67,28 @@ class InvoiceController extends Controller
         $invoice->delete();
 
         return redirect()->route('invoices.index')->with('message', 'Factura eliminada satisfactoriamente');
+    }
+
+    public function storeDetail(Invoice $invoice)
+    {
+        $invoice->products()->attach(request('product_id'), [
+            'quantity' => request('quantity'),
+            'unit_price' => request('unit_price'),
+            'total_price' => request('quantity') * request('unit_price')
+        ]);
+
+        return redirect()->route('invoices.show', $invoice)->with('message', 'Detalle creado satisfactoriamente');
+    }
+
+    public function editDetail(Invoice $invoice){
+
+    }
+
+    public function updateDetail(Invoice $invoice){
+
+    }
+
+    public function destroyDetail(Invoice $invoice, Product $product){
+        $invoice->products()->detach($product->id);
     }
 }

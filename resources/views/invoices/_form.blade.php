@@ -2,7 +2,7 @@
 <div class="row">
     <div class="col">
         <label for="received_at">Fecha de Recibo</label>
-        <input type="date" name="received_at" id="received_at" value="{{ date_format(new DateTime(old('received_at', $invoice->received_at)), 'Y-m-d') }}"
+        <input type="datetime-local" name="received_at" id="received_at" value="{{ old('received_at', $invoice->getDateAttribute($invoice->received_at)) }}"
                class="form-control @error('received_at') is-invalid @enderror">
         @error('received_at')
             <span class="invalid-feedback" role="alert">
@@ -11,8 +11,8 @@
         @enderror
     </div>
     <div class="col">
-        <label for="issued_at">Fecha de Expedición</label>
-        <input type="date" name="issued_at" id="issued_at" value="{{ date_format(new DateTime(old('issued_at', $invoice->issued_at)), 'Y-m-d') }}"
+        <label for="issued_at" class="required">Fecha de Expedición</label>
+        <input type="datetime-local" name="issued_at" id="issued_at" value="{{ old('issued_at', $invoice->getDateAttribute($invoice->issued_at)) }}"
                class="form-control @error('issued_at') is-invalid @enderror">
         @error('issued_at')
             <span class="invalid-feedback" role="alert">
@@ -21,8 +21,8 @@
         @enderror
     </div>
     <div class="col">
-        <label for="overdued_at">Fecha de Vencimiento</label>
-        <input type="date" name="overdued_at" id="overdued_at" value="{{ date_format(new DateTime(old('overdued_at', $invoice->overdued_at)), 'Y-m-d') }}"
+        <label for="overdued_at" class="required">Fecha de Vencimiento</label>
+        <input type="datetime-local" name="overdued_at" id="overdued_at" value="{{ old('overdued_at', $invoice->getDateAttribute($invoice->overdued_at)) }}"
                class="form-control @error('overdued_at') is-invalid @enderror">
         @error('overdued_at')
             <span class="invalid-feedback" role="alert">
@@ -34,9 +34,9 @@
 <br>
 <div class="row">
     <div class="col">
-        <label for="vat">IVA</label>
+        <label for="vat" class="required">IVA (%)</label>
         <input type="number" step="0.01" name="vat" id="vat" value="{{ old('vat', $invoice->vat) }}"
-               class="form-control @error('vat') is-invalid @enderror">
+               class="form-control @error('vat') is-invalid @enderror" placeholder="Ingresa el IVA">
         @error('vat')
             <span class="invalid-feedback" role="alert">
                 <strong>{{ $message }}</strong>
@@ -44,33 +44,25 @@
         @enderror
     </div>
     <div class="col">
-        <label for="total">Valor total</label>
-        <input type="number" name="total" id="total" value="{{ old('total', $invoice->total) }}"
-        class="form-control @error('total') is-invalid @enderror">
-        @error('total')
-            <span class="invalid-feedback" role="alert">
-                <strong>{{ $message }}</strong>
-            </span>
-        @enderror
-    </div>
-    <div class="col">
-        <label for="status">Estado</label>
-        <select id="status" name="status" class="form-control @error('status') is-invalid @enderror">
-            <option value="">--</option>
-            <option value="Paid" {{ old('status', $invoice->status) == "Paid" ? 'selected' : '' }}>Pagada</option>
-            <option value="Draft" {{ old('status', $invoice->status) == "Draft" ? 'selected' : '' }}>Borrador</option>
-            <option value="Pending" {{ old('status', $invoice->status) == "Pending" ? 'selected' : '' }}>Pendiente</option>
+        <label for="state_id" class="required">Estado</label>
+        <select id="state_id" name="state_id" class="form-control @error('state_id') is-invalid @enderror">
+            <option value="">Selecciona el estado</option>
+            @foreach($states as $state)
+                <option value="{{ $state->id }}" {{old('state_id', $invoice->state_id) == $state->id ? 'selected' : ''}}>
+                    {{ $state->name }}
+                </option>
+            @endforeach
         </select>
-        @error('status')
+        @error('state_id')
             <span class="invalid-feedback" role="alert">
                 <strong>{{ $message }}</strong>
             </span>
         @enderror
     </div>
     <div class="col">
-        <label for="client_id">Cliente</label>
+        <label for="client_id" class="required">Cliente</label>
         <select type="text" name="client_id" id="client_id" class="form-control @error('client_id') is-invalid @enderror">
-            <option value="">--</option>
+            <option value="">Selecciona el cliente</option>
             @foreach($clients as $client)
                 <option value="{{ $client->id }}" {{ old('client_id', $invoice->client_id) == $client->id ? 'selected' : '' }}>
                     {{ $client->name }}

@@ -6,7 +6,9 @@
             <h1>{{ $product->name }}</h1>
         </div>
         <div class="card-body">
-            @include('products._buttons')
+            <div class="btn-group">
+                @include('products._buttons')
+            </div>
             <p></p>
             <table class="table border-rounded table-sm">
                 <tr>

@@ -1,9 +1,14 @@
-<a href="{{ route('invoices.edit', $invoice) }}" class="btn btn-primary">
-    Editar
-</a>
-<a href="#" onclick="document.getElementById('delete-invoices').submit()" class="btn btn-danger">
-    Eliminar
-</a>
-<form id="delete-invoices" method="POST" action="{{ route('invoices.destroy', $invoice) }}" class="d-none">
-    @csrf @method('DELETE')
-</form>
+<td class="td-button">
+    <a href="{{ route('invoices.edit', $invoice) }}" class="btn btn-primary">
+        Editar
+    </a>
+</td>
+<td class="td-button">
+    <form method="POST" action="{{ route('invoices.destroy', $invoice) }}">
+        @csrf @method('DELETE')
+        <button type="submit" class="btn btn-danger">
+            Eliminar
+        </button>
+    </form>
+</td>
+

@@ -4,8 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Client;
 use App\Http\Requests\SaveClientRequest;
-use App\Http\Requests\SaveInvoiceRequest;
-use Illuminate\Http\Request;
+use App\TypeDocument;
 
 class ClientController extends Controller
 {
@@ -16,15 +15,17 @@ class ClientController extends Controller
 
     public function index()
     {
+        $clients = Client::paginate(10);
         return view('clients.index', [
-            'clients' => Client::all()
+            'clients' => $clients
         ]);
     }
 
     public function create()
     {
         return view('clients.create', [
-            'client' => new Client
+            'client' => new Client,
+            'type_documents' => TypeDocument::all()
         ]);
     }
 
@@ -45,7 +46,8 @@ class ClientController extends Controller
     public function edit(Client $client)
     {
         return view('clients.edit', [
-            'client' => $client
+            'client' => $client,
+            'type_documents' => TypeDocument::all()
         ]);
     }
 

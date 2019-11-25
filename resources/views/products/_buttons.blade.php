@@ -1,9 +1,14 @@
-<a href="{{ route('products.edit', $product) }}" class="btn btn-primary">
-    Editar
-</a>
-<a href="#" onclick="document.getElementById('delete-product').submit()" class="btn btn-danger">
-    Eliminar
-</a>
-<form id="delete-product" method="POST" action="{{ route('products.destroy', $product) }}" class="d-none">
-    @csrf @method('DELETE')
-</form>
+<td class="td-button">
+    <a href="{{ route('products.edit', $product) }}" class="btn btn-primary">
+        Editar
+    </a>
+</td>
+<td class="td-button">
+    <form method="POST" action="{{ route('products.destroy', $product) }}">
+        @csrf @method('DELETE')
+        <button type="submit" class="btn btn-danger">
+            Eliminar
+        </button>
+    </form>
+</td>
+
