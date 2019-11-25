@@ -191,7 +191,7 @@ return [
         'overdued_at'           => 'fecha de vencimiento',
         'vat'                   => 'iva',
         'total'                 => 'valor total',
-        'state_id'                => 'estado',
+        'state_id'              => 'estado',
         'client_id'             => 'cliente',
         'quantity'              => 'cantidad',
         'unit_price'            => 'precio unitario',

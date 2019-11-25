@@ -66,8 +66,8 @@
         @enderror
     </div>
     <div class="col">
-        <label for="seller_id" class="required">Cliente</label>
-        <select type="text" name="seller_id" id="seller_id" class="form-control @error('seller_id') is-invalid @enderror">
+        <label for="client_id" class="required">Cliente</label>
+        <select type="text" name="client_id" id="client_id" class="form-control @error('client_id') is-invalid @enderror">
             <option value="">Selecciona el Cliente</option>
             @foreach($clients as $client)
                 <option value="{{ $client->id }}" {{ old('client_id', $invoice->client_id) == $client->id ? 'selected' : '' }}>
