@@ -7,8 +7,6 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Invoice extends Model
 {
-    use SoftDeletes;
-
     protected $guarded = [];
 
     public function client(){

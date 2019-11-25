@@ -19,7 +19,6 @@ class CreateSellersTable extends Migration
             $table->string('address');
             $table->string('email')->unique();
             $table->foreign('type_document_id')->references('id')->on('type_documents')->onDelete('cascade');
-            $table->softDeletes();
         });
     }
 
