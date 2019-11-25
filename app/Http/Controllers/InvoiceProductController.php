@@ -11,6 +11,11 @@ use Illuminate\Support\Facades\DB;
 class InvoiceProductController extends Controller
 {
 
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+
     public function create(Invoice $invoice)
     {
         $products = DB::table('products')
