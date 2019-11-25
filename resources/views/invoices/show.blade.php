@@ -3,7 +3,7 @@
 @section('content')
     <div class="card">
         <div class="card-header">
-            <h1>Factura de venta No. {{ $invoice->id }}</h1>
+            <h1>Factura de venta No. {{ str_pad($invoice->id, 3, "0", STR_PAD_LEFT) }}</h1>
         </div>
         <div class="card-body">
             <div class="btn-group">
@@ -56,12 +56,12 @@
             <table class="table">
                 <thead>
                     <tr>
-                        <th class="text-center">CÓDIGO</th>
-                        <th class="text-center">NOMBRE</th>
-                        <th class="text-center">DESCRIPCIÓN</th>
-                        <th class="text-center">CANTIDAD</th>
-                        <th class="text-right">PRECIO UNITARIO</th>
-                        <th class="text-right">PRECIO TOTAL</th>
+                        <th class="text-center" nowrap>CÓDIGO</th>
+                        <th class="text-center" nowrap>NOMBRE</th>
+                        <th class="text-center" nowrap>DESCRIPCIÓN</th>
+                        <th class="text-center" nowrap>CANTIDAD</th>
+                        <th class="text-right" nowrap>PRECIO UNITARIO</th>
+                        <th class="text-right" nowrap>PRECIO TOTAL</th>
                         <th class="text-center"></th>
                         <th></th>
                     </tr>

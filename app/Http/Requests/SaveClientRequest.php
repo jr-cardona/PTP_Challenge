@@ -19,7 +19,7 @@ class SaveClientRequest extends FormRequest
             'document' => [
                 'required',
                 'numeric',
-                'digits_between:8,12',
+                'digits_between:8,10',
                 Rule::unique('clients')->ignore($this->route('client'))
             ],
             'type_document_id' => 'required|numeric|exists:type_documents,id',

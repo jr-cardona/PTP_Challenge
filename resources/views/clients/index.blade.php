@@ -12,6 +12,7 @@
         </div>
     </div>
     <br>
+    {{ $clients->links() }}
     <table class="table border-rounded table-striped">
         <thead class="thead-dark">
             <tr class="text-center">

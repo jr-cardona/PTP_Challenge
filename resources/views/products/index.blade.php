@@ -12,6 +12,7 @@
         </div>
     </div>
     <br>
+    {{ $products->links() }}
     <table class="table border-rounded table-striped">
         <thead class="thead-dark">
             <tr style="text-align: center;">

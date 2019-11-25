@@ -12,6 +12,6 @@ class InvoicesTableSeed extends Seeder
      */
     public function run()
     {
-        factory(Invoice::class, 10)->create();
+        factory(Invoice::class, 100)->create();
     }
 }

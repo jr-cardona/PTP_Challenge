@@ -7,7 +7,6 @@ use App\Client;
 use App\Invoice;
 use App\Product;
 use App\Http\Requests\SaveInvoiceRequest;
-use Illuminate\Http\Request;
 
 class InvoiceController extends Controller
 {
@@ -18,8 +17,9 @@ class InvoiceController extends Controller
 
     public function index()
     {
+        $invoices = Invoice::paginate(10);
         return view('invoices.index', [
-            'invoices' => Invoice::all()
+            'invoices' => $invoices
         ]);
     }
 
