@@ -195,6 +195,7 @@ return [
         'client_id'             => 'cliente',
         'quantity'              => 'cantidad',
         'unit_price'            => 'precio unitario',
-        'product_id'            => 'producto'
+        'product_id'            => 'producto',
+        'seller_id'             => 'vendedor'
     ],
 ];

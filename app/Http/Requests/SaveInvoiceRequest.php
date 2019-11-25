@@ -20,6 +20,7 @@ class SaveInvoiceRequest extends FormRequest
             'vat' => 'required|numeric|between:0,100',
             'state_id' => 'required|numeric|exists:states,id',
             'client_id' => 'required|numeric|exists:clients,id',
+            'seller_id' => 'required|numeric|exists:sellers,id',
             'description' => 'nullable|string|max:255'
         ];
     }

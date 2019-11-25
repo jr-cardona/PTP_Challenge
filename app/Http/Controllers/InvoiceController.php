@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\State;
 use App\Client;
+use App\Seller;
 use App\Invoice;
 use App\Product;
 use App\Http\Requests\SaveInvoiceRequest;
@@ -28,7 +29,8 @@ class InvoiceController extends Controller
         return view('invoices.create', [
             'invoice' => new Invoice,
             'clients' => Client::all(),
-            'states' => State::all()
+            'states' => State::all(),
+            'sellers' => Seller::all()
         ]);
     }
 
@@ -51,6 +53,7 @@ class InvoiceController extends Controller
         return view('invoices.edit', [
             'invoice' => $invoice,
             'clients' => Client::all(),
+            'sellers' => Seller::all(),
             'states' => State::all()
         ]);
     }
