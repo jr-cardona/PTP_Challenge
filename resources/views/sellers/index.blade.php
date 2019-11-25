@@ -1,14 +1,14 @@
 @extends('layouts.app')
-@section('title', 'Vendedors')
+@section('title', 'Vendedores')
 @section('content')
     <div class="row">
         <div class="col">
-            <h1>Vendedors</h1>
+            <h1>Vendedores</h1>
         </div>
     </div>
     <div class="row">
         <div class="col">
-            <a class="btn btn-success" href="{{ route('sellers.create') }}">Crear nuevo sellere</a>
+            <a class="btn btn-success" href="{{ route('sellers.create') }}">Crear nuevo vendedor</a>
         </div>
     </div>
     <br>

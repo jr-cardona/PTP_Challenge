@@ -15,6 +15,10 @@ class Invoice extends Model
         return $this->belongsTo(Client::class);
     }
 
+    public function seller(){
+        return $this->belongsTo(Seller::class);
+    }
+
     public function products(){
         return $this->belongsToMany(Product::class)->withTimestamps()->withPivot('quantity', 'unit_price');
     }

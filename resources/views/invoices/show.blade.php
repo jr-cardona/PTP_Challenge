@@ -40,8 +40,12 @@
                     <td class="td-content">${{ number_format($invoice->getTotalAttribute(), 2) }}</td>
                 </tr>
                 <tr>
-                    <td class="table-dark td-title">Descripción:</td>
-                    <td class="td-content">{{ $invoice->description }}</td>
+                    <td class="table-dark td-title">Vendedor:</td>
+                    <td class="td-content">
+                        <a href="{{ route('sellers.show', $invoice->seller) }}" target="_blank">
+                            {{ $invoice->seller->name }}
+                        </a>
+                    </td>
 
                     <td class="table-dark td-title">Cliente:</td>
                     <td class="td-content">
@@ -49,6 +53,10 @@
                             {{ $invoice->client->name }}
                         </a>
                     </td>
+                </tr>
+                <tr>
+                    <td class="table-dark td-title">Descripción:</td>
+                    <td class="td-content">{{ $invoice->description }}</td>
                 </tr>
             </table>
         </div>

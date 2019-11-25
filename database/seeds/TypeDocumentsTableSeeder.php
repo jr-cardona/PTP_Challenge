@@ -17,6 +17,10 @@ class TypeDocumentsTableSeeder extends Seeder
             'fullname' => 'Cédula de ciudadanía'
         ]);
         TypeDocument::create([
+            'name' => 'NIT',
+            'fullname' => 'NIT'
+        ]);
+        TypeDocument::create([
             'name' => 'TI',
             'fullname' => 'Tarjeta de identidad'
         ]);

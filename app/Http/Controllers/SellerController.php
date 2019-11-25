@@ -33,7 +33,7 @@ class SellerController extends Controller
     {
         Seller::create($request->validated());
 
-        return redirect()->route('sellers.index')->with('message', 'Sellere creado satisfactoriamente');
+        return redirect()->route('sellers.index')->with('message', 'Vendedor creado satisfactoriamente');
     }
 
     public function show(Seller $seller)
@@ -55,13 +55,13 @@ class SellerController extends Controller
     {
         $seller->update($request->validated());
 
-        return redirect()->route('sellers.show', $seller)->with('message', 'Sellere actualizado satisfactoriamente');
+        return redirect()->route('sellers.show', $seller)->with('message', 'Vendedor actualizado satisfactoriamente');
     }
 
     public function destroy(Seller $seller)
     {
         $seller->delete();
 
-        return redirect()->route('sellers.index')->with('message', 'Sellere eliminado satisfactoriamente');
+        return redirect()->route('sellers.index')->with('message', 'Vendedor eliminado satisfactoriamente');
     }
 }

@@ -1,9 +1,9 @@
-<td style="width:10px">
+<td class="td-button">
     <a href="{{ route('sellers.edit', $seller) }}" class="btn btn-primary">
         Editar
     </a>
 </td>
-<td style="width:10px">
+<td class="td-button">
     <form method="POST" action="{{ route('sellers.destroy', $seller) }}">
         @csrf @method('DELETE')
         <button type="submit" class="btn btn-danger">
