@@ -6,24 +6,23 @@ use Illuminate\Support\Facades\Schema;
 
 class CreateSellersTable extends Migration
 {
-    /**
-     * Run the migrations.
-     *
-     * @return void
-     */
     public function up()
     {
         Schema::create('sellers', function (Blueprint $table) {
-            $table->bigIncrements('id');
+            $table->increments('id');
             $table->timestamps();
+            $table->string('document')->unique();
+            $table->unsignedInteger('type_document_id');
+            $table->string('name');
+            $table->string('phone_number')->nullable();
+            $table->string('cell_phone_number');
+            $table->string('address');
+            $table->string('email')->unique();
+            $table->foreign('type_document_id')->references('id')->on('type_documents')->onDelete('cascade');
+            $table->softDeletes();
         });
     }
 
-    /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
     public function down()
     {
         Schema::dropIfExists('sellers');
