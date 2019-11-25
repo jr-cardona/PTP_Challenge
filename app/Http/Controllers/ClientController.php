@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Client;
 use App\Http\Requests\SaveClientRequest;
 use App\TypeDocument;
-use Illuminate\Http\Request;
 
 class ClientController extends Controller
 {

@@ -18,6 +18,10 @@ Route::resource('/productos', 'ProductController')
     ->names('products')
     ->parameters(['productos' => 'product']);
 
+Route::resource('vendedores', 'SellerController')
+    ->names('sellers')
+    ->parameters(['vendedores' => 'seller']);
+
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
