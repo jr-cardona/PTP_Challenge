@@ -28,7 +28,7 @@
             @foreach($sellers as $seller)
                 <tr class="text-center">
                     <td>
-                        <a href="{{ route('sellers.show', $seller) }}" target="_blank">
+                        <a href="{{ route('sellers.show', $seller) }}">
                             {{ $seller->type_document->name }} {{ $seller->document }}
                         </a>
                     </td>
@@ -36,9 +36,17 @@
                     <td>{{ $seller->address }}</td>
                     <td>{{ $seller->email }}</td>
                     <td>{{ $seller->cell_phone_number }}</td>
-                    @include('sellers._buttons')
+                    <td class="btn-group btn-group-sm" nowrap>
+                        @include('sellers._buttons')
+                    </td>
                 </tr>
             @endforeach
         </tbody>
     </table>
 @endsection
+@push('modals')
+    @include('partials.__confirm_delete_modal')
+@endpush
+@push('scripts')
+    <script src="{{ asset(mix('js/delete-modal.js')) }}"></script>
+@endpush
