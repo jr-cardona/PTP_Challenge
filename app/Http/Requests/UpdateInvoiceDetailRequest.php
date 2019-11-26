@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class SaveInvoiceDetailRequest extends FormRequest
+class UpdateInvoiceDetailRequest extends FormRequest
 {
     public function authorize()
     {
@@ -14,10 +14,8 @@ class SaveInvoiceDetailRequest extends FormRequest
     public function rules()
     {
         return [
-            'invoice_id' => 'required',
-            'product_id' => 'required',
-            'price' => 'required|numeric',
-            'quantity' => 'required|numeric'
+            'quantity' => 'required|numeric|min:1|max:9999',
+            'unit_price' => 'required|numeric|min:50|max:999999999.99',
         ];
     }
 }

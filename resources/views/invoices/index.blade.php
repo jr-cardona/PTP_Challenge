@@ -12,31 +12,32 @@
         </div>
     </div>
     <br>
+    {{ $invoices->links() }}
     <table class="table border-rounded table-striped">
         <thead class="thead-dark">
             <tr class="text-center">
-                <th scope="col">Título</th>
+                <th scope="col" nowrap>Título</th>
                 <th scope="col" nowrap>Fecha de expedición</th>
                 <th scope="col" nowrap>Fecha de vencimiento</th>
-                <th scope="col">Valor total</th>
-                <th scope="col">Estado</th>
-                <th scope="col">Cliente</th>
-                <th scope="col" colspan="2">Opciones</th>
+                <th scope="col" nowrap>Valor total</th>
+                <th scope="col" nowrap>Estado</th>
+                <th scope="col" nowrap>Cliente</th>
+                <th scope="col" nowrap colspan="2">Opciones</th>
             </tr>
         </thead>
         <tbody>
             @foreach($invoices as $invoice)
                 <tr class="text-center">
-                    <td>
+                    <td nowrap>
                         <a href="{{ route('invoices.show', $invoice) }}" target="_blank">
-                            Factura de venta No. {{ $invoice->id }}
+                            Factura de venta No. {{ str_pad($invoice->id, 3, "0", STR_PAD_LEFT) }}
                         </a>
                     </td>
-                    <td>{{ $invoice->issued_at }}</td>
-                    <td>{{ $invoice->overdued_at }}</td>
-                    <td>${{ $invoice->getTotalAttribute() }}</td>
-                    <td>{{ $invoice->status }}</td>
-                    <td>
+                    <td nowrap>{{ $invoice->issued_at }}</td>
+                    <td nowrap>{{ $invoice->overdued_at }}</td>
+                    <td nowrap>${{ number_format($invoice->getTotalAttribute(), 2) }}</td>
+                    <td nowrap>{{ $invoice->state->name }}</td>
+                    <td nowrap>
                         <a href="{{ route('clients.show', $invoice->client) }}" target="_blank">
                             {{ $invoice->client->name }}
                         </a>

@@ -8,10 +8,11 @@
     </div>
     <div class="row">
         <div class="col">
-            <a class="btn btn-primary" href="{{ route('clients.create') }}">Crear nuevo cliente</a>
+            <a class="btn btn-success" href="{{ route('clients.create') }}">Crear nuevo cliente</a>
         </div>
     </div>
     <br>
+    {{ $clients->links() }}
     <table class="table border-rounded table-striped">
         <thead class="thead-dark">
             <tr class="text-center">
@@ -28,7 +29,7 @@
                 <tr class="text-center">
                     <td>
                         <a href="{{ route('clients.show', $client) }}" target="_blank">
-                            {{ $client->type_document }} {{ $client->sic_code }}
+                            {{ $client->type_document->name }} {{ $client->document }}
                         </a>
                     </td>
                     <td>{{ $client->name }}</td>

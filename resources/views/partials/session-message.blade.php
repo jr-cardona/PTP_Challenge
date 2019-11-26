@@ -1,3 +1,3 @@
 @if(session('message'))
-    {{ session('message') }}
+    <h3 style="color:red">{{ session('message') }}</h3>
 @endif

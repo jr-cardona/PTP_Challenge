@@ -8,10 +8,11 @@
     </div>
     <div class="row">
         <div class="col">
-            <a class="btn btn-primary" href="{{ route('products.create') }}">Crear nuevo producto</a>
+            <a class="btn btn-success" href="{{ route('products.create') }}">Crear nuevo producto</a>
         </div>
     </div>
     <br>
+    {{ $products->links() }}
     <table class="table border-rounded table-striped">
         <thead class="thead-dark">
             <tr style="text-align: center;">

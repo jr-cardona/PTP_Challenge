@@ -7,26 +7,30 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Invoice extends Model
 {
-    use SoftDeletes;
-
     protected $guarded = [];
 
     public function client(){
         return $this->belongsTo(Client::class);
     }
 
+    public function seller(){
+        return $this->belongsTo(Seller::class);
+    }
+
     public function products(){
-        return $this->belongsToMany(Product::class)->withTimestamps()->withPivot('quantity', 'unit_price', 'total_price');
+        return $this->belongsToMany(Product::class)->withTimestamps()->withPivot('quantity', 'unit_price');
+    }
+
+    public function state(){
+        return $this->belongsTo(State::class);
     }
 
     public function getSubtotalAttribute(){
-        if (isset($this->products[0])){
-            return $this->products[0]->pivot
-                ->where('invoice_id', $this->id)
-                ->sum('total_price');
-        }else{
-            return 0;
+        $subtotal = 0;
+        foreach($this->products as $product){
+            $subtotal += $product->pivot->unit_price * $product->pivot->quantity;
         }
+        return $subtotal;
     }
 
     public function getIvaAmountAttribute(){

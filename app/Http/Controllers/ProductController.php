@@ -10,13 +10,14 @@ class ProductController extends Controller
 {
     public function __construct()
     {
-        //$this->middleware('auth');
+        $this->middleware('auth');
     }
 
     public function index()
     {
+        $products = Product::paginate(10);
         return view('products.index', [
-            'products' => Product::all()
+            'products' => $products
         ]);
     }
 

@@ -2,23 +2,25 @@
 
 namespace App\Http\Controllers;
 
+use App\State;
 use App\Client;
+use App\Seller;
 use App\Invoice;
 use App\Product;
 use App\Http\Requests\SaveInvoiceRequest;
-use Illuminate\Http\Request;
 
 class InvoiceController extends Controller
 {
     public function __construct()
     {
-        //$this->middleware('auth');
+        $this->middleware('auth');
     }
 
     public function index()
     {
+        $invoices = Invoice::paginate(10);
         return view('invoices.index', [
-            'invoices' => Invoice::all()
+            'invoices' => $invoices
         ]);
     }
 
@@ -26,7 +28,9 @@ class InvoiceController extends Controller
     {
         return view('invoices.create', [
             'invoice' => new Invoice,
-            'clients' => Client::all()
+            'clients' => Client::all(),
+            'states' => State::all(),
+            'sellers' => Seller::all()
         ]);
     }
 
@@ -48,7 +52,9 @@ class InvoiceController extends Controller
     {
         return view('invoices.edit', [
             'invoice' => $invoice,
-            'clients' => Client::all()
+            'clients' => Client::all(),
+            'sellers' => Seller::all(),
+            'states' => State::all()
         ]);
     }
 

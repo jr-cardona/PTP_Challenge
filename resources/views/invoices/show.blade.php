@@ -3,7 +3,7 @@
 @section('content')
     <div class="card">
         <div class="card-header">
-            <h1>Factura de venta No. {{ $invoice->id }}</h1>
+            <h1>Factura de venta No. {{ str_pad($invoice->id, 3, "0", STR_PAD_LEFT) }}</h1>
         </div>
         <div class="card-body">
             <div class="btn-group">
@@ -16,7 +16,7 @@
                     <td class="td-content">{{ $invoice->received_at == '' ? "Sin fecha" : $invoice->received_at }}</td>
 
                     <td class="table-dark td-title">Estado:</td>
-                    <td class="td-content">{{ $invoice->status }}</td>
+                    <td class="td-content">{{ $invoice->state->name }}</td>
                 </tr>
                 <tr>
                     <td class="table-dark td-title">Fecha de creación:</td>
@@ -40,8 +40,12 @@
                     <td class="td-content">${{ number_format($invoice->getTotalAttribute(), 2) }}</td>
                 </tr>
                 <tr>
-                    <td class="table-dark td-title">Descripción:</td>
-                    <td class="td-content";>{{ $invoice->description }}</td>
+                    <td class="table-dark td-title">Vendedor:</td>
+                    <td class="td-content">
+                        <a href="{{ route('sellers.show', $invoice->seller) }}" target="_blank">
+                            {{ $invoice->seller->name }}
+                        </a>
+                    </td>
 
                     <td class="table-dark td-title">Cliente:</td>
                     <td class="td-content">
@@ -50,19 +54,24 @@
                         </a>
                     </td>
                 </tr>
+                <tr>
+                    <td class="table-dark td-title">Descripción:</td>
+                    <td class="td-content">{{ $invoice->description }}</td>
+                </tr>
             </table>
         </div>
         <div id="details" class="col-md-12">
             <table class="table">
                 <thead>
                     <tr>
-                        <th class="text-center">CÓDIGO</th>
-                        <th class="text-center">NOMBRE</th>
-                        <th class="text-center">DESCRIPCIÓN</th>
-                        <th class="text-center">CANTIDAD</th>
-                        <th class="text-right">PRECIO UNITARIO</th>
-                        <th class="text-right">PRECIO TOTAL</th>
+                        <th class="text-center" nowrap>CÓDIGO</th>
+                        <th class="text-center" nowrap>NOMBRE</th>
+                        <th class="text-center" nowrap>DESCRIPCIÓN</th>
+                        <th class="text-center" nowrap>CANTIDAD</th>
+                        <th class="text-right" nowrap>PRECIO UNITARIO</th>
+                        <th class="text-right" nowrap>PRECIO TOTAL</th>
                         <th class="text-center"></th>
+                        <th></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -73,16 +82,16 @@
                             <td class="text-center">{{ $product->description }}</td>
                             <td class="text-center">{{ $product->pivot->quantity }}</td>
                             <td class="text-right">${{ number_format($product->pivot->unit_price, 2) }}</td>
-                            <td class="text-right">${{ number_format($product->pivot->total_price, 2) }}</td>
-                            <td class="text-center">
+                            <td class="text-right">${{ number_format($product->pivot->unit_price * $product->pivot->quantity, 2) }}</td>
+                            <td class="td-button">
                                 <a href="{{ route('invoiceDetails.edit', [$invoice, $product]) }}">
                                     <i class="fa fa-edit"></i>
                                 </a>
-                                <a href="#" onclick="document.getElementById('delete-detail').submit()">
-                                    <i class="fa fa-trash"></i>
-                                </a>
-                                <form id="delete-detail" method="POST" action="{{ route('invoiceDetails.destroy', [$invoice, $product]) }}" class="d-none">
+                            </td>
+                            <td class="td-button">
+                                <form id="delete-detail" method="POST" action="{{ route('invoiceDetails.destroy', [$invoice, $product]) }}">
                                     @csrf @method('DELETE')
+                                    <button type="submit"><i class="fa fa-trash"></i></button>
                                 </form>
                             </td>
                         </tr>
