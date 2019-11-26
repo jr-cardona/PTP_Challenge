@@ -1,12 +1,16 @@
 @extends('layouts.app')
 @section('title', 'Ver Cliente')
 @section('content')
+    <a href="{{ route('clients.index') }}" class="btn btn-secondary">
+        <i class="fa fa-arrow-left"></i> Volver
+    </a>
+    <p></p>
     <div class="card">
         <div class="card-header">
             <h1>{{ $client->name }}</h1>
         </div>
         <div class="card-body">
-            <div class="btn-group">
+            <div class="btn-group btn-group-sm">
                 @include('clients._buttons')
             </div>
             <p></p>
@@ -61,3 +65,9 @@
         </div>
     </div>
 @endsection
+@push('modals')
+    @include('partials.__confirm_delete_modal')
+@endpush
+@push('scripts')
+    <script src="{{ asset('js/delete-modal.js') }}"></script>
+@endpush

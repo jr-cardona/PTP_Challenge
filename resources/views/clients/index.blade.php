@@ -21,14 +21,14 @@
                 <th scope="col">Dirección</th>
                 <th scope="col">Correo electrónico</th>
                 <th scope="col">Celular</th>
-                <th scope="col" colspan="2">Opciones</th>
+                <th scope="col">Opciones</th>
             </tr>
         </thead>
         <tbody>
             @foreach($clients as $client)
                 <tr class="text-center">
                     <td>
-                        <a href="{{ route('clients.show', $client) }}" target="_blank">
+                        <a href="{{ route('clients.show', $client) }}">
                             {{ $client->type_document->name }} {{ $client->document }}
                         </a>
                     </td>
@@ -36,9 +36,17 @@
                     <td>{{ $client->address }}</td>
                     <td>{{ $client->email }}</td>
                     <td>{{ $client->cell_phone_number }}</td>
-                    @include('clients._buttons')
+                    <td class="btn-group btn-group-sm" nowrap>
+                        @include('clients._buttons')
+                    </td>
                 </tr>
             @endforeach
         </tbody>
     </table>
 @endsection
+@push('modals')
+    @include('partials.__confirm_delete_modal')
+@endpush
+@push('scripts')
+    <script src="{{ asset(mix('js/delete-modal.js')) }}"></script>
+@endpush
