@@ -14,6 +14,7 @@
 
 </head>
 <body>
+    @stack('modals')
     <div id="app" class="container">
         <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
             <a class="navbar-brand" href="{{ route('home') }}">
@@ -82,6 +83,9 @@
             </div>
         </main>
     </div>
-    <script src="{{ mix('js/app.js') }}"></script>
+    <script src="{{ asset(mix('js/manifest.js')) }}"></script>
+    <script src="{{ asset(mix('js/vendor.js')) }}"></script>
+    <script src="{{ asset(mix('js/app.js')) }}"></script>
+    @stack('scripts')
 </body>
 </html>
