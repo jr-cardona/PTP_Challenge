@@ -22,14 +22,14 @@
                 <th scope="col" nowrap>Valor total</th>
                 <th scope="col" nowrap>Estado</th>
                 <th scope="col" nowrap>Cliente</th>
-                <th scope="col" nowrap colspan="2">Opciones</th>
+                <th scope="col" nowrap>Opciones</th>
             </tr>
         </thead>
         <tbody>
             @foreach($invoices as $invoice)
                 <tr class="text-center">
                     <td nowrap>
-                        <a href="{{ route('invoices.show', $invoice) }}" target="_blank">
+                        <a href="{{ route('invoices.show', $invoice) }}">
                             Factura de venta No. {{ str_pad($invoice->id, 3, "0", STR_PAD_LEFT) }}
                         </a>
                     </td>
@@ -42,9 +42,17 @@
                             {{ $invoice->client->name }}
                         </a>
                     </td>
-                    @include('invoices._buttons')
+                    <td class="btn-group btn-group-sm" nowrap>
+                        @include('invoices._buttons')
+                    </td>
                 </tr>
             @endforeach
         </tbody>
     </table>
 @endsection
+@push('modals')
+    @include('partials.__confirm_delete_modal')
+@endpush
+@push('scripts')
+    <script src="{{ asset(mix('js/delete-modal.js')) }}"></script>
+@endpush
