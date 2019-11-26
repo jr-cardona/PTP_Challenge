@@ -21,7 +21,7 @@
                 <th scope="col">Descripción</th>
                 <th scope="col" nowrap>Fecha de creación</th>
                 <th scope="col" nowrap>Fecha de modificación</th>
-                <th scope="col" nowrap colspan="2">Opciones</th>
+                <th scope="col" nowrap>Opciones</th>
 
             </tr>
         </thead>
@@ -30,16 +30,24 @@
                 <tr style="text-align: center;">
                     <td>{{ $product->id }}</td>
                     <td>
-                        <a href="{{ route('products.show', $product) }}" target="_blank">
+                        <a href="{{ route('products.show', $product) }}">
                             {{ $product->name }}
                         </a>
                     </td>
                     <td>{{ $product->description }}</td>
                     <td>{{ $product->created_at }}</td>
                     <td>{{ $product->updated_at }}</td>
-                    @include('products._buttons')
+                    <td class="btn-group btn-group-sm" nowrap>
+                        @include('products._buttons')
+                    </td>
                 </tr>
             @endforeach
         </tbody>
     </table>
 @endsection
+@push('modals')
+    @include('partials.__confirm_delete_modal')
+@endpush
+@push('scripts')
+    <script src="{{ asset(mix('js/delete-modal.js')) }}"></script>
+@endpush

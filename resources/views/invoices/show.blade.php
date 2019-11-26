@@ -1,12 +1,16 @@
 @extends('layouts.app')
 @section('title', 'Ver Factura')
 @section('content')
+    <a href="{{ route('invoices.index') }}" class="btn btn-secondary">
+        <i class="fa fa-arrow-left"></i> Volver
+    </a>
+    <p></p>
     <div class="card">
         <div class="card-header">
             <h1>Factura de venta No. {{ str_pad($invoice->id, 3, "0", STR_PAD_LEFT) }}</h1>
         </div>
         <div class="card-body">
-            <div class="btn-group">
+            <div class="btn-group btn-group-sm">
                 @include('invoices._buttons')
             </div>
             <p></p>
@@ -116,3 +120,9 @@
         </a>
     </div>
 @endsection
+@push('modals')
+    @include('partials.__confirm_delete_modal')
+@endpush
+@push('scripts')
+    <script src="{{ asset('js/delete-modal.js') }}"></script>
+@endpush
