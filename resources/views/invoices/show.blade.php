@@ -5,15 +5,16 @@
         <i class="fa fa-arrow-left"></i> Volver
     </a>
     <p></p>
-    <div class="card">
-        <div class="card-header">
-            <h1>Factura de venta No. {{ str_pad($invoice->id, 3, "0", STR_PAD_LEFT) }}</h1>
+    <div class="card card-default">
+        <div class="card-header d-flex justify-content-between">
+            <h3 class="card-title mb-0">Factura de venta No. {{ str_pad($invoice->id, 3, "0", STR_PAD_LEFT) }}</h3>
+            <div>
+                <div class="btn-group btn-group-sm">
+                    @include('invoices._buttons')
+                </div>
+            </div>
         </div>
         <div class="card-body">
-            <div class="btn-group btn-group-sm">
-                @include('invoices._buttons')
-            </div>
-            <p></p>
             <table class="table border-rounded table-sm">
                 <tr>
                     <td class="table-dark td-title">Fecha de recibo:</td>
@@ -75,7 +76,6 @@
                         <th class="text-right" nowrap>PRECIO UNITARIO</th>
                         <th class="text-right" nowrap>PRECIO TOTAL</th>
                         <th class="text-center"></th>
-                        <th></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -87,15 +87,18 @@
                             <td class="text-center">{{ $product->pivot->quantity }}</td>
                             <td class="text-right">${{ number_format($product->pivot->unit_price, 2) }}</td>
                             <td class="text-right">${{ number_format($product->pivot->unit_price * $product->pivot->quantity, 2) }}</td>
-                            <td class="td-button">
-                                <a href="{{ route('invoiceDetails.edit', [$invoice, $product]) }}">
-                                    <i class="fa fa-edit"></i>
-                                </a>
-                            </td>
-                            <td class="td-button">
-                                <form id="delete-detail" method="POST" action="{{ route('invoiceDetails.destroy', [$invoice, $product]) }}">
-                                    @csrf @method('DELETE')
-                                    <button type="submit"><i class="fa fa-trash"></i></button>
+                            <td class="text-right">
+                                <div class="btn-group btn-group-sm" role="group">
+                                    <a href="{{ route('invoiceDetails.edit', [$invoice, $product]) }}" class="btn btn-link" title="Editar">
+                                        <i class="fa fa-edit"></i>
+                                    </a>
+                                    <button type="submit" form="deleteDetail{{ $product->id }}" class="btn btn-link text-danger" title="Eliminar">
+                                        <i class="fa fa-trash"></i>
+                                    </button>
+                                </div>
+                                <form id="deleteDetail{{ $product->id }}" action="{{ route('invoiceDetails.destroy', [$invoice, $product]) }}" method="post">
+                                    @method('DELETE')
+                                    @csrf()
                                 </form>
                             </td>
                         </tr>
