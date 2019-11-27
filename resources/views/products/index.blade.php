@@ -13,7 +13,7 @@
     </div>
     <br>
     {{ $products->links() }}
-    <table class="table border-rounded table-striped">
+    <table class="table border-rounded table-striped table-hover">
         <thead class="thead-dark">
             <tr style="text-align: center;">
                 <th scope="col">Código</th>
