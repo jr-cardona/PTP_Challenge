@@ -18,7 +18,7 @@ class Invoice extends Model
     }
 
     public function products(){
-        return $this->belongsToMany(Product::class)->withTimestamps()->withPivot('quantity', 'unit_price');
+        return $this->belongsToMany(Product::class)->withTimestamps()->withPivot('quantity', 'unit_price')->orderBy('id');
     }
 
     public function state(){
