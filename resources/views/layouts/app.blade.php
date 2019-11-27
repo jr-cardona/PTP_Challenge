@@ -34,10 +34,10 @@
                         <a class="nav-link" href="{{ route('clients.index') }}">Clientes</a>
                     </li>
                     <li>
-                        <a class="nav-link" href="{{ route('products.index') }}">Productos</a>
+                        <a class="nav-link" href="{{ route('sellers.index') }}">Vendedores</a>
                     </li>
                     <li>
-                        <a class="nav-link" href="{{ route('sellers.index') }}">Vendedores</a>
+                        <a class="nav-link" href="{{ route('products.index') }}">Productos</a>
                     </li>
                 </ul>
 

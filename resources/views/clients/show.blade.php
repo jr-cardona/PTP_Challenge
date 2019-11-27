@@ -5,15 +5,16 @@
         <i class="fa fa-arrow-left"></i> Volver
     </a>
     <p></p>
-    <div class="card">
-        <div class="card-header">
-            <h1>{{ $client->name }}</h1>
+    <div class="card card-default">
+        <div class="card-header d-flex justify-content-between">
+            <h3 class="card-title mb-0">{{ $client->name }}</h3>
+            <div>
+                <div class="btn-group btn-group-sm">
+                    @include('clients._buttons')
+                </div>
+            </div>
         </div>
         <div class="card-body">
-            <div class="btn-group btn-group-sm">
-                @include('clients._buttons')
-            </div>
-            <p></p>
             <table class="table border-rounded table-sm">
                 <tr>
                     <td class="table-dark td-title">Nombre:</td>
