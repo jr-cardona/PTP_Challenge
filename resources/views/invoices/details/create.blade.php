@@ -24,6 +24,9 @@
                         @enderror
                     </div>
                     @include('invoices.details._form', ['quantity' => "", 'unit_price' => ""])
+                </div>
+                <br>
+                @include('invoices.details._buttons')
             </form>
         </div>
     </div>
