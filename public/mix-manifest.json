@@ -1,7 +1,10 @@
 {
-    "/js/manifest.js": "/js/manifest.js?id=7db827d654313dce4250",
-    "/js/app.js": "/js/app.js?id=dba3bb0d421d508605d3",
-    "/css/app.css": "/css/app.css?id=772bc96a856f534707ff",
-    "/js/delete-modal.js": "/js/delete-modal.js?id=7a8d3bb01cee223b5aaf",
-    "/js/vendor.js": "/js/vendor.js?id=e0b28198a00cffce9490"
+    "/js/app.js": "/js/app.js",
+    "/css/app.css": "/css/app.css",
+    "/js/delete-modal.js": "/js/delete-modal.js",
+    "/js/manifest.js": "/js/manifest.js",
+    "/js/search-client.js": "/js/search-client.js",
+    "/js/search-product.js": "/js/search-product.js",
+    "/js/search-seller.js": "/js/search-seller.js",
+    "/js/vendor.js": "/js/vendor.js"
 }
