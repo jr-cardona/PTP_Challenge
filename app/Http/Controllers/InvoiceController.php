@@ -6,7 +6,7 @@ use App\State;
 use App\Client;
 use App\Seller;
 use App\Invoice;
-use App\Product;
+use Illuminate\Http\Request;
 use App\Http\Requests\SaveInvoiceRequest;
 
 class InvoiceController extends Controller
@@ -16,11 +16,32 @@ class InvoiceController extends Controller
         $this->middleware('auth');
     }
 
-    public function index()
+    public function index(Request $request)
     {
-        $invoices = Invoice::paginate(10);
+        $number = $request->get('number');
+        $client = $request->get('client');
+        $seller = $request->get('seller');
+        $state_id = $request->get('state_id');
+        $client_id = $request->get('client_id');
+        $seller_id = $request->get('seller_id');
+        $issued_init = $request->get('issued_init');
+        $issued_final = $request->get('issued_final');
+        $overdued_init = $request->get('overdued_init');
+        $overdued_final = $request->get('overdued_final');
+
+        $invoices = Invoice::orderBy('id', 'DESC')
+            ->number($number)
+            ->state($state_id)
+            ->client($client_id)
+            ->seller($seller_id)
+            ->issuedDate($issued_init, $issued_final)
+            ->overduedDate($overdued_init, $overdued_final)
+            ->paginate(10);
         return view('invoices.index', [
-            'invoices' => $invoices
+            'invoices' => $invoices,
+            'states' => State::all(),
+            'request' => $request,
+            'side_effect' => 'Se borrarán todos sus detalles asociados'
         ]);
     }
 
@@ -28,9 +49,7 @@ class InvoiceController extends Controller
     {
         return view('invoices.create', [
             'invoice' => new Invoice,
-            'clients' => Client::all(),
             'states' => State::all(),
-            'sellers' => Seller::all()
         ]);
     }
 
@@ -44,7 +63,8 @@ class InvoiceController extends Controller
     public function show(Invoice $invoice)
     {
         return view('invoices.show', [
-            'invoice' => $invoice
+            'invoice' => $invoice,
+            'side_effect' => 'Se borrarán todos sus detalles asociados'
         ]);
     }
 
@@ -52,8 +72,6 @@ class InvoiceController extends Controller
     {
         return view('invoices.edit', [
             'invoice' => $invoice,
-            'clients' => Client::all(),
-            'sellers' => Seller::all(),
             'states' => State::all()
         ]);
     }
