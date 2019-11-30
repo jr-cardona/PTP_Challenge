@@ -22,14 +22,11 @@
     </div>
     <div class="col">
         <label for="seller_id" class="required">Vendedor</label>
-        <select type="text" name="seller_id" id="seller_id" class="form-control @error('seller_id') is-invalid @enderror">
-            <option value="">Selecciona el Vendedor</option>
-            @foreach($sellers as $seller)
-                <option value="{{ $seller->id }}" {{ old('seller_id', $invoice->seller_id) == $seller->id ? 'selected' : '' }}>
-                    {{ $seller->name }}
-                </option>
-            @endforeach
-        </select>
+        <input type="hidden" name="seller_id" id="seller_id" value="{{ old('seller_id', $invoice->seller_id) }}">
+        <input type="text" name="seller" id="seller" value="{{ old('seller', isset($invoice->seller->name) ? $invoice->seller->name : '') }}"
+               class="form-control @error('seller_id') is-invalid @enderror" placeholder="Nombre del vendedor">
+        <div id="sellerList" class="position-absolute" style="z-index: 999">
+        </div>
         @error('seller_id')
         <span class="invalid-feedback" role="alert">
                 <strong>{{ $message }}</strong>
@@ -66,15 +63,12 @@
         @enderror
     </div>
     <div class="col">
-        <label for="client_id" class="required">Cliente</label>
-        <select type="text" name="client_id" id="client_id" class="form-control @error('client_id') is-invalid @enderror">
-            <option value="">Selecciona el Cliente</option>
-            @foreach($clients as $client)
-                <option value="{{ $client->id }}" {{ old('client_id', $invoice->client_id) == $client->id ? 'selected' : '' }}>
-                    {{ $client->name }}
-                </option>
-            @endforeach
-        </select>
+        <label for="client" class="required">Cliente</label>
+        <input type="hidden" name="client_id" id="client_id" value="{{ old('client_id', $invoice->client_id) }}">
+        <input type="text" name="client" id="client" value="{{ old('client', isset($invoice->client->name) ? $invoice->client->name : '') }}"
+               class="form-control @error('client_id') is-invalid @enderror" placeholder="Nombre del cliente">
+        <div id="clientList" class="position-absolute" style="z-index: 999">
+        </div>
         @error('client_id')
             <span class="invalid-feedback" role="alert">
                 <strong>{{ $message }}</strong>

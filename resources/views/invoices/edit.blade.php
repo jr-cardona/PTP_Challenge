@@ -13,3 +13,7 @@
         </div>
     </div>
 @endsection
+@push('scripts')
+    <script src="{{ asset(mix('js/search-client.js')) }}"></script>
+    <script src="{{ asset(mix('js/search-seller.js')) }}"></script>
+@endpush

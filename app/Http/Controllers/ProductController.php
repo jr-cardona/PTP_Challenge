@@ -13,11 +13,18 @@ class ProductController extends Controller
         $this->middleware('auth');
     }
 
-    public function index()
+    public function index(Request $request)
     {
-        $products = Product::paginate(10);
+        $id = $request->get('product_id');
+        $name = $request->get('product');
+
+        $products = Product::orderBy('id')
+            ->product($id)
+            ->paginate(10);
         return view('products.index', [
-            'products' => $products
+            'products' => $products,
+            'request' => $request,
+            'side_effect' => ''
         ]);
     }
 
@@ -38,7 +45,8 @@ class ProductController extends Controller
     public function show(Product $product)
     {
         return view('products.show', [
-            'product' => $product
+            'product' => $product,
+            'side_effect' => ''
         ]);
     }
 

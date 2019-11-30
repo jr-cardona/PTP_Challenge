@@ -3,8 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Client;
-use App\Http\Requests\SaveClientRequest;
 use App\TypeDocument;
+use Illuminate\Http\Request;
+use App\Http\Requests\SaveClientRequest;
 
 class ClientController extends Controller
 {
@@ -13,11 +14,25 @@ class ClientController extends Controller
         $this->middleware('auth');
     }
 
-    public function index()
+    public function index(Request $request)
     {
-        $clients = Client::paginate(10);
+        $id = $request->get('client_id');
+        $name = $request->get('client');
+        $type_document_id = $request->get('type_document_id');
+        $document = $request->get('document');
+        $email = $request->get('email');
+
+        $clients = Client::orderBy('name')
+            ->client($id)
+            ->typedocument($type_document_id)
+            ->document($document)
+            ->email($email)
+            ->paginate(10);
         return view('clients.index', [
-            'clients' => $clients
+            'clients' => $clients,
+            'type_documents' => TypeDocument::all(),
+            'request' => $request,
+            'side_effect' => 'Se borrarán todas sus facturas asociadas'
         ]);
     }
 
@@ -39,7 +54,8 @@ class ClientController extends Controller
     public function show(Client $client)
     {
         return view('clients.show', [
-            'client' => $client
+            'client' => $client,
+            'side_effect' => 'Se borrarán todas sus facturas asociadas'
         ]);
     }
 

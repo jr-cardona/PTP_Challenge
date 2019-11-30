@@ -6,7 +6,7 @@
     </a>
 @endsection
 @section('Name')
-    Factura de venta No. {{ str_pad($invoice->id, 3, "0", STR_PAD_LEFT) }}
+    Factura de venta No. {{$invoice->number }}
 @endsection
 @section('Buttons')
     @include('invoices._buttons')

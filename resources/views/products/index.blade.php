@@ -4,8 +4,27 @@
 @section('Create')
     <a class="btn btn-success" href="{{ route('products.create') }}">Crear nuevo producto</a>
 @endsection
-@section('Links')
-    {{ $products->links() }}
+@section('Search')
+    <form action="{{ route('products.index') }}" method="get">
+        <div class="form-group row">
+            <div class="col-md-3">
+                <input type="hidden" name="product_id" id="product_id" value="{{ $request->get('product_id') }}">
+                <input type="text" name="product" id="product" class="form-control" placeholder="Nombre" value="{{ $request->get('product') }}">
+                <div id="productList" class="position-absolute" style="z-index: 999">
+                </div>
+            </div>
+        </div>
+        <div class="form-group row">
+            <div class="col-md-3 btn-group btn-group-sm">
+                <button type="submit" class="btn btn-primary">
+                    <i class="fa fa-search"></i> Buscar
+                </button>
+                <a href="{{ route('products.index') }}" class="btn btn-danger">
+                    <i class="fa fa-undo"></i> Limpiar
+                </a>
+            </div>
+        </div>
+    </form>
 @endsection
 @section('Header')
     <th scope="col">Código</th>
@@ -32,4 +51,7 @@
             </td>
         </tr>
     @endforeach
+@endsection
+@section('Links')
+    {{ $products->appends($request->all())->links() }}
 @endsection

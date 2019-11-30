@@ -6,7 +6,6 @@ use App\Product;
 use App\Invoice;
 use App\Http\Requests\StoreInvoiceDetailRequest;
 use App\Http\Requests\UpdateInvoiceDetailRequest;
-use Illuminate\Support\Facades\DB;
 
 class InvoiceProductController extends Controller
 {
@@ -18,22 +17,9 @@ class InvoiceProductController extends Controller
 
     public function create(Invoice $invoice)
     {
-        $products = DB::table('products')
-            ->whereNotExists(function ($query) use ($invoice) {
-                $query->select(DB::raw('invoice_product.id'))
-                    ->from('invoice_product')
-                    ->whereRaw('invoice_product.product_id = products.id and invoice_product.invoice_id ='.$invoice->id);
-            })
-            ->get();
-        if (isset($products[0])){
-            return view('invoices.details.create', [
-                'invoice' => $invoice,
-                'products' => $products
-            ]);
-        }
-        else{
-            return redirect()->route('invoices.show', $invoice)->with('message', 'No hay productos disponibles para agregar');
-        }
+        return view('invoices.details.create', [
+            'invoice' => $invoice,
+        ]);
     }
 
     public function store(Invoice $invoice, StoreInvoiceDetailRequest $request)

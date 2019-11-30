@@ -3,8 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Seller;
-use App\Http\Requests\SaveSellerRequest;
 use App\TypeDocument;
+use Illuminate\Http\Request;
+use App\Http\Requests\SaveSellerRequest;
 
 class SellerController extends Controller
 {
@@ -13,11 +14,25 @@ class SellerController extends Controller
         $this->middleware('auth');
     }
 
-    public function index()
+    public function index(Request $request)
     {
-        $sellers = Seller::paginate(10);
+        $id = $request->get('seller_id');
+        $name = $request->get('seller');
+        $type_document_id = $request->get('type_document_id');
+        $document = $request->get('document');
+        $email = $request->get('email');
+
+        $sellers = Seller::orderBy('name')
+            ->seller($id)
+            ->typedocument($type_document_id)
+            ->document($document)
+            ->email($email)
+            ->paginate(10);
         return view('sellers.index', [
-            'sellers' => $sellers
+            'sellers' => $sellers,
+            'type_documents' => TypeDocument::all(),
+            'request' => $request,
+            'side_effect' => 'Se borrarán todas sus facturas asociadas'
         ]);
     }
 
@@ -39,7 +54,8 @@ class SellerController extends Controller
     public function show(Seller $seller)
     {
         return view('sellers.show', [
-            'seller' => $seller
+            'seller' => $seller,
+            'side_effect' => 'Se borrarán todas sus facturas asociadas'
         ]);
     }
 
