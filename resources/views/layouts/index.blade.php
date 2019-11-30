@@ -27,7 +27,7 @@
     </table>
 @endsection
 @push('modals')
-    @include('partials.__confirm_delete_modal')
+    @include('partials.__confirm_delete_modal', ['side_effect' => $side_effect])
 @endpush
 @push('scripts')
     <script src="{{ asset(mix('js/delete-modal.js')) }}"></script>
