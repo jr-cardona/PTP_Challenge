@@ -9,6 +9,7 @@
             </div>
             <div class="modal-body">
                 <p>¡Esta acción no se puede deshacer!</p>
+                @isset($side_effect) <p>{{ $side_effect }}</p> @endisset
                 <form id="deleteForm" action="" method="post">
                     @method('DELETE')
                     @csrf()
