@@ -1,5 +1,8 @@
 <?php
 Route::get('/', 'HomeController@index');
+Route::get('/home', 'HomeController@index')->name('home');
+
+Auth::routes();
 
 Route::resource('/facturas/{invoice}/detalle', 'InvoiceProductController')
     ->except('index', 'show')
@@ -22,6 +25,6 @@ Route::resource('vendedores', 'SellerController')
     ->names('sellers')
     ->parameters(['vendedores' => 'seller']);
 
-Auth::routes();
-
-Route::get('/home', 'HomeController@index')->name('home');
+Route::post('/autocomplete/client', 'AutocompleteController@client')->name('autocomplete.client');
+Route::post('/autocomplete/seller', 'AutocompleteController@seller')->name('autocomplete.seller');
+Route::post('/autocomplete/product', 'AutocompleteController@product')->name('autocomplete.product');
