@@ -9,7 +9,15 @@ class Product extends Model
 {
     protected $guarded = [];
 
+    //ELOQUENT RELATIONSHIPS
     public function invoices(){
         return $this->belongsToMany(Invoice::class);
+    }
+
+    //QUERY SCOPES
+    public function scopeProduct($query, $id){
+        if(trim($id) != ""){
+            return $query->where('id', $id);
+        }
     }
 }
