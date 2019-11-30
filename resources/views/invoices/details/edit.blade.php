@@ -12,7 +12,7 @@
                     <div class="col">
                         <label>Producto</label>
                         <span class="form-control">
-                            {{ $product->id }}
+                            {{ $product->name }}
                         </span>
                     </div>
                     @include('invoices.details._form', [
