@@ -7,3 +7,16 @@
 // Bootstrap
 @import '~bootstrap/scss/bootstrap';
 
+.required:after
+{
+    color: red;
+    content: " *";
+}
+.td-title
+{
+    width: 15%;
+}
+.td-content
+{
+    width: 35%;
+}

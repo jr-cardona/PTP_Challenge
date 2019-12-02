@@ -21,11 +21,12 @@
             <td class="td-content">{{ $product->created_at }}</td>
         </tr>
         <tr>
-            <td class="table-dark td-title">Descripción:</td>
-            <td class="td-content">{{ $product->description }}</td>
-
             <td class="table-dark td-title">Modificado:</td>
             <td class="td-content">{{ $product->updated_at }}</td>
+        </tr>
+        <tr>
+            <td class="table-dark td-title">Descripción:</td>
+            <td class="td-content">{{ $product->description }}</td>
         </tr>
     </table>
 @endsection
