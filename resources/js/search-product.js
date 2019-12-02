@@ -1,13 +1,12 @@
 $(document).ready(function(){
-    console.log("Hola bitches x3! JAJAJAJA");
     $('#product').keyup(function(){
         var query = $(this).val();
         if(query.length > 1){
             var _token = $('input[name="_token"]').val();
             $.ajax({
-                url: '/autocomplete/product',
+                url: '/autocomplete/search',
                 method:"POST",
-                data:{query:query, _token:_token},
+                data:{query:query, _token:_token, table: 'products'},
                 success:function(data){
                     $('#productList').fadeIn();
                     $('#productList').html(data);
@@ -19,7 +18,7 @@ $(document).ready(function(){
         }
     });
 
-    $(document).on('click', 'li.product', function(){
+    $(document).on('click', 'li.products', function(){
         $('#product').val($(this).text());
         $('#product_id').val($(this).attr("id"));
         $('#productList').fadeOut();

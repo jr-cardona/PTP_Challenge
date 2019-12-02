@@ -25,6 +25,4 @@ Route::resource('vendedores', 'SellerController')
     ->names('sellers')
     ->parameters(['vendedores' => 'seller']);
 
-Route::post('/autocomplete/client', 'AutocompleteController@client')->name('autocomplete.client');
-Route::post('/autocomplete/seller', 'AutocompleteController@seller')->name('autocomplete.seller');
-Route::post('/autocomplete/product', 'AutocompleteController@product')->name('autocomplete.product');
+Route::post('/autocomplete/search', 'AutocompleteController@search')->name('autocomplete.search');
