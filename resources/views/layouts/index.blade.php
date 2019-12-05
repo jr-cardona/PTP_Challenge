@@ -3,6 +3,15 @@
     @yield('Title')
 @endsection
 @section('content')
+    @if(count($errors) > 0)
+        <div class="alert alert-danger">
+            <ul>
+                @foreach($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
     <div class="d-flex justify-content-between">
         <h2 class="card-title">
             <i class="fa fa-search"></i> Buscar @yield('Name')

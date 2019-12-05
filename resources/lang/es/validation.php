@@ -196,6 +196,7 @@ return [
         'quantity'              => 'cantidad',
         'unit_price'            => 'precio unitario',
         'product_id'            => 'producto',
-        'seller_id'             => 'vendedor'
+        'seller_id'             => 'vendedor',
+        'file'                  => 'archivo',
     ],
 ];
