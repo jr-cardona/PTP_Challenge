@@ -26,4 +26,5 @@ Route::resource('vendedores', 'SellerController')
     ->parameters(['vendedores' => 'seller']);
 
 Route::get('invoices-export-excel', 'InvoiceController@exportExcel')->name('invoices.exportExcel');
+Route::post('invoices-import-excel', 'InvoiceController@importExcel')->name('invoices.importExcel');
 Route::post('/autocomplete/search', 'AutocompleteController@search')->name('autocomplete.search');

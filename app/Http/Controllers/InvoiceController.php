@@ -3,12 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\State;
-use App\Client;
-use App\Seller;
 use App\Invoice;
 use Illuminate\Http\Request;
 use App\Exports\InvoicesExport;
+use App\Imports\InvoicesImport;
 use App\Http\Requests\SaveInvoiceRequest;
+use Maatwebsite\Excel\Facades\Excel;
 
 class InvoiceController extends Controller
 {
@@ -93,5 +93,23 @@ class InvoiceController extends Controller
 
     public function exportExcel(){
         return Excel::download(new InvoicesExport, 'invoices-list.xlsx');
+    }
+
+    public function importExcel(Request $request){
+        $file = $request->file('file');
+        try {
+            Excel::import(new InvoicesImport(), $file);
+            return back()->with('message', 'Importación completada correctamente');
+        }
+        catch (\Maatwebsite\Excel\Validators\ValidationException $e) {
+            $failures_unsorted = $e->failures();
+            $failures_sorted = array();
+            foreach($failures_unsorted as $failure) {
+                $failures_sorted[$failure->row()][$failure->attribute()] = $failure->errors()[0];
+            }
+            return view('invoices.importErrors', [
+                'failures' => $failures_sorted,
+            ]);
+        }
     }
 }
