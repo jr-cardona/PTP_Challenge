@@ -9,7 +9,7 @@
         <div class="form-group row">
             <div class="col-md-3">
                 <input type="hidden" name="product_id" id="product_id" value="{{ $request->get('product_id') }}">
-                <input type="text" name="product" id="product" class="form-control" placeholder="Nombre" value="{{ $request->get('product') }}">
+                <input type="text" name="product" id="product" class="form-control" placeholder="Nombre" value="{{ $request->get('product') }}" autocomplete="off">
                 <div id="productList" class="position-absolute" style="z-index: 999">
                 </div>
             </div>

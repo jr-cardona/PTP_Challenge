@@ -24,7 +24,7 @@
         <label for="seller_id" class="required">Vendedor</label>
         <input type="hidden" name="seller_id" id="seller_id" value="{{ old('seller_id', $invoice->seller_id) }}">
         <input type="text" name="seller" id="seller" value="{{ old('seller', isset($invoice->seller->name) ? $invoice->seller->name : '') }}"
-               class="form-control @error('seller_id') is-invalid @enderror" placeholder="Nombre del vendedor">
+               class="form-control @error('seller_id') is-invalid @enderror" placeholder="Nombre del vendedor" autocomplete="off">
         <div id="sellerList" class="position-absolute" style="z-index: 999">
         </div>
         @error('seller_id')
@@ -66,7 +66,7 @@
         <label for="client" class="required">Cliente</label>
         <input type="hidden" name="client_id" id="client_id" value="{{ old('client_id', $invoice->client_id) }}">
         <input type="text" name="client" id="client" value="{{ old('client', isset($invoice->client->name) ? $invoice->client->name : '') }}"
-               class="form-control @error('client_id') is-invalid @enderror" placeholder="Nombre del cliente">
+               class="form-control @error('client_id') is-invalid @enderror" placeholder="Nombre del cliente" autocomplete="off">
         <div id="clientList" class="position-absolute" style="z-index: 999">
         </div>
         @error('client_id')

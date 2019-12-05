@@ -48,13 +48,13 @@
             </div>
             <div class="col-md-3">
                 <input type="hidden" name="client_id" id="client_id" value="{{ $request->get('client_id') }}">
-                <input type="text" name="client" id="client" class="form-control" placeholder="Nombre del cliente" value="{{ $request->get('client') }}">
+                <input type="text" name="client" id="client" class="form-control" placeholder="Nombre del cliente" value="{{ $request->get('client') }}" autocomplete="off">
                 <div id="clientList" class="position-absolute" style="z-index: 999">
                 </div>
             </div>
             <div class="col-md-3">
                 <input type="hidden" name="seller_id" id="seller_id" value="{{ $request->get('seller_id') }}">
-                <input type="text" name="seller" id="seller" class="form-control" placeholder="Nombre del vendedor" value="{{ $request->get('seller') }}">
+                <input type="text" name="seller" id="seller" class="form-control" placeholder="Nombre del vendedor" value="{{ $request->get('seller') }}" autocomplete="off">
                 <div id="sellerList" class="position-absolute" style="z-index: 999">
                 </div>
             </div>

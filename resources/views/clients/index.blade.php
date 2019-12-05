@@ -9,7 +9,7 @@
         <div class="form-group row">
             <div class="col-md-3">
                 <input type="hidden" name="client_id" id="client_id" value="{{ $request->get('client_id') }}">
-                <input type="text" name="client" id="client" class="form-control" placeholder="Nombre" value="{{ $request->get('client') }}">
+                <input type="text" name="client" id="client" class="form-control" placeholder="Nombre" value="{{ $request->get('client') }}" autocomplete="off">
                 <div id="clientList" class="position-absolute" style="z-index: 999">
                 </div>
             </div>

@@ -12,7 +12,7 @@
                     <div class="col">
                         <label for="product">Producto</label>
                         <input type="hidden" name="product_id" id="product_id" value="{{ old('product_id') }}">
-                        <input type="text" name="product" id="product" value="{{ old('product') }}"
+                        <input type="text" name="product" id="product" value="{{ old('product') }}" autocomplete="off"
                                class="form-control @error('product_id') is-invalid @enderror" placeholder="Nombre del producto">
                         <div id="productList" class="position-absolute" style="z-index: 999">
                         </div>
