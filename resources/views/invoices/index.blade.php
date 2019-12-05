@@ -2,7 +2,9 @@
 @section('Title', 'Facturas')
 @section('Name', 'Facturas')
 @section('Create')
-    <a class="btn btn-success" href="{{ route('invoices.create') }}">Crear nueva factura</a>
+    <a class="btn btn-secondary" href="{{ route('invoices.exportExcel') }}">
+        <i class="fa fa-file-excel-o"></i> Exportar a Excel
+    </a>
 @endsection
 @section('Search')
     <form action="{{ route('invoices.index') }}" method="get">

@@ -7,6 +7,7 @@ use App\Client;
 use App\Seller;
 use App\Invoice;
 use Illuminate\Http\Request;
+use App\Exports\InvoicesExport;
 use App\Http\Requests\SaveInvoiceRequest;
 
 class InvoiceController extends Controller
@@ -88,5 +89,9 @@ class InvoiceController extends Controller
         $invoice->delete();
 
         return redirect()->route('invoices.index')->with('message', 'Factura eliminada satisfactoriamente');
+    }
+
+    public function exportExcel(){
+        return Excel::download(new InvoicesExport, 'invoices-list.xlsx');
     }
 }
