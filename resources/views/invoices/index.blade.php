@@ -2,7 +2,15 @@
 @section('Title', 'Facturas')
 @section('Name', 'Facturas')
 @section('Create')
-    <a class="btn btn-success" href="{{ route('invoices.create') }}">Crear nueva factura</a>
+    <a class="btn btn-secondary" href="{{ route('invoices.exportExcel') }}">
+        <i class="fa fa-file-excel-o"></i> Exportar a Excel
+    </a>
+    <button type="button" class="btn btn-warning" data-route="{{ route('invoices.importExcel') }}" data-toggle="modal" data-target="#importInvoicesModal">
+        <i class="fa fa-file-excel-o"></i> Importar desde Excel
+    </button>
+    <a class="btn btn-success" href="{{ route('invoices.create') }}">
+        <i class="fa fa-plus"></i> Crear nueva factura
+    </a>
 @endsection
 @section('Search')
     <form action="{{ route('invoices.index') }}" method="get">
@@ -102,3 +110,9 @@
 @section('Links')
     {{ $invoices->appends($request->all())->links() }}
 @endsection
+@push('modals')
+    @include('partials.__import_invoices_modal')
+@endpush
+@push('scripts')
+    <script src="{{ asset(mix('js/import-invoices-modal.js')) }}"></script>
+@endpush

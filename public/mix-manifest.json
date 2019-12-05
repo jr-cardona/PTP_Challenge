@@ -2,6 +2,7 @@
     "/js/app.js": "/js/app.js",
     "/css/app.css": "/css/app.css",
     "/js/delete-modal.js": "/js/delete-modal.js",
+    "/js/import-invoices-modal.js": "/js/import-invoices-modal.js",
     "/js/manifest.js": "/js/manifest.js",
     "/js/search-client.js": "/js/search-client.js",
     "/js/search-product.js": "/js/search-product.js",
