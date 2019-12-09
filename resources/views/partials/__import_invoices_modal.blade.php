@@ -8,8 +8,8 @@
                 </button>
             </div>
             <div class="modal-body">
-                <form id="import" action="" method="post" enctype="multipart/form-data">
-                    <input type="file" name="file" required>
+                <form id="import" action="" method="post" enctype="multipart/form-data" >
+                    <input type="file" name="invoices" required accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel">
                     @csrf()
                 </form>
             </div>

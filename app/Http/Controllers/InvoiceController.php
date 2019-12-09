@@ -97,9 +97,9 @@ class InvoiceController extends Controller
 
     public function importExcel(Request $request){
         $this->validate($request, [
-            'file' => 'required|mimes:xls,xlsx'
+            'invoices' => 'required|mimes:xls,xlsx'
         ]);
-        $file = $request->file('file');
+        $file = $request->file('invoices');
         try {
             Excel::import(new InvoicesImport(), $file);
             return back()->with('message', 'Importación completada correctamente');
