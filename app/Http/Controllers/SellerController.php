@@ -13,17 +13,11 @@ class SellerController extends Controller
 
     public function index(Request $request)
     {
-        $id = $request->get('seller_id');
-        $name = $request->get('seller');
-        $type_document_id = $request->get('type_document_id');
-        $document = $request->get('document');
-        $email = $request->get('email');
-
         $sellers = Seller::orderBy('name')
-            ->seller($id)
-            ->typedocument($type_document_id)
-            ->document($document)
-            ->email($email)
+            ->seller($request->get('seller_id'))
+            ->typedocument($request->get('type_document_id'))
+            ->document($request->get('document'))
+            ->email($request->get('email'))
             ->paginate(10);
         return view('sellers.index', [
             'sellers' => $sellers,

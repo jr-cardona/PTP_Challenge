@@ -13,17 +13,11 @@ class ClientController extends Controller
 
     public function index(Request $request)
     {
-        $id = $request->get('client_id');
-        $name = $request->get('client');
-        $type_document_id = $request->get('type_document_id');
-        $document = $request->get('document');
-        $email = $request->get('email');
-
         $clients = Client::orderBy('name')
-            ->client($id)
-            ->typedocument($type_document_id)
-            ->document($document)
-            ->email($email)
+            ->client($request->get('client_id'))
+            ->typedocument($request->get('type_document_id'))
+            ->document($request->get('document'))
+            ->email($request->get('email'))
             ->paginate(10);
         return view('clients.index', [
             'clients' => $clients,
