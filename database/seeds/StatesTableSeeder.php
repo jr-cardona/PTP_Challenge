@@ -8,13 +8,13 @@ class StatesTableSeeder extends Seeder
     public function run()
     {
         State::create([
-            'name' => 'Abierta',
-        ]);
-        State::create([
-            'name' => 'Borrador',
+            'name' => 'Pendiente',
         ]);
         State::create([
             'name' => 'Pagada',
+        ]);
+        State::create([
+            'name' => 'Vencida',
         ]);
     }
 }
