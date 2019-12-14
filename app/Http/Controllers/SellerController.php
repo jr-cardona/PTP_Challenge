@@ -27,7 +27,6 @@ class SellerController extends Controller
             ->paginate(10);
         return view('sellers.index', [
             'sellers' => $sellers,
-            'type_documents' => TypeDocument::all(),
             'request' => $request,
             'side_effect' => 'Se borrarán todas sus facturas asociadas'
         ]);
@@ -37,7 +36,6 @@ class SellerController extends Controller
     {
         return view('sellers.create', [
             'seller' => new Seller,
-            'type_documents' => TypeDocument::all()
         ]);
     }
 
@@ -60,7 +58,6 @@ class SellerController extends Controller
     {
         return view('sellers.edit', [
             'seller' => $seller,
-            'type_documents' => TypeDocument::all()
         ]);
     }
 

@@ -27,7 +27,6 @@ class ClientController extends Controller
             ->paginate(10);
         return view('clients.index', [
             'clients' => $clients,
-            'type_documents' => TypeDocument::all(),
             'request' => $request,
             'side_effect' => 'Se borrarán todas sus facturas asociadas'
         ]);
@@ -37,7 +36,6 @@ class ClientController extends Controller
     {
         return view('clients.create', [
             'client' => new Client,
-            'type_documents' => TypeDocument::all()
         ]);
     }
 
@@ -60,7 +58,6 @@ class ClientController extends Controller
     {
         return view('clients.edit', [
             'client' => $client,
-            'type_documents' => TypeDocument::all()
         ]);
     }
 
