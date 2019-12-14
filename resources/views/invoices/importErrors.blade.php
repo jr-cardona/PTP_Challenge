@@ -2,20 +2,20 @@
 @section('title', 'Errores de importación')
 @section('content')
     <a href="{{ route('invoices.index') }}" class="btn btn-secondary">
-        <i class="fa fa-arrow-left"></i> Volver
+        <i class="fa fa-arrow-left"></i> {{ __("Volver") }}
     </a>
     <p></p>
     <div class="card card-default">
         <div class="card-header">
-            <h5 class="card-title mb-0 text-center">Listado de errores</h5>
+            <h5 class="card-title mb-0 text-center">{{ __("Listado de errores") }}</h5>
         </div>
         <div class="table-responsive-lg">
             <table class="table">
                 <thead>
                 <tr class="text-center">
-                    <th>Fila #</th>
-                    <th>Campos fallidos</th>
-                    <th>Mensajes de error</th>
+                    <th>{{ __("Fila") }} #</th>
+                    <th>{{ __("Campos fallidos") }}</th>
+                    <th>{{ __("Mensajes de error") }}</th>
                 </tr>
                 </thead>
                 <tbody>

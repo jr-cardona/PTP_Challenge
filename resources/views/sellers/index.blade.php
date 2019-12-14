@@ -2,7 +2,7 @@
 @section('Title', 'Vendedores')
 @section('Name', 'Vendedores')
 @section('Create')
-    <a class="btn btn-success" href="{{ route('sellers.create') }}">Crear nuevo vendedor</a>
+    <a class="btn btn-success" href="{{ route('sellers.create') }}">{{ __("Crear nuevo vendedor") }}</a>
 @endsection
 @section('Search')
     <form action="{{ route('sellers.index') }}" method="get">
@@ -15,10 +15,10 @@
             </div>
             <div class="col-md-3">
                 <select id="type_document_id" name="type_document_id" class="form-control">
-                    <option value="">Tipo de documento</option>
+                    <option value="">{{ __("Tipo de documento") }}</option>
                     @foreach($type_documents as $type_document)
                         <option value="{{ $type_document->id }}" {{ $request->get('type_document_id') == $type_document->id ? 'selected' : ''}}>
-                            {{ $type_document->name }}
+                            {{ $type_document->fullname }}
                         </option>
                     @endforeach
                 </select>
@@ -33,22 +33,22 @@
         <div class="form-group row">
             <div class="col-md-3 btn-group btn-group-sm">
                 <button type="submit" class="btn btn-primary">
-                    <i class="fa fa-search"></i> Buscar
+                    <i class="fa fa-search"></i> {{ __("Buscar") }}
                 </button>
                 <a href="{{ route('sellers.index') }}" class="btn btn-danger">
-                    <i class="fa fa-undo"></i> Limpiar
+                    <i class="fa fa-undo"></i> {{ __("Limpiar") }}
                 </a>
             </div>
         </div>
     </form>
 @endsection
 @section('Header')
-    <th scope="col">Documento</th>
-    <th scope="col" nowrap>Nombre</th>
-    <th scope="col">Dirección</th>
-    <th scope="col">Correo electrónico</th>
-    <th scope="col">Celular</th>
-    <th scope="col" colspan="2">Opciones</th>
+    <th scope="col">{{ __("Documento") }}</th>
+    <th scope="col" nowrap>{{ __("Nombre") }}</th>
+    <th scope="col">{{ __("Dirección") }}</th>
+    <th scope="col">{{ __("Correo electrónico") }}</th>
+    <th scope="col">{{ __("Celular") }}</th>
+    <th scope="col">{{ __("Opciones") }}</th>
 @endsection
 @section('Body')
     @foreach($sellers as $seller)

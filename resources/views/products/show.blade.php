@@ -2,7 +2,7 @@
 @section('Title', 'Ver Producto')
 @section('Back')
     <a href="{{ route('products.index') }}" class="btn btn-secondary">
-        <i class="fa fa-arrow-left"></i> Volver
+        <i class="fa fa-arrow-left"></i> {{ __("Volver") }}
     </a>
 @endsection
 @section('Name')

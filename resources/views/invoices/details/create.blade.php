@@ -3,14 +3,14 @@
 @section('content')
     <div class="card">
         <div class="card-header">
-            <h1>Agregar detalle. Factura de venta No. {{ $invoice->id }}</h1>
+            <h1>{{ __("Agregar detalle. Factura de venta No.") }} {{ $invoice->id }}</h1>
         </div>
         <div class="card-body">
             <form action="{{ route('invoiceDetails.store', $invoice) }}" class="form-group" method="POST">
                 @csrf
                 <div class="row">
                     <div class="col">
-                        <label for="product">Producto</label>
+                        <label for="product">{{ __("Producto") }}</label>
                         <input type="hidden" name="product_id" id="product_id" value="{{ old('product_id') }}">
                         <input type="text" name="product" id="product" value="{{ old('product') }}" autocomplete="off"
                                class="form-control @error('product_id') is-invalid @enderror" placeholder="Nombre del producto">

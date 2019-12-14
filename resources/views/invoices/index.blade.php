@@ -3,32 +3,32 @@
 @section('Name', 'Facturas')
 @section('Create')
     <a class="btn btn-secondary" href="{{ route('invoices.exportExcel') }}">
-        <i class="fa fa-file-excel-o"></i> Exportar a Excel
+        <i class="fa fa-file-excel-o"></i> {{ __("Exportar a Excel") }}
     </a>
     <button type="button" class="btn btn-warning" data-route="{{ route('invoices.importExcel') }}" data-toggle="modal" data-target="#importInvoicesModal">
-        <i class="fa fa-file-excel-o"></i> Importar desde Excel
+        <i class="fa fa-file-excel-o"></i> {{ __("Importar desde Excel") }}
     </button>
     <a class="btn btn-success" href="{{ route('invoices.create') }}">
-        <i class="fa fa-plus"></i> Crear nueva factura
+        <i class="fa fa-plus"></i> {{ __("Crear nueva factura") }}
     </a>
 @endsection
 @section('Search')
     <form action="{{ route('invoices.index') }}" method="get">
         <div class="form-group row">
             <div class="col-md-3">
-                <label for="issued_init">Fecha inicial de expedición</label>
+                <label for="issued_init">{{ __("Fecha inicial de expedición") }}</label>
                 <input type="date" name="issued_init" id="issued_init" class="form-control" value="{{ $request->get('issued_init') }}">
             </div>
             <div class="col-md-3">
-                <label for="issued_final">Fecha final de expedición</label>
+                <label for="issued_final">{{ __("Fecha final de expedición") }}</label>
                 <input type="date" name="issued_final" id="issued_final" class="form-control" value="{{ $request->get('issued_final') }}">
             </div>
             <div class="col-md-3">
-                <label for="overdued_init">Fecha inicial de vencimiento</label>
+                <label for="overdued_init">{{ __("Fecha inicial de vencimiento") }}</label>
                 <input type="date" name="overdued_init" id="overdued_init" class="form-control" value="{{ $request->get('overdued_init') }}">
             </div>
             <div class="col-md-3">
-                <label for="overdued_final">Fecha final de vencimiento</label>
+                <label for="overdued_final">{{ __("Fecha final de vencimiento") }}</label>
                 <input type="date" name="overdued_final" id="overdued_final" class="form-control" value="{{ $request->get('overdued_final') }}">
             </div>
         </div>
@@ -62,30 +62,30 @@
         <div class="form-group row">
             <div class="col-md-3 btn-group btn-group-sm">
                 <button type="submit" class="btn btn-primary">
-                    <i class="fa fa-search"></i> Buscar
+                    <i class="fa fa-search"></i> {{ __("Buscar") }}
                 </button>
                 <a href="{{ route('invoices.index') }}" class="btn btn-danger">
-                    <i class="fa fa-undo"></i> Limpiar
+                    <i class="fa fa-undo"></i> {{ __("Limpiar") }}
                 </a>
             </div>
         </div>
     </form>
 @endsection
 @section('Header')
-    <th scope="col" nowrap>Título</th>
-    <th scope="col" nowrap>Fecha de expedición</th>
-    <th scope="col" nowrap>Fecha de vencimiento</th>
-    <th scope="col" nowrap>Estado</th>
-    <th scope="col" nowrap>Cliente</th>
-    <th scope="col" nowrap>Vendedor</th>
-    <th scope="col" nowrap>Opciones</th>
+    <th scope="col" nowrap>{{ __("Título") }}</th>
+    <th scope="col" nowrap>{{ __("Fecha de expedición") }}</th>
+    <th scope="col" nowrap>{{ __("Fecha de vencimiento") }}</th>
+    <th scope="col" nowrap>{{ __("Estado") }}</th>
+    <th scope="col" nowrap>{{ __("Cliente") }}</th>
+    <th scope="col" nowrap>{{ __("Vendedor") }}</th>
+    <th scope="col" nowrap>{{ __("Opciones") }}</th>
 @endsection
 @section('Body')
     @foreach($invoices as $invoice)
         <tr class="text-center">
             <td nowrap>
                 <a href="{{ route('invoices.show', $invoice) }}">
-                    Factura de venta No. {{ $invoice->number }}
+                    {{ __("Factura de venta No.") }} {{ $invoice->number }}
                 </a>
             </td>
             <td nowrap>{{ $invoice->issued_at }}</td>

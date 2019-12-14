@@ -1,7 +1,7 @@
 @csrf
 <div class="row">
     <div class="col">
-        <label for="name" class="required">Nombre</label>
+        <label for="name" class="required">{{ __("Nombre") }}</label>
         <input type="text" name="name" id="name" value="{{ old('name', $product->name) }}"
                class="form-control @error('name') is-invalid @enderror">
         @error('name')
@@ -37,5 +37,5 @@
 <br>
 <div class="form-group">
     <input type="submit" class="btn btn-primary" value="Guardar">
-    <a href="{{ route('products.index') }}" class="btn btn-danger">Volver</a>
+    <a href="{{ route('products.index') }}" class="btn btn-danger">{{ __("Volver") }}</a>
 </div>

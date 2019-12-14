@@ -2,7 +2,7 @@
 @section('Title', 'Productos')
 @section('Name', 'Productos')
 @section('Create')
-    <a class="btn btn-success" href="{{ route('products.create') }}">Crear nuevo producto</a>
+    <a class="btn btn-success" href="{{ route('products.create') }}">{{ __("Crear nuevo producto") }}</a>
 @endsection
 @section('Search')
     <form action="{{ route('products.index') }}" method="get">
@@ -17,10 +17,10 @@
         <div class="form-group row">
             <div class="col-md-3 btn-group btn-group-sm">
                 <button type="submit" class="btn btn-primary">
-                    <i class="fa fa-search"></i> Buscar
+                    <i class="fa fa-search"></i> {{ __("Buscar") }}
                 </button>
                 <a href="{{ route('products.index') }}" class="btn btn-danger">
-                    <i class="fa fa-undo"></i> Limpiar
+                    <i class="fa fa-undo"></i> {{ __("Limpiar") }}
                 </a>
             </div>
         </div>

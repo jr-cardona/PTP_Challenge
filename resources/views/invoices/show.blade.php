@@ -2,11 +2,11 @@
 @section('Title', 'Ver Factura')
 @section('Back')
     <a href="{{ route('invoices.index') }}" class="btn btn-secondary">
-        <i class="fa fa-arrow-left"></i> Volver
+        <i class="fa fa-arrow-left"></i> {{ __("Volver") }}
     </a>
 @endsection
 @section('Name')
-    Factura de venta No. {{$invoice->number }}
+    {{ __("Factura de venta No.") }} {{$invoice->number }}
 @endsection
 @section('Buttons')
     @include('invoices._buttons')
@@ -14,42 +14,42 @@
 @section('Body')
     <table class="table border-rounded table-sm">
         <tr>
-            <td class="table-dark td-title">Fecha de recibo:</td>
+            <td class="table-dark td-title">{{ __("Fecha de recibo:") }}</td>
             <td class="td-content">{{ $invoice->received_at == '' ? "Sin fecha" : $invoice->received_at }}</td>
 
-            <td class="table-dark td-title">Estado:</td>
+            <td class="table-dark td-title">{{ __("Estado:") }}</td>
             <td class="td-content">{{ $invoice->state->name }}</td>
         </tr>
         <tr>
-            <td class="table-dark td-title">Fecha de creación:</td>
+            <td class="table-dark td-title">{{ __("Fecha de creación:") }}</td>
             <td class="td-content">{{ $invoice->created_at }}</td>
 
-            <td class="table-dark td-title" nowrap>Fecha de modificación:</td>
+            <td class="table-dark td-title" nowrap>{{ __("Fecha de modificación:") }}</td>
             <td class="td-content">{{ $invoice->updated_at }}</td>
         </tr>
         <tr>
-            <td class="table-dark td-title">Fecha de expedición:</td>
+            <td class="table-dark td-title">{{ __("Fecha de expedición:") }}</td>
             <td class="td-content">{{ $invoice->issued_at }}</td>
 
-            <td class="table-dark td-title">Fecha de vencimiento:</td>
+            <td class="table-dark td-title">{{ __("Fecha de vencimiento:") }}</td>
             <td class="td-content">{{ $invoice->overdued_at }}</td>
         </tr>
         <tr>
-            <td class="table-dark td-title">IVA:</td>
+            <td class="table-dark td-title">{{ __("IVA:") }}</td>
             <td class="td-content">{{ $invoice->vat }}%</td>
 
-            <td class="table-dark td-title">Valor total:</td>
+            <td class="table-dark td-title">{{ __("Valor total:") }}</td>
             <td class="td-content">${{ number_format($invoice->getTotalAttribute(), 2) }}</td>
         </tr>
         <tr>
-            <td class="table-dark td-title">Vendedor:</td>
+            <td class="table-dark td-title">{{ __("Vendedor:") }}</td>
             <td class="td-content">
                 <a href="{{ route('sellers.show', $invoice->seller) }}" target="_blank">
                     {{ $invoice->seller->name }}
                 </a>
             </td>
 
-            <td class="table-dark td-title">Cliente:</td>
+            <td class="table-dark td-title">{{ __("Cliente:") }}</td>
             <td class="td-content">
                 <a href="{{ route('clients.show', $invoice->client) }}" target="_blank">
                     {{ $invoice->client->name }}
@@ -57,7 +57,7 @@
             </td>
         </tr>
         <tr>
-            <td class="table-dark td-title">Descripción:</td>
+            <td class="table-dark td-title">{{ __("Descripción:") }}</td>
             <td class="td-content">{{ $invoice->description }}</td>
         </tr>
     </table>
@@ -66,12 +66,12 @@
         <table class="table table-sm">
             <thead>
                 <tr>
-                    <th class="text-center" nowrap>CÓDIGO</th>
-                    <th class="text-center" nowrap>NOMBRE</th>
-                    <th class="text-center" nowrap>DESCRIPCIÓN</th>
-                    <th class="text-center" nowrap>CANTIDAD</th>
-                    <th class="text-right" nowrap>PRECIO UNITARIO</th>
-                    <th class="text-right" nowrap>PRECIO TOTAL</th>
+                    <th class="text-center" nowrap>{{ __("CÓDIGO") }}</th>
+                    <th class="text-center" nowrap>{{ __("NOMBRE") }}</th>
+                    <th class="text-center" nowrap>{{ __("DESCRIPCIÓN") }}</th>
+                    <th class="text-center" nowrap>{{ __("CANTIDAD") }}</th>
+                    <th class="text-right" nowrap>{{ __("PRECIO UNITARIO") }}</th>
+                    <th class="text-right" nowrap>{{ __("PRECIO TOTAL") }}</th>
                     <th class="text-center"></th>
                 </tr>
             </thead>
@@ -101,21 +101,21 @@
                     </tr>
                @endforeach
                 <tr>
-                    <td class="text-right" colspan="5">SUBTOTAL</td>
+                    <td class="text-right" colspan="5">{{ __("SUBTOTAL") }}</td>
                     <td class="text-right">${{ number_format($invoice->getSubtotalAttribute(), 2) }}</td>
                 </tr>
                 <tr>
-                    <td class="text-right" colspan="5">IVA ({{ $invoice->vat }})% </td>
+                    <td class="text-right" colspan="5">{{ __("IVA") }} ({{ $invoice->vat }})% </td>
                     <td class="text-right">${{ number_format($invoice->getIvaAmountAttribute(), 2) }}</td>
                 </tr>
                 <tr>
-                    <td class="text-right" colspan="5">GRAN TOTAL</td>
+                    <td class="text-right" colspan="5">{{ __("GRAN TOTAL") }}</td>
                     <td class="text-right">${{ number_format($invoice->getTotalAttribute(), 2) }}</td>
                 </tr>
             </tbody>
         </table>
         <a href="{{ route('invoiceDetails.create', $invoice) }}" class="btn btn-success btn-block">
-            Agregar Detalle
+            {{ __("Agregar Detalle") }}
         </a>
     </div>
 @endsection

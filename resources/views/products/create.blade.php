@@ -3,7 +3,7 @@
 @section('content')
     <div class="card">
         <div class="card-header">
-            <h1>Crear Producto</h1>
+            <h1>{{ __("Crear Producto") }}</h1>
         </div>
         <div class="card-body">
             <form action="{{ route('products.store') }}" class="form-group" method="POST">
