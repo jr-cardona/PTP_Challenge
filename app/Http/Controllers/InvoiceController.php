@@ -42,9 +42,9 @@ class InvoiceController extends Controller
 
     public function store(SaveInvoiceRequest $request)
     {
-        Invoice::create($request->validated());
+        $result = Invoice::create($request->validated());
 
-        return redirect()->route('invoices.index')->with('message', 'Factura creada satisfactoriamente');
+        return redirect()->route('invoices.show', $result->id)->with('message', 'Factura creada satisfactoriamente');
     }
 
     public function show(Invoice $invoice)
