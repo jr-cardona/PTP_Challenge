@@ -27,12 +27,12 @@
     </form>
 @endsection
 @section('Header')
-    <th scope="col">Código</th>
-    <th scope="col">Nombre</th>
-    <th scope="col">Descripción</th>
-    <th scope="col" nowrap>Fecha de creación</th>
-    <th scope="col" nowrap>Fecha de modificación</th>
-    <th scope="col" nowrap>Opciones</th>
+    <th scope="col">{{ __("Código") }}</th>
+    <th scope="col">{{ __("Nombre") }}</th>
+    <th scope="col">{{ __("Precio unitario") }}</th>
+    <th scope="col" nowrap>{{ __("Fecha de creación") }}</th>
+    <th scope="col" nowrap>{{ __("Fecha de modificación") }}</th>
+    <th scope="col" nowrap>{{ __("Opciones") }}</th>
 @endsection
 @section('Body')
     @foreach($products as $product)
@@ -43,7 +43,7 @@
                     {{ $product->name }}
                 </a>
             </td>
-            <td>{{ $product->description }}</td>
+            <td nowrap>$ {{ number_format($product->unit_price, 2) }}</td>
             <td nowrap>{{ $product->created_at }}</td>
             <td nowrap>{{ $product->updated_at }}</td>
             <td class="btn-group btn-group-sm" nowrap>
