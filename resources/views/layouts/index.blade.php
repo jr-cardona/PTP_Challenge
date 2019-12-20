@@ -42,7 +42,4 @@
 @endpush
 @push('scripts')
     <script src="{{ asset(mix('js/delete-modal.js')) }}"></script>
-    <script src="{{ asset(mix('js/search-client.js')) }}"></script>
-    <script src="{{ asset(mix('js/search-seller.js')) }}"></script>
-    <script src="{{ asset(mix('js/search-product.js')) }}"></script>
 @endpush
