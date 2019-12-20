@@ -10,8 +10,7 @@ class ProductController extends Controller
 {
 
 
-    public function index(Request $request)
-    {
+    public function index(Request $request) {
         $products = Product::orderBy('id')
             ->product($request->get('product_id'))
             ->paginate(10);
@@ -22,46 +21,48 @@ class ProductController extends Controller
         ]);
     }
 
-    public function create()
-    {
+    public function create() {
         return view('products.create', [
             'product' => new Product
         ]);
     }
 
-    public function store(SaveProductRequest $request)
-    {
+    public function store(SaveProductRequest $request) {
         Product::create($request->validated());
 
         return redirect()->route('products.index')->with('message', 'Producto creado satisfactoriamente');
     }
 
-    public function show(Product $product)
-    {
+    public function show(Product $product) {
         return view('products.show', [
             'product' => $product,
             'side_effect' => ''
         ]);
     }
 
-    public function edit(Product $product)
-    {
+    public function edit(Product $product) {
         return view('products.edit', [
             'product' => $product
         ]);
     }
 
-    public function update(SaveProductRequest $request, Product $product)
-    {
+    public function update(SaveProductRequest $request, Product $product) {
         $product->update($request->validated());
 
         return redirect()->route('products.show', $product)->with('message', 'Producto actualizado satisfactoriamente');
     }
 
-    public function destroy(Product $product)
-    {
+    public function destroy(Product $product) {
         $product->delete();
 
         return redirect()->route('products.index')->with('message', 'Producto eliminado satisfactoriamente');
+    }
+
+    public function search(Request $request) {
+        $products = Product::where('name', 'like', '%'. $request->name .'%')
+            ->orderBy('name')
+            ->limit('100')
+            ->get();
+        echo $products;
     }
 }
