@@ -3,27 +3,36 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Seller extends Model
 {
     protected $guarded = [];
 
-    //ELOQUENT RELATIONSHIPS
-    public function invoices(){
+    /**
+     * Relation between sellers and invoices
+     * @return HasMany
+     */
+    public function invoices(): HasMany {
         return $this->hasMany(Invoice::class);
     }
 
-    public function type_document(){
+    /**
+     * Relation between sellers and type documents
+     * @return BelongsTo
+     */
+    public function type_document(): BelongsTo {
         return $this->belongsTo(TypeDocument::class);
     }
 
-    //DERIVED ATTRIBUTES
+    /** DERIVED ATTRIBUTES */
     public function setEmailAttribute($value)
     {
         $this->attributes['email'] = strtolower($value);
     }
 
-    //QUERY SCOPES
+    /** Query Scopes */
     public function scopeSeller($query, $id){
         if(trim($id) != ""){
             return $query->where('id', $id);

@@ -1,8 +1,6 @@
 <?php
 
-
 namespace App\Http\View\Composers;
-
 
 use App\TypeDocument;
 use Illuminate\Support\Facades\Cache;

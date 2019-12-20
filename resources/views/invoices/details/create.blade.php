@@ -11,7 +11,7 @@
                 <div class="row">
                     <div class="col">
                         <label class="required">{{ __("Producto") }}</label>
-                        <v-select label="name" :filterable="false" :options="options" @search="searchSeller">
+                        <v-select label="name" :filterable="false" :options="options" @search="searchProduct">
                             <template slot="no-options">
                                 {{ __("Ingresa el nombre del producto...") }}
                             </template>
@@ -24,7 +24,7 @@
                                 <div class="selected d-center">
                                     @{{ option.name }}
                                 </div>
-                                <input type="hidden" name="seller_id" id="seller_id" :value='option.id'>
+                                <input type="hidden" name="product_id" id="product_id" :value='option.id'>
                             </template>
                         </v-select>
                         @error('product_id')
