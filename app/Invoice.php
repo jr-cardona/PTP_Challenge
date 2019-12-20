@@ -2,6 +2,7 @@
 
 namespace App;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 
 class Invoice extends Model
@@ -72,6 +73,13 @@ class Invoice extends Model
     public function scopeSeller($query, $seller_id){
         if(trim($seller_id) != ""){
             return $query->where('seller_id', $seller_id);
+        }
+    }
+    public function scopeProduct($query, $product_id){
+        if(trim($product_id) != ""){
+            return $query->whereHas('products', function (Builder $query) use ($product_id) {
+                $query->where('product_id', $product_id);
+            });
         }
     }
 
