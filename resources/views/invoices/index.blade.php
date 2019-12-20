@@ -34,11 +34,13 @@
         </div>
         <div class="form-group row">
             <div class="col-md-3">
+                <label for="number">{{ __("Número de factura") }}</label>
                 <input type="number" id="number" name="number" class="form-control" placeholder="No. de factura" value="{{ $request->get('number') }}">
             </div>
             <div class="col-md-3">
+                <label for="state_id">{{ __("Estado") }}</label>
                 <select id="state_id" name="state_id" class="form-control">
-                    <option value="">Estado</option>
+                    <option value="">--</option>
                     @foreach($states as $state)
                         <option value="{{ $state->id }}" {{ $request->get('state_id') == $state->id ? 'selected' : ''}}>
                             {{ $state->name }}
@@ -47,16 +49,63 @@
                 </select>
             </div>
             <div class="col-md-3">
-                <input type="hidden" name="client_id" id="client_id" value="{{ $request->get('client_id') }}">
-                <input type="text" name="client" id="client" class="form-control" placeholder="Nombre del cliente" value="{{ $request->get('client') }}" autocomplete="off">
-                <div id="clientList" class="position-absolute" style="z-index: 999">
-                </div>
+                <label>{{ __("Cliente") }}</label>
+                <v-select label="name" :filterable="false" :options="options" @search="searchClient">
+                    <template slot="no-options">
+                        {{ __("Ingresa el nombre del cliente...") }}
+                    </template>
+                    <template slot="option" slot-scope="option">
+                        <div class="d-center">
+                            @{{ option.name }}
+                        </div>
+                    </template>
+                    <template slot="selected-option" slot-scope="option">
+                        <div class="selected d-center">
+                            @{{ option.name }}
+                        </div>
+                        <input type="hidden" name="client_id" id="client_id" :value='option.id'>
+                    </template>
+                </v-select>
             </div>
             <div class="col-md-3">
-                <input type="hidden" name="seller_id" id="seller_id" value="{{ $request->get('seller_id') }}">
-                <input type="text" name="seller" id="seller" class="form-control" placeholder="Nombre del vendedor" value="{{ $request->get('seller') }}" autocomplete="off">
-                <div id="sellerList" class="position-absolute" style="z-index: 999">
-                </div>
+                <label>{{ __("Vendedor") }}</label>
+                <v-select label="name" :filterable="false" :options="options" @search="searchSeller">
+                    <template slot="no-options">
+                        {{ __("Ingresa el nombre del vendedor...") }}
+                    </template>
+                    <template slot="option" slot-scope="option">
+                        <div class="d-center">
+                            @{{ option.name }}
+                        </div>
+                    </template>
+                    <template slot="selected-option" slot-scope="option">
+                        <div class="selected d-center">
+                            @{{ option.name }}
+                        </div>
+                        <input type="hidden" name="seller_id" id="seller_id" :value='option.id'>
+                    </template>
+                </v-select>
+            </div>
+        </div>
+        <div class="form-group row">
+            <div class="col-md-3">
+                <label>{{ __("Producto") }}</label>
+                <v-select label="name" :filterable="false" :options="options" @search="searchProduct">
+                    <template slot="no-options">
+                        {{ __("Ingresa el nombre del producto...") }}
+                    </template>
+                    <template slot="option" slot-scope="option">
+                        <div class="d-center">
+                            @{{ option.name }}
+                        </div>
+                    </template>
+                    <template slot="selected-option" slot-scope="option">
+                        <div class="selected d-center">
+                            @{{ option.name }}
+                        </div>
+                        <input type="hidden" name="product_id" id="product_id" :value='option.id'>
+                    </template>
+                </v-select>
             </div>
         </div>
         <div class="form-group row">

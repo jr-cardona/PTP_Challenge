@@ -8,14 +8,28 @@
     <form action="{{ route('sellers.index') }}" method="get">
         <div class="form-group row">
             <div class="col-md-3">
-                <input type="hidden" name="seller_id" id="seller_id" value="{{ $request->get('seller_id') }}">
-                <input type="text" name="seller" id="seller" class="form-control" placeholder="Nombre" value="{{ $request->get('seller') }}" autocomplete="off">
-                <div id="sellerList" class="position-absolute" style="z-index: 999">
-                </div>
+                <label>{{ __("Nombre") }}</label>
+                <v-select label="name" :filterable="false" :options="options" @search="searchSeller">
+                    <template slot="no-options">
+                        {{ __("Ingresa el nombre...") }}
+                    </template>
+                    <template slot="option" slot-scope="option">
+                        <div class="d-center">
+                            @{{ option.name }}
+                        </div>
+                    </template>
+                    <template slot="selected-option" slot-scope="option">
+                        <div class="selected d-center">
+                            @{{ option.name }}
+                        </div>
+                        <input type="hidden" name="seller_id" id="seller_id" :value='option.id'>
+                    </template>
+                </v-select>
             </div>
             <div class="col-md-3">
+                <label for="type_document_id">{{ __("Tipo de documento") }}</label>
                 <select id="type_document_id" name="type_document_id" class="form-control">
-                    <option value="">{{ __("Tipo de documento") }}</option>
+                    <option value="">--</option>
                     @foreach($type_documents as $type_document)
                         <option value="{{ $type_document->id }}" {{ $request->get('type_document_id') == $type_document->id ? 'selected' : ''}}>
                             {{ $type_document->fullname }}
@@ -24,9 +38,11 @@
                 </select>
             </div>
             <div class="col-md-3">
-                <input type="number" id="document" name="document" class="form-control" placeholder="Documento" value="{{ $request->get('document') }}">
+                <label for="document">{{ __("Número de documento") }}</label>
+                <input type="number" id="document" name="document" class="form-control" placeholder="No. Documento" value="{{ $request->get('document') }}">
             </div>
             <div class="col-md-3">
+                <label for="email">{{ __("Correo electrónico") }}</label>
                 <input type="text" id="email" name="email" class="form-control" placeholder="Correo electrónico" value="{{ $request->get('email') }}">
             </div>
         </div>

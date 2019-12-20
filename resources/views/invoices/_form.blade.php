@@ -22,11 +22,22 @@
     </div>
     <div class="col">
         <label for="seller_id" class="required">{{ __("Vendedor") }}</label>
-        <input type="hidden" name="seller_id" id="seller_id" value="{{ old('seller_id', $invoice->seller_id) }}">
-        <input type="text" name="seller" id="seller" value="{{ old('seller', isset($invoice->seller->name) ? $invoice->seller->name : '') }}"
-               class="form-control @error('seller_id') is-invalid @enderror" placeholder="Nombre del vendedor" autocomplete="off">
-        <div id="sellerList" class="position-absolute" style="z-index: 999">
-        </div>
+        <v-select label="name" :filterable="false" :options="options" @search="searchSeller">
+            <template slot="no-options">
+                {{ __("Ingresa el nombre del vendedor...") }}
+            </template>
+            <template slot="option" slot-scope="option">
+                <div class="d-center">
+                    @{{ option.name }}
+                </div>
+            </template>
+            <template slot="selected-option" slot-scope="option">
+                <div class="selected d-center">
+                    @{{ option.name }}
+                </div>
+                <input type="hidden" name="seller_id" id="seller_id" :value='option.id'>
+            </template>
+        </v-select>
         @error('seller_id')
         <span class="invalid-feedback" role="alert">
                 <strong>{{ $message }}</strong>
@@ -64,11 +75,22 @@
     </div>
     <div class="col">
         <label for="client" class="required">{{ __("Cliente") }}</label>
-        <input type="hidden" name="client_id" id="client_id" value="{{ old('client_id', $invoice->client_id) }}">
-        <input type="text" name="client" id="client" value="{{ old('client', isset($invoice->client->name) ? $invoice->client->name : '') }}"
-               class="form-control @error('client_id') is-invalid @enderror" placeholder="Nombre del cliente" autocomplete="off">
-        <div id="clientList" class="position-absolute" style="z-index: 999">
-        </div>
+        <v-select label="name" :filterable="false" :options="options" @search="searchClient">
+            <template slot="no-options">
+                {{ __("Ingresa el nombre del cliente...") }}
+            </template>
+            <template slot="option" slot-scope="option">
+                <div class="d-center">
+                    @{{ option.name }}
+                </div>
+            </template>
+            <template slot="selected-option" slot-scope="option">
+                <div class="selected d-center">
+                    @{{ option.name }}
+                </div>
+                <input type="hidden" name="client_id" id="client_id" :value='option.id'>
+            </template>
+        </v-select>
         @error('client_id')
             <span class="invalid-feedback" role="alert">
                 <strong>{{ $message }}</strong>

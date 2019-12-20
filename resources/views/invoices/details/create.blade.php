@@ -10,12 +10,23 @@
                 @csrf
                 <div class="row">
                     <div class="col">
-                        <label for="product">{{ __("Producto") }}</label>
-                        <input type="hidden" name="product_id" id="product_id" value="{{ old('product_id') }}">
-                        <input type="text" name="product" id="product" value="{{ old('product') }}" autocomplete="off"
-                               class="form-control @error('product_id') is-invalid @enderror" placeholder="Nombre del producto">
-                        <div id="productList" class="position-absolute" style="z-index: 999">
-                        </div>
+                        <label class="required">{{ __("Producto") }}</label>
+                        <v-select label="name" :filterable="false" :options="options" @search="searchSeller">
+                            <template slot="no-options">
+                                {{ __("Ingresa el nombre del producto...") }}
+                            </template>
+                            <template slot="option" slot-scope="option">
+                                <div class="d-center">
+                                    @{{ option.name }}
+                                </div>
+                            </template>
+                            <template slot="selected-option" slot-scope="option">
+                                <div class="selected d-center">
+                                    @{{ option.name }}
+                                </div>
+                                <input type="hidden" name="seller_id" id="seller_id" :value='option.id'>
+                            </template>
+                        </v-select>
                         @error('product_id')
                         <span class="invalid-feedback" role="alert">
                                 <strong>{{ $message }}</strong>
@@ -30,6 +41,3 @@
         </div>
     </div>
 @endsection
-@push('scripts')
-    <script src="{{ asset(mix('js/search-product.js')) }}"></script>
-@endpush
