@@ -5,6 +5,9 @@ Auth::routes();
 
 Route::middleware(['auth'])->group(function (){
     Route::get('/home', 'HomeController@index')->name('home');
+    Route::get('/clientes/buscar', 'ClientController@search')->name('clients.search');
+    Route::get('/vendedores/buscar', 'SellerController@search')->name('sellers.search');
+    Route::get('/productos/buscar', 'ProductController@search')->name('prodcuts.search');
 
     Route::resource('/facturas/{invoice}/detalle', 'InvoiceProductController')
         ->except('index', 'show')
@@ -23,14 +26,11 @@ Route::middleware(['auth'])->group(function (){
         ->names('products')
         ->parameters(['productos' => 'product']);
 
-    Route::resource('vendedores', 'SellerController')
+    Route::resource('/vendedores', 'SellerController')
         ->names('sellers')
         ->parameters(['vendedores' => 'seller']);
 
     Route::get('invoices-export-excel', 'InvoiceController@exportExcel')->name('invoices.exportExcel');
     Route::post('invoices-import-excel', 'InvoiceController@importExcel')->name('invoices.importExcel');
-    Route::post('/autocomplete/search', 'AutocompleteController@search')->name('autocomplete.search');
 });
-
-
 
