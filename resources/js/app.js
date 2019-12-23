@@ -34,7 +34,19 @@ Vue.component('v-select', VueSelect.VueSelect);
 const app = new Vue({
     el: "#app",
     data: {
-        options: []
+        options: [],
+        old_client_values: {
+            "id": $('#old_client_id').val(),
+            "name" : $('#old_client_name').val()
+        },
+        old_seller_values: {
+            "id": $('#old_seller_id').val(),
+            "name" : $('#old_seller_name').val()
+        },
+        old_product_values: {
+            "id": $('#old_product_id').val(),
+            "name" : $('#old_product_name').val()
+        },
     },
     methods: {
         searchClient(search, loading) {

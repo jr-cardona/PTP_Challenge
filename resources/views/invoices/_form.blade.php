@@ -22,22 +22,16 @@
     </div>
     <div class="col">
         <label for="seller_id" class="required">{{ __("Vendedor") }}</label>
-        <v-select label="name" :filterable="false" :options="options" @search="searchSeller">
+        <input type="hidden" id="old_seller_name" name="old_seller_name" value="{{ old('seller', isset($invoice->seller->name) ? $invoice->seller->name : '') }}">
+        <input type="hidden" id="old_seller_id" name="old_seller_id" value="{{ old('seller_id', isset($invoice->seller->id) ? $invoice->seller->id : '') }}">
+        <v-select v-model="old_seller_values" label="name" :filterable="false" :options="options" @search="searchSeller"
+                  class="form-control @error('seller_id') is-invalid @enderror" >
             <template slot="no-options">
                 {{ __("Ingresa el nombre del vendedor...") }}
             </template>
-            <template slot="option" slot-scope="option">
-                <div class="d-center">
-                    @{{ option.name }}
-                </div>
-            </template>
-            <template slot="selected-option" slot-scope="option">
-                <div class="selected d-center">
-                    @{{ option.name }}
-                </div>
-                <input type="hidden" name="seller_id" id="seller_id" :value='option.id'>
-            </template>
         </v-select>
+        <input type="hidden" name="seller" id="seller" :value="(old_seller_values) ? old_seller_values.name : '' ">
+        <input type="hidden" name="seller_id" id="seller_id" :value="(old_seller_values) ? old_seller_values.id : '' ">
         @error('seller_id')
         <span class="invalid-feedback" role="alert">
                 <strong>{{ $message }}</strong>
@@ -74,23 +68,17 @@
         @enderror
     </div>
     <div class="col">
-        <label for="client" class="required">{{ __("Cliente") }}</label>
-        <v-select label="name" :filterable="false" :options="options" @search="searchClient">
+        <label for="client_id" class="required">{{ __("Cliente") }}</label>
+        <input type="hidden" id="old_client_name" name="old_client_name" value="{{ old('client', isset($invoice->seller->name) ? $invoice->seller->name : '') }}">
+        <input type="hidden" id="old_client_id" name="old_client_id" value="{{ old('client_id', isset($invoice->seller->name) ? $invoice->seller->name : '') }}">
+        <v-select v-model="old_client_values" label="name" :filterable="false" :options="options" @search="searchClient"
+                  class="form-control @error('client_id') is-invalid @enderror">
             <template slot="no-options">
                 {{ __("Ingresa el nombre del cliente...") }}
             </template>
-            <template slot="option" slot-scope="option">
-                <div class="d-center">
-                    @{{ option.name }}
-                </div>
-            </template>
-            <template slot="selected-option" slot-scope="option">
-                <div class="selected d-center">
-                    @{{ option.name }}
-                </div>
-                <input type="hidden" name="client_id" id="client_id" :value='option.id'>
-            </template>
         </v-select>
+        <input type="hidden" name="client" id="client" :value="(old_client_values) ? old_client_values.name : '' ">
+        <input type="hidden" name="client_id" id="client_id" :value="(old_client_values) ? old_client_values.id : '' ">
         @error('client_id')
             <span class="invalid-feedback" role="alert">
                 <strong>{{ $message }}</strong>

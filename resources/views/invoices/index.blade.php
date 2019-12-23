@@ -50,62 +50,41 @@
             </div>
             <div class="col-md-3">
                 <label>{{ __("Cliente") }}</label>
-                <v-select label="name" :filterable="false" :options="options" @search="searchClient">
+                <input type="hidden" id="old_client_name" name="old_client_name" value="{{ $request->get('client') }}">
+                <input type="hidden" id="old_client_id" name="old_client_id" value="{{ $request->get('client_id') }}">
+                <v-select class="form-control" v-model="old_client_values" label="name" :filterable="false" :options="options" @search="searchClient">
                     <template slot="no-options">
                         {{ __("Ingresa el nombre del cliente...") }}
                     </template>
-                    <template slot="option" slot-scope="option">
-                        <div class="d-center">
-                            @{{ option.name }}
-                        </div>
-                    </template>
-                    <template slot="selected-option" slot-scope="option">
-                        <div class="selected d-center">
-                            @{{ option.name }}
-                        </div>
-                        <input type="hidden" name="client_id" id="client_id" :value='option.id'>
-                    </template>
                 </v-select>
+                <input type="hidden" name="client" id="client" :value="(old_client_values) ? old_client_values.name : '' ">
+                <input type="hidden" name="client_id" id="client_id" :value="(old_client_values) ? old_client_values.id : '' ">
             </div>
             <div class="col-md-3">
                 <label>{{ __("Vendedor") }}</label>
-                <v-select label="name" :filterable="false" :options="options" @search="searchSeller">
+                <input type="hidden" id="old_seller_name" name="old_seller_name" value="{{ $request->get('seller') }}">
+                <input type="hidden" id="old_seller_id" name="old_seller_id" value="{{ $request->get('seller_id') }}">
+                <v-select class="form-control" v-model="old_seller_values" label="name" :filterable="false" :options="options" @search="searchSeller">
                     <template slot="no-options">
                         {{ __("Ingresa el nombre del vendedor...") }}
                     </template>
-                    <template slot="option" slot-scope="option">
-                        <div class="d-center">
-                            @{{ option.name }}
-                        </div>
-                    </template>
-                    <template slot="selected-option" slot-scope="option">
-                        <div class="selected d-center">
-                            @{{ option.name }}
-                        </div>
-                        <input type="hidden" name="seller_id" id="seller_id" :value='option.id'>
-                    </template>
                 </v-select>
+                <input type="hidden" name="seller" id="seller" :value="(old_seller_values) ? old_seller_values.name : '' ">
+                <input type="hidden" name="seller_id" id="seller_id" :value="(old_seller_values) ? old_seller_values.id : '' ">
             </div>
         </div>
         <div class="form-group row">
             <div class="col-md-3">
                 <label>{{ __("Producto") }}</label>
-                <v-select label="name" :filterable="false" :options="options" @search="searchProduct">
+                <input type="hidden" id="old_product_name" name="old_product_name" value="{{ $request->get('product') }}">
+                <input type="hidden" id="old_product_id" name="old_product_id" value="{{ $request->get('product_id') }}">
+                <v-select class="form-control" v-model="old_product_values" label="name" :filterable="false" :options="options" @search="searchProduct">
                     <template slot="no-options">
                         {{ __("Ingresa el nombre del producto...") }}
                     </template>
-                    <template slot="option" slot-scope="option">
-                        <div class="d-center">
-                            @{{ option.name }}
-                        </div>
-                    </template>
-                    <template slot="selected-option" slot-scope="option">
-                        <div class="selected d-center">
-                            @{{ option.name }}
-                        </div>
-                        <input type="hidden" name="product_id" id="product_id" :value='option.id'>
-                    </template>
                 </v-select>
+                <input type="hidden" name="product" id="product" :value="(old_product_values) ? old_product_values.name : '' ">
+                <input type="hidden" name="product_id" id="product_id" :value="(old_product_values) ? old_product_values.id : '' ">
             </div>
         </div>
         <div class="form-group row">

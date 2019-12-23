@@ -11,22 +11,16 @@
                 <div class="row">
                     <div class="col">
                         <label class="required">{{ __("Producto") }}</label>
-                        <v-select label="name" :filterable="false" :options="options" @search="searchProduct">
+                        <input type="hidden" id="old_product_name" name="old_product_name" value="{{ old('product') }}">
+                        <input type="hidden" id="old_product_id" name="old_product_id" value="{{ old('product_id') }}">
+                        <v-select v-model="old_product_values" label="name" :filterable="false" :options="options" @search="searchProduct"
+                                   class="form-control @error('product_id') is-invalid @enderror">
                             <template slot="no-options">
                                 {{ __("Ingresa el nombre del producto...") }}
                             </template>
-                            <template slot="option" slot-scope="option">
-                                <div class="d-center">
-                                    @{{ option.name }}
-                                </div>
-                            </template>
-                            <template slot="selected-option" slot-scope="option">
-                                <div class="selected d-center">
-                                    @{{ option.name }}
-                                </div>
-                                <input type="hidden" name="product_id" id="product_id" :value='option.id'>
-                            </template>
                         </v-select>
+                        <input type="hidden" name="product" id="product" :value="(old_product_values) ? old_product_values.name : '' ">
+                        <input type="hidden" name="product_id" id="product_id" :value="(old_product_values) ? old_product_values.id : '' ">
                         @error('product_id')
                         <span class="invalid-feedback" role="alert">
                                 <strong>{{ $message }}</strong>

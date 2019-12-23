@@ -9,22 +9,16 @@
         <div class="form-group row">
             <div class="col-md-3">
                 <label>{{ __("Nombre") }}</label>
-                <v-select label="name" :filterable="false" :options="options" @search="searchSeller">
+                <input type="hidden" id="old_seller_name" name="old_seller_name" value="{{ $request->get('seller') }}">
+                <input type="hidden" id="old_seller_id" name="old_seller_id" value="{{ $request->get('seller_id') }}">
+                <v-select v-model="old_seller_values" label="name" :filterable="false" :options="options" @search="searchSeller"
+                          class="form-control">
                     <template slot="no-options">
                         {{ __("Ingresa el nombre...") }}
                     </template>
-                    <template slot="option" slot-scope="option">
-                        <div class="d-center">
-                            @{{ option.name }}
-                        </div>
-                    </template>
-                    <template slot="selected-option" slot-scope="option">
-                        <div class="selected d-center">
-                            @{{ option.name }}
-                        </div>
-                        <input type="hidden" name="seller_id" id="seller_id" :value='option.id'>
-                    </template>
                 </v-select>
+                <input type="hidden" name="seller" id="seller" :value="(old_seller_values) ? old_seller_values.name : '' ">
+                <input type="hidden" name="seller_id" id="seller_id" :value="(old_seller_values) ? old_seller_values.id : '' ">
             </div>
             <div class="col-md-3">
                 <label for="type_document_id">{{ __("Tipo de documento") }}</label>

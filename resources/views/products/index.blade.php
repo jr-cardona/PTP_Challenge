@@ -9,22 +9,16 @@
         <div class="form-group row">
             <div class="col-md-3">
                 <label>{{ __("Nombre") }}</label>
-                <v-select label="name" :filterable="false" :options="options" @search="searchProduct">
+                <input type="hidden" id="old_product_name" name="old_product_name" value="{{ $request->get('product') }}">
+                <input type="hidden" id="old_product_id" name="old_product_id" value="{{ $request->get('product_id') }}">
+                <v-select v-model="old_product_values" label="name" :filterable="false" :options="options" @search="searchProduct"
+                          class="form-control">
                     <template slot="no-options">
                         {{ __("Ingresa el nombre...") }}
                     </template>
-                    <template slot="option" slot-scope="option">
-                        <div class="d-center">
-                            @{{ option.name }}
-                        </div>
-                    </template>
-                    <template slot="selected-option" slot-scope="option">
-                        <div class="selected d-center">
-                            @{{ option.name }}
-                        </div>
-                        <input type="hidden" name="product_id" id="product_id" :value='option.id'>
-                    </template>
                 </v-select>
+                <input type="hidden" name="product" id="product" :value="(old_product_values) ? old_product_values.name : '' ">
+                <input type="hidden" name="product_id" id="product_id" :value="(old_product_values) ? old_product_values.id : '' ">
             </div>
         </div>
         <div class="form-group row">
