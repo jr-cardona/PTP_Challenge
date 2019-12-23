@@ -27,16 +27,16 @@
                 <!-- Left Side Of Navbar -->
                 <ul class="nav nav-pills">
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ route('invoices.index') }}">Facturas</a>
+                        <a class="nav-link" href="{{ route('invoices.index') }}">{{ __("Facturas") }}</a>
                     </li>
                     <li>
-                        <a class="nav-link" href="{{ route('clients.index') }}">Clientes</a>
+                        <a class="nav-link" href="{{ route('clients.index') }}">{{ __("Clientes") }}</a>
                     </li>
                     <li>
-                        <a class="nav-link" href="{{ route('sellers.index') }}">Vendedores</a>
+                        <a class="nav-link" href="{{ route('sellers.index') }}">{{ __("Vendedores") }}</a>
                     </li>
                     <li>
-                        <a class="nav-link" href="{{ route('products.index') }}">Productos</a>
+                        <a class="nav-link" href="{{ route('products.index') }}">{{ __("Productos") }}</a>
                     </li>
                 </ul>
 
@@ -82,6 +82,9 @@
             </div>
         </main>
     </div>
+    <script src="https://unpkg.com/vue@latest"></script>
+    <script src="https://unpkg.com/vue-select@latest"></script>
+    <link rel="stylesheet" href="https://unpkg.com/vue-select@latest/dist/vue-select.css">
     <script src="{{ asset(mix('js/manifest.js')) }}"></script>
     <script src="{{ asset(mix('js/vendor.js')) }}"></script>
     <script src="{{ asset(mix('js/app.js')) }}"></script>

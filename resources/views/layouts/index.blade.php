@@ -14,7 +14,7 @@
     @endif
     <div class="d-flex justify-content-between">
         <h2 class="card-title">
-            <i class="fa fa-search"></i> Buscar @yield('Name')
+            <i class="fa fa-search"></i> {{ __("Buscar") }} @yield('Name')
         </h2>
         <div>
             @yield('Create')
@@ -42,7 +42,4 @@
 @endpush
 @push('scripts')
     <script src="{{ asset(mix('js/delete-modal.js')) }}"></script>
-    <script src="{{ asset(mix('js/search-client.js')) }}"></script>
-    <script src="{{ asset(mix('js/search-seller.js')) }}"></script>
-    <script src="{{ asset(mix('js/search-product.js')) }}"></script>
 @endpush

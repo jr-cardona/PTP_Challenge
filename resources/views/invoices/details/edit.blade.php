@@ -3,14 +3,14 @@
 @section('content')
     <div class="card">
         <div class="card-header">
-            <h1>Editar detalle. Factura de venta No. {{ $invoice->id }}</h1>
+            <h1>{{ __("Editar detalle. Factura de venta No.") }} {{ $invoice->id }}</h1>
         </div>
         <div class="card-body">
             <form action="{{ route('invoiceDetails.update', [$invoice, $product]) }}" class="form-group" method="POST">
                 @method('PUT') @csrf
                 <div class="row">
                     <div class="col">
-                        <label>Producto</label>
+                        <label>{{ __("Producto") }}</label>
                         <span class="form-control">
                             {{ $product->name }}
                         </span>

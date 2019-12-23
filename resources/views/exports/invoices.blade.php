@@ -1,15 +1,15 @@
 <table>
     <thead>
     <tr>
-        <th>Número</th>
-        <th>Fecha de expedición</th>
-        <th>Fecha de vencimiento</th>
-        <th>Fecha de recibo</th>
-        <th>IVA</th>
-        <th>Descripción</th>
-        <th>Estado</th>
-        <th>Cliente</th>
-        <th>Vendedor</th>
+        <th>{{ __("Número") }}</th>
+        <th>{{ __("Fecha de expedición") }}</th>
+        <th>{{ __("Fecha de vencimiento") }}</th>
+        <th>{{ __("Fecha de recibo") }}</th>
+        <th>{{ __("IVA") }}</th>
+        <th>{{ __("Descripción") }}</th>
+        <th>{{ __("Estado") }}</th>
+        <th>{{ __("Cliente") }}</th>
+        <th>{{ __("Vendedor") }}</th>
     </tr>
     </thead>
     <tbody>

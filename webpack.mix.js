@@ -14,8 +14,5 @@ const mix = require('laravel-mix');
 mix.js('resources/js/app.js', 'public/js')
     .js('resources/js/delete-modal', 'public/js')
     .js('resources/js/import-invoices-modal', 'public/js')
-    .js('resources/js/search-client', 'public/js')
-    .js('resources/js/search-seller', 'public/js')
-    .js('resources/js/search-product', 'public/js')
     .sass('resources/sass/app.scss', 'public/css')
     .extract();

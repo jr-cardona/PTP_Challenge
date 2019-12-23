@@ -3,7 +3,7 @@
 @section('content')
     <div class="card">
         <div class="card-header">
-            <h1>Crear Factura</h1>
+            <h1>{{ __("Crear Factura") }}</h1>
         </div>
         <div class="card-body">
             <form action="{{ route('invoices.store') }}" class="form-group" method="POST">
@@ -12,7 +12,3 @@
         </div>
     </div>
 @endsection
-@push('scripts')
-    <script src="{{ asset(mix('js/search-client.js')) }}"></script>
-    <script src="{{ asset(mix('js/search-seller.js')) }}"></script>
-@endpush

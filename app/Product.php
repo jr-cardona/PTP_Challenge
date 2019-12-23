@@ -3,18 +3,21 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Product extends Model
 {
     protected $guarded = [];
 
-    //ELOQUENT RELATIONSHIPS
-    public function invoices(){
+    /**
+     * Relation between products and invoices
+     * @return BelongsToMany
+     */
+    public function invoices(): BelongsToMany {
         return $this->belongsToMany(Invoice::class);
     }
 
-    //QUERY SCOPES
+    /** Query Scopes */
     public function scopeProduct($query, $id){
         if(trim($id) != ""){
             return $query->where('id', $id);

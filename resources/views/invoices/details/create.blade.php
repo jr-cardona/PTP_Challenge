@@ -3,19 +3,24 @@
 @section('content')
     <div class="card">
         <div class="card-header">
-            <h1>Agregar detalle. Factura de venta No. {{ $invoice->id }}</h1>
+            <h1>{{ __("Agregar detalle. Factura de venta No.") }} {{ $invoice->id }}</h1>
         </div>
         <div class="card-body">
             <form action="{{ route('invoiceDetails.store', $invoice) }}" class="form-group" method="POST">
                 @csrf
                 <div class="row">
                     <div class="col">
-                        <label for="product">Producto</label>
-                        <input type="hidden" name="product_id" id="product_id" value="{{ old('product_id') }}">
-                        <input type="text" name="product" id="product" value="{{ old('product') }}" autocomplete="off"
-                               class="form-control @error('product_id') is-invalid @enderror" placeholder="Nombre del producto">
-                        <div id="productList" class="position-absolute" style="z-index: 999">
-                        </div>
+                        <label class="required">{{ __("Producto") }}</label>
+                        <input type="hidden" id="old_product_name" name="old_product_name" value="{{ old('product') }}">
+                        <input type="hidden" id="old_product_id" name="old_product_id" value="{{ old('product_id') }}">
+                        <v-select v-model="old_product_values" label="name" :filterable="false" :options="options" @search="searchProduct"
+                                   class="form-control @error('product_id') is-invalid @enderror">
+                            <template slot="no-options">
+                                {{ __("Ingresa el nombre del producto...") }}
+                            </template>
+                        </v-select>
+                        <input type="hidden" name="product" id="product" :value="(old_product_values) ? old_product_values.name : '' ">
+                        <input type="hidden" name="product_id" id="product_id" :value="(old_product_values) ? old_product_values.id : '' ">
                         @error('product_id')
                         <span class="invalid-feedback" role="alert">
                                 <strong>{{ $message }}</strong>
@@ -30,6 +35,3 @@
         </div>
     </div>
 @endsection
-@push('scripts')
-    <script src="{{ asset(mix('js/search-product.js')) }}"></script>
-@endpush

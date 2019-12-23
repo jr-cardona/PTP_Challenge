@@ -9,75 +9,108 @@ use App\Http\Requests\SaveSellerRequest;
 
 class SellerController extends Controller
 {
-    public function __construct()
-    {
-        $this->middleware('auth');
-    }
-
-    public function index(Request $request)
-    {
-        $id = $request->get('seller_id');
-        $name = $request->get('seller');
-        $type_document_id = $request->get('type_document_id');
-        $document = $request->get('document');
-        $email = $request->get('email');
-
+    /**
+     * Display a listing of the resource.
+     * @param Request $request
+     * @return \Illuminate\Http\Response
+     */
+    public function index(Request $request) {
         $sellers = Seller::orderBy('name')
-            ->seller($id)
-            ->typedocument($type_document_id)
-            ->document($document)
-            ->email($email)
+            ->seller($request->get('seller_id'))
+            ->typedocument($request->get('type_document_id'))
+            ->document($request->get('document'))
+            ->email($request->get('email'))
             ->paginate(10);
-        return view('sellers.index', [
+        return response()->view('sellers.index', [
             'sellers' => $sellers,
-            'type_documents' => TypeDocument::all(),
             'request' => $request,
-            'side_effect' => 'Se borrarán todas sus facturas asociadas'
+            'side_effect' => __('Se borrarán todas sus facturas asociadas')
         ]);
     }
 
-    public function create()
-    {
-        return view('sellers.create', [
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function create() {
+        return response()->view('sellers.create', [
             'seller' => new Seller,
-            'type_documents' => TypeDocument::all()
         ]);
     }
 
-    public function store(SaveSellerRequest $request)
-    {
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function store(SaveSellerRequest $request) {
         Seller::create($request->validated());
 
-        return redirect()->route('sellers.index')->with('message', 'Vendedor creado satisfactoriamente');
+        return redirect()->route('sellers.index')->with('message', __('Vendedor creado satisfactoriamente'));
     }
 
-    public function show(Seller $seller)
-    {
-        return view('sellers.show', [
+    /**
+     * Display the specified resource.
+     *
+     * @param Seller $seller
+     * @return \Illuminate\Http\Response
+     */
+    public function show(Seller $seller) {
+        return response()->view('sellers.show', [
             'seller' => $seller,
-            'side_effect' => 'Se borrarán todas sus facturas asociadas'
+            'side_effect' => __('Se borrarán todas sus facturas asociadas')
         ]);
     }
 
-    public function edit(Seller $seller)
-    {
-        return view('sellers.edit', [
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param Seller $seller
+     * @return \Illuminate\Http\Response
+     */
+    public function edit(Seller $seller) {
+        return response()->view('sellers.edit', [
             'seller' => $seller,
-            'type_documents' => TypeDocument::all()
         ]);
     }
 
-    public function update(SaveSellerRequest $request, Seller $seller)
-    {
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param SaveSellerRequest $request
+     * @param Seller $seller
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function update(SaveSellerRequest $request, Seller $seller) {
         $seller->update($request->validated());
 
-        return redirect()->route('sellers.show', $seller)->with('message', 'Vendedor actualizado satisfactoriamente');
+        return redirect()->route('sellers.show', $seller)->with('message', __('Vendedor actualizado satisfactoriamente'));
     }
 
-    public function destroy(Seller $seller)
-    {
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param Seller $seller
+     * @return \Illuminate\Http\RedirectResponse
+     * @throws \Exception
+     */
+    public function destroy(Seller $seller) {
         $seller->delete();
 
-        return redirect()->route('sellers.index')->with('message', 'Vendedor eliminado satisfactoriamente');
+        return redirect()->route('sellers.index')->with('message', __('Vendedor eliminado satisfactoriamente'));
+    }
+
+    /**
+     * Display the specified resource filtering by name.
+     * @param Request $request
+     */
+    public function search(Request $request) {
+        $sellers = Seller::where('name', 'like', '%'. $request->name .'%')
+            ->orderBy('name')
+            ->limit('100')
+            ->get();
+        echo $sellers;
     }
 }

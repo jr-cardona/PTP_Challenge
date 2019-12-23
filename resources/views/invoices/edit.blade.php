@@ -3,7 +3,7 @@
 @section('content')
     <div class="card">
         <div class="card-header">
-            <h1>Editar Factura {{ $invoice->id }}</h1>
+            <h1>{{ __("Editar Factura") }} {{ $invoice->id }}</h1>
         </div>
         <div class="card-body">
             <form action="{{ route('invoices.update', $invoice) }}" class="form-group" method="POST">
@@ -13,7 +13,3 @@
         </div>
     </div>
 @endsection
-@push('scripts')
-    <script src="{{ asset(mix('js/search-client.js')) }}"></script>
-    <script src="{{ asset(mix('js/search-seller.js')) }}"></script>
-@endpush
