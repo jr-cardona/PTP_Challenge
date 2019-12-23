@@ -7,3 +7,24 @@
 // Bootstrap
 @import '~bootstrap/scss/bootstrap';
 
+.required:after
+{
+    color: red;
+    content: " *";
+}
+.td-title
+{
+    width: 15%;
+}
+.td-content
+{
+    width: 35%;
+}
+.v-select .vs__dropdown-toggle
+{
+    border: none;
+}
+.vs__actions
+{
+    padding: 0 1px 0 1px !important;
+}

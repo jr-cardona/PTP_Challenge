@@ -3,10 +3,15 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class TypeDocument extends Model
 {
-    public function clients(){
+    /**
+     * Relation between type documents and clients
+     * @return HasMany
+     */
+    public function clients(): HasMany {
         return $this->hasMany(Client::class);
     }
 }

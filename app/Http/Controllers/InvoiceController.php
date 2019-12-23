@@ -3,95 +3,147 @@
 namespace App\Http\Controllers;
 
 use App\State;
-use App\Client;
-use App\Seller;
 use App\Invoice;
-use App\Product;
+use Illuminate\Http\Request;
+use App\Exports\InvoicesExport;
+use App\Imports\InvoicesImport;
 use App\Http\Requests\SaveInvoiceRequest;
+use Maatwebsite\Excel\Facades\Excel;
 
 class InvoiceController extends Controller
 {
-    public function __construct()
-    {
-        $this->middleware('auth');
-    }
-
-    public function index()
-    {
-        $invoices = Invoice::paginate(10);
-        return view('invoices.index', [
-            'invoices' => $invoices
-        ]);
-    }
-
-    public function create()
-    {
-        return view('invoices.create', [
-            'invoice' => new Invoice,
-            'clients' => Client::all(),
+    /**
+     * Display a listing of the resource.
+     * @param Request $request
+     * @return \Illuminate\Http\Response
+     */
+    public function index(Request $request) {
+        $invoices = Invoice::orderBy('id', 'DESC')
+            ->number($request->get('number'))
+            ->state($request->get('state_id'))
+            ->client($request->get('client_id'))
+            ->seller($request->get('seller_id'))
+            ->product($request->get('product_id'))
+            ->issuedDate($request->get('issued_init'), $request->get('issued_final'))
+            ->overduedDate($request->get('overdued_init'), $request->get('overdued_final'))
+            ->paginate(10);
+        return response()->view('invoices.index', [
+            'invoices' => $invoices,
             'states' => State::all(),
-            'sellers' => Seller::all()
+            'request' => $request,
+            'side_effect' => __('Se borrarán todos sus detalles asociados')
         ]);
     }
 
-    public function store(SaveInvoiceRequest $request)
-    {
-        Invoice::create($request->validated());
-
-        return redirect()->route('invoices.index')->with('message', 'Factura creada satisfactoriamente');
-    }
-
-    public function show(Invoice $invoice)
-    {
-        return view('invoices.show', [
-            'invoice' => $invoice
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function create() {
+        return response()->view('invoices.create', [
+            'invoice' => new Invoice,
+            'states' => State::all(),
         ]);
     }
 
-    public function edit(Invoice $invoice)
-    {
-        return view('invoices.edit', [
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function store(SaveInvoiceRequest $request) {
+        $result = Invoice::create($request->validated());
+
+        return redirect()->route('invoices.show', $result->id)->with('message', __('Factura creada satisfactoriamente'));
+    }
+
+    /**
+     * Display the specified resource.
+     *
+     * @param Invoice $invoice
+     * @return \Illuminate\Http\Response
+     */
+    public function show(Invoice $invoice) {
+        return response()->view('invoices.show', [
             'invoice' => $invoice,
-            'clients' => Client::all(),
-            'sellers' => Seller::all(),
+            'side_effect' => __('Se borrarán todos sus detalles asociados')
+        ]);
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param Invoice $invoice
+     * @return \Illuminate\Http\Response
+     */
+    public function edit(Invoice $invoice) {
+        return response()->view('invoices.edit', [
+            'invoice' => $invoice,
             'states' => State::all()
         ]);
     }
 
-    public function update(SaveInvoiceRequest $request, Invoice $invoice)
-    {
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param SaveInvoiceRequest $request
+     * @param Invoice $invoice
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function update(SaveInvoiceRequest $request, Invoice $invoice) {
         $invoice->update($request->validated());
 
-        return redirect()->route('invoices.show', $invoice)->with('message', 'Factura actualizada satisfactoriamente');
+        return redirect()->route('invoices.show', $invoice)->with('message', __('Factura actualizada satisfactoriamente'));
     }
 
-    public function destroy(Invoice $invoice)
-    {
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param Invoice $invoice
+     * @return \Illuminate\Http\RedirectResponse
+     * @throws \Exception
+     */
+    public function destroy(Invoice $invoice) {
         $invoice->delete();
 
-        return redirect()->route('invoices.index')->with('message', 'Factura eliminada satisfactoriamente');
+        return redirect()->route('invoices.index')->with('message', __('Factura eliminada satisfactoriamente'));
     }
 
-    public function storeDetail(Invoice $invoice)
-    {
-        $invoice->products()->attach(request('product_id'), [
-            'quantity' => request('quantity'),
-            'unit_price' => request('unit_price'),
-            'total_price' => request('quantity') * request('unit_price')
+    /**
+     * Export a listing of the resource.
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\BinaryFileResponse
+     */
+    public function exportExcel() {
+        return Excel::download(new InvoicesExport, 'invoices-list.xlsx');
+    }
+
+    /**
+     * Display a listing of the resource.
+     * @param Request $request
+     * @return \Illuminate\Http\Response & \Illuminate\Http\RedirectResponse
+     * @throws \Illuminate\Validation\ValidationException
+     */
+    public function importExcel(Request $request) {
+        $this->validate($request, [
+            'invoices' => 'required|mimes:xls,xlsx'
         ]);
-
-        return redirect()->route('invoices.show', $invoice)->with('message', 'Detalle creado satisfactoriamente');
-    }
-
-    public function editDetail(Invoice $invoice){
-
-    }
-
-    public function updateDetail(Invoice $invoice){
-
-    }
-
-    public function destroyDetail(Invoice $invoice, Product $product){
-        $invoice->products()->detach($product->id);
+        $file = $request->file('invoices');
+        try {
+            Excel::import(new InvoicesImport(), $file);
+            return redirect()->route('invoices.index')->with('message', __('Importación completada correctamente'));
+        }
+        catch (\Maatwebsite\Excel\Validators\ValidationException $e) {
+            $failures_unsorted = $e->failures();
+            $failures_sorted = array();
+            foreach($failures_unsorted as $failure) {
+                $failures_sorted[$failure->row()][$failure->attribute()] = $failure->errors()[0];
+            }
+            return response()->view('invoices.importErrors', [
+                'failures' => $failures_sorted,
+            ]);
+        }
     }
 }

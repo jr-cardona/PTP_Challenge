@@ -8,11 +8,21 @@ use Illuminate\Foundation\Http\FormRequest;
 class SaveClientRequest extends FormRequest
 {
 
+    /**
+     * Determine if the user is authorized to make this request.
+     *
+     * @return bool
+     */
     public function authorize()
     {
         return true;
     }
 
+    /**
+     * Get the validation rules that apply to the request.
+     *
+     * @return array
+     */
     public function rules()
     {
         return [
@@ -26,7 +36,7 @@ class SaveClientRequest extends FormRequest
             'name' => 'required|string|min:3|max:50',
             'phone_number' => 'nullable|numeric|digits:7',
             'cell_phone_number' => 'required|numeric|digits:10',
-            'address' => 'required|string|min:5|max:50',
+            'address' => 'required|string|min:5|max:100',
             'email' => [
                 'required',
                 'email',
