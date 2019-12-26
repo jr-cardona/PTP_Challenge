@@ -9,7 +9,6 @@ require('./bootstrap');
 window.Vue = require('vue');
 
 import Vue from 'vue';
-import vSelect from 'vue-select';
 import 'vue-select/dist/vue-select.css';
 
 /**
@@ -20,10 +19,6 @@ import 'vue-select/dist/vue-select.css';
  * Eg. ./components/ExampleComponent.vue -> <example-component></example-component>
  */
 
-// const files = require.context('./', true, /\.vue$/i)
-// files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key).default))
-
-//  Vue.component('v-select', vSelect);
 Vue.component('v-select', VueSelect.VueSelect);
 /**
  * Next, we will create a fresh Vue application instance and attach it to
