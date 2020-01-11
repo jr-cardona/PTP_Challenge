@@ -25,6 +25,7 @@
 
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <!-- Left Side Of Navbar -->
+                @auth
                 <ul class="nav nav-pills">
                     <li class="nav-item">
                         <a class="nav-link" href="{{ route('invoices.index') }}">{{ __("Facturas") }}</a>
@@ -39,7 +40,7 @@
                         <a class="nav-link" href="{{ route('products.index') }}">{{ __("Productos") }}</a>
                     </li>
                 </ul>
-
+                @endauth
                 <!-- Right Side Of Navbar -->
                 <ul class="navbar-nav ml-auto">
                     <!-- Authentication Links -->
