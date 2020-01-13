@@ -15,11 +15,12 @@ class SellerController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function index(Request $request) {
-        $sellers = Seller::orderBy('name')
+        $sellers = Seller::with(["type_document"])
             ->seller($request->get('seller_id'))
             ->typedocument($request->get('type_document_id'))
             ->document($request->get('document'))
             ->email($request->get('email'))
+            ->orderBy('name')
             ->paginate(10);
         return response()->view('sellers.index', [
             'sellers' => $sellers,
