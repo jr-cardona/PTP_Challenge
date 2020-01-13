@@ -39,7 +39,7 @@
             <td class="td-content">{{ $invoice->vat }}%</td>
 
             <td class="table-dark td-title">{{ __("Valor total:") }}</td>
-            <td class="td-content">${{ number_format($invoice->getTotalAttribute(), 2) }}</td>
+            <td class="td-content">${{ number_format($invoice->total, 2) }}</td>
         </tr>
         <tr>
             <td class="table-dark td-title">{{ __("Vendedor:") }}</td>
@@ -102,15 +102,15 @@
                @endforeach
                 <tr>
                     <td class="text-right" colspan="5">{{ __("SUBTOTAL") }}</td>
-                    <td class="text-right">${{ number_format($invoice->getSubtotalAttribute(), 2) }}</td>
+                    <td class="text-right">${{ number_format($invoice->subtotal, 2) }}</td>
                 </tr>
                 <tr>
                     <td class="text-right" colspan="5">{{ __("IVA") }} ({{ $invoice->vat }})% </td>
-                    <td class="text-right">${{ number_format($invoice->getIvaAmountAttribute(), 2) }}</td>
+                    <td class="text-right">${{ number_format($invoice->ivaamount, 2) }}</td>
                 </tr>
                 <tr>
                     <td class="text-right" colspan="5">{{ __("GRAN TOTAL") }}</td>
-                    <td class="text-right">${{ number_format($invoice->getTotalAttribute(), 2) }}</td>
+                    <td class="text-right">${{ number_format($invoice->total, 2) }}</td>
                 </tr>
             </tbody>
         </table>
