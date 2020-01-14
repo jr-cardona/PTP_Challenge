@@ -9,6 +9,10 @@
             <form action="{{ route('invoices.update', $invoice) }}" class="form-group" method="POST">
                 @method('PUT')
                 @include('invoices._form')
+                <div class="form-group">
+                    <input type="submit" class="btn btn-primary" value="Guardar">
+                    <a href="{{ route('invoices.show', $invoice) }}" class="btn btn-danger">{{ __("Volver") }}</a>
+                </div>
             </form>
         </div>
     </div>

@@ -2,7 +2,9 @@
 @section('Title', 'Vendedores')
 @section('Name', 'Vendedores')
 @section('Create')
-    <a class="btn btn-success" href="{{ route('sellers.create') }}">{{ __("Crear nuevo vendedor") }}</a>
+    <a class="btn btn-success" href="{{ route('sellers.create') }}">
+        <i class="fa fa-plus"></i> {{ __("Crear nuevo vendedor") }}
+    </a>
 @endsection
 @section('Search')
     <form action="{{ route('sellers.index') }}" method="get">

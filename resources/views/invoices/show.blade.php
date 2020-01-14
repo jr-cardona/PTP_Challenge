@@ -115,7 +115,7 @@
             </tbody>
         </table>
         <a href="{{ route('invoiceDetails.create', $invoice) }}" class="btn btn-success btn-block">
-            {{ __("Agregar Detalle") }}
+            <i class="fa fa-plus"></i> {{ __("Agregar Detalle") }}
         </a>
     </div>
 @endsection

@@ -95,7 +95,3 @@
     </div>
 </div>
 <br>
-<div class="form-group">
-    <input type="submit" class="btn btn-primary" value="Guardar">
-    <a href="{{ route('sellers.show', $seller) }}" class="btn btn-danger">{{ __("Volver") }}</a>
-</div>

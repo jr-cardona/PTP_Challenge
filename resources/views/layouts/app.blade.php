@@ -8,7 +8,6 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <title>@yield('title')</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="{{ mix('css/app.css') }}">
 
 </head>
@@ -84,7 +83,7 @@
     </div>
     <script src="https://unpkg.com/vue@latest"></script>
     <script src="https://unpkg.com/vue-select@latest"></script>
-    <link rel="stylesheet" href="https://unpkg.com/vue-select@latest/dist/vue-select.css">
+    <script src="https://kit.fontawesome.com/d113d634ed.js" crossorigin="anonymous"></script>
     <script src="{{ asset(mix('js/manifest.js')) }}"></script>
     <script src="{{ asset(mix('js/vendor.js')) }}"></script>
     <script src="{{ asset(mix('js/app.js')) }}"></script>

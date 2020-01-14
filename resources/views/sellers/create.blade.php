@@ -8,6 +8,10 @@
         <div class="card-body">
             <form action="{{ route('sellers.store') }}" class="form-group" method="POST">
                 @include('sellers._form')
+                <div class="form-group">
+                    <input type="submit" class="btn btn-primary" value="Guardar">
+                    <a href="{{ route('sellers.index') }}" class="btn btn-danger">{{ __("Volver") }}</a>
+                </div>
             </form>
         </div>
     </div>
