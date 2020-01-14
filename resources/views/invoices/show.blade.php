@@ -4,6 +4,16 @@
     <a href="{{ route('invoices.index') }}" class="btn btn-secondary">
         <i class="fa fa-arrow-left"></i> {{ __("Volver") }}
     </a>
+    @if($invoice->state_id == "1")
+        <a href="{{ route('invoices.payments.create', $invoice) }}" class="btn btn-success">
+            <i class="fa fa-dollar-sign"></i> {{ __("Pagar") }}
+        </a>
+        @empty($invoice->received_at)
+            <a href="{{ route('invoices.receivedCheck', $invoice) }}" class="btn btn-primary">
+                <i class="fa fa-check"></i> {{ __("Marcar como recibida") }}
+            </a>
+        @endempty
+    @endif
 @endsection
 @section('Name')
     {{ __("Factura de venta No.") }} {{$invoice->number }}

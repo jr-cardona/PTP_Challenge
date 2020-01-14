@@ -29,9 +29,9 @@ class InvoiceController extends Controller
             ->paginate(10);
         return response()->view('invoices.index', [
             'invoices' => $invoices,
-            'states' => State::all(),
             'request' => $request,
-            'side_effect' => __('Se borrarán todos sus detalles asociados')
+            'side_effect' => __('Se borrarán todos sus detalles asociados'),
+            'states' => State::all()
         ]);
     }
 
@@ -43,7 +43,6 @@ class InvoiceController extends Controller
     public function create() {
         return response()->view('invoices.create', [
             'invoice' => new Invoice,
-            'states' => State::all(),
         ]);
     }
 
@@ -81,7 +80,6 @@ class InvoiceController extends Controller
     public function edit(Invoice $invoice) {
         return response()->view('invoices.edit', [
             'invoice' => $invoice,
-            'states' => State::all()
         ]);
     }
 
@@ -145,5 +143,12 @@ class InvoiceController extends Controller
                 'failures' => $failures_sorted,
             ]);
         }
+    }
+
+    public function receivedCheck(Invoice $invoice){
+        $now = date("Y-m-d\TH:i:s");
+        $invoice->update(["received_at" => $now]);
+
+        return redirect()->route('invoices.show', $invoice)->with('message', __('Marcada correctamente'));
     }
 }

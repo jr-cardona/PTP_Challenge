@@ -43,5 +43,7 @@ Route::middleware(['auth'])->group(function (){
 
     Route::get('invoices-export-excel', 'InvoiceController@exportExcel')->name('invoices.exportExcel');
     Route::post('invoices-import-excel', 'InvoiceController@importExcel')->name('invoices.importExcel');
+    Route::get('invoices-received-check/{invoice}', 'InvoiceController@receivedCheck')->name('invoices.receivedCheck');
+
 });
 

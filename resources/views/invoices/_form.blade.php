@@ -52,22 +52,6 @@
         @enderror
     </div>
     <div class="col">
-        <label for="state_id" class="required">{{ __("Estado") }}</label>
-        <select id="state_id" name="state_id" class="form-control @error('state_id') is-invalid @enderror">
-            <option value="">{{ __("Selecciona el estado") }}</option>
-            @foreach($states as $state)
-                <option value="{{ $state->id }}" {{old('state_id', $invoice->state_id) == $state->id ? 'selected' : ''}}>
-                    {{ $state->name }}
-                </option>
-            @endforeach
-        </select>
-        @error('state_id')
-            <span class="invalid-feedback" role="alert">
-                <strong>{{ $message }}</strong>
-            </span>
-        @enderror
-    </div>
-    <div class="col">
         <label for="client_id" class="required">{{ __("Cliente") }}</label>
         <input type="hidden" id="old_client_name" name="old_client_name" value="{{ old('client', isset($invoice->seller->name) ? $invoice->seller->name : '') }}">
         <input type="hidden" id="old_client_id" name="old_client_id" value="{{ old('client_id', isset($invoice->seller->name) ? $invoice->seller->name : '') }}">
