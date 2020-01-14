@@ -5,16 +5,16 @@
         <input type="text" name="name" id="name" value="{{ old('name', $seller->name) }}"
                class="form-control @error('name') is-invalid @enderror" placeholder="Ingresa el nombre">
         @error('name')
-        <span class="invalid-feedback" role="alert">
+            <span class="invalid-feedback" role="alert">
                 <strong>{{ $message }}</strong>
             </span>
         @enderror
     </div>
-    <div class="col">
-        <label for="document" class="required">{{ __("Número de documento") }}</label>
-        <input type="number" name="document" id="document" value="{{ old('document', $seller->document) }}"
-               class="form-control @error('document') is-invalid @enderror" placeholder="Ingresa el número de documento">
-        @error('document')
+    <div class="col form-group">
+        <label for="surname" class="required">{{ __("Apellido") }}</label>
+        <input type="text" name="surname" id="surname" value="{{ old('surname', $seller->surname) }}"
+               class="form-control @error('surname') is-invalid @enderror" placeholder="Ingresa el apellido">
+        @error('surname')
         <span class="invalid-feedback" role="alert">
                 <strong>{{ $message }}</strong>
             </span>
@@ -40,6 +40,16 @@
 </div>
 <br>
 <div class="row">
+    <div class="col">
+        <label for="document" class="required">{{ __("Número de documento") }}</label>
+        <input type="number" name="document" id="document" value="{{ old('document', $seller->document) }}"
+               class="form-control @error('document') is-invalid @enderror" placeholder="Ingresa el número de documento">
+        @error('document')
+        <span class="invalid-feedback" role="alert">
+                <strong>{{ $message }}</strong>
+            </span>
+        @enderror
+    </div>
     <div class="col">
         <label for="phone_number">{{ __("Número telefónico") }}</label>
         <input type="tel" name="phone_number" id="phone_number" value="{{ old('phone_number', $seller->phone_number) }}"
@@ -70,6 +80,9 @@
             </span>
         @enderror
     </div>
+</div>
+<br>
+<div class="row">
     <div class="col">
         <label for="email" class="required">{{ __("Email") }}</label>
         <input type="email" name="email" id="email" value="{{ old('email', $seller->email) }}"

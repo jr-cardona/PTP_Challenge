@@ -19,6 +19,7 @@ class CreateClientsTable extends Migration
             $table->string('document')->unique();
             $table->unsignedInteger('type_document_id');
             $table->string('name');
+            $table->string('surname');
             $table->string('phone_number')->nullable();
             $table->string('cell_phone_number');
             $table->string('address');

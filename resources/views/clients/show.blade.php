@@ -14,8 +14,8 @@
 @section('Body')
     <table class="table border-rounded table-sm">
         <tr>
-            <td class="table-dark td-title">{{ __("Nombre:") }}</td>
-            <td class="td-content">{{ $client->name }}</td>
+            <td class="table-dark td-title">{{ __("Nombre completo:") }}</td>
+            <td class="td-content">{{ $client->fullname }}</td>
 
             <td class="table-dark td-title">{{ __("Documento:") }}</td>
             <td class="td-content">{{ $client->type_document->name }} {{ $client->document }}</td>

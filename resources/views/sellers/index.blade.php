@@ -54,8 +54,8 @@
 @endsection
 @section('Header')
     <th scope="col">{{ __("Documento") }}</th>
-    <th scope="col" nowrap>{{ __("Nombre") }}</th>
-    <th scope="col">{{ __("Dirección") }}</th>
+    <th scope="col">{{ __("Nombre") }}</th>
+    <th scope="col">{{ __("Apellido") }}</th>
     <th scope="col">{{ __("Correo electrónico") }}</th>
     <th scope="col">{{ __("Celular") }}</th>
     <th scope="col">{{ __("Opciones") }}</th>
@@ -69,7 +69,7 @@
                 </a>
             </td>
             <td>{{ $seller->name }}</td>
-            <td>{{ $seller->address }}</td>
+            <td>{{ $seller->surname }}</td>
             <td>{{ $seller->email }}</td>
             <td>{{ $seller->cell_phone_number }}</td>
             <td class="btn-group btn-group-sm" nowrap>
