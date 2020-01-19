@@ -101,8 +101,8 @@
 @endsection
 @section('Header')
     <th scope="col" nowrap>{{ __("Título") }}</th>
-    <th scope="col" nowrap>{{ __("Fecha de expedición") }}</th>
-    <th scope="col" nowrap>{{ __("Fecha de vencimiento") }}</th>
+    <th scope="col" nowrap>{{ __("Fecha de creación") }}</th>
+    <th scope="col" nowrap>{{ __("Valor total") }}</th>
     <th scope="col" nowrap>{{ __("Estado") }}</th>
     <th scope="col" nowrap>{{ __("Cliente") }}</th>
     <th scope="col" nowrap>{{ __("Vendedor") }}</th>
@@ -110,23 +110,26 @@
 @endsection
 @section('Body')
     @foreach($invoices as $invoice)
-        <tr class="text-center">
+        <tr>
             <td nowrap>
                 <a href="{{ route('invoices.show', $invoice) }}">
                     {{ __("Factura de venta No.") }} {{ $invoice->number }}
+                    @if($invoice->isPaid())
+                        <i class="fa fa-check-circle"></i>
+                    @endif
                 </a>
             </td>
-            <td nowrap>{{ $invoice->issued_at }}</td>
-            <td nowrap>{{ $invoice->overdued_at }}</td>
-            <td nowrap>{{ $invoice->state->name }}</td>
+            <td class="text-center" nowrap>{{ $invoice->created_at->isoFormat('Y-MM-DD hh:mma') }}</td>
+            <td class="text-center" nowrap>${{ number_format($invoice->total, 2) }}</td>
+            @include('invoices.status_label')
             <td nowrap>
                 <a href="{{ route('clients.show', $invoice->client) }}" target="_blank">
-                    {{ $invoice->client->name }}
+                    {{ $invoice->client->fullname }}
                 </a>
             </td>
             <td nowrap>
                 <a href="{{ route('sellers.show', $invoice->seller) }}" target="_blank">
-                    {{ $invoice->seller->name }}
+                    {{ $invoice->seller->fullname }}
                 </a>
             </td>
             <td class="btn-group btn-group-sm" nowrap>
