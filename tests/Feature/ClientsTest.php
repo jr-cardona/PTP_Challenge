@@ -32,6 +32,84 @@ class ClientsTest extends TestCase
         $response->assertSee("Clientes");
     }
 
+
+
+    /** @test */
+    public function guest_user_cannot_access_to_create_clients_view()
+    {
+        $this->get(route('clients.create'))->assertRedirect(route('login'));
+    }
+
+    /** @test */
+    public function logged_in_user_can_access_to_create_clients_view()
+    {
+        $user = factory(User::class)->create();
+
+        $response = $this->actingAs($user)->get(route('clients.create'));
+
+        $response->assertSuccessful();
+        $response->assertViewIs("clients.create");
+        $response->assertSee("Crear Cliente");
+    }
+
+
+
+    /** @test */
+    public function guest_user_cannot_store_clients()
+    {
+        $type_document = factory(TypeDocument::class)->create();
+
+        $this->post(route('clients.store'), [
+            'document' => '0000000000',
+            'type_document_id' => $type_document->id,
+            'name' => 'Test Name',
+            'surname' => 'Test Surname',
+            'cell_phone_number' => '0000000000',
+            'address' => 'Test Address',
+            'email' => 'test@test.com'
+        ])
+            ->assertRedirect(route('login'));
+
+        $this->assertDatabaseMissing('clients', [
+            'document' => '0000000000',
+            'name' => 'Test Name',
+            'surname' => 'Test Surname',
+            'cell_phone_number' => '0000000000',
+            'address' => 'Test Address',
+            'email' => 'test@test.com'
+        ]);
+    }
+
+    /** @test */
+    public function logged_in_user_can_store_clients()
+    {
+        $user = factory(User::class)->create();
+        $type_document = factory(TypeDocument::class)->create();
+
+        $response = $this->actingAs($user)->post(route('clients.store'), [
+            'document' => '0000000000',
+            'type_document_id' => $type_document->id,
+            'name' => 'Test Name',
+            'surname' => 'Test Surname',
+            'cell_phone_number' => '0000000000',
+            'address' => 'Test Address',
+            'email' => 'test@test.com'
+        ]);
+        $response->assertRedirect(route('clients.show', '1'));
+        $response->assertSessionHasNoErrors();
+
+        $this->assertDatabaseHas('clients', [
+            'document' => '0000000000',
+            'name' => 'Test Name',
+            'surname' => 'Test Surname',
+            'cell_phone_number' => '0000000000',
+            'address' => 'Test Address',
+            'email' => 'test@test.com'
+        ]);
+    }
+
+
+
     /** @test */
     public function guest_user_cannot_access_to_a_specific_client()
     {
@@ -53,57 +131,36 @@ class ClientsTest extends TestCase
         $response->assertSuccessful();
         $response->assertViewIs("clients.show");
         $response->assertSee("Cliente");
+        $response->assertSeeText($client->name);
+    }
+
+
+
+    /** @test */
+    public function guest_user_cannot_access_to_edit_clients_view()
+    {
+        $this->seed("TypeDocumentsTableSeeder");
+        $client = factory(Client::class)->create();
+
+        $this->get(route('clients.edit', $client))->assertRedirect(route('login'));
     }
 
     /** @test */
-    public function guest_user_cannot_create_clients()
+    public function logged_id_user_can_access_to_edit_clients_view()
     {
-        $type_document = factory(TypeDocument::class)->create();
-
-        $this->post(route('clients.store'), [
-            'document' => '0000000000',
-            'type_document_id' => $type_document->id,
-            'name' => 'Test Name',
-            'cell_phone_number' => '0000000000',
-            'address' => 'Test Address',
-            'email' => 'test@test.com'
-        ])
-        ->assertRedirect(route('login'));
-
-        $this->assertDatabaseMissing('clients', [
-            'document' => '0000000000',
-            'name' => 'Test Name',
-            'cell_phone_number' => '0000000000',
-            'address' => 'Test Address',
-            'email' => 'test@test.com'
-        ]);
-    }
-
-    /** @test */
-    public function logged_in_user_can_create_clients()
-    {
+        $this->seed("TypeDocumentsTableSeeder");
+        $client = factory(Client::class)->create();
         $user = factory(User::class)->create();
-        $type_document = factory(TypeDocument::class)->create();
 
-        $this->actingAs($user)->post(route('clients.store'), [
-            'document' => '0000000000',
-            'type_document_id' => $type_document->id,
-            'name' => 'Test Name',
-            'cell_phone_number' => '0000000000',
-            'address' => 'Test Address',
-            'email' => 'test@test.com'
-        ])
-        ->assertRedirect()
-        ->assertSessionHasNoErrors();
+        $response = $this->actingAs($user)->get(route('clients.edit', $client));
 
-        $this->assertDatabaseHas('clients', [
-            'document' => '0000000000',
-            'name' => 'Test Name',
-            'cell_phone_number' => '0000000000',
-            'address' => 'Test Address',
-            'email' => 'test@test.com'
-        ]);
+        $response->assertSuccessful();
+        $response->assertViewIs("clients.edit");
+        $response->assertSee("Editar");
+        $response->assertSeeText($client->name);
     }
+
+
 
     /** @test */
     public function guest_user_cannot_update_clients()
@@ -115,6 +172,7 @@ class ClientsTest extends TestCase
             'document' => '0000000000',
             'type_document_id' => 1,
             'name' => 'Test Name',
+            'surname' => 'Test Surname',
             'cell_phone_number' => '0000000000',
             'address' => 'Test Address',
             'email' => 'test@test.com'
@@ -125,6 +183,7 @@ class ClientsTest extends TestCase
             'document' => $client->document,
             'type_document_id' => $client->type_document_id,
             'name' => $client->name,
+            'surname' => $client->surname,
             'cell_phone_number' => $client->cell_phone_number,
             'address' => $client->address,
             'email' => $client->email,
@@ -138,26 +197,30 @@ class ClientsTest extends TestCase
         $this->seed("TypeDocumentsTableSeeder");
         $client = factory(Client::class)->create();
 
-        $this->actingAs($user)->put(route('clients.update', $client), [
+        $response = $this->actingAs($user)->put(route('clients.update', $client), [
             'document' => '0000000000',
             'type_document_id' => 1,
             'name' => 'Test Name',
+            'surname' => 'Test Surname',
             'cell_phone_number' => '0000000000',
             'address' => 'Test Address',
             'email' => 'test@test.com'
-        ])
-        ->assertRedirect(route('clients.show', $client))
-        ->assertSessionHasNoErrors();
+        ]);
+        $response->assertRedirect(route('clients.show', $client));
+        $response->assertSessionHasNoErrors();
 
         $this->assertDatabaseHas('clients', [
             'document' => '0000000000',
             'type_document_id' => 1,
             'name' => 'Test Name',
+            'surname' => 'Test Surname',
             'cell_phone_number' => '0000000000',
             'address' => 'Test Address',
             'email' => 'test@test.com'
         ]);
     }
+
+
 
     /** @test */
     public function guest_user_cannot_delete_clients()
@@ -172,6 +235,7 @@ class ClientsTest extends TestCase
             'document' => $client->document,
             'type_document_id' => $client->type_document_id,
             'name' => $client->name,
+            'surname' => $client->surname,
             'cell_phone_number' => $client->cell_phone_number,
             'address' => $client->address,
             'email' => $client->email,
@@ -185,14 +249,15 @@ class ClientsTest extends TestCase
         $this->seed("TypeDocumentsTableSeeder");
         $client = factory(Client::class)->create();
 
-        $this->actingAs($user)->delete(route('clients.destroy', $client))
-            ->assertRedirect(route('clients.index'))
-            ->assertSessionHasNoErrors();
+        $response = $this->actingAs($user)->delete(route('clients.destroy', $client));
+        $response->assertRedirect(route('clients.index'));
+        $response->assertSessionHasNoErrors();
 
         $this->assertDatabaseMissing('clients', [
             'document' => $client->document,
             'type_document_id' => $client->type_document_id,
             'name' => $client->name,
+            'surname' => $client->surname,
             'cell_phone_number' => $client->cell_phone_number,
             'address' => $client->address,
             'email' => $client->email,
