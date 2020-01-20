@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Events\InvoiceCreated;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -10,6 +11,16 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 class Invoice extends Model
 {
     protected $guarded = [];
+    protected $dates = [
+        'issued_at',
+        'expired_at',
+        'received_at'
+    ];
+    protected $casts = [
+        'issued_at' => 'datetime:Y-m-d',
+        'expired_at' => 'datetime:Y-m-d',
+        'received_at' => 'datetime:Y-m-d',
+    ];
     protected $dispatchesEvents = [
         'created' => InvoiceCreated::class,
     ];
@@ -63,12 +74,8 @@ class Invoice extends Model
         return $this->getSubtotalAttribute() + $this->getIvaAmountAttribute();
     }
 
-    public function getDateAttribute($date) {
-        if (! empty($date)) {
-            return date_format(date_create($date), 'Y-m-d\TH:i:s');
-        }else{
-            return "";
-        }
+    public function getIssuedAttribute() {
+        return isset($this->issued_at) ? $this->issued_at->toDateString() : '';
     }
 
     /** Query Scopes */
@@ -111,14 +118,7 @@ class Invoice extends Model
 
     public function scopeOverduedDate($query, $overdued_init, $overdued_final) {
         if(trim($overdued_init) != "" && trim($overdued_final) != "") {
-            return $query->whereBetween('overdued_at', [$overdued_init, $overdued_final]);
-        }
-    }
-
-    public function save(array $options = []) {
-        if(parent::save($options)) {
-            $this->number = str_pad($this->id, 5, "0", STR_PAD_LEFT);
-            parent::save();
+            return $query->whereBetween('expired_at', [$overdued_init, $overdued_final]);
         }
     }
 }

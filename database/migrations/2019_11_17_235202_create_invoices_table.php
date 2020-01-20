@@ -17,7 +17,7 @@ class CreateInvoicesTable extends Migration
             $table->increments('id');
             $table->timestamps();
             $table->dateTime('issued_at');
-            $table->dateTime('overdued_at');
+            $table->dateTime('expired_at')->nullable();
             $table->dateTime('received_at')->nullable();
             $table->float('vat')->unsigned();
             $table->string('description')->nullable();
