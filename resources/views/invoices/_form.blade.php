@@ -34,11 +34,15 @@
     <div class="col">
         <label for="vat" class="required">{{ __("IVA") }} (%)</label>
         <input type="number" step="0.01" name="vat" id="vat" value="{{ old('vat', $invoice->vat) }}"
-               class="form-control @error('vat') is-invalid @enderror" placeholder="Ingresa el IVA">
+               class="form-control @error('vat') is-invalid @enderror" placeholder="Ingresa el IVA" required>
         @error('vat')
             <span class="invalid-feedback" role="alert">
                 <strong>{{ $message }}</strong>
             </span>
+        @else
+            <small class="form-text text-muted">
+                {{ __("Debe ser numérico entre 0 y 100") }}
+            </small>
         @enderror
     </div>
     <div class="col">
@@ -59,7 +63,6 @@
             </span>
         @enderror
     </div>
-    <div class="col"></div>
 </div>
 <br>
 <div class="row">
@@ -69,9 +72,13 @@
             {{ old('description', $invoice->description) }}
         </textarea>
         @error('description')
-        <span class="invalid-feedback" role="alert">
+            <span class="invalid-feedback" role="alert">
                 <strong>{{ $message }}</strong>
             </span>
+        @else
+            <small class="form-text text-muted">
+                {{ __("Máximo de caracteres: 255") }}
+            </small>
         @enderror
     </div>
 </div>
