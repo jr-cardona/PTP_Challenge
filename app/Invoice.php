@@ -5,6 +5,7 @@ namespace App;
 use App\Events\InvoiceCreated;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
@@ -55,6 +56,14 @@ class Invoice extends Model
      */
     public function state(): BelongsTo {
         return $this->belongsTo(State::class);
+    }
+
+    /**
+     * Relation between invoices and paymentAttempts
+     * @return HasMany
+     */
+    public function payment_attempts(): HasMany {
+        return $this->hasMany(PaymentAttempt::class);
     }
 
     /** DERIVED ATTRIBUTES */
