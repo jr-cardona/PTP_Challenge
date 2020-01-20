@@ -15,11 +15,12 @@ class ClientController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function index(Request $request) {
-        $clients = Client::orderBy('name')
+        $clients = Client::with(["type_document"])
             ->client($request->get('client_id'))
             ->typedocument($request->get('type_document_id'))
             ->document($request->get('document'))
             ->email($request->get('email'))
+            ->orderBy('name')
             ->paginate(10);
         return response()->view('clients.index', [
             'clients' => $clients,

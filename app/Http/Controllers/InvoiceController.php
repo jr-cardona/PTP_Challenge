@@ -19,7 +19,7 @@ class InvoiceController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function index(Request $request) {
-        $invoices = Invoice::orderBy('id', 'DESC')
+        $invoices = Invoice::with(["client", "seller", "state", "products"])
             ->number($request->get('number'))
             ->state($request->get('state_id'))
             ->client($request->get('client_id'))
@@ -27,6 +27,7 @@ class InvoiceController extends Controller
             ->product($request->get('product_id'))
             ->issuedDate($request->get('issued_init'), $request->get('issued_final'))
             ->overduedDate($request->get('overdued_init'), $request->get('overdued_final'))
+            ->orderBy('id', 'DESC')
             ->paginate(10);
         return response()->view('invoices.index', [
             'invoices' => $invoices,
