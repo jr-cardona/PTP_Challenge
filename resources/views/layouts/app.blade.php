@@ -9,14 +9,13 @@
 
     <title>@yield('title')</title>
     <link rel="stylesheet" href="{{ mix('css/app.css') }}">
-
 </head>
-<body>
+<body style="background-color: floralwhite">
     @stack('modals')
     <div id="app" class="container">
-        <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
+        <nav class="navbar navbar-expand-md navbar-dark shadow-sm" style="background-color: #0c5460;">
             <a class="navbar-brand" href="{{ route('home') }}">
-                {{ config('app.name') }}
+                <img src="https://dev.placetopay.com/web/wp-content/uploads/2019/02/p2p-logo_White.svg" class="attachment-120x120 size-120x120" width="120px">
             </a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">
                 <span class="navbar-toggler-icon"></span>
@@ -24,18 +23,30 @@
 
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <!-- Left Side Of Navbar -->
-                <ul class="nav nav-pills">
+                <ul class="navbar-nav mr-auto">
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ route('invoices.index') }}">{{ __("Facturas") }}</a>
+                        <a href="{{ route('invoices.index') }}"
+                           class="nav-link {{ request()->segment(1) == 'facturas' ? 'active' : '' }}">
+                            <i class="fa fa-file-invoice-dollar"></i> {{ __("Facturas") }}
+                        </a>
                     </li>
-                    <li>
-                        <a class="nav-link" href="{{ route('clients.index') }}">{{ __("Clientes") }}</a>
+                    <li class="nav-item">
+                        <a href="{{ route('clients.index') }}"
+                           class="nav-link {{ request()->segment(1) == 'clientes' ? 'active' : '' }}">
+                            <i class="fa fa-users"></i> {{ __("Clientes") }}
+                        </a>
                     </li>
-                    <li>
-                        <a class="nav-link" href="{{ route('sellers.index') }}">{{ __("Vendedores") }}</a>
+                    <li class="nav-item">
+                        <a href="{{ route('sellers.index') }}"
+                           class="nav-link {{ request()->segment(1) == 'vendedores' ? 'active' : '' }}">
+                            <i class="fa fa-user-tie"></i> {{ __("Vendedores") }}
+                        </a>
                     </li>
-                    <li>
-                        <a class="nav-link" href="{{ route('products.index') }}">{{ __("Productos") }}</a>
+                    <li class="nav-item">
+                        <a href="{{ route('products.index') }}"
+                           class="nav-link {{ request()->segment(1) == 'productos' ? 'active' : '' }}">
+                            <i class="fa fa-barcode"></i> {{ __("Productos") }}
+                        </a>
                     </li>
                 </ul>
 
