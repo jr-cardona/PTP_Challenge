@@ -9,8 +9,12 @@
             <form action="{{ route('clients.store') }}" class="form-group" method="POST">
                 @include('clients._form')
                 <div class="form-group">
-                    <input type="submit" class="btn btn-primary" value="Guardar">
-                    <a href="{{ route('clients.index') }}" class="btn btn-danger">{{ __("Volver") }}</a>
+                    <button type="submit" class="btn btn-success">
+                        <i class="fa fa-save"></i> {{ __("Guardar") }}
+                    </button>
+                    <a href="{{ route("clients.index") }}" class="btn btn-secondary">
+                        <i class="fa fa-arrow-left"></i> {{ __("Volver") }}
+                    </a>
                 </div>
             </form>
         </div>

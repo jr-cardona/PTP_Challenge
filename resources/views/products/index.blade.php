@@ -53,8 +53,8 @@
                 </a>
             </td>
             <td nowrap>$ {{ number_format($product->unit_price, 2) }}</td>
-            <td nowrap>{{ $product->created_at }}</td>
-            <td nowrap>{{ $product->updated_at }}</td>
+            <td nowrap>{{ $product->created_at->isoFormat('Y-MM-DD hh:mma') }}</td>
+            <td nowrap>{{ $product->updated_at->isoFormat('Y-MM-DD hh:mma') }}</td>
             <td class="btn-group btn-group-sm" nowrap>
                 @include('products._buttons')
             </td>
