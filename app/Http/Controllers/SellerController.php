@@ -46,9 +46,9 @@ class SellerController extends Controller
      * @return \Illuminate\Http\RedirectResponse
      */
     public function store(SaveSellerRequest $request) {
-        Seller::create($request->validated());
+        $result = Seller::create($request->validated());
 
-        return redirect()->route('sellers.index')->with('message', __('Vendedor creado satisfactoriamente'));
+        return redirect()->route('sellers.show', $result->id)->with('message', __('Vendedor creado satisfactoriamente'));
     }
 
     /**

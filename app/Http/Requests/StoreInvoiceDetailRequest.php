@@ -27,7 +27,7 @@ class StoreInvoiceDetailRequest extends FormRequest
         return [
             'product_id' => 'required|numeric|exists:products,id',
             'quantity' => 'required|numeric|min:1|max:9999',
-            'unit_price' => 'required|numeric|min:50|max:999999999.99',
+            'unit_price' => 'required|numeric|min:1|max:9999999',
         ];
     }
     public function withValidator($validator)

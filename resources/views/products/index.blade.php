@@ -2,7 +2,9 @@
 @section('Title', 'Productos')
 @section('Name', 'Productos')
 @section('Create')
-    <a class="btn btn-success" href="{{ route('products.create') }}">{{ __("Crear nuevo producto") }}</a>
+    <a class="btn btn-success" href="{{ route('products.create') }}">
+        <i class="fa fa-plus"></i> {{ __("Crear nuevo producto") }}
+    </a>
 @endsection
 @section('Search')
     <form action="{{ route('products.index') }}" method="get">
@@ -51,8 +53,8 @@
                 </a>
             </td>
             <td nowrap>$ {{ number_format($product->unit_price, 2) }}</td>
-            <td nowrap>{{ $product->created_at }}</td>
-            <td nowrap>{{ $product->updated_at }}</td>
+            <td nowrap>{{ $product->created_at->isoFormat('Y-MM-DD hh:mma') }}</td>
+            <td nowrap>{{ $product->updated_at->isoFormat('Y-MM-DD hh:mma') }}</td>
             <td class="btn-group btn-group-sm" nowrap>
                 @include('products._buttons')
             </td>
