@@ -10,6 +10,9 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 class Invoice extends Model
 {
     protected $guarded = [];
+    protected $dispatchesEvents = [
+        'created' => InvoiceCreated::class,
+    ];
 
     /**
      * Relation between invoices and clients
