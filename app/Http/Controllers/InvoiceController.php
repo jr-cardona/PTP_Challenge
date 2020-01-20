@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\State;
 use App\Invoice;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Exports\InvoicesExport;
 use App\Imports\InvoicesImport;
@@ -53,7 +54,7 @@ class InvoiceController extends Controller
      * @return \Illuminate\Http\RedirectResponse
      */
     public function store(SaveInvoiceRequest $request) {
-        $result = Invoice::create($request->validated());
+        $result = Invoice::create(array_merge($request->validated(), ["state_id" => "1"]));
 
         return redirect()->route('invoices.show', $result->id)->with('message', __('Factura creada satisfactoriamente'));
     }
@@ -75,12 +76,16 @@ class InvoiceController extends Controller
      * Show the form for editing the specified resource.
      *
      * @param Invoice $invoice
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\Response | \Illuminate\Http\RedirectResponse
      */
     public function edit(Invoice $invoice) {
-        return response()->view('invoices.edit', [
-            'invoice' => $invoice,
-        ]);
+        if ($invoice->isPaid()){
+            return redirect()->route('invoices.show', $invoice)->with('message', __("La factura ya se encuentra pagada y no se puede editar"));
+        } else {
+            return response()->view('invoices.edit', [
+                'invoice' => $invoice,
+            ]);
+        }
     }
 
     /**
@@ -121,7 +126,7 @@ class InvoiceController extends Controller
     /**
      * Display a listing of the resource.
      * @param Request $request
-     * @return \Illuminate\Http\Response & \Illuminate\Http\RedirectResponse
+     * @return \Illuminate\Http\Response | \Illuminate\Http\RedirectResponse
      * @throws \Illuminate\Validation\ValidationException
      */
     public function importExcel(Request $request) {
@@ -146,7 +151,7 @@ class InvoiceController extends Controller
     }
 
     public function receivedCheck(Invoice $invoice){
-        $now = date("Y-m-d\TH:i:s");
+        $now = Carbon::now();
         $invoice->update(["received_at" => $now]);
 
         return redirect()->route('invoices.show', $invoice)->with('message', __('Marcada correctamente'));

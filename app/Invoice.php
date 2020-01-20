@@ -67,6 +67,21 @@ class Invoice extends Model
     }
 
     /** DERIVED ATTRIBUTES */
+    public function isExpired()
+    {
+        return $this->state_id == 3;
+    }
+
+    public function isPaid()
+    {
+        return $this->state_id == 2;
+    }
+
+    public function isPending()
+    {
+        return $this->state_id == 1;
+    }
+
     public function getSubtotalAttribute() {
         $subtotal = 0;
         foreach($this->products as $product){
