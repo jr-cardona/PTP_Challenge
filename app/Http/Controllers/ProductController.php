@@ -101,12 +101,13 @@ class ProductController extends Controller
     /**
      * Display the specified resource filtering by name.
      * @param Request $request
+     * @return
      */
     public function search(Request $request) {
         $products = Product::where('name', 'like', '%'. $request->name .'%')
             ->orderBy('name')
             ->limit('100')
             ->get();
-        echo $products;
+        return $products;
     }
 }
