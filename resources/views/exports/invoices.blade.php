@@ -17,7 +17,7 @@
         <tr>
             <td>{{ $invoice->number }}</td>
             <td>{{ $invoice->issued_at }}</td>
-            <td>{{ $invoice->overdued_at }}</td>
+            <td>{{ $invoice->expired_at }}</td>
             <td>{{ $invoice->received_at }}</td>
             <td>{{ $invoice->vat }}</td>
             <td>{{ $invoice->description }}</td>

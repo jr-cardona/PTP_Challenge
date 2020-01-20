@@ -47,9 +47,9 @@ class ClientController extends Controller
      * @return \Illuminate\Http\RedirectResponse
      */
     public function store(SaveClientRequest $request) {
-        Client::create($request->validated());
+        $result = Client::create($request->validated());
 
-        return redirect()->route('clients.index')->with('message', __('Cliente creado satisfactoriamente'));
+        return redirect()->route('clients.show', $result->id)->with('message', __('Cliente creado satisfactoriamente'));
     }
 
     /**

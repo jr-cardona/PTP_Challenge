@@ -55,4 +55,9 @@ class Client extends Model
             return $query->where('email', 'LIKE', "%$email%");
         }
     }
+
+    /** Derived attributes */
+    public function getFullNameAttribute(){
+        return $this->name . " " . $this->surname;
+    }
 }

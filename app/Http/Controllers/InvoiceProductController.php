@@ -13,13 +13,17 @@ class InvoiceProductController extends Controller
      * Show the form for creating a new resource.
      *
      * @param Invoice $invoice
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\Response | \Illuminate\Http\RedirectResponse
      */
     public function create(Invoice $invoice)
     {
-        return response()->view('invoices.details.create', [
-            'invoice' => $invoice,
-        ]);
+        if ($invoice->isPaid()){
+            return redirect()->route('invoices.show', $invoice)->with('message', __("La factura ya se encuentra pagada y no se puede editar"));
+        } else {
+            return response()->view('invoices.details.create', [
+                'invoice' => $invoice,
+            ]);
+        }
     }
 
     /**
@@ -41,14 +45,18 @@ class InvoiceProductController extends Controller
      *
      * @param Invoice $invoice
      * @param Product $product
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\Response | \Illuminate\Http\RedirectResponse
      */
     public function edit(Invoice $invoice, Product $product)
     {
-        return response()->view('invoices.details.edit', [
-            'invoice' => $invoice,
-            'product' => $product
-        ]);
+        if ($invoice->isPaid()){
+            return redirect()->route('invoices.show', $invoice)->with('message', __("La factura ya se encuentra pagada y no se puede editar"));
+        } else {
+            return response()->view('invoices.details.edit', [
+                'invoice' => $invoice,
+                'product' => $product
+            ]);
+        }
     }
 
     /**

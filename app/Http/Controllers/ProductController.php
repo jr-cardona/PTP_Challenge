@@ -42,9 +42,9 @@ class ProductController extends Controller
      * @return \Illuminate\Http\RedirectResponse
      */
     public function store(SaveProductRequest $request) {
-        Product::create($request->validated());
+        $result = Product::create($request->validated());
 
-        return redirect()->route('products.index')->with('message', __('Producto creado satisfactoriamente'));
+        return redirect()->route('products.show', $result->id)->with('message', __('Producto creado satisfactoriamente'));
     }
 
     /**

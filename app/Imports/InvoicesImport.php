@@ -21,7 +21,7 @@ class InvoicesImport implements ToModel, WithHeadingRow, WithValidation, WithBat
         return new Invoice([
             'number' => $row['Número'],
             'issued_at' => $row['Fecha de expedición'],
-            'overdued_at' => $row['Fecha de vencimiento'],
+            'expired_at' => $row['Fecha de vencimiento'],
             'received_at' => $row['Fecha de recibo'],
             'vat' => $row['IVA'],
             'description' => $row['Descripción'],
@@ -35,7 +35,7 @@ class InvoicesImport implements ToModel, WithHeadingRow, WithValidation, WithBat
         return[
             'Fecha de expedición' => 'required|date',
             'Fecha de vencimiento' => 'required|date|after:issued_at',
-            'Fecha de recibo' => 'nullable|date|after:issued_at|before:overdued_at',
+            'Fecha de recibo' => 'nullable|date|after:issued_at|before:expired_at',
             'IVA' => 'required|numeric|between:0,100',
             'Descripción' => 'nullable|string|max:255',
             'Estado' => 'required|numeric|exists:states,id',

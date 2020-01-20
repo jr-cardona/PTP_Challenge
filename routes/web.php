@@ -43,5 +43,10 @@ Route::middleware(['auth'])->group(function (){
 
     Route::get('invoices-export-excel', 'InvoiceController@exportExcel')->name('invoices.exportExcel');
     Route::post('invoices-import-excel', 'InvoiceController@importExcel')->name('invoices.importExcel');
+    Route::get('invoices-received-check/{invoice}', 'InvoiceController@receivedCheck')->name('invoices.receivedCheck');
+
+    Route::get('/facturas/pagar/{invoice}', 'PaymentAttemptsController@create')->name('invoices.payments.create');
+    Route::post('/facturas/pagar/{invoice}', 'PaymentAttemptsController@store')->name('invoices.payments.store');
+    Route::get('/facturas/pagar/{invoice}/{paymentAttempt}', 'PaymentAttemptsController@show')->name('invoices.payments.show');
 });
 
