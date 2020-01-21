@@ -22,7 +22,7 @@ Route::middleware(['auth'])->group(function (){
 
     Route::resource('/facturas/{invoice}/detalle', 'InvoiceProductController')
         ->except('index', 'show')
-        ->names('invoiceDetails')
+        ->names('invoices.details')
         ->parameters(['detalle' => 'product']);
 
     Route::resource('/facturas', 'InvoiceController')

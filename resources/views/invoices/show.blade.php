@@ -111,14 +111,14 @@
                         <td class="text-right">
                         @if(!$invoice->isPaid())
                             <div class="btn-group btn-group-sm" role="group">
-                                <a href="{{ route('invoiceDetails.edit', [$invoice, $product]) }}" class="btn btn-link" title="Editar">
+                                <a href="{{ route('invoices.details.edit', [$invoice, $product]) }}" class="btn btn-link" title="Editar">
                                     <i class="fa fa-edit"></i>
                                 </a>
                                 <button type="submit" form="deleteDetail{{ $product->id }}" class="btn btn-link text-danger" title="Eliminar">
                                     <i class="fa fa-trash"></i>
                                 </button>
                             </div>
-                            <form id="deleteDetail{{ $product->id }}" action="{{ route('invoiceDetails.destroy', [$invoice, $product]) }}" method="post">
+                            <form id="deleteDetail{{ $product->id }}" action="{{ route('invoices.details.destroy', [$invoice, $product]) }}" method="post">
                                 @method('DELETE')
                                 @csrf()
                             </form>
@@ -141,7 +141,7 @@
             </tbody>
         </table>
         @if(!$invoice->isPaid())
-            <a href="{{ route('invoiceDetails.create', $invoice) }}" class="btn btn-success btn-block">
+            <a href="{{ route('invoices.details.create', $invoice) }}" class="btn btn-success btn-block">
                 <i class="fa fa-plus"></i> {{ __("Agregar Detalle") }}
             </a>
         @endif
