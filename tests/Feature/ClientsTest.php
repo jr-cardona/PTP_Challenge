@@ -123,7 +123,10 @@ class ClientsTest extends TestCase
     public function logged_in_user_can_access_to_a_specific_client()
     {
         $this->seed("TypeDocumentsTableSeeder");
-        $client = factory(Client::class)->create();
+        $documentType = TypeDocument::whereIn('name', ['CC', 'NIT', 'TI', 'PPN', 'CE'])->inRandomOrder()->first()->id;
+        $client = factory(Client::class)->create([
+            'type_document_id' => $documentType,
+        ]);
         $user = factory(User::class)->create();
 
         $response = $this->actingAs($user)->get(route('clients.show', $client));
@@ -196,10 +199,11 @@ class ClientsTest extends TestCase
         $user = factory(User::class)->create();
         $this->seed("TypeDocumentsTableSeeder");
         $client = factory(Client::class)->create();
+        $documentType = TypeDocument::inRandomOrder()->first();
 
         $response = $this->actingAs($user)->put(route('clients.update', $client), [
             'document' => '0000000000',
-            'type_document_id' => 1,
+            'type_document_id' => $documentType->id,
             'name' => 'Test Name',
             'surname' => 'Test Surname',
             'cell_phone_number' => '0000000000',
@@ -211,7 +215,7 @@ class ClientsTest extends TestCase
 
         $this->assertDatabaseHas('clients', [
             'document' => '0000000000',
-            'type_document_id' => 1,
+            'type_document_id' => $documentType->id,
             'name' => 'Test Name',
             'surname' => 'Test Surname',
             'cell_phone_number' => '0000000000',

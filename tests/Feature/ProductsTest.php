@@ -79,7 +79,7 @@ class ProductsTest extends TestCase
             'description' => 'Test Description',
             'unit_price' => '100'
         ]);
-        $response->assertRedirect(route('products.show', '1'));
+        $response->assertRedirect(route('products.show', Product::first()));
         $response->assertSessionHasNoErrors();
 
         $this->assertDatabaseHas('products', [
