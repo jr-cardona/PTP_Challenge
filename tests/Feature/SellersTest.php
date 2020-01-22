@@ -173,7 +173,7 @@ class SellersTest extends TestCase
 
         $this->put(route('sellers.update', $seller), [
             'document' => '0000000000',
-            'type_document_id' => 1,
+            'type_document_id' => $seller->type_document_id,
             'name' => 'Test Name',
             'surname' => 'Test Surname',
             'cell_phone_number' => '0000000000',
@@ -199,7 +199,7 @@ class SellersTest extends TestCase
         $user = factory(User::class)->create();
         $this->seed("TypeDocumentsTableSeeder");
         $seller = factory(Seller::class)->create();
-		$documentType = TypeDocument::inRandomOrder()->first();
+        $documentType = TypeDocument::inRandomOrder()->first();
 
         $response = $this->actingAs($user)->put(route('sellers.update', $seller), [
             'document' => '0000000000',

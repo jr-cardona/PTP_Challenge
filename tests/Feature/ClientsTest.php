@@ -95,7 +95,7 @@ class ClientsTest extends TestCase
             'address' => 'Test Address',
             'email' => 'test@test.com'
         ]);
-        $response->assertRedirect(route('clients.show', '1'));
+        $response->assertRedirect(route('clients.show', Client::first()));
         $response->assertSessionHasNoErrors();
 
         $this->assertDatabaseHas('clients', [
@@ -173,7 +173,7 @@ class ClientsTest extends TestCase
 
         $this->put(route('clients.update', $client), [
             'document' => '0000000000',
-            'type_document_id' => 1,
+            'type_document_id' => $client->type_document_id,
             'name' => 'Test Name',
             'surname' => 'Test Surname',
             'cell_phone_number' => '0000000000',

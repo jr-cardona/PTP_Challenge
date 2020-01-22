@@ -67,7 +67,6 @@ class InvoicesTest extends TestCase
         $this->post(route('invoices.store'), [
             'issued_at' => '2000-01-01',
             'vat' => 1,
-            'state_id' => 1,
             'client_id' => $client->id,
             'seller_id' => $seller->id,
         ])
@@ -76,7 +75,6 @@ class InvoicesTest extends TestCase
         $this->assertDatabaseMissing('invoices', [
             'issued_at' => '2000-01-01',
             'vat' => 1,
-            'state_id' => 1,
             'client_id' => $client->id,
             'seller_id' => $seller->id,
         ]);
@@ -178,9 +176,9 @@ class InvoicesTest extends TestCase
         $this->put(route('invoices.update', $invoice), [
             'issued_at' => '2000-01-01',
             'vat' => 1,
-            'state_id' => 1,
-            'client_id' => '1',
-            'seller_id' => '1',
+            'state_id' => $invoice->state_id,
+            'client_id' => $invoice->client_id,
+            'seller_id' => $invoice->seller_id,
         ])
             ->assertRedirect('login');
 
