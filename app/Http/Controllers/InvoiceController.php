@@ -55,7 +55,8 @@ class InvoiceController extends Controller
      * @return \Illuminate\Http\RedirectResponse
      */
     public function store(SaveInvoiceRequest $request) {
-        $result = Invoice::create(array_merge($request->validated(), ["state_id" => "1"]));
+        $state = State::where('name', 'Pendiente')->first();
+        $result = Invoice::create(array_merge($request->validated(), ["state_id" => $state->id]));
 
         return redirect()->route('invoices.show', $result->id)->with('message', __('Factura creada satisfactoriamente'));
     }
