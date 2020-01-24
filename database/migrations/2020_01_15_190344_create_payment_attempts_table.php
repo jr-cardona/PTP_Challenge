@@ -16,7 +16,7 @@ class CreatePaymentAttemptsTable extends Migration
         Schema::create('payment_attempts', function (Blueprint $table) {
             $table->increments('id');
             $table->timestamps();
-            $table->unsignedInteger('invoice_id');
+            $table->unsignedInteger('invoice_id')->nullable();
             $table->text('status')->nullable();
             $table->float('amount', 14, 2)->nullable();
             $table->string('requestID')->nullable();
