@@ -18,11 +18,11 @@ Route::middleware(['auth'])->group(function (){
     Route::get('/home', 'HomeController@index')->name('home');
     Route::get('/clientes/buscar', 'ClientController@search')->name('clients.search');
     Route::get('/vendedores/buscar', 'SellerController@search')->name('sellers.search');
-    Route::get('/productos/buscar', 'ProductController@search')->name('prodcuts.search');
+    Route::get('/productos/buscar', 'ProductController@search')->name('products.search');
 
     Route::resource('/facturas/{invoice}/detalle', 'InvoiceProductController')
         ->except('index', 'show')
-        ->names('invoiceDetails')
+        ->names('invoices.details')
         ->parameters(['detalle' => 'product']);
 
     Route::resource('/facturas', 'InvoiceController')

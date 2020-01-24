@@ -106,12 +106,13 @@ class SellerController extends Controller
     /**
      * Display the specified resource filtering by name.
      * @param Request $request
+     * @return
      */
     public function search(Request $request) {
         $sellers = Seller::where('name', 'like', '%'. $request->name .'%')
             ->orderBy('name')
             ->limit('100')
             ->get();
-        echo $sellers;
+        return $sellers;
     }
 }

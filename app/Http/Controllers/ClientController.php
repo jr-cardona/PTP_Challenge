@@ -106,12 +106,13 @@ class ClientController extends Controller
     /**
      * Display the specified resource filtering by name.
      * @param Request $request
+     * @return
      */
     public function search(Request $request) {
         $clients = Client::where('name', 'like', '%'. $request->name .'%')
             ->orderBy('name')
             ->limit('100')
             ->get();
-        echo $clients;
+        return $clients;
     }
 }

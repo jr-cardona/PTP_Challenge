@@ -6,7 +6,7 @@
             <h1>{{ __("Editar detalle. Factura de venta No.") }} {{ $invoice->id }}</h1>
         </div>
         <div class="card-body">
-            <form action="{{ route('invoiceDetails.update', [$invoice, $product]) }}" class="form-group" method="POST">
+            <form action="{{ route('invoices.details.update', [$invoice, $product]) }}" class="form-group" method="POST">
                 @method('PUT') @csrf
                 <div class="row">
                     <div class="col">

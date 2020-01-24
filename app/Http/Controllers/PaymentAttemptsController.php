@@ -29,9 +29,7 @@ class PaymentAttemptsController extends Controller
             return redirect()->route('invoices.show', $invoice)->with('message', __("No ha configurado login y trankey en su archivo de configuración"));
         }
 
-        $paymentAttempt = PaymentAttempt::create([
-            'invoice_id' => $invoice->id,
-        ]);
+        $paymentAttempt = PaymentAttempt::create();
 
         $request_c = [
             "buyer" => [
@@ -63,6 +61,7 @@ class PaymentAttemptsController extends Controller
         if ($response->isSuccessful()) {
             // STORE THE $response->requestId() and $response->processUrl() on your DB associated with the payment order
             $paymentAttempt->update([
+                'invoice_id' => $invoice->id,
                 'requestID' => $response->requestId(),
                 'processUrl' => $response->processUrl(),
                 'status' => $response->status()->status(),
@@ -119,7 +118,7 @@ class PaymentAttemptsController extends Controller
         return new PlacetoPay([
             'login' => env('LOGIN'),
             'tranKey' => env('TRANKEY'),
-            'url' => 'https://dev.placetopay.com/redirection/',
+            'url' => 'https://test.placetopay.com/redirection/',
         ]);
     }
 }

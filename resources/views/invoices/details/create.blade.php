@@ -6,7 +6,7 @@
             <h1>{{ __("Agregar detalle. Factura de venta No.") }} {{ $invoice->id }}</h1>
         </div>
         <div class="card-body">
-            <form action="{{ route('invoiceDetails.store', $invoice) }}" class="form-group" method="POST">
+            <form action="{{ route('invoices.details.store', $invoice) }}" class="form-group" method="POST">
                 @csrf
                 <div class="row">
                     <div class="col">
