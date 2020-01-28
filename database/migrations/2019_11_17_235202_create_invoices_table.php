@@ -24,7 +24,6 @@ class CreateInvoicesTable extends Migration
             $table->unsignedInteger('state_id');
             $table->unsignedInteger('client_id');
             $table->unsignedInteger('seller_id');
-            $table->string('number')->nullable()->unique();
             $table->foreign('state_id')->references('id')->on('states')->onDelete('cascade');
             $table->foreign('client_id')->references('id')->on('clients')->onDelete('cascade');
             $table->foreign('seller_id')->references('id')->on('sellers')->onDelete('cascade');

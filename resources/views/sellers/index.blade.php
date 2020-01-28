@@ -1,7 +1,13 @@
 @extends('layouts.index')
 @section('Title', 'Vendedores')
 @section('Name', 'Vendedores')
-@section('Create')
+@section('Actions')
+    <a class="btn btn-secondary" href="{{ route('export.sellers') }}">
+        <i class="fa fa-file-excel"></i> {{ __("Exportar a Excel") }}
+    </a>
+    <button type="button" class="btn btn-warning" data-route="{{ route('import.sellers') }}" data-toggle="modal" data-target="#importSellersModal">
+        <i class="fa fa-file-excel"></i> {{ __("Importar desde Excel") }}
+    </button>
     <a class="btn btn-success" href="{{ route('sellers.create') }}">
         <i class="fa fa-plus"></i> {{ __("Crear nuevo vendedor") }}
     </a>
@@ -83,3 +89,9 @@
 @section('Links')
     {{ $sellers->appends($request->all())->links() }}
 @endsection
+@push('modals')
+    @include('partials.__import_sellers_modal')
+@endpush
+@push('scripts')
+    <script src="{{ asset(mix('js/import-sellers-modal.js')) }}"></script>
+@endpush

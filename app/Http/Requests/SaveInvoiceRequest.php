@@ -25,7 +25,6 @@ class SaveInvoiceRequest extends FormRequest
     {
         return [
             'issued_at' => 'required|date',
-            'received_at' => 'nullable|date|after:issued_at|before:expired_at',
             'vat' => 'required|numeric|between:0,100',
             'client_id' => 'required|numeric|exists:clients,id',
             'seller_id' => 'required|numeric|exists:sellers,id',

@@ -49,7 +49,7 @@ class SellerController extends Controller
     public function store(SaveSellerRequest $request) {
         $result = Seller::create($request->validated());
 
-        return redirect()->route('sellers.show', $result->id)->with('message', __('Vendedor creado satisfactoriamente'));
+        return redirect()->route('sellers.show', $result->id)->withSuccess(__('Vendedor creado satisfactoriamente'));
     }
 
     /**
@@ -87,7 +87,7 @@ class SellerController extends Controller
     public function update(SaveSellerRequest $request, Seller $seller) {
         $seller->update($request->validated());
 
-        return redirect()->route('sellers.show', $seller)->with('message', __('Vendedor actualizado satisfactoriamente'));
+        return redirect()->route('sellers.show', $seller)->withSuccess(__('Vendedor actualizado satisfactoriamente'));
     }
 
     /**
@@ -100,19 +100,6 @@ class SellerController extends Controller
     public function destroy(Seller $seller) {
         $seller->delete();
 
-        return redirect()->route('sellers.index')->with('message', __('Vendedor eliminado satisfactoriamente'));
-    }
-
-    /**
-     * Display the specified resource filtering by name.
-     * @param Request $request
-     * @return
-     */
-    public function search(Request $request) {
-        $sellers = Seller::where('name', 'like', '%'. $request->name .'%')
-            ->orderBy('name')
-            ->limit('100')
-            ->get();
-        return $sellers;
+        return redirect()->route('sellers.index')->withSuccess(__('Vendedor eliminado satisfactoriamente'));
     }
 }

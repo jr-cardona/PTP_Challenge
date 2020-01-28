@@ -49,7 +49,7 @@ class ClientController extends Controller
     public function store(SaveClientRequest $request) {
         $result = Client::create($request->validated());
 
-        return redirect()->route('clients.show', $result->id)->with('message', __('Cliente creado satisfactoriamente'));
+        return redirect()->route('clients.show', $result->id)->withSuccess(__('Cliente creado satisfactoriamente'));
     }
 
     /**
@@ -87,7 +87,7 @@ class ClientController extends Controller
     public function update(SaveClientRequest $request, Client $client) {
         $client->update($request->validated());
 
-        return redirect()->route('clients.show', $client)->with('message', __('Cliente actualizado satisfactoriamente'));
+        return redirect()->route('clients.show', $client)->withSuccess(__('Cliente actualizado satisfactoriamente'));
     }
 
     /**
@@ -100,19 +100,6 @@ class ClientController extends Controller
     public function destroy(Client $client) {
         $client->delete();
 
-        return redirect()->route('clients.index')->with('message', __('Cliente eliminado satisfactoriamente'));
-    }
-
-    /**
-     * Display the specified resource filtering by name.
-     * @param Request $request
-     * @return
-     */
-    public function search(Request $request) {
-        $clients = Client::where('name', 'like', '%'. $request->name .'%')
-            ->orderBy('name')
-            ->limit('100')
-            ->get();
-        return $clients;
+        return redirect()->route('clients.index')->withSuccess(__('Cliente eliminado satisfactoriamente'));
     }
 }

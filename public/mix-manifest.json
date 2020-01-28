@@ -2,7 +2,10 @@
     "/js/app.js": "/js/app.js",
     "/css/app.css": "/css/app.css",
     "/js/delete-modal.js": "/js/delete-modal.js",
+    "/js/import-clients-modal.js": "/js/import-clients-modal.js",
     "/js/import-invoices-modal.js": "/js/import-invoices-modal.js",
+    "/js/import-products-modal.js": "/js/import-products-modal.js",
+    "/js/import-sellers-modal.js": "/js/import-sellers-modal.js",
     "/js/manifest.js": "/js/manifest.js",
     "/js/vendor.js": "/js/vendor.js"
 }

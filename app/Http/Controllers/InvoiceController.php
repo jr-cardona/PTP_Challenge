@@ -6,10 +6,7 @@ use App\State;
 use App\Invoice;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
-use App\Exports\InvoicesExport;
-use App\Imports\InvoicesImport;
 use App\Http\Requests\SaveInvoiceRequest;
-use Maatwebsite\Excel\Facades\Excel;
 
 class InvoiceController extends Controller
 {
@@ -26,7 +23,6 @@ class InvoiceController extends Controller
             ->seller($request->get('seller_id'))
             ->product($request->get('product_id'))
             ->issuedDate($request->get('issued_init'), $request->get('issued_final'))
-            ->overduedDate($request->get('overdued_init'), $request->get('overdued_final'))
             ->orderBy('id', 'DESC')
             ->paginate(10);
         return response()->view('invoices.index', [
@@ -58,7 +54,7 @@ class InvoiceController extends Controller
         $state = State::where('name', 'Pendiente')->first();
         $result = Invoice::create(array_merge($request->validated(), ["state_id" => $state->id]));
 
-        return redirect()->route('invoices.show', $result->id)->with('message', __('Factura creada satisfactoriamente'));
+        return redirect()->route('invoices.show', $result->id)->withSuccess(__('Factura creada satisfactoriamente'));
     }
 
     /**
@@ -82,7 +78,7 @@ class InvoiceController extends Controller
      */
     public function edit(Invoice $invoice) {
         if ($invoice->isPaid()){
-            return redirect()->route('invoices.show', $invoice)->with('message', __("La factura ya se encuentra pagada y no se puede editar"));
+            return redirect()->route('invoices.show', $invoice)->withInfo(__("La factura ya se encuentra pagada y no se puede editar"));
         } else {
             return response()->view('invoices.edit', [
                 'invoice' => $invoice,
@@ -100,7 +96,7 @@ class InvoiceController extends Controller
     public function update(SaveInvoiceRequest $request, Invoice $invoice) {
         $invoice->update($request->validated());
 
-        return redirect()->route('invoices.show', $invoice)->with('message', __('Factura actualizada satisfactoriamente'));
+        return redirect()->route('invoices.show', $invoice)->withSuccess(__('Factura actualizada satisfactoriamente'));
     }
 
     /**
@@ -113,49 +109,13 @@ class InvoiceController extends Controller
     public function destroy(Invoice $invoice) {
         $invoice->delete();
 
-        return redirect()->route('invoices.index')->with('message', __('Factura eliminada satisfactoriamente'));
-    }
-
-    /**
-     * Export a listing of the resource.
-     * @param Request $request
-     * @return \Symfony\Component\HttpFoundation\BinaryFileResponse
-     */
-    public function exportExcel() {
-        return Excel::download(new InvoicesExport, 'invoices-list.xlsx');
-    }
-
-    /**
-     * Display a listing of the resource.
-     * @param Request $request
-     * @return \Illuminate\Http\Response | \Illuminate\Http\RedirectResponse
-     * @throws \Illuminate\Validation\ValidationException
-     */
-    public function importExcel(Request $request) {
-        $this->validate($request, [
-            'invoices' => 'required|mimes:xls,xlsx'
-        ]);
-        $file = $request->file('invoices');
-        try {
-            Excel::import(new InvoicesImport(), $file);
-            return redirect()->route('invoices.index')->with('message', __('Importación completada correctamente'));
-        }
-        catch (\Maatwebsite\Excel\Validators\ValidationException $e) {
-            $failures_unsorted = $e->failures();
-            $failures_sorted = array();
-            foreach($failures_unsorted as $failure) {
-                $failures_sorted[$failure->row()][$failure->attribute()] = $failure->errors()[0];
-            }
-            return response()->view('invoices.importErrors', [
-                'failures' => $failures_sorted,
-            ]);
-        }
+        return redirect()->route('invoices.index')->withSuccess(__('Factura eliminada satisfactoriamente'));
     }
 
     public function receivedCheck(Invoice $invoice){
         $now = Carbon::now();
         $invoice->update(["received_at" => $now]);
 
-        return redirect()->route('invoices.show', $invoice)->with('message', __('Marcada correctamente'));
+        return redirect()->route('invoices.show', $invoice)->withSuccess(__('Marcada correctamente'));
     }
 }

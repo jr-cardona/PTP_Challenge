@@ -15,8 +15,6 @@ class DatabaseSeeder extends Seeder
             UsersTableSeeder::class,
             TypeDocumentsTableSeeder::class,
             StatesTableSeeder::class,
-            InvoicesTableSeed::class,
-            ProductsTableSeed::class
         ]);
     }
 }

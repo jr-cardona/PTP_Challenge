@@ -16,14 +16,30 @@ Auth::routes();
 Route::middleware(['auth'])->group(function (){
     Route::get('/', 'HomeController@index');
     Route::get('/home', 'HomeController@index')->name('home');
-    Route::get('/clientes/buscar', 'ClientController@search')->name('clients.search');
-    Route::get('/vendedores/buscar', 'SellerController@search')->name('sellers.search');
-    Route::get('/productos/buscar', 'ProductController@search')->name('products.search');
+
+    Route::get('/clientes/buscar', 'SearchController@clients')->name('search.clients');
+    Route::get('/productos/buscar', 'SearchController@products')->name('search.products');
+    Route::get('/vendedores/buscar', 'SearchController@sellers')->name('search.sellers');
+
+    Route::get('/clientes/exportar', 'ExportController@clients')->name('export.clients');
+    Route::get('/facturas/exportar', 'ExportController@invoices')->name('export.invoices');
+    Route::get('/productos/exportar', 'ExportController@products')->name('export.products');
+    Route::get('/vendedores/exportar', 'ExportController@sellers')->name('export.sellers');
+
+    Route::post('/clientes/importar', 'ImportController@clients')->name('import.clients');
+    Route::post('/facturas/importar', 'ImportController@invoices')->name('import.invoices');
+    Route::post('/productos/importar', 'ImportController@products')->name('import.products');
+    Route::post('/vendedores/importar', 'ImportController@sellers')->name('import.sellers');
 
     Route::resource('/facturas/{invoice}/detalle', 'InvoiceProductController')
         ->except('index', 'show')
         ->names('invoices.details')
         ->parameters(['detalle' => 'product']);
+
+    Route::resource('/facturas/{invoice}/pagar', 'PaymentAttemptsController')
+        ->only('create', 'store', 'show')
+        ->names('invoices.payments')
+        ->parameters(['pagar' => 'paymentAttempt']);
 
     Route::resource('/facturas', 'InvoiceController')
         ->names('invoices')
@@ -41,12 +57,8 @@ Route::middleware(['auth'])->group(function (){
         ->names('sellers')
         ->parameters(['vendedores' => 'seller']);
 
-    Route::get('invoices-export-excel', 'InvoiceController@exportExcel')->name('invoices.exportExcel');
-    Route::post('invoices-import-excel', 'InvoiceController@importExcel')->name('invoices.importExcel');
     Route::get('invoices-received-check/{invoice}', 'InvoiceController@receivedCheck')->name('invoices.receivedCheck');
 
-    Route::get('/facturas/pagar/{invoice}', 'PaymentAttemptsController@create')->name('invoices.payments.create');
-    Route::post('/facturas/pagar/{invoice}', 'PaymentAttemptsController@store')->name('invoices.payments.store');
-    Route::get('/facturas/pagar/{invoice}/{paymentAttempt}', 'PaymentAttemptsController@show')->name('invoices.payments.show');
+
 });
 

@@ -1,12 +1,12 @@
 @extends('layouts.index')
 @section('Title', 'Facturas')
 @section('Name', 'Facturas')
-@section('Create')
-    <a class="btn btn-secondary" href="{{ route('invoices.exportExcel') }}">
-        <i class="fa fa-file-excel-o"></i> {{ __("Exportar a Excel") }}
+@section('Actions')
+    <a class="btn btn-secondary" href="{{ route('export.invoices') }}">
+        <i class="fa fa-file-excel"></i> {{ __("Exportar a Excel") }}
     </a>
-    <button type="button" class="btn btn-warning" data-route="{{ route('invoices.importExcel') }}" data-toggle="modal" data-target="#importInvoicesModal">
-        <i class="fa fa-file-excel-o"></i> {{ __("Importar desde Excel") }}
+    <button type="button" class="btn btn-warning" data-route="{{ route('import.invoices') }}" data-toggle="modal" data-target="#importInvoicesModal">
+        <i class="fa fa-file-excel"></i> {{ __("Importar desde Excel") }}
     </button>
     <a class="btn btn-success" href="{{ route('invoices.create') }}">
         <i class="fa fa-plus"></i> {{ __("Crear nueva factura") }}
@@ -22,31 +22,6 @@
             <div class="col-md-3">
                 <label for="issued_final">{{ __("Fecha final de expedición") }}</label>
                 <input type="date" name="issued_final" id="issued_final" class="form-control" value="{{ $request->get('issued_final') }}">
-            </div>
-            <div class="col-md-3">
-                <label for="overdued_init">{{ __("Fecha inicial de vencimiento") }}</label>
-                <input type="date" name="overdued_init" id="overdued_init" class="form-control" value="{{ $request->get('overdued_init') }}">
-            </div>
-            <div class="col-md-3">
-                <label for="overdued_final">{{ __("Fecha final de vencimiento") }}</label>
-                <input type="date" name="overdued_final" id="overdued_final" class="form-control" value="{{ $request->get('overdued_final') }}">
-            </div>
-        </div>
-        <div class="form-group row">
-            <div class="col-md-3">
-                <label for="number">{{ __("Número de factura") }}</label>
-                <input type="number" id="number" name="number" class="form-control" placeholder="No. de factura" value="{{ $request->get('number') }}">
-            </div>
-            <div class="col-md-3">
-                <label for="state_id">{{ __("Estado") }}</label>
-                <select id="state_id" name="state_id" class="form-control">
-                    <option value="">--</option>
-                    @foreach($states as $state)
-                        <option value="{{ $state->id }}" {{ $request->get('state_id') == $state->id ? 'selected' : ''}}>
-                            {{ $state->name }}
-                        </option>
-                    @endforeach
-                </select>
             </div>
             <div class="col-md-3">
                 <label>{{ __("Cliente") }}</label>
@@ -75,6 +50,21 @@
         </div>
         <div class="form-group row">
             <div class="col-md-3">
+                <label for="number">{{ __("Número de factura") }}</label>
+                <input type="number" id="number" name="number" class="form-control" placeholder="No. de factura" value="{{ $request->get('number') }}">
+            </div>
+            <div class="col-md-3">
+                <label for="state_id">{{ __("Estado") }}</label>
+                <select id="state_id" name="state_id" class="form-control">
+                    <option value="">--</option>
+                    @foreach($states as $state)
+                        <option value="{{ $state->id }}" {{ $request->get('state_id') == $state->id ? 'selected' : ''}}>
+                            {{ $state->name }}
+                        </option>
+                    @endforeach
+                </select>
+            </div>
+            <div class="col-md-3">
                 <label>{{ __("Producto") }}</label>
                 <input type="hidden" id="old_product_name" name="old_product_name" value="{{ $request->get('product') }}">
                 <input type="hidden" id="old_product_id" name="old_product_id" value="{{ $request->get('product_id') }}">
@@ -101,7 +91,7 @@
 @endsection
 @section('Header')
     <th scope="col" nowrap>{{ __("Título") }}</th>
-    <th scope="col" nowrap>{{ __("Fecha de creación") }}</th>
+    <th scope="col" nowrap>{{ __("Fecha de expedición") }}</th>
     <th scope="col" nowrap>{{ __("Valor total") }}</th>
     <th scope="col" nowrap>{{ __("Estado") }}</th>
     <th scope="col" nowrap>{{ __("Cliente") }}</th>
@@ -113,13 +103,13 @@
         <tr>
             <td nowrap>
                 <a href="{{ route('invoices.show', $invoice) }}">
-                    {{ __("Factura de venta No.") }} {{ $invoice->number }}
+                    {{ $invoice->fullname }}
                     @if($invoice->isPaid())
                         <i class="fa fa-check-circle"></i>
                     @endif
                 </a>
             </td>
-            <td class="text-center" nowrap>{{ $invoice->created_at->isoFormat('Y-MM-DD hh:mma') }}</td>
+            <td class="text-center" nowrap>{{ $invoice->issued_at->isoFormat('Y-MM-DD hh:mma') }}</td>
             <td class="text-center" nowrap>${{ number_format($invoice->total, 2) }}</td>
             @include('invoices.status_label')
             <td nowrap>

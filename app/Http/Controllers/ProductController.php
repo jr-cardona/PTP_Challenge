@@ -44,7 +44,7 @@ class ProductController extends Controller
     public function store(SaveProductRequest $request) {
         $result = Product::create($request->validated());
 
-        return redirect()->route('products.show', $result->id)->with('message', __('Producto creado satisfactoriamente'));
+        return redirect()->route('products.show', $result->id)->withSuccess(__('Producto creado satisfactoriamente'));
     }
 
     /**
@@ -82,7 +82,7 @@ class ProductController extends Controller
     public function update(SaveProductRequest $request, Product $product) {
         $product->update($request->validated());
 
-        return redirect()->route('products.show', $product)->with('message', __('Producto actualizado satisfactoriamente'));
+        return redirect()->route('products.show', $product)->withSuccess(__('Producto actualizado satisfactoriamente'));
     }
 
     /**
@@ -95,19 +95,6 @@ class ProductController extends Controller
     public function destroy(Product $product) {
         $product->delete();
 
-        return redirect()->route('products.index')->with('message', __('Producto eliminado satisfactoriamente'));
-    }
-
-    /**
-     * Display the specified resource filtering by name.
-     * @param Request $request
-     * @return
-     */
-    public function search(Request $request) {
-        $products = Product::where('name', 'like', '%'. $request->name .'%')
-            ->orderBy('name')
-            ->limit('100')
-            ->get();
-        return $products;
+        return redirect()->route('products.index')->withSuccess(__('Producto eliminado satisfactoriamente'));
     }
 }

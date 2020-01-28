@@ -17,7 +17,7 @@
             <i class="fa fa-search"></i> {{ __("Buscar") }} @yield('Name')
         </h2>
         <div>
-            @yield('Create')
+            @yield('Actions')
         </div>
     </div>
     <br>
