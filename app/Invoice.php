@@ -102,10 +102,14 @@ class Invoice extends Model
         return isset($this->issued_at) ? $this->issued_at->toDateString() : '';
     }
 
+    public function getFullNameAttribute(){
+        return __("Factura de venta No. ").str_pad($this->id, 5, "0", STR_PAD_LEFT);
+    }
+
     /** Query Scopes */
     public function scopeNumber($query, $number) {
         if(trim($number) != "") {
-            return $query->where('number', 'LIKE', "%$number%");
+            return $query->where('id', 'LIKE', "%$number%");
         }
     }
 
@@ -137,12 +141,6 @@ class Invoice extends Model
     public function scopeIssuedDate($query, $issued_init, $issued_final) {
         if(trim($issued_init) != "" && trim($issued_final) != "") {
             return $query->whereBetween('issued_at', [$issued_init, $issued_final]);
-        }
-    }
-
-    public function scopeOverduedDate($query, $overdued_init, $overdued_final) {
-        if(trim($overdued_init) != "" && trim($overdued_final) != "") {
-            return $query->whereBetween('expired_at', [$overdued_init, $overdued_final]);
         }
     }
 }
