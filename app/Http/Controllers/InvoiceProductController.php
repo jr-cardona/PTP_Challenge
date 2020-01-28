@@ -18,7 +18,7 @@ class InvoiceProductController extends Controller
     public function create(Invoice $invoice)
     {
         if ($invoice->isPaid()){
-            return redirect()->route('invoices.show', $invoice)->with('message', __("La factura ya se encuentra pagada y no se puede editar"));
+            return redirect()->route('invoices.show', $invoice)->withInfo(__("La factura ya se encuentra pagada y no se puede editar"));
         } else {
             return response()->view('invoices.details.create', [
                 'invoice' => $invoice,
@@ -37,7 +37,7 @@ class InvoiceProductController extends Controller
     {
         $invoice->products()->attach(request('product_id'), $request->validated());
 
-        return redirect()->route('invoices.show', $invoice)->with('message', 'Detalle creado satisfactoriamente');
+        return redirect()->route('invoices.show', $invoice)->withSuccess(__('Detalle creado satisfactoriamente'));
     }
 
     /**
@@ -50,7 +50,7 @@ class InvoiceProductController extends Controller
     public function edit(Invoice $invoice, Product $product)
     {
         if ($invoice->isPaid()){
-            return redirect()->route('invoices.show', $invoice)->with('message', __("La factura ya se encuentra pagada y no se puede editar"));
+            return redirect()->route('invoices.show', $invoice)->withInfo(__("La factura ya se encuentra pagada y no se puede editar"));
         } else {
             return response()->view('invoices.details.edit', [
                 'invoice' => $invoice,
@@ -71,7 +71,7 @@ class InvoiceProductController extends Controller
     {
         $invoice->products()->updateExistingPivot($product->id, $request->validated());
 
-        return redirect()->route('invoices.show', $invoice)->with('message', 'Detalle actualizado satisfactoriamente');
+        return redirect()->route('invoices.show', $invoice)->withSuccess(__('Detalle actualizado satisfactoriamente'));
     }
 
     /**
@@ -86,6 +86,6 @@ class InvoiceProductController extends Controller
     {
         $invoice->products()->detach($product->id);
 
-        return redirect()->route('invoices.show', $invoice)->with('message', 'Detalle eliminado satisfactoriamente');
+        return redirect()->route('invoices.show', $invoice)->withSuccess(__('Detalle eliminado satisfactoriamente'));
     }
 }

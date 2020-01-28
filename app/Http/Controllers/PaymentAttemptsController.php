@@ -14,23 +14,16 @@ class PaymentAttemptsController extends Controller
     public function create(Invoice $invoice)
     {
         if ($invoice->total == 0){
-            return redirect()->route('invoices.show', $invoice)->with('message', __("La factura no tiene productos a pagar, intente nuevamente"));
+            return redirect()->route('invoices.show', $invoice)->withError(__("La factura no tiene productos a pagar, intente nuevamente"));
         }elseif ($invoice->state_id == 2){
-            return redirect()->route('invoices.show', $invoice)->with('message', __("La factura ya se encuentra pagada"));
+            return redirect()->route('invoices.show', $invoice)->withInfo(__("La factura ya se encuentra pagada"));
         }
         return view('invoices.payments.create', compact('invoice'));
     }
 
-    public function store(Invoice $invoice, Request $request)
+    public function store(Invoice $invoice, Request $request, PlacetoPay $placetopay)
     {
-        if ($this->issetLoginAndTrankey()){
-            $placetopay = $this->authenticate();
-        } else {
-            return redirect()->route('invoices.show', $invoice)->with('message', __("No ha configurado login y trankey en su archivo de configuración"));
-        }
-
         $paymentAttempt = PaymentAttempt::create();
-
         $request_c = [
             "buyer" => [
                 "name" => $invoice->client->name,
@@ -74,14 +67,8 @@ class PaymentAttemptsController extends Controller
         }
     }
 
-    public function show(Invoice $invoice, PaymentAttempt $paymentAttempt)
+    public function show(Invoice $invoice, PaymentAttempt $paymentAttempt, PlacetoPay $placetopay)
     {
-        if ($this->issetLoginAndTrankey()){
-            $placetopay = $this->authenticate();
-        } else {
-            return redirect()->route('invoices.show', $invoice)->with('message', __("No ha configurado login y trankey en su archivo de configuración"));
-        }
-
         $response = $placetopay->query($paymentAttempt->requestID);
         $paymentAttempt->update([
             'status' => $response->status()->status(),
@@ -101,24 +88,6 @@ class PaymentAttemptsController extends Controller
             'invoice' => $invoice,
             'paymentAttempt' => $paymentAttempt,
             'response' => $response
-        ]);
-    }
-
-    public function issetLoginAndTrankey()
-    {
-        if (empty(getenv('LOGIN')) || empty(getenv('TRANKEY'))) {
-            return false;
-        } else {
-            return true;
-        }
-    }
-
-    public function authenticate()
-    {
-        return new PlacetoPay([
-            'login' => env('LOGIN'),
-            'tranKey' => env('TRANKEY'),
-            'url' => 'https://test.placetopay.com/redirection/',
         ]);
     }
 }
