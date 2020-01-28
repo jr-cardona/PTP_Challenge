@@ -95,7 +95,6 @@
     </div>
     <script src="https://unpkg.com/vue@latest"></script>
     <script src="https://unpkg.com/vue-select@latest"></script>
-    <script src="https://kit.fontawesome.com/d113d634ed.js" crossorigin="anonymous"></script>
     <script src="{{ asset(mix('js/manifest.js')) }}"></script>
     <script src="{{ asset(mix('js/vendor.js')) }}"></script>
     <script src="{{ asset(mix('js/app.js')) }}"></script>

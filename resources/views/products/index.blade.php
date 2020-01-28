@@ -1,7 +1,13 @@
 @extends('layouts.index')
 @section('Title', 'Productos')
 @section('Name', 'Productos')
-@section('Create')
+@section('Actions')
+    <a class="btn btn-secondary" href="{{ route('export.products') }}">
+        <i class="fa fa-file-excel"></i> {{ __("Exportar a Excel") }}
+    </a>
+    <button type="button" class="btn btn-warning" data-route="{{ route('import.products') }}" data-toggle="modal" data-target="#importProductsModal">
+        <i class="fa fa-file-excel"></i> {{ __("Importar desde Excel") }}
+    </button>
     <a class="btn btn-success" href="{{ route('products.create') }}">
         <i class="fa fa-plus"></i> {{ __("Crear nuevo producto") }}
     </a>
@@ -64,3 +70,9 @@
 @section('Links')
     {{ $products->appends($request->all())->links() }}
 @endsection
+@push('modals')
+    @include('partials.__import_products_modal')
+@endpush
+@push('scripts')
+    <script src="{{ asset(mix('js/import-products-modal.js')) }}"></script>
+@endpush

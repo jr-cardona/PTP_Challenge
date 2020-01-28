@@ -23,7 +23,7 @@
     </div>
 @endsection
 @section('Name')
-    {{ __("Factura de venta No.") }} {{$invoice->number }}
+    {{ $invoice->fullname }}
     @if($invoice->isPaid())
         <i class="fa fa-check-circle"></i>
     @endif
@@ -54,7 +54,7 @@
                 <td class="td-content">{{ $invoice->issued_at->isoFormat('Y-MM-DD') }}</td>
 
                 <td class="table-dark td-title">{{ __("Fecha de vencimiento:") }}</td>
-                <td class="td-content">{{ $invoice->expired_at->isoFormat('Y-MM-DD') }}</td>
+                <td class="td-content">{{ $invoice->expired_at == '' ? "Sin fecha" : $invoice->expired_at->isoFormat('Y-MM-DD') }}</td>
             </tr>
             <tr>
                 <td class="table-dark td-title">{{ __("IVA:") }}</td>

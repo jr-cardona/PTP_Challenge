@@ -1,7 +1,13 @@
 @extends('layouts.index')
 @section('Title', 'Clientes')
 @section('Name', 'Clientes')
-@section('Create')
+@section('Actions')
+    <a class="btn btn-secondary" href="{{ route('export.clients') }}">
+        <i class="fa fa-file-excel"></i> {{ __("Exportar a Excel") }}
+    </a>
+    <button type="button" class="btn btn-warning" data-route="{{ route('import.clients') }}" data-toggle="modal" data-target="#importClientsModal">
+        <i class="fa fa-file-excel"></i> {{ __("Importar desde Excel") }}
+    </button>
     <a class="btn btn-success" href="{{ route('clients.create') }}">
         <i class="fa fa-plus"></i> {{ __("Crear nuevo cliente") }}
     </a>
@@ -83,3 +89,9 @@
 @section('Links')
     {{ $clients->appends($request->all())->links() }}
 @endsection
+@push('modals')
+    @include('partials.__import_clients_modal')
+@endpush
+@push('scripts')
+    <script src="{{ asset(mix('js/import-clients-modal.js')) }}"></script>
+@endpush
