@@ -105,8 +105,24 @@
                         <td class="text-center">{{ $product->id }}</td>
                         <td class="text-center">{{ $product->name }}</td>
                         <td class="text-center">{{ $product->description }}</td>
-                        <td class="text-center">{{ $product->pivot->quantity }}</td>
-                        <td class="text-right">${{ number_format($product->pivot->unit_price, 2) }}</td>
+                        @if($invoice->isPaid())
+                            <td class="text-center">{{ $product->pivot->quantity }}</td>
+                            <td class="text-right">{{ number_format($product->pivot->unit_price, 2) }}</td>
+                        @else
+                            <td class="text-center">
+                                <a href="#" class="update" data-name="quantity" data-type="text" data-title="Editar cantidad"
+                                   data-url="{{ route('invoices.details.update', [$invoice, $product]) }}" data-pk="">
+                                    {{ $product->pivot->quantity }}
+                                </a>
+                            </td>
+                            <td class="text-right">
+                                $
+                                <a href="#" class="update" data-name="unit_price" data-type="text" data-title="Editar precio unitario"
+                                   data-url="{{ route('invoices.details.update', [$invoice, $product]) }}" data-pk="" data-value="{{ $product->pivot->unit_price }}">
+                                    {{ number_format($product->pivot->unit_price, 2) }}
+                                </a>
+                            </td>
+                        @endif
                         <td class="text-right">${{ number_format($product->pivot->unit_price * $product->pivot->quantity, 2) }}</td>
                         <td class="text-right">
                         @if(!$invoice->isPaid())
