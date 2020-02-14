@@ -86,7 +86,7 @@
     </div>
     <br>
     <div class="shadow">
-        <div class="card-header text-center"><h3>{{ __("Detalles de producto") }}</h3></div>
+        <div class="card-header text-center"><h3>{{ __("Lista de productos") }}</h3></div>
         <table class="table table-sm">
             <thead>
                 <tr>
@@ -102,7 +102,11 @@
             <tbody>
                 @foreach($invoice->products as $product)
                     <tr>
-                        <td class="text-center">{{ $product->id }}</td>
+                        <td class="text-center">
+                            <a href="{{ route('products.show', $product) }}">
+                                {{ $product->id }}
+                            </a>
+                        </td>
                         <td class="text-center">{{ $product->name }}</td>
                         <td class="text-center">{{ $product->description }}</td>
                         <td class="text-center">{{ $product->pivot->quantity }}</td>
@@ -113,6 +117,7 @@
                                 <button type="button" class="btn btn-link text-danger" data-route="{{ route('invoices.details.destroy', [$invoice, $product]) }}" data-toggle="modal" data-target="#confirmDeleteModal">
                                     <i class="fa fa-trash"></i>
                                 </button>
+                            @endif
                         </td>
                     </tr>
                @endforeach
@@ -125,7 +130,7 @@
                     <td class="text-right">${{ number_format($invoice->ivaamount, 2) }}</td>
                 </tr>
                 <tr>
-                    <td class="text-right" colspan="5">{{ __("GRAN TOTAL") }}</td>
+                    <td class="text-right" colspan="5">{{ __("VALOR TOTAL") }}</td>
                     <td class="text-right">${{ number_format($invoice->total, 2) }}</td>
                 </tr>
             </tbody>
@@ -142,10 +147,10 @@
         <table class="table table-sm">
             <thead>
                 <tr class="text-center">
-                    <th>{{ __("Código de transacción") }}</th>
-                    <th>{{ __("Fecha") }}</th>
-                    <th>{{ __("Estado") }}</th>
-                    <th>{{ __("Monto") }}</th>
+                    <th class="text-center">{{ __("Código de transacción") }}</th>
+                    <th class="text-center">{{ __("Fecha") }}</th>
+                    <th class="text-center">{{ __("Estado") }}</th>
+                    <th class="text-center">{{ __("Monto") }}</th>
                 </tr>
             </thead>
             <tbody>
