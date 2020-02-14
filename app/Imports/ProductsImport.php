@@ -9,14 +9,17 @@ use Maatwebsite\Excel\Concerns\WithHeadingRow;
 use Maatwebsite\Excel\Concerns\WithValidation;
 use Maatwebsite\Excel\Concerns\WithBatchInserts;
 use Maatwebsite\Excel\Imports\HeadingRowFormatter;
+
 HeadingRowFormatter::default('none');
 
-class ProductsImport implements ToModel, WithHeadingRow, WithValidation, WithBatchInserts
+class ProductsImport extends BaseImport implements ToModel, WithHeadingRow, WithValidation, WithBatchInserts
 {
     use Importable;
+    private $rows = 0;
 
     public function model(array $row)
     {
+        ++$this->rows;
         return new Product([
             'name' => $row['Nombre'],
             'description' => $row['Descripción'],
@@ -35,5 +38,10 @@ class ProductsImport implements ToModel, WithHeadingRow, WithValidation, WithBat
     public function batchSize(): int
     {
         return 1000;
+    }
+
+    public function getRowCount(): int
+    {
+        return $this->rows;
     }
 }

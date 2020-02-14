@@ -13,10 +13,7 @@ const mix = require('laravel-mix');
 
 mix.js('resources/js/app.js', 'public/js')
     .js('resources/js/delete-modal', 'public/js')
-    .js('resources/js/import-invoices-modal', 'public/js')
-    .js('resources/js/import-clients-modal', 'public/js')
-    .js('resources/js/import-products-modal', 'public/js')
-    .js('resources/js/import-sellers-modal', 'public/js')
+    .js('resources/js/import-modal', 'public/js')
     .js('resources/js/inline-edit', 'public/js')
     .sass('resources/sass/app.scss', 'public/css')
     .extract();

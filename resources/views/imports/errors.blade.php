@@ -1,7 +1,7 @@
 @extends('layouts.app')
 @section('title', 'Errores de importación')
 @section('content')
-    <a href="{{ route('products.index') }}" class="btn btn-secondary">
+    <a href="{{ route($route) }}" class="btn btn-secondary">
         <i class="fa fa-arrow-left"></i> {{ __("Volver") }}
     </a>
     <p></p>

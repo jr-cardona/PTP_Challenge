@@ -5,7 +5,7 @@
     <a class="btn btn-secondary" href="{{ route('export.sellers') }}">
         <i class="fa fa-file-excel"></i> {{ __("Exportar a Excel") }}
     </a>
-    <button type="button" class="btn btn-warning" data-route="{{ route('import.sellers') }}" data-toggle="modal" data-target="#importSellersModal">
+    <button type="button" class="btn btn-warning" data-route="{{ route('import.sellers') }}" data-toggle="modal" data-target="#importModal">
         <i class="fa fa-file-excel"></i> {{ __("Importar desde Excel") }}
     </button>
     <a class="btn btn-success" href="{{ route('sellers.create') }}">

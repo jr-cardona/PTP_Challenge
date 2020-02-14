@@ -19,22 +19,17 @@ class ImportController extends Controller
      */
     public function invoices(Request $request){
         $this->validate($request, [
-            'invoices' => 'required|mimes:xls,xlsx'
+            'file' => 'required|mimes:xls,xlsx'
         ]);
-        $file = $request->file('invoices');
+        $file = $request->file('file');
         try {
-            Excel::import(new InvoicesImport(), $file);
-            return redirect()->route('invoices.index')->withSuccess(__('Importación completada correctamente'));
+            $import = new InvoicesImport;
+            Excel::import($import, $file);
+            $cant = $import->getRowCount();
+            return redirect()->route('invoices.index')->withSuccess(__("Se importaron {$cant} facturas satisfactoriamente"));
         }
         catch (\Maatwebsite\Excel\Validators\ValidationException $e) {
-            $failures_unsorted = $e->failures();
-            $failures_sorted = array();
-            foreach($failures_unsorted as $failure) {
-                $failures_sorted[$failure->row()][$failure->attribute()] = $failure->errors()[0];
-            }
-            return response()->view('imports.invoices', [
-                'failures' => $failures_sorted,
-            ]);
+            return $this->display_errors($e, 'invoices.index');
         }
     }
 
@@ -46,64 +41,61 @@ class ImportController extends Controller
      */
     public function clients(Request $request){
         $this->validate($request, [
-            'clients' => 'required|mimes:xls,xlsx'
+            'file' => 'required|mimes:xls,xlsx'
         ]);
-        $file = $request->file('clients');
+        $file = $request->file('file');
         try {
-            Excel::import(new ClientsImport(), $file);
-            return redirect()->route('clients.index')->withSuccess(__('Importación completada correctamente'));
+            $import = new ClientsImport;
+            Excel::import($import, $file);
+            $cant = $import->getRowCount();
+            return redirect()->route('clients.index')->withSuccess(__("Se importaron {$cant} clientes satisfactoriamente"));
         }
         catch (\Maatwebsite\Excel\Validators\ValidationException $e) {
-            $failures_unsorted = $e->failures();
-            $failures_sorted = array();
-            foreach($failures_unsorted as $failure) {
-                $failures_sorted[$failure->row()][$failure->attribute()] = $failure->errors()[0];
-            }
-            return response()->view('imports.clients', [
-                'failures' => $failures_sorted,
-            ]);
+            return $this->display_errors($e, 'clients.index');
         }
     }
 
     public function sellers(Request $request){
         $this->validate($request, [
-            'sellers' => 'required|mimes:xls,xlsx'
+            'file' => 'required|mimes:xls,xlsx'
         ]);
-        $file = $request->file('sellers');
+        $file = $request->file('file');
         try {
-            Excel::import(new SellersImport(), $file);
-            return redirect()->route('sellers.index')->withSuccess(__('Importación completada correctamente'));
+            $import = new SellersImport;
+            Excel::import($import, $file);
+            $cant = $import->getRowCount();
+            return redirect()->route('sellers.index')->withSuccess(__("Se importaron {$cant} vendedores satisfactoriamente"));
         }
         catch (\Maatwebsite\Excel\Validators\ValidationException $e) {
-            $failures_unsorted = $e->failures();
-            $failures_sorted = array();
-            foreach($failures_unsorted as $failure) {
-                $failures_sorted[$failure->row()][$failure->attribute()] = $failure->errors()[0];
-            }
-            return response()->view('imports.sellers', [
-                'failures' => $failures_sorted,
-            ]);
+            return $this->display_errors($e, 'sellers.index');
         }
     }
 
     public function products(Request $request){
         $this->validate($request, [
-            'products' => 'required|mimes:xls,xlsx'
+            'file' => 'required|mimes:xls,xlsx'
         ]);
-        $file = $request->file('products');
+        $file = $request->file('file');
         try {
-            Excel::import(new ProductsImport(), $file);
-            return redirect()->route('products.index')->withSuccess(__('Importación completada correctamente'));
+            $import = new ProductsImport;
+            Excel::import($import, $file);
+            $cant = $import->getRowCount();
+            return redirect()->route('sellers.index')->withSuccess(__("Se importaron {$cant} productos satisfactoriamente"));
         }
         catch (\Maatwebsite\Excel\Validators\ValidationException $e) {
-            $failures_unsorted = $e->failures();
-            $failures_sorted = array();
-            foreach($failures_unsorted as $failure) {
-                $failures_sorted[$failure->row()][$failure->attribute()] = $failure->errors()[0];
-            }
-            return response()->view('imports.products', [
-                'failures' => $failures_sorted,
-            ]);
+            return $this->display_errors($e, 'products.index');
         }
+    }
+
+    public function display_errors($e, $route){
+        $failures_unsorted = $e->failures();
+        $failures_sorted = array();
+        foreach($failures_unsorted as $failure) {
+            $failures_sorted[$failure->row()][$failure->attribute()] = $failure->errors()[0];
+        }
+        return response()->view('imports.errors', [
+            'failures' => $failures_sorted,
+            'route' => $route
+        ]);
     }
 }

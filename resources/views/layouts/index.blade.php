@@ -39,7 +39,9 @@
 @endsection
 @push('modals')
     @include('partials.__confirm_delete_modal', ['side_effect' => $side_effect])
+    @include('partials.__import_modal')
 @endpush
 @push('scripts')
     <script src="{{ asset(mix('js/delete-modal.js')) }}"></script>
+    <script src="{{ asset(mix('js/import-modal.js')) }}"></script>
 @endpush

@@ -10,14 +10,17 @@ use Maatwebsite\Excel\Concerns\WithHeadingRow;
 use Maatwebsite\Excel\Concerns\WithValidation;
 use Maatwebsite\Excel\Concerns\WithBatchInserts;
 use Maatwebsite\Excel\Imports\HeadingRowFormatter;
+
 HeadingRowFormatter::default('none');
 
-class SellersImport implements ToModel, WithHeadingRow, WithValidation, WithBatchInserts
+class SellersImport extends BaseImport implements ToModel, WithHeadingRow, WithValidation, WithBatchInserts
 {
     use Importable;
+    private $rows = 0;
 
     public function model(array $row)
     {
+        ++$this->rows;
         return new Seller([
             'type_document_id' => $row['ID Documento'],
             'document' => $row['Número documento'],
@@ -58,5 +61,10 @@ class SellersImport implements ToModel, WithHeadingRow, WithValidation, WithBatc
     public function batchSize(): int
     {
         return 1000;
+    }
+
+    public function getRowCount(): int
+    {
+        return $this->rows;
     }
 }
