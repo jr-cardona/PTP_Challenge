@@ -24,16 +24,6 @@
                 <input type="date" name="issued_final" id="issued_final" class="form-control" value="{{ $request->get('issued_final') }}">
             </div>
             <div class="col-md-3">
-                <label>{{ __("Cliente") }}</label>
-                <input type="hidden" id="old_client_name" name="old_client_name" value="{{ $request->get('client') }}">
-                <input type="hidden" id="old_client_id" name="old_client_id" value="{{ $request->get('client_id') }}">
-                <v-select class="form-control" v-model="old_client_values" label="name" :filterable="false" :options="options" @search="searchClient">
-                    <template slot="no-options">
-                        {{ __("Ingresa el nombre del cliente...") }}
-                    </template>
-                </v-select>
-                <input type="hidden" name="client" id="client" :value="(old_client_values) ? old_client_values.name : '' ">
-                <input type="hidden" name="client_id" id="client_id" :value="(old_client_values) ? old_client_values.id : '' ">
                 <label for="expires_init">{{ __("Fecha inicial de vencimiento") }}</label>
                 <input type="date" name="expires_init" id="expires_init" class="form-control" value="{{ $request->get('expires_init') }}">
             </div>
@@ -68,6 +58,18 @@
                 </v-select>
                 <input type="hidden" name="product" id="product" :value="(old_product_values) ? old_product_values.name : '' ">
                 <input type="hidden" name="product_id" id="product_id" :value="(old_product_values) ? old_product_values.id : '' ">
+            </div>
+            <div class="col-md-3">
+                <label>{{ __("Cliente") }}</label>
+                <input type="hidden" id="old_client_fullname" name="old_client_fullname" value="{{ $request->get('client') }}">
+                <input type="hidden" id="old_client_id" name="old_client_id" value="{{ $request->get('client_id') }}">
+                <v-select class="form-control" v-model="old_client_values" label="fullname" :filterable="false" :options="options" @search="searchClient">
+                    <template slot="no-options">
+                        {{ __("Ingresa el nombre del cliente...") }}
+                    </template>
+                </v-select>
+                <input type="hidden" name="client" id="client" :value="(old_client_values) ? old_client_values.fullname : '' ">
+                <input type="hidden" name="client_id" id="client_id" :value="(old_client_values) ? old_client_values.id : '' ">
             </div>
         </div>
         <div class="form-group row">

@@ -32,7 +32,7 @@ class Client extends Model
     }
 
     /** Query Scopes */
-    public function scopeClient($query, $id) {
+    public function scopeId($query, $id) {
         if(trim($id) != ""){
             return $query->where('id', $id);
         }

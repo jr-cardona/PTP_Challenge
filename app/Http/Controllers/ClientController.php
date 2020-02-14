@@ -16,7 +16,7 @@ class ClientController extends Controller
      */
     public function index(Request $request) {
         $clients = Client::with(["type_document"])
-            ->client($request->get('client_id'))
+            ->id($request->get('id'))
             ->typedocument($request->get('type_document_id'))
             ->document($request->get('document'))
             ->email($request->get('email'))

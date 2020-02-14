@@ -17,16 +17,16 @@
         <div class="form-group row">
             <div class="col-md-3">
                 <label>{{ __("Nombre") }}</label>
-                <input type="hidden" id="old_client_name" name="old_client_name" value="{{ $request->get('client') }}">
-                <input type="hidden" id="old_client_id" name="old_client_id" value="{{ $request->get('client_id') }}">
-                <v-select v-model="old_client_values" label="name" :filterable="false" :options="options" @search="searchClient"
+                <input type="hidden" id="old_client_fullname" name="old_client_fullname" value="{{ $request->get('client') }}">
+                <input type="hidden" id="old_client_id" name="old_client_id" value="{{ $request->get('id') }}">
+                <v-select v-model="old_client_values" label="fullname" :filterable="false" :options="options" @search="searchClient"
                           class="form-control">
                     <template slot="no-options">
                         {{ __("Ingresa el nombre...") }}
                     </template>
                 </v-select>
-                <input type="hidden" name="client" id="client" :value="(old_client_values) ? old_client_values.name : '' ">
-                <input type="hidden" name="client_id" id="client_id" :value="(old_client_values) ? old_client_values.id : '' ">
+                <input type="hidden" name="client" id="client" :value="(old_client_values) ? old_client_values.fullname : '' ">
+                <input type="hidden" name="id" id="id" :value="(old_client_values) ? old_client_values.id : '' ">
             </div>
             <div class="col-md-3">
                 <label for="type_document_id">{{ __("Tipo de documento") }}</label>

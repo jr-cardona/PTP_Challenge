@@ -47,15 +47,15 @@
     </div>
     <div class="col">
         <label for="client_id" class="required">{{ __("Cliente") }}</label>
-        <input type="hidden" id="old_client_name" name="old_client_name" value="{{ old('client', isset($invoice->client->name) ? $invoice->client->name : '') }}">
+        <input type="hidden" id="old_client_fullname" name="old_client_fullname" value="{{ old('client', isset($invoice->client->name) ? $invoice->client->name : '') }}">
         <input type="hidden" id="old_client_id" name="old_client_id" value="{{ old('client_id', isset($invoice->client->id) ? $invoice->client->id : '') }}">
-        <v-select v-model="old_client_values" label="name" :filterable="false" :options="options" @search="searchClient"
+        <v-select v-model="old_client_values" label="fullname" :filterable="false" :options="options" @search="searchClient"
                   class="form-control @error('client_id') is-invalid @enderror">
             <template slot="no-options">
                 {{ __("Ingresa el nombre del cliente...") }}
             </template>
         </v-select>
-        <input type="hidden" name="client" id="client" :value="(old_client_values) ? old_client_values.name : '' ">
+        <input type="hidden" name="client" id="client" :value="(old_client_values) ? old_client_values.fullname : '' ">
         <input type="hidden" name="client_id" id="client_id" :value="(old_client_values) ? old_client_values.id : '' ">
         @error('client_id')
             <span class="invalid-feedback" role="alert">
