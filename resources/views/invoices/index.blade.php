@@ -28,16 +28,6 @@
                 <input type="date" name="expires_init" id="expires_init" class="form-control" value="{{ $request->get('expires_init') }}">
             </div>
             <div class="col-md-3">
-                <label>{{ __("Vendedor") }}</label>
-                <input type="hidden" id="old_seller_name" name="old_seller_name" value="{{ $request->get('seller') }}">
-                <input type="hidden" id="old_seller_id" name="old_seller_id" value="{{ $request->get('seller_id') }}">
-                <v-select class="form-control" v-model="old_seller_values" label="name" :filterable="false" :options="options" @search="searchSeller">
-                    <template slot="no-options">
-                        {{ __("Ingresa el nombre del vendedor...") }}
-                    </template>
-                </v-select>
-                <input type="hidden" name="seller" id="seller" :value="(old_seller_values) ? old_seller_values.name : '' ">
-                <input type="hidden" name="seller_id" id="seller_id" :value="(old_seller_values) ? old_seller_values.id : '' ">
                 <label for="expires_final">{{ __("Fecha final de vencimiento") }}</label>
                 <input type="date" name="expires_final" id="expires_final" class="form-control" value="{{ $request->get('expires_final') }}">
             </div>
@@ -70,6 +60,18 @@
                 </v-select>
                 <input type="hidden" name="client" id="client" :value="(old_client_values) ? old_client_values.fullname : '' ">
                 <input type="hidden" name="client_id" id="client_id" :value="(old_client_values) ? old_client_values.id : '' ">
+            </div>
+            <div class="col-md-3">
+                <label>{{ __("Vendedor") }}</label>
+                <input type="hidden" id="old_seller_fullname" name="old_seller_fullname" value="{{ $request->get('seller') }}">
+                <input type="hidden" id="old_seller_id" name="old_seller_id" value="{{ $request->get('seller_id') }}">
+                <v-select class="form-control" v-model="old_seller_values" label="fullname" :filterable="false" :options="options" @search="searchSeller">
+                    <template slot="no-options">
+                        {{ __("Ingresa el nombre del vendedor...") }}
+                    </template>
+                </v-select>
+                <input type="hidden" name="seller" id="seller" :value="(old_seller_values) ? old_seller_values.fullname : '' ">
+                <input type="hidden" name="seller_id" id="seller_id" :value="(old_seller_values) ? old_seller_values.id : '' ">
             </div>
         </div>
         <div class="form-group row">

@@ -16,7 +16,7 @@ class SellerController extends Controller
      */
     public function index(Request $request) {
         $sellers = Seller::with(["type_document"])
-            ->seller($request->get('seller_id'))
+            ->id($request->get('id'))
             ->typedocument($request->get('type_document_id'))
             ->document($request->get('document'))
             ->email($request->get('email'))

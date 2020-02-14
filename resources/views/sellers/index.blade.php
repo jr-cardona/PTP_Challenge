@@ -17,16 +17,16 @@
         <div class="form-group row">
             <div class="col-md-3">
                 <label>{{ __("Nombre") }}</label>
-                <input type="hidden" id="old_seller_name" name="old_seller_name" value="{{ $request->get('seller') }}">
-                <input type="hidden" id="old_seller_id" name="old_seller_id" value="{{ $request->get('seller_id') }}">
-                <v-select v-model="old_seller_values" label="name" :filterable="false" :options="options" @search="searchSeller"
+                <input type="hidden" id="old_seller_fullname" name="old_seller_fullname" value="{{ $request->get('seller') }}">
+                <input type="hidden" id="old_seller_id" name="old_seller_id" value="{{ $request->get('id') }}">
+                <v-select v-model="old_seller_values" label="fullname" :filterable="false" :options="options" @search="searchSeller"
                           class="form-control">
                     <template slot="no-options">
                         {{ __("Ingresa el nombre...") }}
                     </template>
                 </v-select>
-                <input type="hidden" name="seller" id="seller" :value="(old_seller_values) ? old_seller_values.name : '' ">
-                <input type="hidden" name="seller_id" id="seller_id" :value="(old_seller_values) ? old_seller_values.id : '' ">
+                <input type="hidden" name="seller" id="seller" :value="(old_seller_values) ? old_seller_values.fullname : '' ">
+                <input type="hidden" name="id" id="id" :value="(old_seller_values) ? old_seller_values.id : '' ">
             </div>
             <div class="col-md-3">
                 <label for="type_document_id">{{ __("Tipo de documento") }}</label>
