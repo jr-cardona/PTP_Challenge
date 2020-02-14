@@ -105,40 +105,14 @@
                         <td class="text-center">{{ $product->id }}</td>
                         <td class="text-center">{{ $product->name }}</td>
                         <td class="text-center">{{ $product->description }}</td>
-                        @if($invoice->isPaid())
-                            <td class="text-center">{{ $product->pivot->quantity }}</td>
-                            <td class="text-right">{{ number_format($product->pivot->unit_price, 2) }}</td>
-                        @else
-                            <td class="text-center">
-                                <a href="#" class="update" data-name="quantity" data-type="text" data-title="Editar cantidad"
-                                   data-url="{{ route('invoices.details.update', [$invoice, $product]) }}" data-pk="">
-                                    {{ $product->pivot->quantity }}
-                                </a>
-                            </td>
-                            <td class="text-right">
-                                $
-                                <a href="#" class="update" data-name="unit_price" data-type="text" data-title="Editar precio unitario"
-                                   data-url="{{ route('invoices.details.update', [$invoice, $product]) }}" data-pk="" data-value="{{ $product->pivot->unit_price }}">
-                                    {{ number_format($product->pivot->unit_price, 2) }}
-                                </a>
-                            </td>
-                        @endif
+                        <td class="text-center">{{ $product->pivot->quantity }}</td>
+                        <td class="text-right">{{ number_format($product->pivot->unit_price, 2) }}</td>
                         <td class="text-right">${{ number_format($product->pivot->unit_price * $product->pivot->quantity, 2) }}</td>
                         <td class="text-right">
-                        @if(!$invoice->isPaid())
-                            <div class="btn-group btn-group-sm" role="group">
-                                <a href="{{ route('invoices.details.edit', [$invoice, $product]) }}" class="btn btn-link" title="Editar">
-                                    <i class="fa fa-edit"></i>
-                                </a>
-                                <button type="submit" form="deleteDetail{{ $product->id }}" class="btn btn-link text-danger" title="Eliminar">
+                            @if(!$invoice->isPaid())
+                                <button type="button" class="btn btn-link text-danger" data-route="{{ route('invoices.details.destroy', [$invoice, $product]) }}" data-toggle="modal" data-target="#confirmDeleteModal">
                                     <i class="fa fa-trash"></i>
                                 </button>
-                            </div>
-                            <form id="deleteDetail{{ $product->id }}" action="{{ route('invoices.details.destroy', [$invoice, $product]) }}" method="post">
-                                @method('DELETE')
-                                @csrf()
-                            </form>
-                        @endif
                         </td>
                     </tr>
                @endforeach
