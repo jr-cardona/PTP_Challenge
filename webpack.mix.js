@@ -16,4 +16,5 @@ mix.js('resources/js/app.js', 'public/js')
     .js('resources/js/import-modal', 'public/js')
     .js('resources/js/inline-edit', 'public/js')
     .sass('resources/sass/app.scss', 'public/css')
+    .sass('resources/sass/auth.scss', 'public/css')
     .extract();

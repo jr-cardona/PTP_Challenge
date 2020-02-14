@@ -14,8 +14,9 @@
 Auth::routes();
 
 Route::middleware(['auth'])->group(function (){
-    Route::get('/', 'HomeController@index');
-    Route::get('/home', 'HomeController@index')->name('home');
+    Route::get('/', function() {
+        return view('home');
+    })->name('home');
 
     Route::get('/clientes/buscar', 'SearchController@clients')->name('search.clients');
     Route::get('/productos/buscar', 'SearchController@products')->name('search.products');
