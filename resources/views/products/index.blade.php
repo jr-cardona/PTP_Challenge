@@ -42,12 +42,12 @@
     </form>
 @endsection
 @section('Header')
-    <th scope="col">{{ __("Código") }}</th>
-    <th scope="col">{{ __("Nombre") }}</th>
-    <th scope="col">{{ __("Precio unitario") }}</th>
-    <th scope="col" nowrap>{{ __("Fecha de creación") }}</th>
-    <th scope="col" nowrap>{{ __("Fecha de modificación") }}</th>
-    <th scope="col" nowrap>{{ __("Opciones") }}</th>
+    <th class="text-center" nowrap>{{ __("Código") }}</th>
+    <th class="text-center" nowrap>{{ __("Nombre") }}</th>
+    <th class="text-center" nowrap>{{ __("Precio unitario") }}</th>
+    <th class="text-center" nowrap>{{ __("Fecha de creación") }}</th>
+    <th class="text-center" nowrap>{{ __("Fecha de modificación") }}</th>
+    <th class="text-center" nowrap>{{ __("Opciones") }}</th>
 @endsection
 @section('Body')
     @foreach($products as $product)
@@ -70,9 +70,3 @@
 @section('Links')
     {{ $products->appends($request->all())->links() }}
 @endsection
-@push('modals')
-    @include('partials.__import_products_modal')
-@endpush
-@push('scripts')
-    <script src="{{ asset(mix('js/import-products-modal.js')) }}"></script>
-@endpush

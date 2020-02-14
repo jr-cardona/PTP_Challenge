@@ -61,12 +61,11 @@
     </form>
 @endsection
 @section('Header')
-    <th scope="col">{{ __("Documento") }}</th>
-    <th scope="col">{{ __("Nombre") }}</th>
-    <th scope="col">{{ __("Apellido") }}</th>
-    <th scope="col">{{ __("Correo electrónico") }}</th>
-    <th scope="col">{{ __("Celular") }}</th>
-    <th scope="col">{{ __("Opciones") }}</th>
+    <th class="text-center" nowrap>{{ __("Documento") }}</th>
+    <th class="text-center" nowrap>{{ __("Nombre completo") }}</th>
+    <th class="text-center" nowrap>{{ __("Correo electrónico") }}</th>
+    <th class="text-center" nowrap>{{ __("Celular") }}</th>
+    <th></th>
 @endsection
 @section('Body')
     @foreach($clients as $client)
@@ -76,8 +75,7 @@
                     {{ $client->type_document->name }} {{ $client->document }}
                 </a>
             </td>
-            <td>{{ $client->name }}</td>
-            <td>{{ $client->surname }}</td>
+            <td>{{ $client->fullname }}</td>
             <td>{{ $client->email }}</td>
             <td>{{ $client->cell_phone_number }}</td>
             <td class="btn-group btn-group-sm" nowrap>
@@ -89,9 +87,3 @@
 @section('Links')
     {{ $clients->appends($request->all())->links() }}
 @endsection
-@push('modals')
-    @include('partials.__import_clients_modal')
-@endpush
-@push('scripts')
-    <script src="{{ asset(mix('js/import-clients-modal.js')) }}"></script>
-@endpush

@@ -130,9 +130,3 @@
 @section('Links')
     {{ $invoices->appends($request->all())->links() }}
 @endsection
-@push('modals')
-    @include('partials.__import_invoices_modal')
-@endpush
-@push('scripts')
-    <script src="{{ asset(mix('js/import-invoices-modal.js')) }}"></script>
-@endpush

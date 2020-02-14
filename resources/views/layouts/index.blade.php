@@ -25,7 +25,7 @@
     <br>
     <table class="table border-rounded table-striped table-hover">
         <thead class="thead-dark">
-            <tr class="text-center">
+            <tr>
                 @yield('Header')
             </tr>
         </thead>
@@ -42,6 +42,7 @@
     @include('partials.__import_modal')
 @endpush
 @push('scripts')
+    <script src="{{ asset(mix('js/app.js')) }}"></script>
     <script src="{{ asset(mix('js/delete-modal.js')) }}"></script>
     <script src="{{ asset(mix('js/import-modal.js')) }}"></script>
 @endpush
