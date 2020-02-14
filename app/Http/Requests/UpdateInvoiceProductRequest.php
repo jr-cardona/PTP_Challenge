@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class UpdateInvoiceDetailRequest extends FormRequest
+class UpdateInvoiceProductRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -23,9 +23,11 @@ class UpdateInvoiceDetailRequest extends FormRequest
      */
     public function rules()
     {
-        return [
-            'quantity' => 'required|numeric|min:1|max:9999',
-            'unit_price' => 'required|numeric|min:1|max:999999999.99',
-        ];
+        if ($this->request->get('name') == "quantity") {
+            $validationRules['value'] = 'required|numeric|min:1|max:999';
+        }else{
+            $validationRules['value'] = 'required|numeric|min:1|max:9999999.99';
+        }
+        return $validationRules;
     }
 }

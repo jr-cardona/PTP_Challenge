@@ -5,7 +5,7 @@ namespace App\Http\Requests;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Foundation\Http\FormRequest;
 
-class StoreInvoiceDetailRequest extends FormRequest
+class StoreInvoiceProductRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
