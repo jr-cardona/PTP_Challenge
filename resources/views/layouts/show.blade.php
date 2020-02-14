@@ -22,7 +22,7 @@
     </div>
 @endsection
 @push('modals')
-    @include('partials.__confirm_delete_modal', ['side_effect' => isset($side_effect) ? $side_effect : ''])
+    @include('partials.__confirm_delete_modal')
 @endpush
 @push('scripts')
     <script src="{{ asset('js/delete-modal.js') }}"></script>

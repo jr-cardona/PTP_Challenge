@@ -25,7 +25,6 @@ class ClientController extends Controller
         return response()->view('clients.index', [
             'clients' => $clients,
             'request' => $request,
-            'side_effect' => __('Se borrarán todas sus facturas asociadas')
         ]);
     }
 

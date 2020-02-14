@@ -27,7 +27,6 @@ class InvoiceController extends Controller
         return response()->view('invoices.index', [
             'invoices' => $invoices,
             'request' => $request,
-            'side_effect' => __('Se borrarán todos sus detalles asociados'),
         ]);
     }
 
@@ -63,7 +62,6 @@ class InvoiceController extends Controller
     public function show(Invoice $invoice) {
         return response()->view('invoices.show', [
             'invoice' => $invoice,
-            'side_effect' => __('Se borrarán todos sus detalles asociados')
         ]);
     }
 

@@ -38,7 +38,7 @@
     </div>
 @endsection
 @push('modals')
-    @include('partials.__confirm_delete_modal', ['side_effect' => $side_effect])
+    @include('partials.__confirm_delete_modal')
     @include('partials.__import_modal')
 @endpush
 @push('scripts')

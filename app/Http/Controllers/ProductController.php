@@ -20,7 +20,6 @@ class ProductController extends Controller
         return response()->view('products.index', [
             'products' => $products,
             'request' => $request,
-            'side_effect' => ''
         ]);
     }
 

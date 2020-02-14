@@ -25,7 +25,6 @@ class SellerController extends Controller
         return response()->view('sellers.index', [
             'sellers' => $sellers,
             'request' => $request,
-            'side_effect' => __('Se borrarán todas sus facturas asociadas')
         ]);
     }
 

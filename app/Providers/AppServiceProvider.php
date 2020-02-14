@@ -35,5 +35,9 @@ class AppServiceProvider extends ServiceProvider
             'create' => 'crear',
             'edit' => 'editar'
         ]);
+
+        Blade::directive('routeIs', function ($expression) {
+            return "<?php if (Request::url() == route($expression)): ?>";
+        });
     }
 }
