@@ -188,7 +188,7 @@ return [
         'number'                => 'número de factura',
         'received_at'           => 'fecha de facturación',
         'issued_at'             => 'fecha de expedición',
-        'expired_at'           => 'fecha de vencimiento',
+        'expires_at'           => 'fecha de vencimiento',
         'vat'                   => 'iva',
         'total'                 => 'valor total',
         'state_id'              => 'estado',

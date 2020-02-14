@@ -51,10 +51,10 @@
             </tr>
             <tr>
                 <td class="table-dark td-title">{{ __("Fecha de expedición:") }}</td>
-                <td class="td-content">{{ $invoice->issued_at->isoFormat('Y-MM-DD') }}</td>
+                <td class="td-content">{{ $invoice->issued_at->toDateString() }}</td>
 
                 <td class="table-dark td-title">{{ __("Fecha de vencimiento:") }}</td>
-                <td class="td-content">{{ $invoice->expired_at == '' ? "Sin fecha" : $invoice->expired_at->isoFormat('Y-MM-DD') }}</td>
+                <td class="td-content">{{ $invoice->expires_at->toDateString() }}</td>
             </tr>
             <tr>
                 <td class="table-dark td-title">{{ __("IVA:") }}</td>

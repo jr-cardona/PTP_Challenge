@@ -2,6 +2,8 @@
     <thead>
     <tr>
         <th>{{ __("Título") }}</th>
+        <th>{{ __("Fecha de creación") }}</th>
+        <th>{{ __("Fecha de modifición") }}</th>
         <th>{{ __("Fecha de expedición") }}</th>
         <th>{{ __("Fecha de vencimiento") }}</th>
         <th>{{ __("Fecha de recibo") }}</th>
@@ -18,8 +20,10 @@
     @foreach($invoices as $invoice)
         <tr>
             <td>{{ $invoice->fullname }}</td>
-            <td>{{ $invoice->issued_at }}</td>
-            <td>{{ $invoice->expired_at }}</td>
+            <td>{{ $invoice->created_at }}</td>
+            <td>{{ $invoice->updated_at }}</td>
+            <td>{{ $invoice->issued_at->toDateString() }}</td>
+            <td>{{ $invoice->expires_at->toDateString() }}</td>
             <td>{{ $invoice->received_at }}</td>
             <td>{{ $invoice->vat }}</td>
             <td>{{ $invoice->description }}</td>

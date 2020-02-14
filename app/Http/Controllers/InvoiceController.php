@@ -21,6 +21,7 @@ class InvoiceController extends Controller
             ->seller($request->get('seller_id'))
             ->product($request->get('product_id'))
             ->issuedDate($request->get('issued_init'), $request->get('issued_final'))
+            ->expiresDate($request->get('expires_init'), $request->get('expires_final'))
             ->orderBy('id', 'DESC')
             ->paginate(10);
         return response()->view('invoices.index', [

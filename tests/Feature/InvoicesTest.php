@@ -33,11 +33,34 @@ class InvoicesTest extends TestCase
         $response = $this->actingAs($user)->get(route('invoices.index'));
 
         $response->assertSuccessful();
+        $response->assertViewHas('invoices');
         $response->assertViewIs("invoices.index");
         $response->assertSee("Facturas");
     }
 
 
+
+    /** @test */
+    public function invoices_can_be_found_by_issued_init_and_issued_final(){
+        $this->withoutExceptionHandling();
+        $user = factory(User::class)->create();
+        $invoice1 = factory(Invoice::class)->create(['issued_at' => Carbon::now()->subWeek()]);
+        $invoice2 = factory(Invoice::class)->create(['issued_at' => Carbon::now()->addWeek()]);
+        $invoice3 = factory(Invoice::class)->create(['issued_at' => Carbon::now()]);
+
+        $response = $this->actingAs($user)->get(route('invoices.index'));
+        $response->assertSeeText($invoice1->fullname);
+        $response->assertSeeText($invoice2->fullname);
+        $response->assertSeeText($invoice3->fullname);
+
+        $response = $this->actingAs($user)->get(route('invoices.index', [
+            'issued_init' => Carbon::now()->toDateString(),
+            'issued_final' => Carbon::now()->toDateString(),
+        ]));
+        $response->assertDontSeeText($invoice1->fullname);
+        $response->assertDontSeeText($invoice2->fullname);
+        $response->assertSeeText($invoice3->fullname);
+    }
 
     /** @test */
     public function guest_user_cannot_access_to_create_invoices_view()
@@ -232,5 +255,14 @@ class InvoicesTest extends TestCase
             'quantity' => 1,
             'unit_price' => 1,
         ]);
+
+    private function data(){
+        $client = factory(Client::class)->create();
+        $seller = factory(Seller::class)->create();
+        return [
+            'issued_at' => Carbon::now()->toDateString(),
+            'client_id' => $client->id,
+            'seller_id' => $seller->id,
+        ];
     }
 }

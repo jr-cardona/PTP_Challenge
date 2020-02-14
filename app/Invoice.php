@@ -105,8 +105,8 @@ class Invoice extends Model
         return $this->getSubtotalAttribute() + $this->getIvaAmountAttribute();
     }
 
-    public function getIssuedAttribute() {
-        return isset($this->issued_at) ? $this->issued_at->toDateString() : '';
+    public function getIssuedAttribute(){
+        return isset($this->issued_at) ? $this->issued_at->toDateString() : $this->issued_at;
     }
 
     public function getFullNameAttribute(){
@@ -131,6 +131,7 @@ class Invoice extends Model
             return $query->where('seller_id', $seller_id);
         }
     }
+
     public function scopeProduct($query, $product_id) {
         if(trim($product_id) != "") {
             return $query->whereHas('products', function (Builder $query) use ($product_id) {
@@ -142,6 +143,12 @@ class Invoice extends Model
     public function scopeIssuedDate($query, $issued_init, $issued_final) {
         if(trim($issued_init) != "" && trim($issued_final) != "") {
             return $query->whereBetween('issued_at', [$issued_init, $issued_final]);
+        }
+    }
+
+    public function scopeExpiresDate($query, $expires_init, $expires_final) {
+        if(trim($expires_init) != "" && trim($expires_final) != "") {
+            return $query->whereBetween('expires_at', [$expires_init, $expires_final]);
         }
     }
 }

@@ -34,6 +34,8 @@
                 </v-select>
                 <input type="hidden" name="client" id="client" :value="(old_client_values) ? old_client_values.name : '' ">
                 <input type="hidden" name="client_id" id="client_id" :value="(old_client_values) ? old_client_values.id : '' ">
+                <label for="expires_init">{{ __("Fecha inicial de vencimiento") }}</label>
+                <input type="date" name="expires_init" id="expires_init" class="form-control" value="{{ $request->get('expires_init') }}">
             </div>
             <div class="col-md-3">
                 <label>{{ __("Vendedor") }}</label>
@@ -46,6 +48,8 @@
                 </v-select>
                 <input type="hidden" name="seller" id="seller" :value="(old_seller_values) ? old_seller_values.name : '' ">
                 <input type="hidden" name="seller_id" id="seller_id" :value="(old_seller_values) ? old_seller_values.id : '' ">
+                <label for="expires_final">{{ __("Fecha final de vencimiento") }}</label>
+                <input type="date" name="expires_final" id="expires_final" class="form-control" value="{{ $request->get('expires_final') }}">
             </div>
         </div>
         <div class="form-group row">
@@ -99,7 +103,8 @@
                     @endif
                 </a>
             </td>
-            <td class="text-center" nowrap>{{ $invoice->issued_at->isoFormat('Y-MM-DD hh:mma') }}</td>
+            <td class="text-center" nowrap>{{ $invoice->issued_at->toDateString() }}</td>
+            <td class="text-center" nowrap>{{ $invoice->expires_at->toDateString() }}</td>
             <td class="text-center" nowrap>${{ number_format($invoice->total, 2) }}</td>
             @include('invoices.status_label')
             <td nowrap>

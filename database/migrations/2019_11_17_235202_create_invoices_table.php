@@ -15,9 +15,9 @@ class CreateInvoicesTable extends Migration
     {
         Schema::create('invoices', function (Blueprint $table) {
             $table->increments('id');
-            $table->timestamps();
-            $table->dateTime('issued_at');
-            $table->dateTime('expired_at')->nullable();
+            $table->date('issued_at');
+            $table->date('expires_at')->nullable();
+            $table->dateTime('paid_at')->nullable();
             $table->dateTime('received_at')->nullable();
             $table->float('vat')->unsigned();
             $table->string('description')->nullable();
@@ -25,6 +25,7 @@ class CreateInvoicesTable extends Migration
             $table->unsignedInteger('seller_id');
             $table->foreign('client_id')->references('id')->on('clients')->onDelete('cascade');
             $table->foreign('seller_id')->references('id')->on('sellers')->onDelete('cascade');
+            $table->timestamps();
         });
     }
 
