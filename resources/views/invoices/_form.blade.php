@@ -10,7 +10,7 @@
             </span>
         @else
             <small class="form-text text-muted">
-                {{ __("Debe ser numérico entre 0 y 100") }}
+                {{ __("No debe sobrepasar 1 semana del día actual") }}
             </small>
         @enderror
     </div>
@@ -69,4 +69,6 @@
         @enderror
     </div>
 </div>
-<br>
+@push('scripts')
+    <script src="{{ asset(mix('js/app.js')) }}"></script>
+@endpush
