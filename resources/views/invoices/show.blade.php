@@ -5,7 +5,7 @@
         <a href="{{ route('invoices.index') }}" class="btn btn-secondary">
             <i class="fa fa-arrow-left"></i> {{ __("Volver") }}
         </a>
-        @if($invoice->state_id == "1")
+        @if($invoice->isPending())
             <a href="{{ route('invoices.payments.create', $invoice) }}" class="btn btn-success">
                 <i class="fa fa-dollar-sign"></i> {{ __("Pagar") }}
             </a>
@@ -156,7 +156,7 @@
                 </tr>
             </tbody>
         </table>
-        @if(!$invoice->isPaid())
+        @if(!$invoice->isPaid() && !$invoice->isExpired())
             <a href="{{ route('invoices.details.create', $invoice) }}" class="btn btn-success btn-block">
                 <i class="fa fa-plus"></i> {{ __("Agregar Detalle") }}
             </a>
@@ -191,3 +191,6 @@
         </table>
     </div>
 @endsection
+@push('scripts')
+    <script src="{{ asset(mix('js/inline-edit.js')) }}"></script>
+@endpush

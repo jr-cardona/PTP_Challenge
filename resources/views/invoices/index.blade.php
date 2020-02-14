@@ -54,17 +54,6 @@
                 <input type="number" id="number" name="number" class="form-control" placeholder="No. de factura" value="{{ $request->get('number') }}">
             </div>
             <div class="col-md-3">
-                <label for="state_id">{{ __("Estado") }}</label>
-                <select id="state_id" name="state_id" class="form-control">
-                    <option value="">--</option>
-                    @foreach($states as $state)
-                        <option value="{{ $state->id }}" {{ $request->get('state_id') == $state->id ? 'selected' : ''}}>
-                            {{ $state->name }}
-                        </option>
-                    @endforeach
-                </select>
-            </div>
-            <div class="col-md-3">
                 <label>{{ __("Producto") }}</label>
                 <input type="hidden" id="old_product_name" name="old_product_name" value="{{ $request->get('product') }}">
                 <input type="hidden" id="old_product_id" name="old_product_id" value="{{ $request->get('product_id') }}">
@@ -90,13 +79,14 @@
     </form>
 @endsection
 @section('Header')
-    <th scope="col" nowrap>{{ __("Título") }}</th>
-    <th scope="col" nowrap>{{ __("Fecha de expedición") }}</th>
-    <th scope="col" nowrap>{{ __("Valor total") }}</th>
-    <th scope="col" nowrap>{{ __("Estado") }}</th>
-    <th scope="col" nowrap>{{ __("Cliente") }}</th>
-    <th scope="col" nowrap>{{ __("Vendedor") }}</th>
-    <th scope="col" nowrap>{{ __("Opciones") }}</th>
+    <th class="text-center" nowrap>{{ __("Título") }}</th>
+    <th class="text-center" nowrap>{{ __("Fecha expedición") }}</th>
+    <th class="text-center" nowrap>{{ __("Fecha vencimiento") }}</th>
+    <th class="text-center" nowrap>{{ __("Valor total") }}</th>
+    <th class="text-center" nowrap>{{ __("Estado") }}</th>
+    <th class="text-center" nowrap>{{ __("Cliente") }}</th>
+    <th class="text-center" nowrap>{{ __("Vendedor") }}</th>
+    <th></th>
 @endsection
 @section('Body')
     @foreach($invoices as $invoice)

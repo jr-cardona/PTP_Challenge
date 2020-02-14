@@ -3,6 +3,7 @@
 namespace App;
 
 use App\Events\InvoiceCreated;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -14,13 +15,15 @@ class Invoice extends Model
     protected $guarded = [];
     protected $dates = [
         'issued_at',
-        'expired_at',
-        'received_at'
+        'expires_at',
+        'received_at',
+        'paid_at',
     ];
     protected $casts = [
-        'issued_at' => 'datetime:Y-m-d',
-        'expired_at' => 'datetime:Y-m-d',
-        'received_at' => 'datetime:Y-m-d',
+        'issued_at' => 'date:Y-m-d',
+        'expires_at' => 'date:Y-m-d',
+        'received_at' => 'date:Y-m-d',
+        'paid_at' => 'date:Y-m-d',
     ];
     protected $dispatchesEvents = [
         'created' => InvoiceCreated::class,
@@ -51,14 +54,6 @@ class Invoice extends Model
     }
 
     /**
-     * Relation between invoices and states
-     * @return BelongsTo
-     */
-    public function state(): BelongsTo {
-        return $this->belongsTo(State::class);
-    }
-
-    /**
      * Relation between invoices and paymentAttempts
      * @return HasMany
      */
@@ -69,17 +64,29 @@ class Invoice extends Model
     /** DERIVED ATTRIBUTES */
     public function isExpired()
     {
-        return $this->state_id == 3;
+        if ($this->expires_at <= Carbon::now()){
+            return true;
+        } else {
+            return false;
+        }
     }
 
     public function isPaid()
     {
-        return $this->state_id == 2;
+        if (!empty($this->paid_at) && !$this->isExpired()) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     public function isPending()
     {
-        return $this->state_id == 1;
+        if (empty($this->paid_at) && !$this->isExpired()) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     public function getSubtotalAttribute() {
@@ -110,12 +117,6 @@ class Invoice extends Model
     public function scopeNumber($query, $number) {
         if(trim($number) != "") {
             return $query->where('id', 'LIKE', "%$number%");
-        }
-    }
-
-    public function scopeState($query, $state_id) {
-        if(trim($state_id) != "") {
-            return $query->where('state_id', $state_id);
         }
     }
 

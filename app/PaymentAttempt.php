@@ -24,8 +24,8 @@ class PaymentAttempt extends Model
             'FAILED' => 'Fallido',
             'APPROVED' => 'Aprobado',
             'REJECTED' => 'Rechazado',
-            'PENDING' => 'Pendiente']
-        [$status];
+            'PENDING' => 'Pendiente'
+        ][$status];
     }
 
     public function isFailed()

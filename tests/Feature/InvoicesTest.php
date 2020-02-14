@@ -2,15 +2,17 @@
 
 namespace Tests\Feature;
 
-use App\Client;
-use App\Product;
-use App\Seller;
-use App\State;
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
-use Tests\TestCase;
-use App\Invoice;
 use App\User;
+use App\Client;
+use App\Seller;
+use App\Product;
+use App\Invoice;
+use Carbon\Carbon;
+use Tests\TestCase;
+use App\Exports\InvoicesExport;
+use Maatwebsite\Excel\Facades\Excel;
+use Illuminate\Foundation\Testing\WithFaker;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class InvoicesTest extends TestCase
 {
@@ -55,57 +57,27 @@ class InvoicesTest extends TestCase
         $response->assertSee("Crear Factura");
     }
 
-
-
     /** @test */
     public function guest_user_cannot_store_invoices()
     {
-        $this->seed("TypeDocumentsTableSeeder");
-        $this->seed("StatesTableSeeder");
-        $client = factory(Client::class)->create();
-        $seller = factory(Seller::class)->create();
-        $this->post(route('invoices.store'), [
-            'issued_at' => '2000-01-01',
-            'vat' => 1,
-            'client_id' => $client->id,
-            'seller_id' => $seller->id,
-        ])
-            ->assertRedirect(route('login'));
+        $this->post(route('invoices.store'), $this->data())->assertRedirect(route('login'));
 
-        $this->assertDatabaseMissing('invoices', [
-            'issued_at' => '2000-01-01',
-            'vat' => 1,
-            'client_id' => $client->id,
-            'seller_id' => $seller->id,
-        ]);
+        $this->assertDatabaseMissing('invoices', $this->data());
     }
 
     /** @test */
     public function logged_in_user_can_store_invoices()
     {
         $user = factory(User::class)->create();
-        $this->seed("TypeDocumentsTableSeeder");
-        $this->seed("StatesTableSeeder");
-        $client = factory(Client::class)->create();
-        $seller = factory(Seller::class)->create();
+        $data = $this->data();
 
-        $response = $this->actingAs($user)->post(route('invoices.store'), [
-            'issued_at' => '2000-01-01',
-            'vat' => 1,
-            'client_id' => $client->id,
-            'seller_id' => $seller->id,
-        ]);
-
-        $invoice = Invoice::first();
-        $response->assertRedirect(route('invoices.show', $invoice));
+        $response = $this->actingAs($user)->post(route('invoices.store'), $data);
+        $response->assertRedirect(route('invoices.show', Invoice::first()));
         $response->assertSessionHasNoErrors();
 
-        $this->assertDatabaseHas('invoices', [
-            'issued_at' => '2000-01-01 00:00:00',
-            'vat' => 1,
-            'client_id' => $client->id,
-            'seller_id' => $seller->id,
-        ]);
+        $this->assertDatabaseHas('invoices', $data);
+    }
+
     }
 
 
@@ -113,8 +85,6 @@ class InvoicesTest extends TestCase
     /** @test */
     public function guest_user_cannot_access_to_a_specific_invoice()
     {
-        $this->seed("TypeDocumentsTableSeeder");
-        $this->seed("StatesTableSeeder");
         $invoice = factory(Invoice::class)->create();
 
         $this->get(route('invoices.show', $invoice))->assertRedirect(route('login'));
@@ -124,8 +94,6 @@ class InvoicesTest extends TestCase
     public function logged_in_user_can_access_to_a_specific_invoice()
     {
         $user = factory(User::class)->create();
-        $this->seed("TypeDocumentsTableSeeder");
-        $this->seed("StatesTableSeeder");
         $invoice = factory(Invoice::class)->create();
 
         $response = $this->actingAs($user)->get(route('invoices.show', $invoice));
@@ -136,13 +104,9 @@ class InvoicesTest extends TestCase
         $response->assertSeeText($invoice->number);
     }
 
-
-
     /** @test */
     public function guest_user_cannot_access_to_edit_invoices_view()
     {
-        $this->seed("TypeDocumentsTableSeeder");
-        $this->seed("StatesTableSeeder");
         $invoice = factory(Invoice::class)->create();
 
         $this->get(route('invoices.edit', $invoice))->assertRedirect(route('login'));
@@ -152,12 +116,9 @@ class InvoicesTest extends TestCase
     public function logged_id_user_can_access_to_edit_invoices_view()
     {
         $user = factory(User::class)->create();
-        $this->seed("TypeDocumentsTableSeeder");
-        $this->seed("StatesTableSeeder");
         $invoice = factory(Invoice::class)->create();
 
         $response = $this->actingAs($user)->get(route('invoices.edit', $invoice));
-
         $response->assertSuccessful();
         $response->assertViewIs("invoices.edit");
         $response->assertSee("Editar");
@@ -169,23 +130,11 @@ class InvoicesTest extends TestCase
     /** @test */
     public function guest_user_cannot_update_invoices()
     {
-        $this->seed("TypeDocumentsTableSeeder");
-        $this->seed("StatesTableSeeder");
         $invoice = factory(Invoice::class)->create();
 
-        $this->put(route('invoices.update', $invoice), [
-            'issued_at' => '2000-01-01',
-            'vat' => 1,
-            'state_id' => $invoice->state_id,
-            'client_id' => $invoice->client_id,
-            'seller_id' => $invoice->seller_id,
-        ])
-            ->assertRedirect('login');
+        $this->put(route('invoices.update', $invoice), $this->data())->assertRedirect('login');
 
         $this->assertDatabaseHas('invoices', [
-            'issued_at' => $invoice->issued_at,
-            'vat' => $invoice->vat,
-            'state_id' => $invoice->state_id,
             'client_id' => $invoice->client_id,
             'seller_id' => $invoice->seller_id,
         ]);
@@ -194,45 +143,25 @@ class InvoicesTest extends TestCase
     /** @test */
     public function logged_in_user_can_update_invoices()
     {
-		//$this->withoutExceptionHandling();
         $user = factory(User::class)->create();
-        $this->seed("TypeDocumentsTableSeeder");
-        $this->seed("StatesTableSeeder");
         $invoice = factory(Invoice::class)->create();
+        $data = $this->data();
 
-        $response = $this->actingAs($user)->put(route('invoices.update', $invoice), [
-            'issued_at' => '2000-01-01',
-            'vat' => 1,
-			'client_id' => $invoice->client_id,
-			'seller_id' => $invoice->seller_id
-        ]);
-        $response->assertRedirect(route('invoices.show', Invoice::first()));
+        $response = $this->actingAs($user)->put(route('invoices.update', $invoice), $data);
+        $response->assertRedirect(route('invoices.show', $invoice->id));
         $response->assertSessionHasNoErrors();
 
-        $this->assertDatabaseHas('invoices', [
-            'issued_at' => '2000-01-01 00:00:00',
-            'vat' => 1,
-			'client_id' => $invoice->client_id,
-			'seller_id' => $invoice->seller_id
-        ]);
+        $this->assertDatabaseHas('invoices', $data);
     }
-
-
 
     /** @test */
     public function guest_user_cannot_delete_invoices()
     {
-        $this->seed("TypeDocumentsTableSeeder");
-        $this->seed("StatesTableSeeder");
         $invoice = factory(Invoice::class)->create();
 
-        $this->delete(route('invoices.destroy', $invoice))
-            ->assertRedirect(route('login'));
+        $this->delete(route('invoices.destroy', $invoice))->assertRedirect(route('login'));
 
         $this->assertDatabaseHas('invoices', [
-            'issued_at' => $invoice->issued_at,
-            'vat' => $invoice->vat,
-            'state_id' => $invoice->state_id,
             'client_id' => $invoice->client_id,
             'seller_id' => $invoice->seller_id,
         ]);
@@ -242,8 +171,6 @@ class InvoicesTest extends TestCase
     public function logged_in_user_can_delete_invoices()
     {
         $user = factory(User::class)->create();
-        $this->seed("TypeDocumentsTableSeeder");
-        $this->seed("StatesTableSeeder");
         $invoice = factory(Invoice::class)->create();
 
         $response = $this->actingAs($user)->delete(route('invoices.destroy', $invoice));
@@ -251,59 +178,35 @@ class InvoicesTest extends TestCase
         $response->assertSessionHasNoErrors();
 
         $this->assertDatabaseMissing('invoices', [
-            'issued_at' => $invoice->issued_at,
-            'vat' => $invoice->vat,
-            'state_id' => $invoice->state_id,
             'client_id' => $invoice->client_id,
             'seller_id' => $invoice->seller_id,
         ]);
     }
 
-
-
     /** @test */
-    public function guest_user_cannot_access_to_create_invoice_details_view()
-    {
-        $this->seed("TypeDocumentsTableSeeder");
-        $this->seed("StatesTableSeeder");
-        $invoice = factory(Invoice::class)->create();
-
-        $this->get(route('invoices.details.create', $invoice))->assertRedirect(route('login'));
-    }
-
-    /** @test */
-    public function logged_in_user_can_access_to_create_invoice_details_view()
+    public function not_pending_invoice_cannot_be_received_checked()
     {
         $user = factory(User::class)->create();
-        $this->seed("TypeDocumentsTableSeeder");
-        $this->seed("StatesTableSeeder");
-        $invoice = factory(Invoice::class)->create();
+        $invoice = factory(Invoice::class)->create(["paid_at" => Carbon::now()]);
 
-        $response = $this->actingAs($user)->get(route('invoices.details.create', $invoice));
+        $response = $this->actingAs($user)->get(route('invoices.receivedCheck', $invoice));
+        $response->assertRedirect(route('invoices.show', $invoice));
 
-        $response->assertSuccessful();
-        $response->assertViewIs("invoices.details.create");
-        $response->assertSee("Agregar detalle");
+        $this->assertDatabaseHas("invoices", [
+           'received_at' => null
+        ]);
     }
 
-
-
     /** @test */
-    public function guest_user_cannot_store_invoice_details()
+    public function pending_invoice_can_be_received_checked()
     {
-        $this->seed("TypeDocumentsTableSeeder");
-        $this->seed("StatesTableSeeder");
-        $product = factory(Product::class)->create();
+        $user = factory(User::class)->create();
         $invoice = factory(Invoice::class)->create();
-        $this->post(route('invoices.details.store', $invoice), [
-            'quantity' => 1,
-            'unit_price' => 1,
-        ])
-            ->assertRedirect(route('login'));
 
-        $this->assertDatabaseMissing('invoice_product', [
-            'quantity' => 1,
-            'unit_price' => 1,
+        $response = $this->actingAs($user)->get(route('invoices.receivedCheck', $invoice));
+        $response->assertRedirect(route('invoices.show', $invoice));
+        $this->assertDatabaseHas("invoices", [
+            'received_at' => Carbon::now()
         ]);
     }
 

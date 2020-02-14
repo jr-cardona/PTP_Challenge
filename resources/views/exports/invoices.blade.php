@@ -10,7 +10,6 @@
         <th>{{ __("Estado") }}</th>
         <th>{{ __("Cliente") }}</th>
         <th>{{ __("Vendedor") }}</th>
-        <th>{{ __("ID Estado") }}</th>
         <th>{{ __("ID Cliente") }}</th>
         <th>{{ __("ID Vendedor") }}</th>
     </tr>
@@ -24,10 +23,9 @@
             <td>{{ $invoice->received_at }}</td>
             <td>{{ $invoice->vat }}</td>
             <td>{{ $invoice->description }}</td>
-            <td>{{ $invoice->state->name }}</td>
+            @include('invoices.status_label')
             <td>{{ $invoice->client->fullname }}</td>
             <td>{{ $invoice->seller->fullname }}</td>
-            <td>{{ $invoice->state_id }}</td>
             <td>{{ $invoice->client_id }}</td>
             <td>{{ $invoice->seller_id }}</td>
         </tr>

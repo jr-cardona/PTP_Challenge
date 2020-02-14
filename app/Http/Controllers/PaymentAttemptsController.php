@@ -14,9 +14,9 @@ class PaymentAttemptsController extends Controller
     public function create(Invoice $invoice)
     {
         if ($invoice->total == 0){
-            return redirect()->route('invoices.show', $invoice)->withError(__("La factura no tiene productos a pagar, intente nuevamente"));
-        }elseif ($invoice->state_id == 2){
-            return redirect()->route('invoices.show', $invoice)->withInfo(__("La factura ya se encuentra pagada"));
+            return redirect()->route('invoices.show', $invoice)->withInfo(__("La factura no tiene productos a pagar, intente nuevamente"));
+        }elseif ($invoice->isPaid()){
+            return redirect()->route('invoices.show', $invoice)->withError(__("La factura ya se encuentra pagada"));
         }
         return view('invoices.payments.create', compact('invoice'));
     }
@@ -76,7 +76,7 @@ class PaymentAttemptsController extends Controller
         ]);
         if ($paymentAttempt->status == 'APPROVED'){
             $invoice->update([
-                'state_id' => '2',
+                'paid_at' => Carbon::now(),
             ]);
             if (empty($invoice->received_at)){
                 $invoice->update([
