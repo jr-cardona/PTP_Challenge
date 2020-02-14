@@ -175,7 +175,7 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach($invoice->payment_attempts as $paymentAttempt)
+                @foreach($invoice->paymentAttempts as $paymentAttempt)
                     <tr class="text-center">
                         <td>
                             <a href="{{ route("invoices.payments.show", [$invoice, $paymentAttempt]) }}">

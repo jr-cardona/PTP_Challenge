@@ -58,7 +58,7 @@ class Invoice extends Model
      * Relation between invoices and paymentAttempts
      * @return HasMany
      */
-    public function payment_attempts(): HasMany {
+    public function paymentAttempts(): HasMany {
         return $this->hasMany(PaymentAttempt::class);
     }
 
