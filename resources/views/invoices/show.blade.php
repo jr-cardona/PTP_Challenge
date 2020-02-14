@@ -58,7 +58,7 @@
             </tr>
             <tr>
                 <td class="table-dark td-title">{{ __("IVA:") }}</td>
-                <td class="td-content">{{ $invoice->vat }}%</td>
+                <td class="td-content">{{ Config::get('constants.vat') }}%</td>
 
                 <td class="table-dark td-title">{{ __("Valor total:") }}</td>
                 <td class="td-content">${{ number_format($invoice->total, 2) }}</td>
@@ -147,7 +147,7 @@
                     <td class="text-right">${{ number_format($invoice->subtotal, 2) }}</td>
                 </tr>
                 <tr>
-                    <td class="text-right" colspan="5">{{ __("IVA") }} ({{ $invoice->vat }})% </td>
+                    <td class="text-right" colspan="5">{{ __("IVA") }} ({{ Config::get('constants.vat') }})% </td>
                     <td class="text-right">${{ number_format($invoice->ivaamount, 2) }}</td>
                 </tr>
                 <tr>

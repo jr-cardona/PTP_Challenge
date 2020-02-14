@@ -4,6 +4,7 @@ namespace App;
 
 use App\Events\InvoiceCreated;
 use Carbon\Carbon;
+use Config;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -98,7 +99,7 @@ class Invoice extends Model
     }
 
     public function getIvaAmountAttribute() {
-        return $this->getSubtotalAttribute() * $this->vat / 100;
+        return $this->getSubtotalAttribute() * Config::get('constants.vat') / 100;
     }
 
     public function getTotalAttribute() {

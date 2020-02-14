@@ -14,7 +14,6 @@ $factory->define(Invoice::class, function (Faker $faker) {
     return [
         'issued_at' => $faker->dateTimeBetween($start_date, $final_date),
         'description' => $faker->text,
-        'vat' => $faker->numberBetween(0,100),
         'client_id' => factory(Client::class),
         'seller_id' => factory(Seller::class)
     ];

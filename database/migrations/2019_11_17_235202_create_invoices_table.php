@@ -19,7 +19,6 @@ class CreateInvoicesTable extends Migration
             $table->date('expires_at')->nullable();
             $table->dateTime('paid_at')->nullable();
             $table->dateTime('received_at')->nullable();
-            $table->float('vat')->unsigned();
             $table->string('description')->nullable();
             $table->unsignedInteger('client_id');
             $table->unsignedInteger('seller_id');
