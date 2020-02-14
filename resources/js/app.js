@@ -9,6 +9,8 @@ require('./bootstrap');
 window.Vue = require('vue');
 
 import Vue from 'vue';
+import SearchForm from './components/SearchForm';
+import InvoiceProduct from "./components/InvoiceProduct";
 import 'vue-select/dist/vue-select.css';
 
 /**
@@ -18,8 +20,9 @@ import 'vue-select/dist/vue-select.css';
  *
  * Eg. ./components/ExampleComponent.vue -> <example-component></example-component>
  */
-
 Vue.component('v-select', VueSelect.VueSelect);
+Vue.component('search-form', SearchForm);
+Vue.component('invoice-product', InvoiceProduct);
 /**
  * Next, we will create a fresh Vue application instance and attach it to
  * the page. Then, you may begin adding components to this application
@@ -32,11 +35,11 @@ const app = new Vue({
         options: [],
         old_client_values: {
             "id": $('#old_client_id').val(),
-            "name" : $('#old_client_name').val()
+            "fullname" : $('#old_client_fullname').val()
         },
         old_seller_values: {
             "id": $('#old_seller_id').val(),
-            "name" : $('#old_seller_name').val()
+            "fullname" : $('#old_seller_fullname').val()
         },
         old_product_values: {
             "id": $('#old_product_id').val(),

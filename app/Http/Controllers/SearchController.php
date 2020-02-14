@@ -6,6 +6,7 @@ use App\Client;
 use App\Product;
 use App\Seller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class SearchController extends Controller
 {
@@ -15,7 +16,8 @@ class SearchController extends Controller
      * @return
      */
     public function clients(Request $request) {
-        $clients = Client::where('name', 'like', '%'. $request->name .'%')
+        $clients = Client::select('id', DB::raw('concat(name, " ", surname) as fullname'))
+            ->where(DB::raw('concat(name, " ", surname)'), 'like', '%'. $request->name .'%')
             ->orderBy('name')
             ->limit('100')
             ->get();
@@ -28,7 +30,8 @@ class SearchController extends Controller
      * @return
      */
     public function sellers(Request $request) {
-        $sellers = Seller::where('name', 'like', '%'. $request->name .'%')
+        $sellers = Seller::select('id', DB::raw('concat(name, " ", surname) as fullname'))
+            ->where(DB::raw('concat(name, " ", surname)'), 'like', '%'. $request->name .'%')
             ->orderBy('name')
             ->limit('100')
             ->get();
