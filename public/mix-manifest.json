@@ -5,7 +5,6 @@
     "/css/custom.css": "/css/custom.css",
     "/js/delete-modal.js": "/js/delete-modal.js",
     "/js/import-modal.js": "/js/import-modal.js",
-    "/js/inline-edit.js": "/js/inline-edit.js",
     "/js/manifest.js": "/js/manifest.js",
     "/js/vendor.js": "/js/vendor.js"
 }
