@@ -1,6 +1,14 @@
 @extends('layouts.index')
 @section('Title', 'Productos')
-@section('Name', 'Productos')
+@section('Name')
+    {{ __("Productos") }}
+    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#searchModal">
+        <i class="fa fa-filter"></i>
+    </button>
+    <a href="{{ route('products.index') }}" class="btn btn-danger">
+        <i class="fa fa-undo"></i>
+    </a>
+@endsection
 @section('Actions')
     <a class="btn btn-secondary" href="{{ route('export.products') }}">
         <i class="fa fa-file-excel"></i> {{ __("Exportar a Excel") }}
@@ -13,33 +21,7 @@
     </a>
 @endsection
 @section('Search')
-    <form action="{{ route('products.index') }}" method="get">
-        <div class="form-group row">
-            <div class="col-md-3">
-                <label>{{ __("Nombre") }}</label>
-                <input type="hidden" id="old_product_name" name="old_product_name" value="{{ $request->get('product') }}">
-                <input type="hidden" id="old_product_id" name="old_product_id" value="{{ $request->get('product_id') }}">
-                <v-select v-model="old_product_values" label="name" :filterable="false" :options="options" @search="searchProduct"
-                          class="form-control">
-                    <template slot="no-options">
-                        {{ __("Ingresa el nombre...") }}
-                    </template>
-                </v-select>
-                <input type="hidden" name="product" id="product" :value="(old_product_values) ? old_product_values.name : '' ">
-                <input type="hidden" name="product_id" id="product_id" :value="(old_product_values) ? old_product_values.id : '' ">
-            </div>
-        </div>
-        <div class="form-group row">
-            <div class="col-md-3 btn-group btn-group-sm">
-                <button type="submit" class="btn btn-primary">
-                    <i class="fa fa-search"></i> {{ __("Buscar") }}
-                </button>
-                <a href="{{ route('products.index') }}" class="btn btn-danger">
-                    <i class="fa fa-undo"></i> {{ __("Limpiar") }}
-                </a>
-            </div>
-        </div>
-    </form>
+    @include('products.__search_modal')
 @endsection
 @section('Header')
     <th class="text-center" nowrap>{{ __("Código") }}</th>

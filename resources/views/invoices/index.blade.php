@@ -1,6 +1,14 @@
 @extends('layouts.index')
 @section('Title', 'Facturas')
-@section('Name', 'Facturas')
+@section('Name')
+    {{ __("Facturas") }}
+    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#searchModal">
+        <i class="fa fa-filter"></i>
+    </button>
+    <a href="{{ route('invoices.index') }}" class="btn btn-danger">
+        <i class="fa fa-undo"></i>
+    </a>
+@endsection
 @section('Actions')
     <a class="btn btn-secondary" href="{{ route('export.invoices') }}">
         <i class="fa fa-file-excel"></i> {{ __("Exportar a Excel") }}
@@ -13,78 +21,7 @@
     </a>
 @endsection
 @section('Search')
-    <form action="{{ route('invoices.index') }}" method="get">
-        <div class="form-group row">
-            <div class="col-md-3">
-                <label for="issued_init">{{ __("Fecha inicial de expedición") }}</label>
-                <input type="date" name="issued_init" id="issued_init" class="form-control" value="{{ $request->get('issued_init') }}">
-            </div>
-            <div class="col-md-3">
-                <label for="issued_final">{{ __("Fecha final de expedición") }}</label>
-                <input type="date" name="issued_final" id="issued_final" class="form-control" value="{{ $request->get('issued_final') }}">
-            </div>
-            <div class="col-md-3">
-                <label for="expires_init">{{ __("Fecha inicial de vencimiento") }}</label>
-                <input type="date" name="expires_init" id="expires_init" class="form-control" value="{{ $request->get('expires_init') }}">
-            </div>
-            <div class="col-md-3">
-                <label for="expires_final">{{ __("Fecha final de vencimiento") }}</label>
-                <input type="date" name="expires_final" id="expires_final" class="form-control" value="{{ $request->get('expires_final') }}">
-            </div>
-        </div>
-        <div class="form-group row">
-            <div class="col-md-3">
-                <label for="number">{{ __("Número de factura") }}</label>
-                <input type="number" id="number" name="number" class="form-control" placeholder="No. de factura" value="{{ $request->get('number') }}">
-            </div>
-            <div class="col-md-3">
-                <label>{{ __("Producto") }}</label>
-                <input type="hidden" id="old_product_name" name="old_product_name" value="{{ $request->get('product') }}">
-                <input type="hidden" id="old_product_id" name="old_product_id" value="{{ $request->get('product_id') }}">
-                <v-select class="form-control" v-model="old_product_values" label="name" :filterable="false" :options="options" @search="searchProduct">
-                    <template slot="no-options">
-                        {{ __("Ingresa el nombre del producto...") }}
-                    </template>
-                </v-select>
-                <input type="hidden" name="product" id="product" :value="(old_product_values) ? old_product_values.name : '' ">
-                <input type="hidden" name="product_id" id="product_id" :value="(old_product_values) ? old_product_values.id : '' ">
-            </div>
-            <div class="col-md-3">
-                <label>{{ __("Cliente") }}</label>
-                <input type="hidden" id="old_client_fullname" name="old_client_fullname" value="{{ $request->get('client') }}">
-                <input type="hidden" id="old_client_id" name="old_client_id" value="{{ $request->get('client_id') }}">
-                <v-select class="form-control" v-model="old_client_values" label="fullname" :filterable="false" :options="options" @search="searchClient">
-                    <template slot="no-options">
-                        {{ __("Ingresa el nombre del cliente...") }}
-                    </template>
-                </v-select>
-                <input type="hidden" name="client" id="client" :value="(old_client_values) ? old_client_values.fullname : '' ">
-                <input type="hidden" name="client_id" id="client_id" :value="(old_client_values) ? old_client_values.id : '' ">
-            </div>
-            <div class="col-md-3">
-                <label>{{ __("Vendedor") }}</label>
-                <input type="hidden" id="old_seller_fullname" name="old_seller_fullname" value="{{ $request->get('seller') }}">
-                <input type="hidden" id="old_seller_id" name="old_seller_id" value="{{ $request->get('seller_id') }}">
-                <v-select class="form-control" v-model="old_seller_values" label="fullname" :filterable="false" :options="options" @search="searchSeller">
-                    <template slot="no-options">
-                        {{ __("Ingresa el nombre del vendedor...") }}
-                    </template>
-                </v-select>
-                <input type="hidden" name="seller" id="seller" :value="(old_seller_values) ? old_seller_values.fullname : '' ">
-                <input type="hidden" name="seller_id" id="seller_id" :value="(old_seller_values) ? old_seller_values.id : '' ">
-            </div>
-        </div>
-        <div class="form-group row">
-            <div class="col-md-3 btn-group btn-group-sm">
-                <button type="submit" class="btn btn-primary">
-                    <i class="fa fa-search"></i> {{ __("Buscar") }}
-                </button>
-                <a href="{{ route('invoices.index') }}" class="btn btn-danger">
-                    <i class="fa fa-undo"></i> {{ __("Limpiar") }}
-                </a>
-            </div>
-        </div>
-    </form>
+    @include('invoices.__search_modal')
 @endsection
 @section('Header')
     <th class="text-center" nowrap>{{ __("Título") }}</th>
