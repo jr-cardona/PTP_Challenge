@@ -2,6 +2,7 @@
 @section('title')
     @yield('Title')
 @endsection
+<div></div>
 @section('content')
     <div class="d-flex justify-content-between">
         @yield('Back')

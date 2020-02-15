@@ -36,42 +36,42 @@
         <div class="card-header text-center"><h3>{{ __("Datos generales") }}</h3></div>
         <table class="table table-sm">
             <tr>
-                <td class="table-dark td-title">{{ __("Fecha de recibo:") }}</td>
+                <td class="table-dark td-title custom-header">{{ __("Fecha de recibo:") }}</td>
                 <td class="td-content">{{ $invoice->received_at == '' ? "Sin fecha" : $invoice->received_at->isoFormat('Y-MM-DD hh:mma') }}</td>
 
-                <td class="table-dark td-title">{{ __("Estado:") }}</td>
+                <td class="table-dark td-title custom-header">{{ __("Estado:") }}</td>
                 @include('invoices.status_label')
             </tr>
             <tr>
-                <td class="table-dark td-title">{{ __("Fecha de creación:") }}</td>
+                <td class="table-dark td-title custom-header">{{ __("Fecha de creación:") }}</td>
                 <td class="td-content">{{ $invoice->created_at->isoFormat('Y-MM-DD hh:mma') }}</td>
 
-                <td class="table-dark td-title" nowrap>{{ __("Fecha de modificación:") }}</td>
+                <td class="table-dark td-title custom-header" nowrap>{{ __("Fecha de modificación:") }}</td>
                 <td class="td-content">{{ $invoice->updated_at->isoFormat('Y-MM-DD hh:mma') }}</td>
             </tr>
             <tr>
-                <td class="table-dark td-title">{{ __("Fecha de expedición:") }}</td>
+                <td class="table-dark td-title custom-header">{{ __("Fecha de expedición:") }}</td>
                 <td class="td-content">{{ $invoice->issued_at->toDateString() }}</td>
 
-                <td class="table-dark td-title">{{ __("Fecha de vencimiento:") }}</td>
+                <td class="table-dark td-title custom-header">{{ __("Fecha de vencimiento:") }}</td>
                 <td class="td-content">{{ $invoice->expires_at->toDateString() }}</td>
             </tr>
             <tr>
-                <td class="table-dark td-title">{{ __("IVA:") }}</td>
+                <td class="table-dark td-title custom-header">{{ __("IVA:") }}</td>
                 <td class="td-content">{{ Config::get('constants.vat') }}%</td>
 
-                <td class="table-dark td-title">{{ __("Valor total:") }}</td>
+                <td class="table-dark td-title custom-header">{{ __("Valor total:") }}</td>
                 <td class="td-content">${{ number_format($invoice->total, 2) }}</td>
             </tr>
             <tr>
-                <td class="table-dark td-title">{{ __("Vendedor:") }}</td>
+                <td class="table-dark td-title custom-header">{{ __("Vendedor:") }}</td>
                 <td class="td-content">
                     <a href="{{ route('sellers.show', $invoice->seller) }}" target="_blank">
                         {{ $invoice->seller->fullname }}
                     </a>
                 </td>
 
-                <td class="table-dark td-title">{{ __("Cliente:") }}</td>
+                <td class="table-dark td-title custom-header">{{ __("Cliente:") }}</td>
                 <td class="td-content">
                     <a href="{{ route('clients.show', $invoice->client) }}" target="_blank">
                         {{ $invoice->client->fullname }}
@@ -79,7 +79,7 @@
                 </td>
             </tr>
             <tr>
-                <td class="table-dark td-title">{{ __("Descripción:") }}</td>
+                <td class="table-dark td-title custom-header">{{ __("Descripción:") }}</td>
                 <td class="td-content">{{ $invoice->description }}</td>
             </tr>
         </table>
@@ -170,6 +170,3 @@
         </table>
     </div>
 @endsection
-@push('scripts')
-    <script src="{{ asset(mix('js/inline-edit.js')) }}"></script>
-@endpush

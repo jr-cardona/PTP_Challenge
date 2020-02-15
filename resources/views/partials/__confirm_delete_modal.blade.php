@@ -16,8 +16,12 @@
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">{{ __("Cerrar") }}</button>
-                <button type="submit" form="deleteForm" class="btn btn-danger">{{ __("Eliminar") }}</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                    <i class="fa fa-times"></i> {{ __("Cerrar") }}
+                </button>
+                <button type="submit" form="deleteForm" class="btn btn-danger">
+                    <i class="fa fa-trash"></i> {{ __("Eliminar") }}
+                </button>
             </div>
         </div>
     </div>

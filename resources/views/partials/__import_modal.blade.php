@@ -14,8 +14,12 @@
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">{{ __("Cerrar") }}</button>
-                <button type="submit" form="import" class="btn btn-warning">{{ __("Importar") }}</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                    <i class="fa fa-times"></i> {{ __("Cerrar") }}
+                </button>
+                <button type="submit" form="import" class="btn btn-warning">
+                    <i class="fa fa-file-excel"></i> {{ __("Importar") }}
+                </button>
             </div>
         </div>
     </div>

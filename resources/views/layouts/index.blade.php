@@ -2,6 +2,7 @@
 @section('title')
     @yield('Title')
 @endsection
+<div></div>
 @section('content')
     @if(count($errors) > 0)
         <div class="alert alert-danger">
@@ -22,9 +23,11 @@
     </div>
     <br>
     @yield('Search')
-    <br>
+    <div class="mt-3 d-flex justify-content-center">
+        @yield('Links')
+    </div>
     <table class="table border-rounded table-striped table-hover">
-        <thead class="thead-dark">
+        <thead class="custom-header">
             <tr>
                 @yield('Header')
             </tr>
@@ -33,9 +36,7 @@
             @yield('Body')
         </tbody>
     </table>
-    <div class="mt-3 d-flex justify-content-center">
-        @yield('Links')
-    </div>
+
 @endsection
 @push('modals')
     @include('partials.__confirm_delete_modal')
