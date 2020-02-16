@@ -13,7 +13,7 @@
                         <div class="col">
                             <label>{{ __("Nombre") }}</label>
                             <input type="hidden" id="old_product_name" name="old_product_name" value="{{ $request->get('product') }}">
-                            <input type="hidden" id="old_product_id" name="old_product_id" value="{{ $request->get('product_id') }}">
+                            <input type="hidden" id="old_id" name="old_id" value="{{ $request->get('id') }}">
                             <v-select v-model="old_product_values" label="name" :filterable="false" :options="options" @search="searchProduct"
                                       class="form-control">
                                 <template slot="no-options">
@@ -21,7 +21,7 @@
                                 </template>
                             </v-select>
                             <input type="hidden" name="product" id="product" :value="(old_product_values) ? old_product_values.name : '' ">
-                            <input type="hidden" name="product_id" id="product_id" :value="(old_product_values) ? old_product_values.id : '' ">
+                            <input type="hidden" name="id" id="id" :value="(old_product_values) ? old_product_values.id : '' ">
                         </div>
                     </div>
                 </form>

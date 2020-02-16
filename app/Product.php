@@ -18,7 +18,7 @@ class Product extends Model
     }
 
     /** Query Scopes */
-    public function scopeProduct($query, $id){
+    public function scopeId($query, $id){
         if(trim($id) != ""){
             return $query->where('id', $id);
         }

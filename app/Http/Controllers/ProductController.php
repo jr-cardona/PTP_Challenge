@@ -15,7 +15,7 @@ class ProductController extends Controller
      */
     public function index(Request $request) {
         $products = Product::orderBy('id')
-            ->product($request->get('product_id'))
+            ->id($request->get('id'))
             ->paginate(10);
         return response()->view('products.index', [
             'products' => $products,
