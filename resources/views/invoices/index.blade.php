@@ -34,7 +34,7 @@
     <th></th>
 @endsection
 @section('Body')
-    @foreach($invoices as $invoice)
+    @forelse($invoices as $invoice)
         <tr>
             <td nowrap>
                 <a href="{{ route('invoices.show', $invoice) }}">
@@ -62,7 +62,15 @@
                 @include('invoices._buttons')
             </td>
         </tr>
-    @endforeach
+    @empty
+        <tr>
+            <td colspan="8" class="p-3">
+                <p class="alert alert-secondary text-center">
+                    {{ __('No se encontraron facturas') }}
+                </p>
+            </td>
+        </tr>
+    @endforelse
 @endsection
 @section('Links')
     {{ $invoices->appends($request->all())->links() }}

@@ -32,7 +32,7 @@
     <th class="text-center" nowrap>{{ __("Opciones") }}</th>
 @endsection
 @section('Body')
-    @foreach($products as $product)
+    @forelse($products as $product)
         <tr class="text-center">
             <td>{{ $product->id }}</td>
             <td>
@@ -47,7 +47,15 @@
                 @include('products._buttons')
             </td>
         </tr>
-    @endforeach
+    @empty
+        <tr>
+            <td colspan="6" class="p-3">
+                <p class="alert alert-secondary text-center">
+                    {{ __('No se encontraron productos') }}
+                </p>
+            </td>
+        </tr>
+    @endforelse
 @endsection
 @section('Links')
     {{ $products->appends($request->all())->links() }}

@@ -31,7 +31,7 @@
     <th></th>
 @endsection
 @section('Body')
-    @foreach($sellers as $seller)
+    @forelse($sellers as $seller)
         <tr class="text-center">
             <td>
                 <a href="{{ route('sellers.show', $seller) }}">
@@ -45,7 +45,15 @@
                 @include('sellers._buttons')
             </td>
         </tr>
-    @endforeach
+    @empty
+        <tr>
+            <td colspan="6" class="p-3">
+                <p class="alert alert-secondary text-center">
+                    {{ __('No se encontraron vendedores') }}
+                </p>
+            </td>
+        </tr>
+    @endforelse
 @endsection
 @section('Links')
     {{ $sellers->appends($request->all())->links() }}

@@ -32,7 +32,7 @@
     <th></th>
 @endsection
 @section('Body')
-    @foreach($clients as $client)
+    @forelse($clients as $client)
         <tr class="text-center">
             <td>
                 <a href="{{ route('clients.show', $client) }}">{{ $client->fullname }}</a>
@@ -45,7 +45,15 @@
                 @include('clients._buttons')
             </td>
         </tr>
-    @endforeach
+    @empty
+        <tr>
+            <td colspan="6" class="p-3">
+                <p class="alert alert-secondary text-center">
+                    {{ __('No se encontraron clientes') }}
+                </p>
+            </td>
+        </tr>
+    @endforelse
 @endsection
 @section('Links')
     {{ $clients->appends($request->all())->links() }}
