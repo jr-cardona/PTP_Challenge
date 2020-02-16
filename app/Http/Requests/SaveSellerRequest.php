@@ -39,9 +39,9 @@ class SaveSellerRequest extends FormRequest
             'address' => 'required|string|min:5|max:100',
             'email' => [
                 'required',
-                'email',
                 'string',
-                'min:5',
+                'email',
+                'min:6',
                 'max:100',
                 Rule::unique('sellers')->ignore($this->route('seller'))
             ]

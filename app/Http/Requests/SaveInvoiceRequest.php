@@ -25,7 +25,7 @@ class SaveInvoiceRequest extends FormRequest
     public function rules()
     {
         $start_date = Carbon::now()->subWeek()->toDateString();
-        $final_date = Carbon::now()->addWeek()->toDateString();
+        $final_date = Carbon::now()->toDateString();
         return [
             'issued_at' => 'required|date|after_or_equal:' . $start_date . '|before_or_equal:' . $final_date,
             'client_id' => 'required|numeric|exists:clients,id',
