@@ -14,4 +14,12 @@ class TypeDocument extends Model
     public function clients(): HasMany {
         return $this->hasMany(Client::class);
     }
+
+    /**
+     * Relation between type documents and sellers
+     * @return HasMany
+     */
+    public function sellers(): HasMany {
+        return $this->hasMany(Seller::class);
+    }
 }
