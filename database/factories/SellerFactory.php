@@ -12,7 +12,7 @@ $factory->define(Seller::class, function (Faker $faker) {
         'type_document_id' => TypeDocument::whereIn('name', ['CC', 'NIT', 'PPN', 'TI', 'CE'])
                 ->inRandomOrder()->first()->id ?? factory(TypeDocument::class),
         'name' => $faker->firstName,
-        'surname' => $faker->lastName,
+        'surname' => $faker->firstName,
         'phone_number' => $faker->numberBetween(1000000,9999999),
         'cell_phone_number' => "3".$faker->numberBetween(100000000,999999999),
         'address' => $faker->address,

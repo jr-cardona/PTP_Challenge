@@ -10,7 +10,7 @@ use Faker\Generator as Faker;
 
 $factory->define(Invoice::class, function (Faker $faker) {
     $start_date = Carbon::now()->subWeek();
-    $final_date = Carbon::now()->addWeek();
+    $final_date = Carbon::now();
     return [
         'issued_at' => $faker->dateTimeBetween($start_date, $final_date),
         'description' => $faker->text,
