@@ -61,6 +61,7 @@
                     <th>{{ __("Título") }}</th>
                     <th>{{ __("Fecha de expedición") }}</th>
                     <th>{{ __("Fecha de vencimiento") }}</th>
+                    <th>{{ __("Valor") }}</th>
                     <th>{{ __("Estado") }}</th>
                 </tr>
             </thead>
@@ -74,6 +75,7 @@
                     </td>
                     <td>{{ $invoice->issued_at->toDateString() }}</td>
                     <td>{{ $invoice->expires_at->toDateString() }}</td>
+                    <td>${{ number_format($invoice->total, 2) }}</td>
                     @include('invoices.status_label')
                 </tr>
             @endforeach

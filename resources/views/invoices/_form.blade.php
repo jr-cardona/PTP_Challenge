@@ -16,7 +16,7 @@
     </div>
     <div class="col">
         <label for="client_id" class="required">{{ __("Cliente") }}</label>
-        <input type="hidden" id="old_client_fullname" name="old_client_fullname" value="{{ old('client', isset($invoice->client->name) ? $invoice->client->name : '') }}">
+        <input type="hidden" id="old_client_fullname" name="old_client_fullname" value="{{ old('client', isset($invoice->client->fullname) ? $invoice->client->fullname : '') }}">
         <input type="hidden" id="old_client_id" name="old_client_id" value="{{ old('client_id', isset($invoice->client->id) ? $invoice->client->id : '') }}">
         <v-select v-model="old_client_values" label="fullname" :filterable="false" :options="options" @search="searchClient"
                   class="form-control @error('client_id') is-invalid @enderror">
@@ -34,7 +34,7 @@
     </div>
     <div class="col">
         <label for="seller_id" class="required">{{ __("Vendedor") }}</label>
-        <input type="hidden" id="old_seller_fullname" name="old_seller_fullname" value="{{ old('seller', isset($invoice->seller->name) ? $invoice->seller->name : '') }}">
+        <input type="hidden" id="old_seller_fullname" name="old_seller_fullname" value="{{ old('seller', isset($invoice->seller->fullname) ? $invoice->seller->fullname : '') }}">
         <input type="hidden" id="old_seller_id" name="old_seller_id" value="{{ old('seller_id', isset($invoice->seller->id) ? $invoice->seller->id : '') }}">
         <v-select v-model="old_seller_values" label="fullname" :filterable="false" :options="options" @search="searchSeller"
                   class="form-control @error('seller_id') is-invalid @enderror" >
