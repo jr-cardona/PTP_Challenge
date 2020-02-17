@@ -3,10 +3,10 @@
 @section('content')
     <div class="card">
         <div class="card-header">
-            <h1>{{ __("Agregar detalle") }} {{ $invoice->fullname }}</h1>
+            <h1>{{ __("Agregar producto") }} {{ $invoice->fullname }}</h1>
         </div>
         <div class="card-body">
-            <form action="{{ route('invoices.details.store', $invoice) }}" class="form-group" method="POST">
+            <form action="{{ route('invoices.products.store', $invoice) }}" class="form-group" method="POST">
                 @csrf
                 <div class="row">
                     <div class="col">
@@ -27,10 +27,10 @@
                             </span>
                         @enderror
                     </div>
-                    @include('invoices.details._form', ['quantity' => "", 'unit_price' => ""])
+                    @include('invoices.products._form', ['quantity' => "", 'unit_price' => ""])
                 </div>
                 <br>
-                @include('invoices.details._buttons')
+                @include('invoices.products._buttons')
             </form>
         </div>
     </div>

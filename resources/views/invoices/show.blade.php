@@ -114,7 +114,7 @@
                         <td class="text-right">${{ number_format($product->pivot->unit_price * $product->pivot->quantity, 2) }}</td>
                         <td class="text-right">
                             @if(!$invoice->isPaid())
-                                <button type="button" class="btn btn-link text-danger" data-route="{{ route('invoices.details.destroy', [$invoice, $product]) }}" data-toggle="modal" data-target="#confirmDeleteModal">
+                                <button type="button" class="btn btn-link text-danger" data-route="{{ route('invoices.products.destroy', [$invoice, $product]) }}" data-toggle="modal" data-target="#confirmDeleteModal">
                                     <i class="fa fa-trash"></i>
                                 </button>
                             @endif
@@ -136,8 +136,8 @@
             </tbody>
         </table>
         @if(!$invoice->isPaid() && !$invoice->isExpired())
-            <a href="{{ route('invoices.details.create', $invoice) }}" class="btn btn-success btn-block">
-                <i class="fa fa-plus"></i> {{ __("Agregar Detalle") }}
+            <a href="{{ route('invoices.products.create', $invoice) }}" class="btn btn-success btn-block">
+                <i class="fa fa-plus"></i> {{ __("Agregar Producto") }}
             </a>
         @endif
     </div>

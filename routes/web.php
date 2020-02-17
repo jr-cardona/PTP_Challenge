@@ -32,10 +32,10 @@ Route::middleware(['auth'])->group(function (){
     Route::post('/productos/importar', 'ImportController@products')->name('import.products');
     Route::post('/vendedores/importar', 'ImportController@sellers')->name('import.sellers');
 
-    Route::resource('/facturas/{invoice}/detalle', 'InvoiceProductController')
+    Route::resource('/facturas/{invoice}/producto', 'InvoiceProductController')
         ->except('index', 'show')
-        ->names('invoices.details')
-        ->parameters(['detalle' => 'product']);
+        ->names('invoices.products')
+        ->parameters(['producto' => 'product']);
 
     Route::resource('/facturas/{invoice}/pagar', 'PaymentAttemptsController')
         ->only('create', 'store', 'show')
@@ -58,8 +58,5 @@ Route::middleware(['auth'])->group(function (){
         ->names('sellers')
         ->parameters(['vendedores' => 'seller']);
 
-    Route::get('invoices-received-check/{invoice}', 'InvoiceController@receivedCheck')->name('invoices.receivedCheck');
-
-
+    Route::get('/invoices-received-check/{invoice}', 'InvoiceController@receivedCheck')->name('invoices.receivedCheck');
 });
-
