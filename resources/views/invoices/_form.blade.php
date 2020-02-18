@@ -16,8 +16,8 @@
     </div>
     <div class="col">
         <label for="client_id" class="required">{{ __("Cliente") }}</label>
-        <input type="hidden" id="old_client_fullname" name="old_client_fullname" value="{{ old('client', isset($invoice->client->fullname) ? $invoice->client->fullname : '') }}">
-        <input type="hidden" id="old_client_id" name="old_client_id" value="{{ old('client_id', isset($invoice->client->id) ? $invoice->client->id : '') }}">
+        <input type="hidden" id="old_client_fullname" name="old_client_fullname" value="{{ old('client', isset($invoice->client->fullname) ? $invoice->client->fullname : $request->get('client')) }}">
+        <input type="hidden" id="old_client_id" name="old_client_id" value="{{ old('client_id', isset($invoice->client->id) ? $invoice->client->id : $request->get('client_id')) }}">
         <v-select v-model="old_client_values" label="fullname" :filterable="false" :options="options" @search="searchClient"
                   class="form-control @error('client_id') is-invalid @enderror">
             <template slot="no-options">
