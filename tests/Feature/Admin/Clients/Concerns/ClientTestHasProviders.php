@@ -2,7 +2,7 @@
 
 namespace Tests\Feature\Admin\Clients\Concerns;
 
-use App\Client;
+use App\TypeDocument;
 use Illuminate\Support\Str;
 
 trait ClientTestHasProviders
@@ -12,14 +12,21 @@ trait ClientTestHasProviders
      *
      * @var array
      */
-    protected $baseData = [
-        'document' => 0000000000,
-        'name' => 'Test Name',
-        'surname' => 'Test Surname',
-        'cell_phone_number' => 3000000000,
-        'address' => 'Test Address',
-        'email' => 'test@test.com',
-    ];
+    protected $baseData = [];
+
+    public function __construct()
+    {
+        $type_document = factory(TypeDocument::class)->create();
+        $this->baseData = [
+            'document' => 0000000000,
+            'type_document_id' => $type_document->id,
+            'name' => 'Test Name',
+            'surname' => 'Test Surname',
+            'cell_phone_number' => 3000000000,
+            'address' => 'Test Address',
+            'email' => 'test@test.com',
+        ];
+    }
 
     /**
      * Data provider for store validations test

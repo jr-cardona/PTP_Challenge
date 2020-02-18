@@ -18,7 +18,7 @@ class UpdateProductTest extends TestCase
         $data = $this->data();
 
         $this->put(route('products.update', $product), $data)->assertRedirect('login');
-        $this->assertDatabaseMissing('products', $this->data());
+        $this->assertDatabaseMissing('products', $data);
     }
 
     /** @test */

@@ -2,16 +2,22 @@
 
 namespace Tests\Feature\Admin\Clients;
 
-use App\Client;
-use App\TypeDocument;
 use App\User;
+use App\Client;
 use Tests\TestCase;
+use App\TypeDocument;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class StoreClientTest extends TestCase
 {
     use RefreshDatabase;
     use Concerns\ClientTestHasProviders;
+
+    public function __construct($name = null, array $data = array(), $dataName = '') {
+        parent::__construct($name, $data, $dataName);
+
+        $this->createApplication();
+    }
 
     /** @test */
     public function guest_user_cannot_store_clients()
@@ -25,15 +31,6 @@ class StoreClientTest extends TestCase
     /** @test */
     public function logged_in_user_can_store_clients()
     {
-        $user = factory(User::class)->create();
-        $data = $this->data();
-
-        $response = $this->actingAs($user)->post(route('clients.store'), $data);
-        $response->assertRedirect();
-    }
-
-    /** @test */
-    public function when_stored_a_client_should_redirect_to_his_show_view_without_errors(){
         $user = factory(User::class)->create();
         $data = $this->data();
 

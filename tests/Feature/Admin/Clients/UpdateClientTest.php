@@ -30,16 +30,6 @@ class UpdateClientTest extends TestCase
         $data = $this->data();
 
         $response = $this->actingAs($user)->put(route('clients.update', $client), $data);
-        $response->assertRedirect();
-    }
-
-    /** @test */
-    public function when_updated_a_client_should_redirect_to_his_show_view_without_errors(){
-        $client = factory(Client::class)->create();
-        $user = factory(User::class)->create();
-        $data = $this->data();
-
-        $response = $this->actingAs($user)->put(route('clients.update', $client), $data);
         $response->assertRedirect(route('clients.show', $client));
         $response->assertSessionHasNoErrors();
     }

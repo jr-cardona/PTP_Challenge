@@ -36,7 +36,7 @@ class CreateInvoiceTest extends TestCase
     }
 
     /** @test */
-    public function create_invoices_view_contains_fields_to_create_a_invoice()
+    public function create_invoices_view_contains_fields_to_create_an_invoice()
     {
         $user = factory(User::class)->create();
 

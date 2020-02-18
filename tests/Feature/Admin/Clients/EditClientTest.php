@@ -20,7 +20,7 @@ class EditClientTest extends TestCase
     }
 
     /** @test */
-    public function logged_id_user_can_access_to_edit_clients_view()
+    public function logged_in_user_can_access_to_edit_clients_view()
     {
         $client = factory(Client::class)->create();
         $user = factory(User::class)->create();

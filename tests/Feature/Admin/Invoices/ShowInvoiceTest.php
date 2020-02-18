@@ -41,7 +41,7 @@ class ShowInvoiceTest extends TestCase
     }
 
     /** @test */
-    public function the_invoice_show_view_has_a_invoice()
+    public function the_invoice_show_view_has_an_invoice()
     {
         $invoice = factory(Invoice::class)->create();
         $user = factory(User::class)->create();

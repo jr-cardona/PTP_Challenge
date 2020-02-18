@@ -12,9 +12,7 @@ class ExcelClientTest extends TestCase
 {
     use RefreshDatabase;
 
-    /**
-     * @test
-     */
+    /** @test */
     public function user_can_download_clients_export()
     {
         $user = factory(User::class)->create();

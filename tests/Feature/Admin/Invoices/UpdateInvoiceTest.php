@@ -3,6 +3,7 @@
 namespace Tests\Feature\Admin\Invoices;
 
 use App\User;
+use App\Client;
 use App\Seller;
 use App\Invoice;
 use Carbon\Carbon;
@@ -35,7 +36,7 @@ class UpdateInvoiceTest extends TestCase
     }
 
     /** @test */
-    public function when_updated_a_invoice_should_redirect_to_his_show_view_without_errors(){
+    public function when_updated_an_invoice_should_redirect_to_his_show_view_without_errors(){
         $invoice = factory(Invoice::class)->create();
         $user = factory(User::class)->create();
         $data = $this->data();
@@ -46,7 +47,7 @@ class UpdateInvoiceTest extends TestCase
     }
 
     /** @test */
-    public function data_invoice_can_be_updated_in_database(){
+    public function datan_invoice_can_be_updated_in_database(){
         $invoice = factory(Invoice::class)->create();
         $user = factory(User::class)->create();
         $data = $this->data();
@@ -61,12 +62,11 @@ class UpdateInvoiceTest extends TestCase
         $user = factory(User::class)->create();
         $invoice = factory(Invoice::class)->create(["paid_at" => Carbon::now()]);
 
+        $this->assertDatabaseHas("invoices", ['received_at' => null]);
         $response = $this->actingAs($user)->get(route('invoices.receivedCheck', $invoice));
-        $response->assertRedirect(route('invoices.show', $invoice));
 
-        $this->assertDatabaseHas("invoices", [
-            'received_at' => null
-        ]);
+        $response->assertRedirect(route('invoices.show', $invoice));
+        $this->assertDatabaseHas("invoices", ['received_at' => null]);
     }
 
     /** @test */
@@ -75,11 +75,11 @@ class UpdateInvoiceTest extends TestCase
         $user = factory(User::class)->create();
         $invoice = factory(Invoice::class)->create();
 
+        $this->assertDatabaseHas("invoices", ['received_at' => null]);
         $response = $this->actingAs($user)->get(route('invoices.receivedCheck', $invoice));
+
         $response->assertRedirect(route('invoices.show', $invoice));
-        $this->assertDatabaseHas("invoices", [
-            'received_at' => Carbon::now()
-        ]);
+        $this->assertDatabaseMissing("invoices", ['received_at' => null]);
     }
 
     /**
@@ -87,7 +87,7 @@ class UpdateInvoiceTest extends TestCase
      * @return array
      */
     public function data(){
-        $client = factory(Invoice::class)->create();
+        $client = factory(Client::class)->create();
         $seller = factory(Seller::class)->create();
         return [
             'issued_at' => Carbon::now()->toDateString(),
