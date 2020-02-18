@@ -49,41 +49,30 @@ const app = new Vue({
     methods: {
         searchClient(search, loading) {
             loading(true);
-            this.searchC(loading, search, this);
-        },
-        searchC: _.debounce((loading, search, vm) => {
             fetch(
                 `/clientes/buscar?name=${escape(search)}`
             ).then(res => {
-                res.json().then(json => (vm.options = json));
+                res.json().then(json => (this.options = json));
                 loading(false);
             });
-        }, 350),
-
+        },
         searchSeller(search, loading) {
             loading(true);
-            this.searchS(loading, search, this);
-        },
-        searchS: _.debounce((loading, search, vm) => {
             fetch(
                 `/vendedores/buscar?name=${escape(search)}`
             ).then(res => {
-                res.json().then(json => (vm.options = json));
+                res.json().then(json => (this.options = json));
                 loading(false);
             });
-        }, 350),
-
+        },
         searchProduct(search, loading) {
             loading(true);
-            this.searchP(loading, search, this);
-        },
-        searchP: _.debounce((loading, search, vm) => {
             fetch(
                 `/productos/buscar?name=${escape(search)}`
             ).then(res => {
-                res.json().then(json => (vm.options = json));
+                res.json().then(json => (this.options = json));
                 loading(false);
             });
-        }, 350)
+        },
     }
 });
