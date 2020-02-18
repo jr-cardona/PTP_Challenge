@@ -23,11 +23,9 @@ class UpdateInvoiceProductRequest extends FormRequest
      */
     public function rules()
     {
-        if ($this->request->get('name') == "quantity") {
-            $validationRules['value'] = 'required|numeric|min:1|max:999';
-        }else{
-            $validationRules['value'] = 'required|numeric|min:1|max:9999999.99';
-        }
-        return $validationRules;
+        return [
+            'quantity' => 'required|numeric|min:1|max:9999',
+            'unit_price' => 'required|numeric|min:1|max:9999999',
+        ];
     }
 }

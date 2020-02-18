@@ -13,10 +13,12 @@ class PaymentAttemptsController extends Controller
 
     public function create(Invoice $invoice)
     {
-        if ($invoice->total == 0){
-            return redirect()->route('invoices.show', $invoice)->withInfo(__("La factura no tiene productos a pagar, intente nuevamente"));
-        }elseif ($invoice->isPaid()){
+        if ($invoice->isPaid()){
             return redirect()->route('invoices.show', $invoice)->withError(__("La factura ya se encuentra pagada"));
+        }elseif ($invoice->isExpired()){
+            return redirect()->route('invoices.show', $invoice)->withError(__("La factura ya se encuentra vencida"));
+        }elseif ($invoice->total == 0){
+            return redirect()->route('invoices.show', $invoice)->withInfo(__("La factura no tiene productos a pagar, intente nuevamente"));
         }
         return view('invoices.payments.create', compact('invoice'));
     }

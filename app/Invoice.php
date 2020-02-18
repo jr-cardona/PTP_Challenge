@@ -107,7 +107,7 @@ class Invoice extends Model
     }
 
     public function getIssuedAttribute(){
-        return isset($this->issued_at) ? $this->issued_at->toDateString() : $this->issued_at;
+        return isset($this->issued_at) ? $this->issued_at->toDateString() : Carbon::now()->toDateString();
     }
 
     public function getFullNameAttribute(){
