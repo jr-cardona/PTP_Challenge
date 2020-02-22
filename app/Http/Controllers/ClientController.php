@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use Config;
 use App\Client;
-use App\TypeDocument;
 use Illuminate\Http\Request;
 use App\Http\Requests\SaveClientRequest;
 
@@ -15,16 +15,21 @@ class ClientController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function index(Request $request) {
+        $paginate = Config::get('constants.paginate');
         $clients = Client::with(["type_document"])
             ->id($request->get('id'))
             ->typedocument($request->get('type_document_id'))
             ->document($request->get('document'))
             ->email($request->get('email'))
-            ->orderBy('name')
-            ->paginate(10);
+            ->orderBy('name');
+        $count = $clients->count();
+        $clients = $clients->paginate(10);
+
         return response()->view('clients.index', [
             'clients' => $clients,
             'request' => $request,
+            'count' => $count,
+            'paginate' => $paginate
         ]);
     }
 

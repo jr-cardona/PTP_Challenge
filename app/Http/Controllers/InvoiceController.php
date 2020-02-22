@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Invoice;
 use Carbon\Carbon;
+use Config;
 use Illuminate\Http\Request;
 use App\Http\Requests\SaveInvoiceRequest;
 
@@ -15,6 +16,7 @@ class InvoiceController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function index(Request $request) {
+        $paginate = Config::get('constants.paginate');
         $invoices = Invoice::with(["client", "seller", "products"])
             ->number($request->get('number'))
             ->client($request->get('client_id'))
@@ -22,11 +24,15 @@ class InvoiceController extends Controller
             ->product($request->get('product_id'))
             ->issuedDate($request->get('issued_init'), $request->get('issued_final'))
             ->expiresDate($request->get('expires_init'), $request->get('expires_final'))
-            ->orderBy('id', 'DESC')
-            ->paginate(10);
+            ->state($request->get('state'))
+            ->orderBy('id', 'DESC');
+        $count = $invoices->count();
+        $invoices = $invoices->paginate($paginate);
         return response()->view('invoices.index', [
             'invoices' => $invoices,
             'request' => $request,
+            'count' => $count,
+            'paginate' => $paginate
         ]);
     }
 

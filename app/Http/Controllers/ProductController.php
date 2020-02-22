@@ -2,9 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use Config;
 use App\Product;
-use App\Http\Requests\SaveProductRequest;
 use Illuminate\Http\Request;
+use App\Http\Requests\SaveProductRequest;
 
 class ProductController extends Controller
 {
@@ -14,12 +15,17 @@ class ProductController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function index(Request $request) {
+        $paginate = Config::get('constants.paginate');
         $products = Product::orderBy('id')
-            ->id($request->get('id'))
-            ->paginate(10);
+            ->id($request->get('id'));
+        $count = $products->count();
+        $products = $products->paginate(10);
+
         return response()->view('products.index', [
             'products' => $products,
             'request' => $request,
+            'count' => $count,
+            'paginate' => $paginate,
         ]);
     }
 

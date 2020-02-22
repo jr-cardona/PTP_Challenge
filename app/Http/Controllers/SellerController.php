@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use Config;
 use App\Seller;
-use App\TypeDocument;
 use Illuminate\Http\Request;
 use App\Http\Requests\SaveSellerRequest;
 
@@ -15,16 +15,21 @@ class SellerController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function index(Request $request) {
+        $paginate = Config::get('constants.paginate');
         $sellers = Seller::with(["type_document"])
             ->id($request->get('id'))
             ->typedocument($request->get('type_document_id'))
             ->document($request->get('document'))
             ->email($request->get('email'))
-            ->orderBy('name')
-            ->paginate(10);
+            ->orderBy('name');
+        $count = $sellers->count();
+        $sellers = $sellers->paginate(10);
+
         return response()->view('sellers.index', [
             'sellers' => $sellers,
             'request' => $request,
+            'count' => $count,
+            'paginate' => $paginate,
         ]);
     }
 

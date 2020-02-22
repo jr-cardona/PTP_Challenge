@@ -23,7 +23,10 @@
     </div>
     <br>
     @yield('Search')
-    <div class="mt-3 d-flex justify-content-center">
+    <div class="mt-2 d-flex justify-content-center">
+        @include('partials.__pagination')
+    </div>
+    <div class="d-flex justify-content-center">
         @yield('Links')
     </div>
     <table class="table border-rounded table-striped table-hover">
