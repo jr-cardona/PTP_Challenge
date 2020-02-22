@@ -12,6 +12,7 @@ import Vue from 'vue';
 import SearchForm from './components/SearchForm';
 import InvoiceProduct from "./components/InvoiceProduct";
 import 'vue-select/dist/vue-select.css';
+import VueSelect from 'vue-select/dist/vue-select.js';
 
 /**
  * The following block of code may be used to automatically register your
@@ -20,7 +21,7 @@ import 'vue-select/dist/vue-select.css';
  *
  * Eg. ./components/ExampleComponent.vue -> <example-component></example-component>
  */
-Vue.component('v-select', VueSelect.VueSelect);
+Vue.component('v-select', VueSelect);
 Vue.component('search-form', SearchForm);
 Vue.component('invoice-product', InvoiceProduct);
 /**
