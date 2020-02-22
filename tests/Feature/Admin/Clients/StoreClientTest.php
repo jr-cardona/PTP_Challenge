@@ -13,7 +13,8 @@ class StoreClientTest extends TestCase
     use RefreshDatabase;
     use Concerns\ClientTestHasProviders;
 
-    public function __construct($name = null, array $data = array(), $dataName = '') {
+    public function __construct($name = null, array $data = array(), $dataName = '')
+    {
         parent::__construct($name, $data, $dataName);
 
         $this->createApplication();
@@ -40,7 +41,8 @@ class StoreClientTest extends TestCase
     }
 
     /** @test */
-    public function a_client_can_be_stored_in_database(){
+    public function a_client_can_be_stored_in_database()
+    {
         $user = factory(User::class)->create();
         $data = $this->data();
 
@@ -60,7 +62,9 @@ class StoreClientTest extends TestCase
      * @dataProvider storeTestDataProvider
      */
     public function a_client_cannot_be_stored_due_to_validation_errors(
-        array $clientData, string $field, string $message
+        array $clientData,
+        string $field,
+        string $message
     ) {
         $user = factory(User::class)->create();
         factory(Client::class)->create(["document" => 12345678, "email" => "repeated@email.com"]);
@@ -73,7 +77,8 @@ class StoreClientTest extends TestCase
      * An array with valid client data
      * @return array
      */
-    public function data(){
+    public function data()
+    {
         $type_document = factory(TypeDocument::class)->create();
         return [
             'document' => '0000000000',

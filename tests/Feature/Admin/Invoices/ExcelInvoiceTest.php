@@ -22,7 +22,7 @@ class ExcelInvoiceTest extends TestCase
 
         $this->actingAs($user)->get(route('export.invoices'));
 
-        Excel::assertDownloaded('invoices-list.xlsx', function(InvoicesExport $export) {
+        Excel::assertDownloaded('invoices-list.xlsx', function (InvoicesExport $export) {
             return $export->view()->name() == 'exports.invoices';
         });
     }

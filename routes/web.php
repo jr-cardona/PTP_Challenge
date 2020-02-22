@@ -13,8 +13,8 @@
 
 Auth::routes();
 
-Route::middleware(['auth'])->group(function (){
-    Route::get('/', function() {
+Route::middleware(['auth'])->group(function () {
+    Route::get('/', function () {
         return view('home');
     })->name('home');
 

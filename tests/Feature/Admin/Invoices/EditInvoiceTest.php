@@ -21,7 +21,8 @@ class EditInvoiceTest extends TestCase
     }
 
     /** @test */
-    public function logged_in_user_cannot_access_to_edit_paid_invoices_view(){
+    public function logged_in_user_cannot_access_to_edit_paid_invoices_view()
+    {
         $invoice = factory(Invoice::class)->create(["paid_at" => Carbon::now()]);
         $user = factory(User::class)->create();
 
@@ -30,7 +31,8 @@ class EditInvoiceTest extends TestCase
     }
 
     /** @test */
-    public function logged_in_user_cannot_access_to_edit_expired_invoices_view(){
+    public function logged_in_user_cannot_access_to_edit_expired_invoices_view()
+    {
         $invoice = factory(Invoice::class)->create(["issued_at" => Carbon::now()->subMonth()]);
         $user = factory(User::class)->create();
 

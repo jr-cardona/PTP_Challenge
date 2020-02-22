@@ -34,7 +34,8 @@ class DestroyClientTest extends TestCase
     }
 
     /** @test */
-    public function when_deleted_a_client_should_redirect_to_clients_index_view(){
+    public function when_deleted_a_client_should_redirect_to_clients_index_view()
+    {
         $user = factory(User::class)->create();
         $client = factory(Client::class)->create();
 
@@ -43,7 +44,8 @@ class DestroyClientTest extends TestCase
     }
 
     /** @test */
-    public function a_client_can_be_deleted_from_database(){
+    public function a_client_can_be_deleted_from_database()
+    {
         $user = factory(User::class)->create();
         $client = factory(Client::class)->create();
 

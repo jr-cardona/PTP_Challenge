@@ -12,7 +12,8 @@ class SearchProductTest extends TestCase
     use RefreshDatabase;
 
     /** @test */
-    public function product_can_be_searched_by_name(){
+    public function product_can_be_searched_by_name()
+    {
         $user = factory(User::class)->create();
         factory(Product::class)->create(["name" => "aaa"]);
         factory(Product::class)->create(["name" => "bbb"]);

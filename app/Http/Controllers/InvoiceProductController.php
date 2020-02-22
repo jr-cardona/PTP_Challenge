@@ -17,7 +17,7 @@ class InvoiceProductController extends Controller
      */
     public function create(Invoice $invoice)
     {
-        if ($invoice->isPaid()){
+        if ($invoice->isPaid()) {
             return redirect()->route('invoices.show', $invoice)->withInfo(__("La factura ya se encuentra pagada y no se puede editar"));
         } else {
             return response()->view('invoices.products.create', [
@@ -49,7 +49,7 @@ class InvoiceProductController extends Controller
      */
     public function edit(Invoice $invoice, Product $product)
     {
-        if ($invoice->isPaid()){
+        if ($invoice->isPaid()) {
             return redirect()->route('invoices.show', $invoice)->withInfo(__("La factura ya se encuentra pagada y no se puede editar"));
         } else {
             return response()->view('invoices.products.edit', [

@@ -12,7 +12,8 @@ class SearchSellerTest extends TestCase
     use RefreshDatabase;
 
     /** @test */
-    public function sellers_can_be_searched_by_name(){
+    public function sellers_can_be_searched_by_name()
+    {
         $user = factory(User::class)->create();
         factory(Seller::class)->create(["name" => "aaa"]);
         factory(Seller::class)->create(["name" => "bbb"]);

@@ -14,7 +14,8 @@ class ClientController extends Controller
      * @param Request $request
      * @return \Illuminate\Http\Response
      */
-    public function index(Request $request) {
+    public function index(Request $request)
+    {
         $paginate = Config::get('constants.paginate');
         $clients = Client::with(["type_document"])
             ->id($request->get('id'))
@@ -38,7 +39,8 @@ class ClientController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create() {
+    public function create()
+    {
         return response()->view('clients.create', [
             'client' => new Client,
         ]);
@@ -50,7 +52,8 @@ class ClientController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function store(SaveClientRequest $request) {
+    public function store(SaveClientRequest $request)
+    {
         $result = Client::create($request->validated());
 
         return redirect()->route('clients.show', $result->id)->withSuccess(__('Cliente creado satisfactoriamente'));
@@ -62,7 +65,8 @@ class ClientController extends Controller
      * @param Client $client
      * @return \Illuminate\Http\Response
      */
-    public function show(Client $client) {
+    public function show(Client $client)
+    {
         return response()->view('clients.show', [
             'client' => $client,
             'side_effect' => __('Se borrarán todas sus facturas asociadas')
@@ -75,7 +79,8 @@ class ClientController extends Controller
      * @param Client $client
      * @return \Illuminate\Http\Response
      */
-    public function edit(Client $client) {
+    public function edit(Client $client)
+    {
         return response()->view('clients.edit', [
             'client' => $client,
         ]);
@@ -88,7 +93,8 @@ class ClientController extends Controller
      * @param Client $client
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function update(SaveClientRequest $request, Client $client) {
+    public function update(SaveClientRequest $request, Client $client)
+    {
         $client->update($request->validated());
 
         return redirect()->route('clients.show', $client)->withSuccess(__('Cliente actualizado satisfactoriamente'));
@@ -101,7 +107,8 @@ class ClientController extends Controller
      * @return \Illuminate\Http\RedirectResponse
      * @throws \Exception
      */
-    public function destroy(Client $client) {
+    public function destroy(Client $client)
+    {
         $client->delete();
 
         return redirect()->route('clients.index')->withSuccess(__('Cliente eliminado satisfactoriamente'));

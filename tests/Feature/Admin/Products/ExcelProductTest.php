@@ -22,7 +22,7 @@ class ExcelProductTest extends TestCase
 
         $this->actingAs($user)->get(route('export.products'));
 
-        Excel::assertDownloaded('products-list.xlsx', function(ProductsExport $export) {
+        Excel::assertDownloaded('products-list.xlsx', function (ProductsExport $export) {
             return $export->view()->name() == 'exports.products';
         });
     }

@@ -11,7 +11,8 @@ class TypeDocument extends Model
      * Relation between type documents and clients
      * @return HasMany
      */
-    public function clients(): HasMany {
+    public function clients(): HasMany
+    {
         return $this->hasMany(Client::class);
     }
 
@@ -19,7 +20,8 @@ class TypeDocument extends Model
      * Relation between type documents and sellers
      * @return HasMany
      */
-    public function sellers(): HasMany {
+    public function sellers(): HasMany
+    {
         return $this->hasMany(Seller::class);
     }
 }

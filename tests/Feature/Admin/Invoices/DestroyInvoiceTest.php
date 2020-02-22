@@ -34,7 +34,8 @@ class DestroyInvoiceTest extends TestCase
     }
 
     /** @test */
-    public function when_deleted_an_invoice_should_redirect_to_invoices_index_view(){
+    public function when_deleted_an_invoice_should_redirect_to_invoices_index_view()
+    {
         $user = factory(User::class)->create();
         $invoice = factory(Invoice::class)->create();
 
@@ -43,7 +44,8 @@ class DestroyInvoiceTest extends TestCase
     }
 
     /** @test */
-    public function an_invoice_can_be_deleted_from_database(){
+    public function an_invoice_can_be_deleted_from_database()
+    {
         $user = factory(User::class)->create();
         $invoice = factory(Invoice::class)->create();
 

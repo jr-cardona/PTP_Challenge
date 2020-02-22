@@ -15,7 +15,8 @@ class StoreInvoiceTest extends TestCase
     use RefreshDatabase;
     use Concerns\InvoiceTestHasProviders;
 
-    public function __construct($name = null, array $data = array(), $dataName = '') {
+    public function __construct($name = null, array $data = array(), $dataName = '')
+    {
         parent::__construct($name, $data, $dataName);
 
         $this->createApplication();
@@ -41,7 +42,8 @@ class StoreInvoiceTest extends TestCase
     }
 
     /** @test */
-    public function when_stored_an_invoice_should_redirect_to_his_show_view_without_errors(){
+    public function when_stored_an_invoice_should_redirect_to_his_show_view_without_errors()
+    {
         $user = factory(User::class)->create();
         $data = $this->data();
 
@@ -51,7 +53,8 @@ class StoreInvoiceTest extends TestCase
     }
 
     /** @test */
-    public function an_invoice_can_be_stored_in_database(){
+    public function an_invoice_can_be_stored_in_database()
+    {
         $user = factory(User::class)->create();
         $data = $this->data();
 
@@ -71,7 +74,9 @@ class StoreInvoiceTest extends TestCase
      * @dataProvider storeTestDataProvider
      */
     public function an_invoice_cannot_be_stored_due_to_validation_errors(
-        array $invoiceData, string $field, string $message
+        array $invoiceData,
+        string $field,
+        string $message
     ) {
         $user = factory(User::class)->create();
         $response =  $this->actingAs($user)->post(route('invoices.store'), $invoiceData);
@@ -83,7 +88,8 @@ class StoreInvoiceTest extends TestCase
      * An array with valid invoice data
      * @return array
      */
-    public function data(){
+    public function data()
+    {
         $client = factory(Client::class)->create();
         $seller = factory(Seller::class)->create();
         return [

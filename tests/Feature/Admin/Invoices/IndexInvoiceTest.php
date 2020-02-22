@@ -72,7 +72,8 @@ class IndexInvoiceTest extends TestCase
     }
 
     /** @test */
-    public function invoices_can_be_found_by_issued_init_and_issued_final(){
+    public function invoices_can_be_found_by_issued_init_and_issued_final()
+    {
         $user = factory(User::class)->create();
         $invoice1 = factory(Invoice::class)->create(['issued_at' => Carbon::now()->subWeek()]);
         $invoice2 = factory(Invoice::class)->create(['issued_at' => Carbon::now()->addWeek()]);
@@ -93,7 +94,8 @@ class IndexInvoiceTest extends TestCase
     }
 
     /** @test */
-    public function invoices_can_be_found_by_expires_init_and_expires_final(){
+    public function invoices_can_be_found_by_expires_init_and_expires_final()
+    {
         $user = factory(User::class)->create();
         $invoice1 = factory(Invoice::class)->create(['issued_at' => Carbon::now()->subWeek()]);
         $invoice2 = factory(Invoice::class)->create(['issued_at' => Carbon::now()->addWeek()]);
@@ -136,21 +138,21 @@ class IndexInvoiceTest extends TestCase
     public function invoices_can_be_found_by_product()
     {
         $user = factory(User::class)->create();
-        $invoices = factory(Invoice::class, 5)->create()->each(function ($invoice){
+        $invoices = factory(Invoice::class, 5)->create()->each(function ($invoice) {
             $product = factory(Product::class)->create();
             $invoice->products()->attach($product->id, ['quantity' => 1, 'unit_price' => 1]);
         });
 
         $response = $this->actingAs($user)->get(route('invoices.index'));
-        foreach($invoices as $invoice){
+        foreach ($invoices as $invoice) {
             $response->assertSeeText($invoice->fullname);
         }
 
         $response = $this->actingAs($user)->get(route('invoices.index', ['product_id' => $invoices->last()->products->first()->id]));
-        foreach($invoices as $invoice){
-            if ($invoice !== $invoices->last()){
+        foreach ($invoices as $invoice) {
+            if ($invoice !== $invoices->last()) {
                 $response->assertDontSeeText($invoice->fullname);
-            }else{
+            } else {
                 $response->assertSeeText($invoice->fullname);
             }
         }

@@ -28,13 +28,15 @@ class LoginTest extends TestCase
     }
 
     /** @test */
-    public function a_guest_user_can_access_to_register_view(){
+    public function a_guest_user_can_access_to_register_view()
+    {
         $response = $this->get('register');
         $response->assertViewIs('auth.register');
     }
 
     /** @test */
-    public function a_guest_user_can_register(){
+    public function a_guest_user_can_register()
+    {
         $response = $this->post(route('register'), [
             'name' => 'Test name',
             'email' => 'test@email.com',
@@ -44,14 +46,16 @@ class LoginTest extends TestCase
     }
 
     /** @test */
-    public function registered_users_can_login(){
+    public function registered_users_can_login()
+    {
         $user = factory(User::class)->create();
         $response = $this->actingAs($user)->post(route('login'));
         $response->assertRedirect(route('home'));
     }
 
     /** @test */
-    public function a_logged_in_user_can_logout(){
+    public function a_logged_in_user_can_logout()
+    {
         $this->withoutExceptionHandling();
         $user = factory(User::class)->create();
         $response = $this->actingAs($user)->post('logout');
@@ -59,10 +63,10 @@ class LoginTest extends TestCase
     }
 
     /** @test */
-    public function an_authenticated_user_can_access_to_confirm_password(){
+    public function an_authenticated_user_can_access_to_confirm_password()
+    {
         $user = factory(User::class)->create();
         $response = $this->actingAs($user)->get(route('password.confirm'));
         $response->assertStatus(200);
     }
-
 }

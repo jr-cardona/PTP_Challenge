@@ -13,13 +13,15 @@ class Product extends Model
      * Relation between products and invoices
      * @return BelongsToMany
      */
-    public function invoices(): BelongsToMany {
+    public function invoices(): BelongsToMany
+    {
         return $this->belongsToMany(Invoice::class);
     }
 
     /** Query Scopes */
-    public function scopeId($query, $id){
-        if(trim($id) != ""){
+    public function scopeId($query, $id)
+    {
+        if (trim($id) != "") {
             return $query->where('id', $id);
         }
     }

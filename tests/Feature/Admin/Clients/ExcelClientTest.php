@@ -20,7 +20,7 @@ class ExcelClientTest extends TestCase
 
         $this->actingAs($user)->get(route('export.clients'));
 
-        Excel::assertDownloaded('clients-list.xlsx', function(ClientsExport $export) {
+        Excel::assertDownloaded('clients-list.xlsx', function (ClientsExport $export) {
             return $export->view()->name() == 'exports.clients';
         });
     }

@@ -43,7 +43,8 @@ class DestroyInvoiceProductTest extends TestCase
     }
 
     /** @test */
-    public function when_deleted_a_product_should_redirect_to_invoice_show_view(){
+    public function when_deleted_a_product_should_redirect_to_invoice_show_view()
+    {
         $user = factory(User::class)->create();
         $data = $this->data();
         $product = factory(Product::class)->create();
@@ -55,7 +56,8 @@ class DestroyInvoiceProductTest extends TestCase
     }
 
     /** @test */
-    public function a_product_can_be_deleted_from_database(){
+    public function a_product_can_be_deleted_from_database()
+    {
         $user = factory(User::class)->create();
         $data = $this->data();
         $product = factory(Product::class)->create();
@@ -73,7 +75,8 @@ class DestroyInvoiceProductTest extends TestCase
      * An array with valid invoice_product data
      * @return array
      */
-    public function data(){
+    public function data()
+    {
         return [
             'quantity' => 1,
             'unit_price' => 1,

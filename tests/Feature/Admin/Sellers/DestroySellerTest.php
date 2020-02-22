@@ -34,7 +34,8 @@ class DestroySellerTest extends TestCase
     }
 
     /** @test */
-    public function when_deleted_a_seller_should_redirect_to_sellers_index_view(){
+    public function when_deleted_a_seller_should_redirect_to_sellers_index_view()
+    {
         $user = factory(User::class)->create();
         $seller = factory(Seller::class)->create();
 
@@ -43,7 +44,8 @@ class DestroySellerTest extends TestCase
     }
 
     /** @test */
-    public function a_seller_can_be_deleted_from_database(){
+    public function a_seller_can_be_deleted_from_database()
+    {
         $user = factory(User::class)->create();
         $seller = factory(Seller::class)->create();
 

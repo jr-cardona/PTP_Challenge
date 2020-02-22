@@ -14,7 +14,8 @@ class ProductController extends Controller
      * @param Request $request
      * @return \Illuminate\Http\Response
      */
-    public function index(Request $request) {
+    public function index(Request $request)
+    {
         $paginate = Config::get('constants.paginate');
         $products = Product::orderBy('id')
             ->id($request->get('id'));
@@ -34,7 +35,8 @@ class ProductController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create() {
+    public function create()
+    {
         return response()->view('products.create', [
             'product' => new Product
         ]);
@@ -46,7 +48,8 @@ class ProductController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function store(SaveProductRequest $request) {
+    public function store(SaveProductRequest $request)
+    {
         $result = Product::create($request->validated());
 
         return redirect()->route('products.show', $result->id)->withSuccess(__('Producto creado satisfactoriamente'));
@@ -58,7 +61,8 @@ class ProductController extends Controller
      * @param Product $product
      * @return \Illuminate\Http\Response
      */
-    public function show(Product $product) {
+    public function show(Product $product)
+    {
         return response()->view('products.show', [
             'product' => $product,
             'side_effect' => ''
@@ -71,7 +75,8 @@ class ProductController extends Controller
      * @param Product $product
      * @return \Illuminate\Http\Response
      */
-    public function edit(Product $product) {
+    public function edit(Product $product)
+    {
         return response()->view('products.edit', [
             'product' => $product
         ]);
@@ -84,7 +89,8 @@ class ProductController extends Controller
      * @param Product $product
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function update(SaveProductRequest $request, Product $product) {
+    public function update(SaveProductRequest $request, Product $product)
+    {
         $product->update($request->validated());
 
         return redirect()->route('products.show', $product)->withSuccess(__('Producto actualizado satisfactoriamente'));
@@ -97,7 +103,8 @@ class ProductController extends Controller
      * @return \Illuminate\Http\RedirectResponse
      * @throws \Exception
      */
-    public function destroy(Product $product) {
+    public function destroy(Product $product)
+    {
         $product->delete();
 
         return redirect()->route('products.index')->withSuccess(__('Producto eliminado satisfactoriamente'));

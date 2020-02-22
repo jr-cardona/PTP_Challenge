@@ -12,7 +12,8 @@ class SearchClientTest extends TestCase
     use RefreshDatabase;
 
     /** @test */
-    public function clients_can_be_searched_by_name(){
+    public function clients_can_be_searched_by_name()
+    {
         $user = factory(User::class)->create();
         factory(Client::class)->create(["name" => "aaa"]);
         factory(Client::class)->create(["name" => "bbb"]);

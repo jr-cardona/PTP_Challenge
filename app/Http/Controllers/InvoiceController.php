@@ -15,7 +15,8 @@ class InvoiceController extends Controller
      * @param Request $request
      * @return \Illuminate\Http\Response
      */
-    public function index(Request $request) {
+    public function index(Request $request)
+    {
         $paginate = Config::get('constants.paginate');
         $invoices = Invoice::with(["client", "seller", "products"])
             ->number($request->get('number'))
@@ -41,7 +42,8 @@ class InvoiceController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create(Request $request) {
+    public function create(Request $request)
+    {
         return response()->view('invoices.create', [
             'invoice' => new Invoice,
             'request' => $request
@@ -54,7 +56,8 @@ class InvoiceController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function store(SaveInvoiceRequest $request) {
+    public function store(SaveInvoiceRequest $request)
+    {
         $result = Invoice::create($request->validated());
 
         return redirect()->route('invoices.show', $result->id)->withSuccess(__('Factura creada satisfactoriamente'));
@@ -66,7 +69,8 @@ class InvoiceController extends Controller
      * @param Invoice $invoice
      * @return \Illuminate\Http\Response
      */
-    public function show(Invoice $invoice) {
+    public function show(Invoice $invoice)
+    {
         return response()->view('invoices.show', [
             'invoice' => $invoice,
         ]);
@@ -78,8 +82,9 @@ class InvoiceController extends Controller
      * @param Invoice $invoice
      * @return \Illuminate\Http\Response | \Illuminate\Http\RedirectResponse
      */
-    public function edit(Invoice $invoice) {
-        if ($invoice->isPaid()){
+    public function edit(Invoice $invoice)
+    {
+        if ($invoice->isPaid()) {
             return redirect()->route('invoices.show', $invoice)->withInfo(__("La factura ya se encuentra pagada y no se puede editar"));
         } elseif ($invoice->isExpired()) {
             return redirect()->route('invoices.show', $invoice)->withInfo(__("La factura ya se encuentra vencida y no se puede editar"));
@@ -97,7 +102,8 @@ class InvoiceController extends Controller
      * @param Invoice $invoice
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function update(SaveInvoiceRequest $request, Invoice $invoice) {
+    public function update(SaveInvoiceRequest $request, Invoice $invoice)
+    {
         $invoice->update($request->validated());
 
         return redirect()->route('invoices.show', $invoice)->withSuccess(__('Factura actualizada satisfactoriamente'));
@@ -110,13 +116,15 @@ class InvoiceController extends Controller
      * @return \Illuminate\Http\RedirectResponse
      * @throws \Exception
      */
-    public function destroy(Invoice $invoice) {
+    public function destroy(Invoice $invoice)
+    {
         $invoice->delete();
 
         return redirect()->route('invoices.index')->withSuccess(__('Factura eliminada satisfactoriamente'));
     }
 
-    public function receivedCheck(Invoice $invoice){
+    public function receivedCheck(Invoice $invoice)
+    {
         if ($invoice->isPending() && empty($invoice->received_at)) {
             $now = Carbon::now();
             $invoice->update(["received_at" => $now]);

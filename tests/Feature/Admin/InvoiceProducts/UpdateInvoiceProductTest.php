@@ -40,7 +40,8 @@ class UpdateInvoiceProductTest extends TestCase
     }
 
     /** @test */
-    public function data_product_can_be_updated_in_database(){
+    public function data_product_can_be_updated_in_database()
+    {
         $data = $this->data();
         $user = factory(User::class)->create();
         $product = factory(Product::class)->create();
@@ -55,7 +56,8 @@ class UpdateInvoiceProductTest extends TestCase
      * An array with valid invoice_product data
      * @return array
      */
-    public function data(){
+    public function data()
+    {
         return [
             'quantity' => 100,
             'unit_price' => 1000,

@@ -14,19 +14,23 @@ class ExportController extends Controller
      * Export a listing of the resource.
      * @return \Symfony\Component\HttpFoundation\BinaryFileResponse
      */
-    public function invoices(){
+    public function invoices()
+    {
         return Excel::download(new InvoicesExport, 'invoices-list.xlsx');
     }
 
-    public function clients(){
+    public function clients()
+    {
         return Excel::download(new ClientsExport, 'clients-list.xlsx');
     }
 
-    public function sellers(){
+    public function sellers()
+    {
         return Excel::download(new SellersExport, 'sellers-list.xlsx');
     }
 
-    public function products(){
+    public function products()
+    {
         return Excel::download(new ProductsExport, 'products-list.xlsx');
     }
 }

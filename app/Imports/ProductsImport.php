@@ -27,7 +27,8 @@ class ProductsImport extends BaseImport implements ToModel, WithHeadingRow, With
         ]);
     }
 
-    public function rules(): array{
+    public function rules(): array
+    {
         return[
             'Nombre' => 'required',
             'Descripción' => 'required',

@@ -35,7 +35,8 @@ class UpdateSellerTest extends TestCase
     }
 
     /** @test */
-    public function data_seller_can_be_updated_in_database(){
+    public function data_seller_can_be_updated_in_database()
+    {
         $seller = factory(Seller::class)->create();
         $user = factory(User::class)->create();
         $data = $this->data();
@@ -48,7 +49,8 @@ class UpdateSellerTest extends TestCase
      * An array with valid seller data
      * @return array
      */
-    public function data(){
+    public function data()
+    {
         $type_document = factory(TypeDocument::class)->create();
         return [
             'document' => '0000000000',

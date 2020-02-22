@@ -34,7 +34,8 @@ class DestroyProductTest extends TestCase
     }
 
     /** @test */
-    public function when_deleted_a_product_should_redirect_to_products_index_view(){
+    public function when_deleted_a_product_should_redirect_to_products_index_view()
+    {
         $user = factory(User::class)->create();
         $product = factory(Product::class)->create();
 
@@ -43,7 +44,8 @@ class DestroyProductTest extends TestCase
     }
 
     /** @test */
-    public function a_product_can_be_deleted_from_database(){
+    public function a_product_can_be_deleted_from_database()
+    {
         $user = factory(User::class)->create();
         $product = factory(Product::class)->create();
 

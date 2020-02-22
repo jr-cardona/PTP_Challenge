@@ -39,18 +39,19 @@ class StoreInvoiceProductRequest extends FormRequest
         });
     }
 
-    public function repeatedProduct(){
+    public function repeatedProduct()
+    {
         $availableProduct = DB::table('products')
             ->where('id', request('product_id'))
-            ->whereNotExists(function ($query){
+            ->whereNotExists(function ($query) {
                 $query->select(DB::raw('invoice_product.id'))
                     ->from('invoice_product')
                     ->whereRaw('invoice_product.product_id = products.id and invoice_product.invoice_id ='.$this->invoice->id);
             })
             ->get()->toArray();
-        if (isset($availableProduct[0])){
+        if (isset($availableProduct[0])) {
             return false;
-        }else{
+        } else {
             return true;
         }
     }

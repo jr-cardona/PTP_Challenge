@@ -36,7 +36,8 @@ class UpdateInvoiceTest extends TestCase
     }
 
     /** @test */
-    public function when_updated_an_invoice_should_redirect_to_his_show_view_without_errors(){
+    public function when_updated_an_invoice_should_redirect_to_his_show_view_without_errors()
+    {
         $invoice = factory(Invoice::class)->create();
         $user = factory(User::class)->create();
         $data = $this->data();
@@ -47,7 +48,8 @@ class UpdateInvoiceTest extends TestCase
     }
 
     /** @test */
-    public function datan_invoice_can_be_updated_in_database(){
+    public function datan_invoice_can_be_updated_in_database()
+    {
         $invoice = factory(Invoice::class)->create();
         $user = factory(User::class)->create();
         $data = $this->data();
@@ -86,7 +88,8 @@ class UpdateInvoiceTest extends TestCase
      * An array with valid invoice data
      * @return array
      */
-    public function data(){
+    public function data()
+    {
         $client = factory(Client::class)->create();
         $seller = factory(Seller::class)->create();
         return [

@@ -10,6 +10,7 @@ use Maatwebsite\Excel\Concerns\WithValidation;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
 use Maatwebsite\Excel\Concerns\WithBatchInserts;
 use Maatwebsite\Excel\Imports\HeadingRowFormatter;
+
 HeadingRowFormatter::default('none');
 
 class InvoicesImport extends BaseImport implements ToModel, WithHeadingRow, WithValidation, WithBatchInserts
@@ -30,7 +31,8 @@ class InvoicesImport extends BaseImport implements ToModel, WithHeadingRow, With
         ]);
     }
 
-    public function rules(): array{
+    public function rules(): array
+    {
         return[
             'Fecha de expedición' => 'required|date',
             'Fecha de vencimiento' => 'nullable|date|after:issued_at',

@@ -20,7 +20,7 @@ class TypeDocumentComposer
 
     public function compose(View $view)
     {
-        $view->with('type_documents', Cache::remember('type_documents.enabled', 600, function(){
+        $view->with('type_documents', Cache::remember('type_documents.enabled', 600, function () {
             return $this->type_documents::all();
         }));
     }

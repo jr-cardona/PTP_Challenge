@@ -10,14 +10,13 @@ use Dnetix\Redirection\PlacetoPay;
 
 class PaymentAttemptsController extends Controller
 {
-
     public function create(Invoice $invoice)
     {
-        if ($invoice->isPaid()){
+        if ($invoice->isPaid()) {
             return redirect()->route('invoices.show', $invoice)->withError(__("La factura ya se encuentra pagada"));
-        }elseif ($invoice->isExpired()){
+        } elseif ($invoice->isExpired()) {
             return redirect()->route('invoices.show', $invoice)->withError(__("La factura ya se encuentra vencida"));
-        }elseif ($invoice->total == 0){
+        } elseif ($invoice->total == 0) {
             return redirect()->route('invoices.show', $invoice)->withInfo(__("La factura no tiene productos a pagar, intente nuevamente"));
         }
         return view('invoices.payments.create', compact('invoice'));
@@ -76,11 +75,11 @@ class PaymentAttemptsController extends Controller
             'status' => $response->status()->status(),
             'amount' => $response->request->payment()->amount()->total()
         ]);
-        if ($paymentAttempt->status == 'APPROVED'){
+        if ($paymentAttempt->status == 'APPROVED') {
             $invoice->update([
                 'paid_at' => Carbon::now(),
             ]);
-            if (empty($invoice->received_at)){
+            if (empty($invoice->received_at)) {
                 $invoice->update([
                     'received_at' => Carbon::now()
                 ]);

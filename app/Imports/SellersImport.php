@@ -33,7 +33,8 @@ class SellersImport extends BaseImport implements ToModel, WithHeadingRow, WithV
         ]);
     }
 
-    public function rules(): array{
+    public function rules(): array
+    {
         return[
             'Número documento' => [
                 'required',

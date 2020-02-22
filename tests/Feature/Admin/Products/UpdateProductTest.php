@@ -34,7 +34,8 @@ class UpdateProductTest extends TestCase
     }
 
     /** @test */
-    public function data_product_can_be_updated_in_database(){
+    public function data_product_can_be_updated_in_database()
+    {
         $product = factory(Product::class)->create();
         $user = factory(User::class)->create();
         $data = $this->data();
@@ -47,7 +48,8 @@ class UpdateProductTest extends TestCase
      * An array with valid product data
      * @return array
      */
-    public function data(){
+    public function data()
+    {
         return [
             'name' => 'Test Name',
             'unit_price' => 1000,

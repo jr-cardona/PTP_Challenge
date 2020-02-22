@@ -66,7 +66,8 @@ class CreatePaymentAttemptTest extends TestCase
     }
 
     /** @test */
-    public function a_payment_attempt_can_belongs_to_a_invoice(){
+    public function a_payment_attempt_can_belongs_to_a_invoice()
+    {
         $invoice = factory(Invoice::class)->create();
         $payment_attempt = factory(PaymentAttempt::class)->create(["invoice_id" => $invoice->id]);
         $this->assertDatabaseHas('payment_attempts', [

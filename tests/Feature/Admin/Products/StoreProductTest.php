@@ -12,7 +12,8 @@ class StoreProductTest extends TestCase
     use RefreshDatabase;
     use Concerns\ProductTestHasProviders;
 
-    public function __construct($name = null, array $data = array(), $dataName = '') {
+    public function __construct($name = null, array $data = array(), $dataName = '')
+    {
         parent::__construct($name, $data, $dataName);
 
         $this->createApplication();
@@ -39,7 +40,8 @@ class StoreProductTest extends TestCase
     }
 
     /** @test */
-    public function a_product_can_be_stored_in_database(){
+    public function a_product_can_be_stored_in_database()
+    {
         $user = factory(User::class)->create();
         $data = $this->data();
 
@@ -59,7 +61,9 @@ class StoreProductTest extends TestCase
      * @dataProvider storeTestDataProvider
      */
     public function a_product_cannot_be_stored_due_to_validation_errors(
-        array $productData, string $field, string $message
+        array $productData,
+        string $field,
+        string $message
     ) {
         $user = factory(User::class)->create();
         factory(Product::class)->create();
@@ -72,7 +76,8 @@ class StoreProductTest extends TestCase
      * An array with valid product data
      * @return array
      */
-    public function data(){
+    public function data()
+    {
         return [
             'name' => 'Test Name',
             'unit_price' => 1000,

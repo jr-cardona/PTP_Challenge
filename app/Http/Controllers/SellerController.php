@@ -14,7 +14,8 @@ class SellerController extends Controller
      * @param Request $request
      * @return \Illuminate\Http\Response
      */
-    public function index(Request $request) {
+    public function index(Request $request)
+    {
         $paginate = Config::get('constants.paginate');
         $sellers = Seller::with(["type_document"])
             ->id($request->get('id'))
@@ -38,7 +39,8 @@ class SellerController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create() {
+    public function create()
+    {
         return response()->view('sellers.create', [
             'seller' => new Seller,
         ]);
@@ -50,7 +52,8 @@ class SellerController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function store(SaveSellerRequest $request) {
+    public function store(SaveSellerRequest $request)
+    {
         $result = Seller::create($request->validated());
 
         return redirect()->route('sellers.show', $result->id)->withSuccess(__('Vendedor creado satisfactoriamente'));
@@ -62,7 +65,8 @@ class SellerController extends Controller
      * @param Seller $seller
      * @return \Illuminate\Http\Response
      */
-    public function show(Seller $seller) {
+    public function show(Seller $seller)
+    {
         return response()->view('sellers.show', [
             'seller' => $seller,
             'side_effect' => __('Se borrarán todas sus facturas asociadas')
@@ -75,7 +79,8 @@ class SellerController extends Controller
      * @param Seller $seller
      * @return \Illuminate\Http\Response
      */
-    public function edit(Seller $seller) {
+    public function edit(Seller $seller)
+    {
         return response()->view('sellers.edit', [
             'seller' => $seller,
         ]);
@@ -88,7 +93,8 @@ class SellerController extends Controller
      * @param Seller $seller
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function update(SaveSellerRequest $request, Seller $seller) {
+    public function update(SaveSellerRequest $request, Seller $seller)
+    {
         $seller->update($request->validated());
 
         return redirect()->route('sellers.show', $seller)->withSuccess(__('Vendedor actualizado satisfactoriamente'));
@@ -101,7 +107,8 @@ class SellerController extends Controller
      * @return \Illuminate\Http\RedirectResponse
      * @throws \Exception
      */
-    public function destroy(Seller $seller) {
+    public function destroy(Seller $seller)
+    {
         $seller->delete();
 
         return redirect()->route('sellers.index')->withSuccess(__('Vendedor eliminado satisfactoriamente'));
