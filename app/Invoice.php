@@ -69,7 +69,7 @@ class Invoice extends Model
     /** DERIVED ATTRIBUTES */
     public function isExpired()
     {
-        if ($this->expires_at <= Carbon::now()) {
+        if ($this->expires_at <= Carbon::now() && ! $this->isPaid()) {
             return true;
         } else {
             return false;
@@ -78,7 +78,7 @@ class Invoice extends Model
 
     public function isPaid()
     {
-        if (!empty($this->paid_at) && !$this->isExpired()) {
+        if (! empty($this->paid_at)) {
             return true;
         } else {
             return false;
@@ -175,6 +175,7 @@ class Invoice extends Model
         }
         if (trim($state) == "expired") {
             return $query->whereDate('expires_at', "<=", Carbon::now());
+            return $query->whereDate('expires_at', "<=", Carbon::now())->whereNotNull('paid_at');
         }
         if (trim($state) == "pending") {
             return $query->whereNull("paid_at")->whereDate('expires_at', ">", Carbon::now());
