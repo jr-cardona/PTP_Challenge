@@ -32,7 +32,7 @@
                     <div class="form-group row">
                         <div class="col">
                             <label for="number">{{ __("Número de factura") }}</label>
-                            <input type="number" id="number" name="number" class="form-control" placeholder="No. de factura" value="{{ $request->get('number') }}">
+                            <input type="number" @if(empty($request->get('number'))) id="number" name="number" @endif class="form-control" placeholder="No. de factura" value="{{ $request->get('number') }}">
                         </div>
                         <div class="col">
                             <label>{{ __("Producto") }}</label>
@@ -71,6 +71,17 @@
                             </v-select>
                             <input type="hidden" name="seller" id="seller" :value="(old_seller_values) ? old_seller_values.fullname : '' ">
                             <input type="hidden" name="seller_id" id="seller_id" :value="(old_seller_values) ? old_seller_values.id : '' ">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col">
+                            <label for="state">{{ __("Estado") }}</label>
+                            <select id="state" name="state" class="form-control">
+                                <option value="">--</option>
+                                <option value="paid" {{ $request->get('state') == "paid" ? 'selected' : ''}}>{{ __("Pagada") }}</option>
+                                <option value="expired" {{ $request->get('state') == "expired" ? 'selected' : ''}}>{{ __("Vencida") }}</option>
+                                <option value="pending" {{ $request->get('state') == "pending" ? 'selected' : ''}}>{{ __("Pendiente") }}</option>
+                            </select>
                         </div>
                     </div>
                 </form>

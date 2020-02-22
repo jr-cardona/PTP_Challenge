@@ -112,9 +112,12 @@
                         <td class="text-center">{{ $product->pivot->quantity }}</td>
                         <td class="text-right">{{ number_format($product->pivot->unit_price, 2) }}</td>
                         <td class="text-right">${{ number_format($product->pivot->unit_price * $product->pivot->quantity, 2) }}</td>
-                        <td class="text-right">
-                            @if(!$invoice->isPaid())
-                                <button type="button" class="btn btn-link text-danger" data-route="{{ route('invoices.products.destroy', [$invoice, $product]) }}" data-toggle="modal" data-target="#confirmDeleteModal">
+                        <td class="text-right btn-group btn-group-sm">
+                            @if($invoice->isPending())
+                                <a href="{{ route('invoices.products.edit', [$invoice, $product]) }}" class="btn text-primary">
+                                    <i class="fa fa-edit"></i>
+                                </a>
+                                <button type="button" class="btn text-danger" data-route="{{ route('invoices.products.destroy', [$invoice, $product]) }}" data-toggle="modal" data-target="#confirmDeleteModal">
                                     <i class="fa fa-trash"></i>
                                 </button>
                             @endif
@@ -135,7 +138,7 @@
                 </tr>
             </tbody>
         </table>
-        @if(!$invoice->isPaid() && !$invoice->isExpired())
+        @if($invoice->isPending())
             <a href="{{ route('invoices.products.create', $invoice) }}" class="btn btn-success btn-block">
                 <i class="fa fa-plus"></i> {{ __("Agregar Producto") }}
             </a>
