@@ -5,7 +5,7 @@
         <a href="{{ route('invoices.index') }}" class="btn btn-secondary">
             <i class="fa fa-arrow-left"></i> {{ __("Volver") }}
         </a>
-        @if($invoice->state_id == "1")
+        @if($invoice->isPending())
             <a href="{{ route('invoices.payments.create', $invoice) }}" class="btn btn-success">
                 <i class="fa fa-dollar-sign"></i> {{ __("Pagar") }}
             </a>
@@ -36,42 +36,42 @@
         <div class="card-header text-center"><h3>{{ __("Datos generales") }}</h3></div>
         <table class="table table-sm">
             <tr>
-                <td class="table-dark td-title">{{ __("Fecha de recibo:") }}</td>
+                <td class="table-dark td-title custom-header">{{ __("Fecha de recibo:") }}</td>
                 <td class="td-content">{{ $invoice->received_at == '' ? "Sin fecha" : $invoice->received_at->isoFormat('Y-MM-DD hh:mma') }}</td>
 
-                <td class="table-dark td-title">{{ __("Estado:") }}</td>
+                <td class="table-dark td-title custom-header">{{ __("Estado:") }}</td>
                 @include('invoices.status_label')
             </tr>
             <tr>
-                <td class="table-dark td-title">{{ __("Fecha de creación:") }}</td>
+                <td class="table-dark td-title custom-header">{{ __("Fecha de creación:") }}</td>
                 <td class="td-content">{{ $invoice->created_at->isoFormat('Y-MM-DD hh:mma') }}</td>
 
-                <td class="table-dark td-title" nowrap>{{ __("Fecha de modificación:") }}</td>
+                <td class="table-dark td-title custom-header" nowrap>{{ __("Fecha de modificación:") }}</td>
                 <td class="td-content">{{ $invoice->updated_at->isoFormat('Y-MM-DD hh:mma') }}</td>
             </tr>
             <tr>
-                <td class="table-dark td-title">{{ __("Fecha de expedición:") }}</td>
-                <td class="td-content">{{ $invoice->issued_at->isoFormat('Y-MM-DD') }}</td>
+                <td class="table-dark td-title custom-header">{{ __("Fecha de expedición:") }}</td>
+                <td class="td-content">{{ $invoice->issued_at->toDateString() }}</td>
 
-                <td class="table-dark td-title">{{ __("Fecha de vencimiento:") }}</td>
-                <td class="td-content">{{ $invoice->expired_at == '' ? "Sin fecha" : $invoice->expired_at->isoFormat('Y-MM-DD') }}</td>
+                <td class="table-dark td-title custom-header">{{ __("Fecha de vencimiento:") }}</td>
+                <td class="td-content">{{ $invoice->expires_at->toDateString() }}</td>
             </tr>
             <tr>
-                <td class="table-dark td-title">{{ __("IVA:") }}</td>
-                <td class="td-content">{{ $invoice->vat }}%</td>
+                <td class="table-dark td-title custom-header">{{ __("IVA:") }}</td>
+                <td class="td-content">{{ Config::get('constants.vat') }}%</td>
 
-                <td class="table-dark td-title">{{ __("Valor total:") }}</td>
+                <td class="table-dark td-title custom-header">{{ __("Valor total:") }}</td>
                 <td class="td-content">${{ number_format($invoice->total, 2) }}</td>
             </tr>
             <tr>
-                <td class="table-dark td-title">{{ __("Vendedor:") }}</td>
+                <td class="table-dark td-title custom-header">{{ __("Vendedor:") }}</td>
                 <td class="td-content">
                     <a href="{{ route('sellers.show', $invoice->seller) }}" target="_blank">
                         {{ $invoice->seller->fullname }}
                     </a>
                 </td>
 
-                <td class="table-dark td-title">{{ __("Cliente:") }}</td>
+                <td class="table-dark td-title custom-header">{{ __("Cliente:") }}</td>
                 <td class="td-content">
                     <a href="{{ route('clients.show', $invoice->client) }}" target="_blank">
                         {{ $invoice->client->fullname }}
@@ -79,14 +79,14 @@
                 </td>
             </tr>
             <tr>
-                <td class="table-dark td-title">{{ __("Descripción:") }}</td>
+                <td class="table-dark td-title custom-header">{{ __("Descripción:") }}</td>
                 <td class="td-content">{{ $invoice->description }}</td>
             </tr>
         </table>
     </div>
     <br>
     <div class="shadow">
-        <div class="card-header text-center"><h3>{{ __("Detalles de producto") }}</h3></div>
+        <div class="card-header text-center"><h3>{{ __("Lista de productos") }}</h3></div>
         <table class="table table-sm">
             <thead>
                 <tr>
@@ -102,27 +102,25 @@
             <tbody>
                 @foreach($invoice->products as $product)
                     <tr>
-                        <td class="text-center">{{ $product->id }}</td>
+                        <td class="text-center">
+                            <a href="{{ route('products.show', $product) }}">
+                                {{ $product->id }}
+                            </a>
+                        </td>
                         <td class="text-center">{{ $product->name }}</td>
                         <td class="text-center">{{ $product->description }}</td>
                         <td class="text-center">{{ $product->pivot->quantity }}</td>
-                        <td class="text-right">${{ number_format($product->pivot->unit_price, 2) }}</td>
+                        <td class="text-right">{{ number_format($product->pivot->unit_price, 2) }}</td>
                         <td class="text-right">${{ number_format($product->pivot->unit_price * $product->pivot->quantity, 2) }}</td>
-                        <td class="text-right">
-                        @if(!$invoice->isPaid())
-                            <div class="btn-group btn-group-sm" role="group">
-                                <a href="{{ route('invoices.details.edit', [$invoice, $product]) }}" class="btn btn-link" title="Editar">
+                        <td class="text-right btn-group btn-group-sm">
+                            @if($invoice->isPending())
+                                <a href="{{ route('invoices.products.edit', [$invoice, $product]) }}" class="btn text-primary">
                                     <i class="fa fa-edit"></i>
                                 </a>
-                                <button type="submit" form="deleteDetail{{ $product->id }}" class="btn btn-link text-danger" title="Eliminar">
+                                <button type="button" class="btn text-danger" data-route="{{ route('invoices.products.destroy', [$invoice, $product]) }}" data-toggle="modal" data-target="#confirmDeleteModal">
                                     <i class="fa fa-trash"></i>
                                 </button>
-                            </div>
-                            <form id="deleteDetail{{ $product->id }}" action="{{ route('invoices.details.destroy', [$invoice, $product]) }}" method="post">
-                                @method('DELETE')
-                                @csrf()
-                            </form>
-                        @endif
+                            @endif
                         </td>
                     </tr>
                @endforeach
@@ -131,18 +129,18 @@
                     <td class="text-right">${{ number_format($invoice->subtotal, 2) }}</td>
                 </tr>
                 <tr>
-                    <td class="text-right" colspan="5">{{ __("IVA") }} ({{ $invoice->vat }})% </td>
+                    <td class="text-right" colspan="5">{{ __("IVA") }} ({{ Config::get('constants.vat') }})% </td>
                     <td class="text-right">${{ number_format($invoice->ivaamount, 2) }}</td>
                 </tr>
                 <tr>
-                    <td class="text-right" colspan="5">{{ __("GRAN TOTAL") }}</td>
+                    <td class="text-right" colspan="5">{{ __("VALOR TOTAL") }}</td>
                     <td class="text-right">${{ number_format($invoice->total, 2) }}</td>
                 </tr>
             </tbody>
         </table>
-        @if(!$invoice->isPaid())
-            <a href="{{ route('invoices.details.create', $invoice) }}" class="btn btn-success btn-block">
-                <i class="fa fa-plus"></i> {{ __("Agregar Detalle") }}
+        @if($invoice->isPending())
+            <a href="{{ route('invoices.products.create', $invoice) }}" class="btn btn-success btn-block">
+                <i class="fa fa-plus"></i> {{ __("Agregar Producto") }}
             </a>
         @endif
     </div>
@@ -152,14 +150,14 @@
         <table class="table table-sm">
             <thead>
                 <tr class="text-center">
-                    <th>{{ __("Código de transacción") }}</th>
-                    <th>{{ __("Fecha") }}</th>
-                    <th>{{ __("Estado") }}</th>
-                    <th>{{ __("Monto") }}</th>
+                    <th class="text-center">{{ __("Código de transacción") }}</th>
+                    <th class="text-center">{{ __("Fecha") }}</th>
+                    <th class="text-center">{{ __("Estado") }}</th>
+                    <th class="text-center">{{ __("Monto") }}</th>
                 </tr>
             </thead>
             <tbody>
-                @foreach($invoice->payment_attempts as $paymentAttempt)
+                @foreach($invoice->paymentAttempts as $paymentAttempt)
                     <tr class="text-center">
                         <td>
                             <a href="{{ route("invoices.payments.show", [$invoice, $paymentAttempt]) }}">

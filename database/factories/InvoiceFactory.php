@@ -5,15 +5,15 @@
 use App\Client;
 use App\Seller;
 use App\Invoice;
-use App\State;
+use Carbon\Carbon;
 use Faker\Generator as Faker;
 
 $factory->define(Invoice::class, function (Faker $faker) {
+    $start_date = Carbon::now()->subWeek();
+    $final_date = Carbon::now();
     return [
-        'issued_at' => $faker->dateTime,
+        'issued_at' => $faker->dateTimeBetween($start_date, $final_date),
         'description' => $faker->text,
-        'vat' => $faker->numberBetween(0,100),
-        'state_id' => factory(State::class),
         'client_id' => factory(Client::class),
         'seller_id' => factory(Seller::class)
     ];

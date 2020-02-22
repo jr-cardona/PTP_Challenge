@@ -30,10 +30,10 @@
                 <td class="td-content">{{ $client->document }}</td>
             </tr>
             <tr>
-                <td class="table-dark td-title">{{ __("Creado:")}}</td>
+                <td class="table-dark td-title">{{ __("Fecha de creación:")}}</td>
                 <td class="td-content">{{ $client->created_at->isoFormat('Y-MM-DD hh:mma') }}</td>
 
-                <td class="table-dark td-title">{{ __("Modificado:")}}</td>
+                <td class="table-dark td-title">{{ __("Fecha de modificación:")}}</td>
                 <td class="td-content">{{ $client->updated_at->isoFormat('Y-MM-DD hh:mma') }}</td>
             </tr>
             <tr>
@@ -54,12 +54,21 @@
     </div>
     <br>
     <div class="shadow">
-        <div class="card-header text-center"><h3>{{ __("Facturas asociadas") }}</h3></div>
+        <div class="card-header justify-content-between d-flex">
+            <div class="col-md-1"></div>
+            <h3 class="col-md-3">{{ __("Facturas asociadas") }}</h3>
+            <a class="btn btn-success" target="_blank"
+               href="{{ route('invoices.create', ["client_id" => $client->id, "client" => $client->fullname]) }}" >
+                <i class="fa fa-plus"></i>
+            </a>
+        </div>
         <table class="table table-sm">
             <thead>
                 <tr>
                     <th>{{ __("Título") }}</th>
                     <th>{{ __("Fecha de expedición") }}</th>
+                    <th>{{ __("Fecha de vencimiento") }}</th>
+                    <th>{{ __("Valor") }}</th>
                     <th>{{ __("Estado") }}</th>
                 </tr>
             </thead>
@@ -71,7 +80,9 @@
                             {{ __("Factura de venta No.")}} {{ $invoice->id }}
                         </a>
                     </td>
-                    <td>{{ $invoice->issued_at }}</td>
+                    <td>{{ $invoice->issued_at->toDateString() }}</td>
+                    <td>{{ $invoice->expires_at->toDateString() }}</td>
+                    <td>${{ number_format($invoice->total, 2) }}</td>
                     @include('invoices.status_label')
                 </tr>
             @endforeach

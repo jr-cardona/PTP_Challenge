@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\State;
 use App\Invoice;
 use Carbon\Carbon;
+use Config;
 use Illuminate\Http\Request;
 use App\Http\Requests\SaveInvoiceRequest;
 
@@ -15,21 +15,25 @@ class InvoiceController extends Controller
      * @param Request $request
      * @return \Illuminate\Http\Response
      */
-    public function index(Request $request) {
-        $invoices = Invoice::with(["client", "seller", "state", "products"])
+    public function index(Request $request)
+    {
+        $paginate = Config::get('constants.paginate');
+        $invoices = Invoice::with(["client", "seller", "products"])
             ->number($request->get('number'))
-            ->state($request->get('state_id'))
             ->client($request->get('client_id'))
             ->seller($request->get('seller_id'))
             ->product($request->get('product_id'))
             ->issuedDate($request->get('issued_init'), $request->get('issued_final'))
-            ->orderBy('id', 'DESC')
-            ->paginate(10);
+            ->expiresDate($request->get('expires_init'), $request->get('expires_final'))
+            ->state($request->get('state'))
+            ->orderBy('id', 'DESC');
+        $count = $invoices->count();
+        $invoices = $invoices->paginate($paginate);
         return response()->view('invoices.index', [
             'invoices' => $invoices,
             'request' => $request,
-            'side_effect' => __('Se borrarán todos sus detalles asociados'),
-            'states' => State::all()
+            'count' => $count,
+            'paginate' => $paginate
         ]);
     }
 
@@ -38,9 +42,11 @@ class InvoiceController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create() {
+    public function create(Request $request)
+    {
         return response()->view('invoices.create', [
             'invoice' => new Invoice,
+            'request' => $request
         ]);
     }
 
@@ -50,9 +56,9 @@ class InvoiceController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function store(SaveInvoiceRequest $request) {
-        $state = State::where('name', 'Pendiente')->first();
-        $result = Invoice::create(array_merge($request->validated(), ["state_id" => $state->id]));
+    public function store(SaveInvoiceRequest $request)
+    {
+        $result = Invoice::create($request->validated());
 
         return redirect()->route('invoices.show', $result->id)->withSuccess(__('Factura creada satisfactoriamente'));
     }
@@ -63,10 +69,10 @@ class InvoiceController extends Controller
      * @param Invoice $invoice
      * @return \Illuminate\Http\Response
      */
-    public function show(Invoice $invoice) {
+    public function show(Invoice $invoice)
+    {
         return response()->view('invoices.show', [
             'invoice' => $invoice,
-            'side_effect' => __('Se borrarán todos sus detalles asociados')
         ]);
     }
 
@@ -76,9 +82,12 @@ class InvoiceController extends Controller
      * @param Invoice $invoice
      * @return \Illuminate\Http\Response | \Illuminate\Http\RedirectResponse
      */
-    public function edit(Invoice $invoice) {
-        if ($invoice->isPaid()){
+    public function edit(Invoice $invoice)
+    {
+        if ($invoice->isPaid()) {
             return redirect()->route('invoices.show', $invoice)->withInfo(__("La factura ya se encuentra pagada y no se puede editar"));
+        } elseif ($invoice->isExpired()) {
+            return redirect()->route('invoices.show', $invoice)->withInfo(__("La factura ya se encuentra vencida y no se puede editar"));
         } else {
             return response()->view('invoices.edit', [
                 'invoice' => $invoice,
@@ -93,7 +102,8 @@ class InvoiceController extends Controller
      * @param Invoice $invoice
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function update(SaveInvoiceRequest $request, Invoice $invoice) {
+    public function update(SaveInvoiceRequest $request, Invoice $invoice)
+    {
         $invoice->update($request->validated());
 
         return redirect()->route('invoices.show', $invoice)->withSuccess(__('Factura actualizada satisfactoriamente'));
@@ -106,16 +116,22 @@ class InvoiceController extends Controller
      * @return \Illuminate\Http\RedirectResponse
      * @throws \Exception
      */
-    public function destroy(Invoice $invoice) {
+    public function destroy(Invoice $invoice)
+    {
         $invoice->delete();
 
         return redirect()->route('invoices.index')->withSuccess(__('Factura eliminada satisfactoriamente'));
     }
 
-    public function receivedCheck(Invoice $invoice){
-        $now = Carbon::now();
-        $invoice->update(["received_at" => $now]);
+    public function receivedCheck(Invoice $invoice)
+    {
+        if ($invoice->isPending() && empty($invoice->received_at)) {
+            $now = Carbon::now();
+            $invoice->update(["received_at" => $now]);
 
-        return redirect()->route('invoices.show', $invoice)->withSuccess(__('Marcada correctamente'));
+            return redirect()->route('invoices.show', $invoice)->withSuccess(__('Marcada correctamente'));
+        } else {
+            return redirect()->route('invoices.show', $invoice)->withError(__('No se puede marcar'));
+        }
     }
 }
