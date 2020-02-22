@@ -1,12 +1,20 @@
-Mostrando registros (
+{{ ("Mostrando registros (") }}
 @empty($request->get('page'))
-    {{ 1 }}
+    @if($count > 0)
+        {{ 1 }}
+    @else
+        {{ 0 }}
+    @endif
 @else
     {{ $paginate * ($request->get('page') - 1) + 1 }}
 @endempty
 -
 @empty($request->get('page'))
-    {{ $paginate }}
+	@if(($paginate) > $count)
+		{{ $count }}
+	@else
+		{{ $paginate }}
+	@endif
 @else
     @if(($request->get('page') * $paginate) > $count)
         {{ $count }}
@@ -14,4 +22,4 @@ Mostrando registros (
         {{ ($request->get('page') * $paginate) }}
     @endif
 @endempty
-) de {{ $count }}
+{{ (") de") }} {{ $count }}
