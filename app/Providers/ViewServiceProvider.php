@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
+use App\Http\View\Composers\TypeDocumentComposer;
 
 class ViewServiceProvider extends ServiceProvider
 {
@@ -27,7 +28,7 @@ class ViewServiceProvider extends ServiceProvider
         // Compose a list of Types document
         View::composer(
             ['clients._form', 'clients.index', 'sellers._form', 'sellers.index'],
-            'App\Http\View\Composers\TypeDocumentComposer'
+            TypeDocumentComposer::class
         );
     }
 }

@@ -20,7 +20,8 @@ class TypeDocumentComposer
 
     public function compose(View $view)
     {
-        $type_documents = $this->type_documents->orderBy('fullname', 'asc')->select('id', 'fullname')->get();
-        return $view->with('type_documents', $type_documents);
+        $view->with('type_documents', Cache::remember('type_documents.enabled', 600, function(){
+            return $this->type_documents::all();
+        }));
     }
 }
