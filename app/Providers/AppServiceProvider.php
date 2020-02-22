@@ -2,10 +2,10 @@
 
 namespace App\Providers;
 
+use Dnetix\Redirection\PlacetoPay;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
-use Dnetix\Redirection\PlacetoPay;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -16,8 +16,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->app->singleton(PlaceToPay::class, function () {
-            return new PlaceToPay([
+        $this->app->singleton(PlacetoPay::class, static function () {
+            return new PlacetoPay([
                 'login' => config('services.placetopay.login'),
                 'tranKey' => config('services.placetopay.trankey'),
                 'url' => 'https://test.placetopay.com/redirection/',
@@ -37,8 +37,8 @@ class AppServiceProvider extends ServiceProvider
             'edit' => 'editar'
         ]);
 
-        Blade::directive('routeIs', function ($expression) {
-            return "<?php if (Request::url() == route($expression)): ?>";
+        Blade::directive('routeIs', static function ($expression) {
+            return "<?php if (Request::url() == route(${expression})): ?>";
         });
     }
 }

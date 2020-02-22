@@ -33,7 +33,7 @@ class InvoicesImport extends BaseImport implements ToModel, WithHeadingRow, With
 
     public function rules(): array
     {
-        return[
+        return [
             'Fecha de expedición' => 'required|date',
             'Fecha de vencimiento' => 'nullable|date|after:issued_at',
             'Fecha de recibo' => 'nullable|date|after:issued_at|before:expires_at',

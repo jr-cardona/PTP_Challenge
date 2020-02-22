@@ -16,21 +16,21 @@ class ExportController extends Controller
      */
     public function invoices()
     {
-        return Excel::download(new InvoicesExport, 'invoices-list.xlsx');
+        return Excel::download(new InvoicesExport(), 'invoices-list.xlsx');
     }
 
     public function clients()
     {
-        return Excel::download(new ClientsExport, 'clients-list.xlsx');
+        return Excel::download(new ClientsExport(), 'clients-list.xlsx');
     }
 
     public function sellers()
     {
-        return Excel::download(new SellersExport, 'sellers-list.xlsx');
+        return Excel::download(new SellersExport(), 'sellers-list.xlsx');
     }
 
     public function products()
     {
-        return Excel::download(new ProductsExport, 'products-list.xlsx');
+        return Excel::download(new ProductsExport(), 'products-list.xlsx');
     }
 }

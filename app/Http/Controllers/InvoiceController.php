@@ -45,7 +45,7 @@ class InvoiceController extends Controller
     public function create(Request $request)
     {
         return response()->view('invoices.create', [
-            'invoice' => new Invoice,
+            'invoice' => new Invoice(),
             'request' => $request
         ]);
     }
@@ -86,13 +86,13 @@ class InvoiceController extends Controller
     {
         if ($invoice->isPaid()) {
             return redirect()->route('invoices.show', $invoice)->withInfo(__("La factura ya se encuentra pagada y no se puede editar"));
-        } elseif ($invoice->isExpired()) {
-            return redirect()->route('invoices.show', $invoice)->withInfo(__("La factura ya se encuentra vencida y no se puede editar"));
-        } else {
-            return response()->view('invoices.edit', [
-                'invoice' => $invoice,
-            ]);
         }
+        if ($invoice->isExpired()) {
+            return redirect()->route('invoices.show', $invoice)->withInfo(__("La factura ya se encuentra vencida y no se puede editar"));
+        }
+        return response()->view('invoices.edit', [
+            'invoice' => $invoice,
+        ]);
     }
 
     /**

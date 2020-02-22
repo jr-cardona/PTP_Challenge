@@ -13,7 +13,6 @@ class AssignInvoiceFields
      */
     public function __construct()
     {
-        //
     }
 
     /**

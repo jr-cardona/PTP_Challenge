@@ -35,12 +35,12 @@ class SellersImport extends BaseImport implements ToModel, WithHeadingRow, WithV
 
     public function rules(): array
     {
-        return[
+        return [
             'Número documento' => [
                 'required',
                 'numeric',
                 'digits_between:8,10',
-                Rule::unique('sellers', 'document')
+                Rule::unique('sellers', 'document'),
             ],
             'ID Documento' => 'required|numeric|exists:type_documents,id',
             'Nombre' => 'required|string|min:3|max:50',
@@ -51,7 +51,7 @@ class SellersImport extends BaseImport implements ToModel, WithHeadingRow, WithV
                 'string',
                 'min:5',
                 'max:100',
-                Rule::unique('sellers', 'email')
+                Rule::unique('sellers', 'email'),
             ],
             'Teléfono celular' => 'required|numeric|digits:10',
             'Teléfono fijo' => 'nullable|numeric|digits:7',

@@ -38,7 +38,7 @@ class ProductController extends Controller
     public function create()
     {
         return response()->view('products.create', [
-            'product' => new Product
+            'product' => new Product()
         ]);
     }
 

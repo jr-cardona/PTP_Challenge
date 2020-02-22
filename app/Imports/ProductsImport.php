@@ -29,7 +29,7 @@ class ProductsImport extends BaseImport implements ToModel, WithHeadingRow, With
 
     public function rules(): array
     {
-        return[
+        return [
             'Nombre' => 'required',
             'Descripción' => 'required',
             'Precio unitario' => 'required',

@@ -87,7 +87,7 @@ class Invoice extends Model
 
     public function isPending()
     {
-        if (empty($this->paid_at) && !$this->isExpired()) {
+        if (empty($this->paid_at) && ! $this->isExpired()) {
             return true;
         } else {
             return false;
@@ -126,29 +126,30 @@ class Invoice extends Model
     /** Query Scopes */
     public function scopeNumber($query, $number)
     {
-        if (trim($number) != "") {
-            return $query->where('id', 'LIKE', "%$number%");
+        if (trim($number) !== '') {
+            return $query->where('id', 'LIKE', "%${number}%");
         }
     }
 
     public function scopeClient($query, $client_id)
     {
-        if (trim($client_id) != "") {
+        if (trim($client_id) !== '') {
             return $query->where('client_id', $client_id);
         }
     }
 
     public function scopeSeller($query, $seller_id)
     {
-        if (trim($seller_id) != "") {
+        if (trim($seller_id) !== '') {
             return $query->where('seller_id', $seller_id);
         }
     }
 
     public function scopeProduct($query, $product_id)
     {
-        if (trim($product_id) != "") {
-            return $query->whereHas('products', function (Builder $query) use ($product_id) {
+        if (trim($product_id) !== '') {
+            return $query->whereHas('products',
+                static function (Builder $query) use ($product_id) {
                 $query->where('product_id', $product_id);
             });
         }
@@ -156,28 +157,27 @@ class Invoice extends Model
 
     public function scopeIssuedDate($query, $issued_init, $issued_final)
     {
-        if (trim($issued_init) != "" && trim($issued_final) != "") {
+        if (trim($issued_init) !== '' && trim($issued_final) !== '') {
             return $query->whereBetween('issued_at', [$issued_init, $issued_final]);
         }
     }
 
     public function scopeExpiresDate($query, $expires_init, $expires_final)
     {
-        if (trim($expires_init) != "" && trim($expires_final) != "") {
+        if (trim($expires_init) !== '' && trim($expires_final) !== '') {
             return $query->whereBetween('expires_at', [$expires_init, $expires_final]);
         }
     }
 
     public function scopeState($query, $state)
     {
-        if (trim($state) == "paid") {
+        if (trim($state) === "paid") {
             return $query->whereNotNull('paid_at');
         }
-        if (trim($state) == "expired") {
-            return $query->whereDate('expires_at', "<=", Carbon::now());
+        if (trim($state) === "expired") {
             return $query->whereDate('expires_at', "<=", Carbon::now())->whereNotNull('paid_at');
         }
-        if (trim($state) == "pending") {
+        if (trim($state) === "pending") {
             return $query->whereNull("paid_at")->whereDate('expires_at', ">", Carbon::now());
         }
     }

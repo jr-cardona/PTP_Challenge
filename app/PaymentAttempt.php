@@ -2,8 +2,8 @@
 
 namespace App;
 
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class PaymentAttempt extends Model
 {
@@ -25,27 +25,27 @@ class PaymentAttempt extends Model
             'FAILED' => 'Fallido',
             'APPROVED' => 'Aprobado',
             'REJECTED' => 'Rechazado',
-            'PENDING' => 'Pendiente'
+            'PENDING' => 'Pendiente',
         ][$status];
     }
 
     public function isFailed()
     {
-        return $this->status == 'FAILED';
+        return $this->status === 'FAILED';
     }
 
     public function isApproved()
     {
-        return $this->status == 'APPROVED';
+        return $this->status === 'APPROVED';
     }
 
     public function isRejected()
     {
-        return $this->status == 'REJECTED';
+        return $this->status === 'REJECTED';
     }
 
     public function isPending()
     {
-        return $this->status == 'PENDING';
+        return $this->status === 'PENDING';
     }
 }

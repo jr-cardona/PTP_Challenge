@@ -35,7 +35,7 @@ class ClientsImport extends BaseImport implements ToModel, WithHeadingRow, WithV
 
     public function rules(): array
     {
-        return[
+        return [
             'Número documento' => [
                 'required',
                 'numeric',

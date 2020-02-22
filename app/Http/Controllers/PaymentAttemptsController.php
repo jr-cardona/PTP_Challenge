@@ -14,9 +14,11 @@ class PaymentAttemptsController extends Controller
     {
         if ($invoice->isPaid()) {
             return redirect()->route('invoices.show', $invoice)->withError(__("La factura ya se encuentra pagada"));
-        } elseif ($invoice->isExpired()) {
+        }
+        if ($invoice->isExpired()) {
             return redirect()->route('invoices.show', $invoice)->withError(__("La factura ya se encuentra vencida"));
-        } elseif ($invoice->total == 0) {
+        }
+        if ($invoice->total == 0) {
             return redirect()->route('invoices.show', $invoice)->withInfo(__("La factura no tiene productos a pagar, intente nuevamente"));
         }
         return view('invoices.payments.create', compact('invoice'));
@@ -62,9 +64,6 @@ class PaymentAttemptsController extends Controller
             ]);
             // Redirect the client to the processUrl or display it on the JS extension
             return redirect()->away($response->processUrl());
-        } else {
-            // There was some error so check the message and log it
-            dd($response->status()->message());
         }
     }
 

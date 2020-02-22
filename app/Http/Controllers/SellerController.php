@@ -42,7 +42,7 @@ class SellerController extends Controller
     public function create()
     {
         return response()->view('sellers.create', [
-            'seller' => new Seller,
+            'seller' => new Seller(),
         ]);
     }
 

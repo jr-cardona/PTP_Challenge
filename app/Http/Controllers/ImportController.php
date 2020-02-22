@@ -24,12 +24,12 @@ class ImportController extends Controller
         ]);
         $file = $request->file('file');
         try {
-            $import = new InvoicesImport;
+            $import = new InvoicesImport();
             Excel::import($import, $file);
             $cant = $import->getRowCount();
             return redirect()->route('invoices.index')->withSuccess(__("Se importaron {$cant} facturas satisfactoriamente"));
-        } catch (\Maatwebsite\Excel\Validators\ValidationException $e) {
-            return $this->display_errors($e, 'invoices.index');
+        } catch (\Maatwebsite\Excel\Validators\ValidationException $err) {
+            return $this->displayErrors($err, 'invoices.index');
         }
     }
 
@@ -46,12 +46,12 @@ class ImportController extends Controller
         ]);
         $file = $request->file('file');
         try {
-            $import = new ClientsImport;
+            $import = new ClientsImport();
             Excel::import($import, $file);
             $cant = $import->getRowCount();
             return redirect()->route('clients.index')->withSuccess(__("Se importaron {$cant} clientes satisfactoriamente"));
-        } catch (\Maatwebsite\Excel\Validators\ValidationException $e) {
-            return $this->display_errors($e, 'clients.index');
+        } catch (\Maatwebsite\Excel\Validators\ValidationException $err) {
+            return $this->displayErrors($err, 'clients.index');
         }
     }
 
@@ -62,12 +62,12 @@ class ImportController extends Controller
         ]);
         $file = $request->file('file');
         try {
-            $import = new SellersImport;
+            $import = new SellersImport();
             Excel::import($import, $file);
             $cant = $import->getRowCount();
             return redirect()->route('sellers.index')->withSuccess(__("Se importaron {$cant} vendedores satisfactoriamente"));
-        } catch (\Maatwebsite\Excel\Validators\ValidationException $e) {
-            return $this->display_errors($e, 'sellers.index');
+        } catch (\Maatwebsite\Excel\Validators\ValidationException $err) {
+            return $this->displayErrors($err, 'sellers.index');
         }
     }
 
@@ -78,18 +78,18 @@ class ImportController extends Controller
         ]);
         $file = $request->file('file');
         try {
-            $import = new ProductsImport;
+            $import = new ProductsImport();
             Excel::import($import, $file);
             $cant = $import->getRowCount();
             return redirect()->route('sellers.index')->withSuccess(__("Se importaron {$cant} productos satisfactoriamente"));
-        } catch (\Maatwebsite\Excel\Validators\ValidationException $e) {
-            return $this->display_errors($e, 'products.index');
+        } catch (\Maatwebsite\Excel\Validators\ValidationException $err) {
+            return $this->displayErrors($err, 'products.index');
         }
     }
 
-    public function display_errors($e, $route)
+    public function displayErrors($err, $route)
     {
-        $failures_unsorted = $e->failures();
+        $failures_unsorted = $err->failures();
         $failures_sorted = array();
         foreach ($failures_unsorted as $failure) {
             $failures_sorted[$failure->row()][$failure->attribute()] = $failure->errors()[0];

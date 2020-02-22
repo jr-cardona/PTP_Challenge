@@ -13,24 +13,43 @@
 
 Auth::routes();
 
-Route::middleware(['auth'])->group(function () {
-    Route::get('/', function () {
+Route::middleware(['auth'])->group(static function () {
+    Route::get('/', static function () {
         return view('home');
     })->name('home');
 
-    Route::get('/clientes/buscar', 'SearchController@clients')->name('search.clients');
-    Route::get('/productos/buscar', 'SearchController@products')->name('search.products');
-    Route::get('/vendedores/buscar', 'SearchController@sellers')->name('search.sellers');
+    Route::get('/clientes/buscar', 'SearchController@clients')
+        ->name('search.clients');
 
-    Route::get('/clientes/exportar', 'ExportController@clients')->name('export.clients');
-    Route::get('/facturas/exportar', 'ExportController@invoices')->name('export.invoices');
-    Route::get('/productos/exportar', 'ExportController@products')->name('export.products');
-    Route::get('/vendedores/exportar', 'ExportController@sellers')->name('export.sellers');
+    Route::get('/productos/buscar', 'SearchController@products')
+        ->name('search.products');
 
-    Route::post('/clientes/importar', 'ImportController@clients')->name('import.clients');
-    Route::post('/facturas/importar', 'ImportController@invoices')->name('import.invoices');
-    Route::post('/productos/importar', 'ImportController@products')->name('import.products');
-    Route::post('/vendedores/importar', 'ImportController@sellers')->name('import.sellers');
+    Route::get('/vendedores/buscar', 'SearchController@sellers')
+        ->name('search.sellers');
+
+    Route::get('/clientes/exportar', 'ExportController@clients')
+        ->name('export.clients');
+
+    Route::get('/facturas/exportar', 'ExportController@invoices')
+        ->name('export.invoices');
+
+    Route::get('/productos/exportar', 'ExportController@products')
+        ->name('export.products');
+
+    Route::get('/vendedores/exportar', 'ExportController@sellers')
+        ->name('export.sellers');
+
+    Route::post('/clientes/importar', 'ImportController@clients')
+        ->name('import.clients');
+
+    Route::post('/facturas/importar', 'ImportController@invoices')
+        ->name('import.invoices');
+
+    Route::post('/productos/importar', 'ImportController@products')
+        ->name('import.products');
+
+    Route::post('/vendedores/importar', 'ImportController@sellers')
+        ->name('import.sellers');
 
     Route::resource('/facturas/{invoice}/producto', 'InvoiceProductController')
         ->except('index', 'show')
@@ -58,5 +77,6 @@ Route::middleware(['auth'])->group(function () {
         ->names('sellers')
         ->parameters(['vendedores' => 'seller']);
 
-    Route::get('/invoices-received-check/{invoice}', 'InvoiceController@receivedCheck')->name('invoices.receivedCheck');
+    Route::get('/invoices-received-check/{invoice}', 'InvoiceController@receivedCheck')
+        ->name('invoices.receivedCheck');
 });

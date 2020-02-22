@@ -17,12 +17,11 @@ class SearchController extends Controller
      */
     public function clients(Request $request)
     {
-        $clients = Client::select('id', DB::raw('concat(name, " ", surname) as fullname'))
+        return Client::select('id', DB::raw('concat(name, " ", surname) as fullname'))
             ->where(DB::raw('concat(name, " ", surname)'), 'like', '%'. $request->name .'%')
             ->orderBy('name')
             ->limit('100')
             ->get();
-        return $clients;
     }
 
     /**
@@ -32,12 +31,11 @@ class SearchController extends Controller
      */
     public function sellers(Request $request)
     {
-        $sellers = Seller::select('id', DB::raw('concat(name, " ", surname) as fullname'))
+        return Seller::select('id', DB::raw('concat(name, " ", surname) as fullname'))
             ->where(DB::raw('concat(name, " ", surname)'), 'like', '%'. $request->name .'%')
             ->orderBy('name')
             ->limit('100')
             ->get();
-        return $sellers;
     }
 
     /**
@@ -47,10 +45,9 @@ class SearchController extends Controller
      */
     public function products(Request $request)
     {
-        $products = Product::where('name', 'like', '%'. $request->name .'%')
+        return Product::where('name', 'like', '%'. $request->name .'%')
             ->orderBy('name')
             ->limit('100')
             ->get();
-        return $products;
     }
 }
