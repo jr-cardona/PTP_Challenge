@@ -1,5 +1,6 @@
 <?php
 
+use App\Invoice;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -12,10 +13,10 @@ class DatabaseSeeder extends Seeder
     public function run()
     {
         $this->call([
+            UsersTableSeeder::class,
             TypeDocumentsTableSeeder::class,
-            StatesTableSeeder::class,
-            InvoicesTableSeed::class,
-            ProductsTableSeed::class
+            InvoicesTableSeeder::class,
+            ProductsTableSeeder::class,
         ]);
     }
 }

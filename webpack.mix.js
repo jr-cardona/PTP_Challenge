@@ -13,6 +13,8 @@ const mix = require('laravel-mix');
 
 mix.js('resources/js/app.js', 'public/js')
     .js('resources/js/delete-modal', 'public/js')
-    .js('resources/js/import-invoices-modal', 'public/js')
+    .js('resources/js/import-modal', 'public/js')
     .sass('resources/sass/app.scss', 'public/css')
+    .sass('resources/sass/auth.scss', 'public/css')
+    .sass('resources/sass/custom.scss', 'public/css')
     .extract();

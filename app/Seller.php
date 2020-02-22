@@ -14,7 +14,8 @@ class Seller extends Model
      * Relation between sellers and invoices
      * @return HasMany
      */
-    public function invoices(): HasMany {
+    public function invoices(): HasMany
+    {
         return $this->hasMany(Invoice::class);
     }
 
@@ -22,7 +23,8 @@ class Seller extends Model
      * Relation between sellers and type documents
      * @return BelongsTo
      */
-    public function type_document(): BelongsTo {
+    public function type_document(): BelongsTo
+    {
         return $this->belongsTo(TypeDocument::class);
     }
 
@@ -33,27 +35,37 @@ class Seller extends Model
     }
 
     /** Query Scopes */
-    public function scopeSeller($query, $id){
-        if(trim($id) != ""){
+    public function scopeId($query, $id)
+    {
+        if (trim($id) != "") {
             return $query->where('id', $id);
         }
     }
 
-    public function scopeTypeDocument($query, $type_document_id){
-        if(trim($type_document_id) != ""){
+    public function scopeTypeDocument($query, $type_document_id)
+    {
+        if (trim($type_document_id) != "") {
             return $query->where('type_document_id', $type_document_id);
         }
     }
 
-    public function scopeDocument($query, $document){
-        if(trim($document) != ""){
+    public function scopeDocument($query, $document)
+    {
+        if (trim($document) != "") {
             return $query->where('document', 'LIKE', "%$document%");
         }
     }
 
-    public function scopeEmail($query, $email){
-        if(trim($email) != ""){
+    public function scopeEmail($query, $email)
+    {
+        if (trim($email) != "") {
             return $query->where('email', 'LIKE', "%$email%");
         }
+    }
+
+    /** Derived attributes */
+    public function getFullNameAttribute()
+    {
+        return $this->name . " " . $this->surname;
     }
 }

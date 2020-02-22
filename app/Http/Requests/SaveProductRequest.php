@@ -25,8 +25,8 @@ class SaveProductRequest extends FormRequest
     {
         return [
             'name' => 'required|string|min:3|max:30',
+            'unit_price' => 'required|numeric|min:1|max:9999999',
             'description' => 'nullable|string|max:255',
-            'unit_price' => 'required|numeric|min:50|max:999999999.99',
         ];
     }
 }

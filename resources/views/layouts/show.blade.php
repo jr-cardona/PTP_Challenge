@@ -2,10 +2,13 @@
 @section('title')
     @yield('Title')
 @endsection
+<div></div>
 @section('content')
-    @yield('Back')
+    <div class="d-flex justify-content-between">
+        @yield('Back')
+    </div>
     <p></p>
-    <div class="card card-default">
+    <div class="card shadow">
         <div class="card-header d-flex justify-content-between">
             <h3 class="card-title mb-0">@yield('Name')</h3>
             <div>
@@ -20,7 +23,7 @@
     </div>
 @endsection
 @push('modals')
-    @include('partials.__confirm_delete_modal', ['side_effect' => $side_effect])
+    @include('partials.__confirm_delete_modal')
 @endpush
 @push('scripts')
     <script src="{{ asset('js/delete-modal.js') }}"></script>

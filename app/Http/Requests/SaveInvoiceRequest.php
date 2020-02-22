@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use Carbon\Carbon;
 use Illuminate\Foundation\Http\FormRequest;
 
 class SaveInvoiceRequest extends FormRequest
@@ -23,12 +24,10 @@ class SaveInvoiceRequest extends FormRequest
      */
     public function rules()
     {
+        $start_date = Carbon::now()->subWeek()->toDateString();
+        $final_date = Carbon::now()->toDateString();
         return [
-            'issued_at' => 'required|date',
-            'overdued_at' => 'required|date|after:issued_at',
-            'received_at' => 'nullable|date|after:issued_at|before:overdued_at',
-            'vat' => 'required|numeric|between:0,100',
-            'state_id' => 'required|numeric|exists:states,id',
+            'issued_at' => 'required|date|after_or_equal:' . $start_date . '|before_or_equal:' . $final_date,
             'client_id' => 'required|numeric|exists:clients,id',
             'seller_id' => 'required|numeric|exists:sellers,id',
             'description' => 'nullable|string|max:255'

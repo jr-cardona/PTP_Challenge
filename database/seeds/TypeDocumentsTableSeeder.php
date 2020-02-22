@@ -25,8 +25,8 @@ class TypeDocumentsTableSeeder extends Seeder
             'fullname' => 'Tarjeta de identidad'
         ]);
         TypeDocument::create([
-            'name' => 'TP',
-            'fullname' => 'Tarjeta de pasaporte'
+            'name' => 'PPN',
+            'fullname' => 'Pasaporte'
         ]);
         TypeDocument::create([
             'name' => 'CE',

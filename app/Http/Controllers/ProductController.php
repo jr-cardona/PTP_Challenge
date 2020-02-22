@@ -2,9 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use Config;
 use App\Product;
-use App\Http\Requests\SaveProductRequest;
 use Illuminate\Http\Request;
+use App\Http\Requests\SaveProductRequest;
 
 class ProductController extends Controller
 {
@@ -13,14 +14,19 @@ class ProductController extends Controller
      * @param Request $request
      * @return \Illuminate\Http\Response
      */
-    public function index(Request $request) {
+    public function index(Request $request)
+    {
+        $paginate = Config::get('constants.paginate');
         $products = Product::orderBy('id')
-            ->product($request->get('product_id'))
-            ->paginate(10);
+            ->id($request->get('id'));
+        $count = $products->count();
+        $products = $products->paginate(10);
+
         return response()->view('products.index', [
             'products' => $products,
             'request' => $request,
-            'side_effect' => ''
+            'count' => $count,
+            'paginate' => $paginate,
         ]);
     }
 
@@ -29,7 +35,8 @@ class ProductController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create() {
+    public function create()
+    {
         return response()->view('products.create', [
             'product' => new Product
         ]);
@@ -41,10 +48,11 @@ class ProductController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function store(SaveProductRequest $request) {
-        Product::create($request->validated());
+    public function store(SaveProductRequest $request)
+    {
+        $result = Product::create($request->validated());
 
-        return redirect()->route('products.index')->with('message', __('Producto creado satisfactoriamente'));
+        return redirect()->route('products.show', $result->id)->withSuccess(__('Producto creado satisfactoriamente'));
     }
 
     /**
@@ -53,7 +61,8 @@ class ProductController extends Controller
      * @param Product $product
      * @return \Illuminate\Http\Response
      */
-    public function show(Product $product) {
+    public function show(Product $product)
+    {
         return response()->view('products.show', [
             'product' => $product,
             'side_effect' => ''
@@ -66,7 +75,8 @@ class ProductController extends Controller
      * @param Product $product
      * @return \Illuminate\Http\Response
      */
-    public function edit(Product $product) {
+    public function edit(Product $product)
+    {
         return response()->view('products.edit', [
             'product' => $product
         ]);
@@ -79,10 +89,11 @@ class ProductController extends Controller
      * @param Product $product
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function update(SaveProductRequest $request, Product $product) {
+    public function update(SaveProductRequest $request, Product $product)
+    {
         $product->update($request->validated());
 
-        return redirect()->route('products.show', $product)->with('message', __('Producto actualizado satisfactoriamente'));
+        return redirect()->route('products.show', $product)->withSuccess(__('Producto actualizado satisfactoriamente'));
     }
 
     /**
@@ -92,21 +103,10 @@ class ProductController extends Controller
      * @return \Illuminate\Http\RedirectResponse
      * @throws \Exception
      */
-    public function destroy(Product $product) {
+    public function destroy(Product $product)
+    {
         $product->delete();
 
-        return redirect()->route('products.index')->with('message', __('Producto eliminado satisfactoriamente'));
-    }
-
-    /**
-     * Display the specified resource filtering by name.
-     * @param Request $request
-     */
-    public function search(Request $request) {
-        $products = Product::where('name', 'like', '%'. $request->name .'%')
-            ->orderBy('name')
-            ->limit('100')
-            ->get();
-        echo $products;
+        return redirect()->route('products.index')->withSuccess(__('Producto eliminado satisfactoriamente'));
     }
 }

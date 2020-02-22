@@ -4,8 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Product;
 use App\Invoice;
-use App\Http\Requests\StoreInvoiceDetailRequest;
-use App\Http\Requests\UpdateInvoiceDetailRequest;
+use App\Http\Requests\StoreInvoiceProductRequest;
+use App\Http\Requests\UpdateInvoiceProductRequest;
 
 class InvoiceProductController extends Controller
 {
@@ -13,27 +13,31 @@ class InvoiceProductController extends Controller
      * Show the form for creating a new resource.
      *
      * @param Invoice $invoice
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\Response | \Illuminate\Http\RedirectResponse
      */
     public function create(Invoice $invoice)
     {
-        return response()->view('invoices.details.create', [
-            'invoice' => $invoice,
-        ]);
+        if ($invoice->isPaid()) {
+            return redirect()->route('invoices.show', $invoice)->withInfo(__("La factura ya se encuentra pagada y no se puede editar"));
+        } else {
+            return response()->view('invoices.products.create', [
+                'invoice' => $invoice,
+            ]);
+        }
     }
 
     /**
      * Store a newly created resource in storage.
      *
      * @param Invoice $invoice
-     * @param StoreInvoiceDetailRequest $request
+     * @param StoreInvoiceProductRequest $request
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function store(Invoice $invoice, StoreInvoiceDetailRequest $request)
+    public function store(Invoice $invoice, StoreInvoiceProductRequest $request)
     {
         $invoice->products()->attach(request('product_id'), $request->validated());
 
-        return redirect()->route('invoices.show', $invoice)->with('message', 'Detalle creado satisfactoriamente');
+        return redirect()->route('invoices.show', $invoice)->withSuccess(__('Detalle creado satisfactoriamente'));
     }
 
     /**
@@ -41,14 +45,18 @@ class InvoiceProductController extends Controller
      *
      * @param Invoice $invoice
      * @param Product $product
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\Response | \Illuminate\Http\RedirectResponse
      */
     public function edit(Invoice $invoice, Product $product)
     {
-        return response()->view('invoices.details.edit', [
-            'invoice' => $invoice,
-            'product' => $product
-        ]);
+        if ($invoice->isPaid()) {
+            return redirect()->route('invoices.show', $invoice)->withInfo(__("La factura ya se encuentra pagada y no se puede editar"));
+        } else {
+            return response()->view('invoices.products.edit', [
+                'invoice' => $invoice,
+                'product' => $product
+            ]);
+        }
     }
 
     /**
@@ -56,14 +64,14 @@ class InvoiceProductController extends Controller
      *
      * @param Invoice $invoice
      * @param Product $product
-     * @param UpdateInvoiceDetailRequest $request
+     * @param UpdateInvoiceProductRequest $request
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function update(Invoice $invoice, Product $product, UpdateInvoiceDetailRequest $request)
+    public function update(Invoice $invoice, Product $product, UpdateInvoiceProductRequest $request)
     {
         $invoice->products()->updateExistingPivot($product->id, $request->validated());
 
-        return redirect()->route('invoices.show', $invoice)->with('message', 'Detalle actualizado satisfactoriamente');
+        return redirect()->route('invoices.show', $invoice)->withSuccess(__('Detalle actualizado satisfactoriamente'));
     }
 
     /**
@@ -78,6 +86,6 @@ class InvoiceProductController extends Controller
     {
         $invoice->products()->detach($product->id);
 
-        return redirect()->route('invoices.show', $invoice)->with('message', 'Detalle eliminado satisfactoriamente');
+        return redirect()->route('invoices.show', $invoice)->withSuccess(__('Detalle eliminado satisfactoriamente'));
     }
 }

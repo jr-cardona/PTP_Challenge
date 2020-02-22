@@ -3,50 +3,53 @@
 namespace App\Imports;
 
 use App\Invoice;
-use Illuminate\Validation\Rule;
+use Carbon\Carbon;
 use Maatwebsite\Excel\Concerns\ToModel;
 use Maatwebsite\Excel\Concerns\Importable;
-use Maatwebsite\Excel\Concerns\WithHeadingRow;
 use Maatwebsite\Excel\Concerns\WithValidation;
+use Maatwebsite\Excel\Concerns\WithHeadingRow;
 use Maatwebsite\Excel\Concerns\WithBatchInserts;
 use Maatwebsite\Excel\Imports\HeadingRowFormatter;
+
 HeadingRowFormatter::default('none');
 
-class InvoicesImport implements ToModel, WithHeadingRow, WithValidation, WithBatchInserts
+class InvoicesImport extends BaseImport implements ToModel, WithHeadingRow, WithValidation, WithBatchInserts
 {
     use Importable;
+    private $rows = 0;
 
     public function model(array $row)
     {
+        ++$this->rows;
         return new Invoice([
-            'number' => $row['Número'],
-            'issued_at' => $row['Fecha de expedición'],
-            'overdued_at' => $row['Fecha de vencimiento'],
-            'received_at' => $row['Fecha de recibo'],
-            'vat' => $row['IVA'],
+            'issued_at' => Carbon::create($row['Fecha de expedición']),
+            'expires_at' => Carbon::create($row['Fecha de vencimiento']),
+            'received_at' => Carbon::create($row['Fecha de recibo']),
             'description' => $row['Descripción'],
-            'state_id' => $row['Estado'],
-            'client_id' => $row['Cliente'],
-            'seller_id' => $row['Vendedor'],
+            'client_id' => $row['ID Cliente'],
+            'seller_id' => $row['ID Vendedor'],
         ]);
     }
 
-    public function rules(): array{
+    public function rules(): array
+    {
         return[
             'Fecha de expedición' => 'required|date',
-            'Fecha de vencimiento' => 'required|date|after:issued_at',
-            'Fecha de recibo' => 'nullable|date|after:issued_at|before:overdued_at',
-            'IVA' => 'required|numeric|between:0,100',
+            'Fecha de vencimiento' => 'nullable|date|after:issued_at',
+            'Fecha de recibo' => 'nullable|date|after:issued_at|before:expires_at',
             'Descripción' => 'nullable|string|max:255',
-            'Estado' => 'required|numeric|exists:states,id',
-            'Cliente' => 'required|numeric|exists:clients,id',
-            'Vendedor' => 'required|numeric|exists:sellers,id',
-            'Número' => ['required', Rule::unique('invoices', 'number')],
+            'ID Cliente' => 'required|numeric|exists:clients,id',
+            'ID Vendedor' => 'required|numeric|exists:sellers,id',
         ];
     }
 
     public function batchSize(): int
     {
         return 1000;
+    }
+
+    public function getRowCount(): int
+    {
+        return $this->rows;
     }
 }
