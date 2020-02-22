@@ -2,6 +2,7 @@
 @section('title')
     @yield('Title')
 @endsection
+<div></div>
 @section('content')
     <div class="d-flex justify-content-between">
         @yield('Back')
@@ -22,7 +23,7 @@
     </div>
 @endsection
 @push('modals')
-    @include('partials.__confirm_delete_modal', ['side_effect' => isset($side_effect) ? $side_effect : ''])
+    @include('partials.__confirm_delete_modal')
 @endpush
 @push('scripts')
     <script src="{{ asset('js/delete-modal.js') }}"></script>

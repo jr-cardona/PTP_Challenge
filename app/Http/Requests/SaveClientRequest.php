@@ -36,13 +36,13 @@ class SaveClientRequest extends FormRequest
             'name' => 'required|string|min:3|max:50',
             'surname' => 'required|string|min:3|max:50',
             'phone_number' => 'nullable|numeric|digits:7',
-            'cell_phone_number' => 'required|numeric|digits:10',
+            'cell_phone_number' => 'required|numeric|digits:10|starts_with:3',
             'address' => 'required|string|min:5|max:100',
             'email' => [
                 'required',
-                'email',
                 'string',
-                'min:5',
+                'email',
+                'min:6',
                 'max:100',
                 Rule::unique('clients')->ignore($this->route('client'))
             ]

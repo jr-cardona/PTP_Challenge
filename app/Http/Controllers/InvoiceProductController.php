@@ -4,8 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Product;
 use App\Invoice;
-use App\Http\Requests\StoreInvoiceDetailRequest;
-use App\Http\Requests\UpdateInvoiceDetailRequest;
+use App\Http\Requests\StoreInvoiceProductRequest;
+use App\Http\Requests\UpdateInvoiceProductRequest;
 
 class InvoiceProductController extends Controller
 {
@@ -17,10 +17,10 @@ class InvoiceProductController extends Controller
      */
     public function create(Invoice $invoice)
     {
-        if ($invoice->isPaid()){
+        if ($invoice->isPaid()) {
             return redirect()->route('invoices.show', $invoice)->withInfo(__("La factura ya se encuentra pagada y no se puede editar"));
         } else {
-            return response()->view('invoices.details.create', [
+            return response()->view('invoices.products.create', [
                 'invoice' => $invoice,
             ]);
         }
@@ -30,10 +30,10 @@ class InvoiceProductController extends Controller
      * Store a newly created resource in storage.
      *
      * @param Invoice $invoice
-     * @param StoreInvoiceDetailRequest $request
+     * @param StoreInvoiceProductRequest $request
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function store(Invoice $invoice, StoreInvoiceDetailRequest $request)
+    public function store(Invoice $invoice, StoreInvoiceProductRequest $request)
     {
         $invoice->products()->attach(request('product_id'), $request->validated());
 
@@ -49,10 +49,10 @@ class InvoiceProductController extends Controller
      */
     public function edit(Invoice $invoice, Product $product)
     {
-        if ($invoice->isPaid()){
+        if ($invoice->isPaid()) {
             return redirect()->route('invoices.show', $invoice)->withInfo(__("La factura ya se encuentra pagada y no se puede editar"));
         } else {
-            return response()->view('invoices.details.edit', [
+            return response()->view('invoices.products.edit', [
                 'invoice' => $invoice,
                 'product' => $product
             ]);
@@ -64,10 +64,10 @@ class InvoiceProductController extends Controller
      *
      * @param Invoice $invoice
      * @param Product $product
-     * @param UpdateInvoiceDetailRequest $request
+     * @param UpdateInvoiceProductRequest $request
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function update(Invoice $invoice, Product $product, UpdateInvoiceDetailRequest $request)
+    public function update(Invoice $invoice, Product $product, UpdateInvoiceProductRequest $request)
     {
         $invoice->products()->updateExistingPivot($product->id, $request->validated());
 

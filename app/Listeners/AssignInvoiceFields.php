@@ -24,7 +24,7 @@ class AssignInvoiceFields
      */
     public function handle(InvoiceCreated $event)
     {
-        $event->invoice->expired_at = $event->invoice->issued_at->addMonth();
+        $event->invoice->expires_at = $event->invoice->issued_at->addMonth();
         $event->invoice->save();
     }
 }

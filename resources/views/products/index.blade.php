@@ -1,11 +1,19 @@
 @extends('layouts.index')
 @section('Title', 'Productos')
-@section('Name', 'Productos')
+@section('Name')
+    {{ __("Productos") }}
+    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#searchModal">
+        <i class="fa fa-filter"></i>
+    </button>
+    <a href="{{ route('products.index') }}" class="btn btn-danger">
+        <i class="fa fa-undo"></i>
+    </a>
+@endsection
 @section('Actions')
     <a class="btn btn-secondary" href="{{ route('export.products') }}">
         <i class="fa fa-file-excel"></i> {{ __("Exportar a Excel") }}
     </a>
-    <button type="button" class="btn btn-warning" data-route="{{ route('import.products') }}" data-toggle="modal" data-target="#importProductsModal">
+    <button type="button" class="btn btn-warning" data-route="{{ route('import.products') }}" data-toggle="modal" data-target="#importModal">
         <i class="fa fa-file-excel"></i> {{ __("Importar desde Excel") }}
     </button>
     <a class="btn btn-success" href="{{ route('products.create') }}">
@@ -13,44 +21,18 @@
     </a>
 @endsection
 @section('Search')
-    <form action="{{ route('products.index') }}" method="get">
-        <div class="form-group row">
-            <div class="col-md-3">
-                <label>{{ __("Nombre") }}</label>
-                <input type="hidden" id="old_product_name" name="old_product_name" value="{{ $request->get('product') }}">
-                <input type="hidden" id="old_product_id" name="old_product_id" value="{{ $request->get('product_id') }}">
-                <v-select v-model="old_product_values" label="name" :filterable="false" :options="options" @search="searchProduct"
-                          class="form-control">
-                    <template slot="no-options">
-                        {{ __("Ingresa el nombre...") }}
-                    </template>
-                </v-select>
-                <input type="hidden" name="product" id="product" :value="(old_product_values) ? old_product_values.name : '' ">
-                <input type="hidden" name="product_id" id="product_id" :value="(old_product_values) ? old_product_values.id : '' ">
-            </div>
-        </div>
-        <div class="form-group row">
-            <div class="col-md-3 btn-group btn-group-sm">
-                <button type="submit" class="btn btn-primary">
-                    <i class="fa fa-search"></i> {{ __("Buscar") }}
-                </button>
-                <a href="{{ route('products.index') }}" class="btn btn-danger">
-                    <i class="fa fa-undo"></i> {{ __("Limpiar") }}
-                </a>
-            </div>
-        </div>
-    </form>
+    @include('products.__search_modal')
 @endsection
 @section('Header')
-    <th scope="col">{{ __("Código") }}</th>
-    <th scope="col">{{ __("Nombre") }}</th>
-    <th scope="col">{{ __("Precio unitario") }}</th>
-    <th scope="col" nowrap>{{ __("Fecha de creación") }}</th>
-    <th scope="col" nowrap>{{ __("Fecha de modificación") }}</th>
-    <th scope="col" nowrap>{{ __("Opciones") }}</th>
+    <th class="text-center" nowrap>{{ __("Código") }}</th>
+    <th class="text-center" nowrap>{{ __("Nombre") }}</th>
+    <th class="text-center" nowrap>{{ __("Precio unitario") }}</th>
+    <th class="text-center" nowrap>{{ __("Fecha de creación") }}</th>
+    <th class="text-center" nowrap>{{ __("Fecha de modificación") }}</th>
+    <th class="text-center" nowrap>{{ __("Opciones") }}</th>
 @endsection
 @section('Body')
-    @foreach($products as $product)
+    @forelse($products as $product)
         <tr class="text-center">
             <td>{{ $product->id }}</td>
             <td>
@@ -65,14 +47,16 @@
                 @include('products._buttons')
             </td>
         </tr>
-    @endforeach
+    @empty
+        <tr>
+            <td colspan="6" class="p-3">
+                <p class="alert alert-secondary text-center">
+                    {{ __('No se encontraron productos') }}
+                </p>
+            </td>
+        </tr>
+    @endforelse
 @endsection
 @section('Links')
     {{ $products->appends($request->all())->links() }}
 @endsection
-@push('modals')
-    @include('partials.__import_products_modal')
-@endpush
-@push('scripts')
-    <script src="{{ asset(mix('js/import-products-modal.js')) }}"></script>
-@endpush

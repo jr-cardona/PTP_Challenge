@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use Config;
 use App\Seller;
-use App\TypeDocument;
 use Illuminate\Http\Request;
 use App\Http\Requests\SaveSellerRequest;
 
@@ -14,18 +14,23 @@ class SellerController extends Controller
      * @param Request $request
      * @return \Illuminate\Http\Response
      */
-    public function index(Request $request) {
+    public function index(Request $request)
+    {
+        $paginate = Config::get('constants.paginate');
         $sellers = Seller::with(["type_document"])
-            ->seller($request->get('seller_id'))
+            ->id($request->get('id'))
             ->typedocument($request->get('type_document_id'))
             ->document($request->get('document'))
             ->email($request->get('email'))
-            ->orderBy('name')
-            ->paginate(10);
+            ->orderBy('name');
+        $count = $sellers->count();
+        $sellers = $sellers->paginate(10);
+
         return response()->view('sellers.index', [
             'sellers' => $sellers,
             'request' => $request,
-            'side_effect' => __('Se borrarán todas sus facturas asociadas')
+            'count' => $count,
+            'paginate' => $paginate,
         ]);
     }
 
@@ -34,7 +39,8 @@ class SellerController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create() {
+    public function create()
+    {
         return response()->view('sellers.create', [
             'seller' => new Seller,
         ]);
@@ -46,7 +52,8 @@ class SellerController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function store(SaveSellerRequest $request) {
+    public function store(SaveSellerRequest $request)
+    {
         $result = Seller::create($request->validated());
 
         return redirect()->route('sellers.show', $result->id)->withSuccess(__('Vendedor creado satisfactoriamente'));
@@ -58,7 +65,8 @@ class SellerController extends Controller
      * @param Seller $seller
      * @return \Illuminate\Http\Response
      */
-    public function show(Seller $seller) {
+    public function show(Seller $seller)
+    {
         return response()->view('sellers.show', [
             'seller' => $seller,
             'side_effect' => __('Se borrarán todas sus facturas asociadas')
@@ -71,7 +79,8 @@ class SellerController extends Controller
      * @param Seller $seller
      * @return \Illuminate\Http\Response
      */
-    public function edit(Seller $seller) {
+    public function edit(Seller $seller)
+    {
         return response()->view('sellers.edit', [
             'seller' => $seller,
         ]);
@@ -84,7 +93,8 @@ class SellerController extends Controller
      * @param Seller $seller
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function update(SaveSellerRequest $request, Seller $seller) {
+    public function update(SaveSellerRequest $request, Seller $seller)
+    {
         $seller->update($request->validated());
 
         return redirect()->route('sellers.show', $seller)->withSuccess(__('Vendedor actualizado satisfactoriamente'));
@@ -97,7 +107,8 @@ class SellerController extends Controller
      * @return \Illuminate\Http\RedirectResponse
      * @throws \Exception
      */
-    public function destroy(Seller $seller) {
+    public function destroy(Seller $seller)
+    {
         $seller->delete();
 
         return redirect()->route('sellers.index')->withSuccess(__('Vendedor eliminado satisfactoriamente'));

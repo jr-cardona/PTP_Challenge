@@ -13,7 +13,8 @@ class PaymentAttempt extends Model
      * Relation between paymentAttempts and invoices
      * @return BelongsTo
      */
-    public function invoice(): BelongsTo {
+    public function invoice(): BelongsTo
+    {
         return $this->belongsTo(Invoice::class);
     }
 
@@ -24,8 +25,8 @@ class PaymentAttempt extends Model
             'FAILED' => 'Fallido',
             'APPROVED' => 'Aprobado',
             'REJECTED' => 'Rechazado',
-            'PENDING' => 'Pendiente']
-        [$status];
+            'PENDING' => 'Pendiente'
+        ][$status];
     }
 
     public function isFailed()
