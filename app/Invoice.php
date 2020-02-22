@@ -2,9 +2,9 @@
 
 namespace App;
 
-use App\Events\InvoiceCreated;
-use Carbon\Carbon;
 use Config;
+use Carbon\Carbon;
+use App\Events\InvoiceCreated;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -150,6 +150,18 @@ class Invoice extends Model
     public function scopeExpiresDate($query, $expires_init, $expires_final) {
         if(trim($expires_init) != "" && trim($expires_final) != "") {
             return $query->whereBetween('expires_at', [$expires_init, $expires_final]);
+        }
+    }
+
+    public function scopeState($query, $state){
+        if (trim($state) == "paid"){
+            return $query->whereNotNull('paid_at');
+        }
+        if (trim($state) == "expired"){
+            return $query->whereDate('expires_at', "<=", Carbon::now());
+        }
+        if (trim($state) == "pending"){
+            return $query->whereNull("paid_at")->whereDate('expires_at', ">", Carbon::now());
         }
     }
 }
