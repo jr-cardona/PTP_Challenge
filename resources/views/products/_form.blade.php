@@ -20,13 +20,18 @@
                class="form-control @error('unit_price') is-invalid @enderror" required min="1" max="9999999">
         @error('unit_price')
             <span class="invalid-feedback" role="alert">
+        <label for="cost" class="required">{{ __("Costo") }}</label>
+        <input type="number" name="cost" id="cost" value="{{ old('cost', $product->cost) }}"
+               class="form-control @error('cost') is-invalid @enderror" required min="1" max="9999999">
+        @error('cost')
+        <span class="invalid-feedback" role="alert">
                 <strong>{{ $message }}</strong>
             </span>
         @else
             <small class="form-text text-muted">
                 {{ __("Debe ser numérico entre 1 y 9999999") }}
             </small>
-        @enderror
+            @enderror
     </div>
 </div>
 <br>

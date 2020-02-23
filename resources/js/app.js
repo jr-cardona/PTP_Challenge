@@ -36,15 +36,16 @@ const app = new Vue({
         options: [],
         old_client_values: {
             "id": $('#old_client_id').val(),
-            "fullname" : $('#old_client_fullname').val()
+            "fullname" : $('#old_client_fullname').val(),
         },
         old_seller_values: {
             "id": $('#old_seller_id').val(),
-            "fullname" : $('#old_seller_fullname').val()
+            "fullname" : $('#old_seller_fullname').val(),
         },
         old_product_values: {
             "id": $('#old_product_id').val(),
-            "name" : $('#old_product_name').val()
+            "name" : $('#old_product_name').val(),
+            "price" : $('#old_product_price').val(),
         },
     },
     methods: {
