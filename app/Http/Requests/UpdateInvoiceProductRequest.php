@@ -25,7 +25,6 @@ class UpdateInvoiceProductRequest extends FormRequest
     {
         return [
             'quantity' => 'required|numeric|min:1|max:9999',
-            'unit_price' => 'required|numeric|min:1|max:9999999',
         ];
     }
 }

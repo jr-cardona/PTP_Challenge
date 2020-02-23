@@ -35,7 +35,11 @@ class InvoiceProductController extends Controller
      */
     public function store(Invoice $invoice, StoreInvoiceProductRequest $request)
     {
-        $invoice->products()->attach(request('product_id'), $request->validated());
+        $product = Product::find($request->get('product_id'));
+        $invoice->products()->attach($product->id, array_merge($request->validated(),
+                ['unit_price' => $product->price]
+            )
+        );
 
         return redirect()->route('invoices.show', $invoice)->withSuccess(__('Detalle creado satisfactoriamente'));
     }

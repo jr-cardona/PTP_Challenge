@@ -15,9 +15,14 @@
                             {{ $product->name }}
                         </span>
                     </div>
+                    <div class="col">
+                        <label>{{ __("Precio unitario") }}</label>
+                        <span class="form-control">
+                            {{ $product->price }}
+                        </span>
+                    </div>
                     @include('invoices.products._form', [
                         'quantity' => $invoice->products->find($product->id)->pivot->quantity,
-                        'unit_price' => $invoice->products->find($product->id)->pivot->unit_price
                     ])
                 </div>
                 <br>

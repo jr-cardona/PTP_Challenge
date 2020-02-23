@@ -13,6 +13,7 @@
                         <label class="required">{{ __("Producto") }}</label>
                         <input type="hidden" id="old_product_name" name="old_product_name" value="{{ old('product') }}">
                         <input type="hidden" id="old_product_id" name="old_product_id" value="{{ old('product_id') }}">
+                        <input type="hidden" id="old_product_price" name="old_product_price" value="{{ old('product_price') }}">
                         <v-select v-model="old_product_values" label="name" :filterable="false" :options="options" @search="searchProduct"
                                    class="form-control @error('product_id') is-invalid @enderror">
                             <template slot="no-options">
@@ -22,12 +23,17 @@
                         <input type="hidden" name="product" id="product" :value="(old_product_values) ? old_product_values.name : '' ">
                         <input type="hidden" name="product_id" id="product_id" :value="(old_product_values) ? old_product_values.id : '' ">
                         @error('product_id')
-                        <span class="invalid-feedback" role="alert">
+                            <span class="invalid-feedback" role="alert">
                                 <strong>{{ $message }}</strong>
                             </span>
                         @enderror
                     </div>
-                    @include('invoices.products._form', ['quantity' => "", 'unit_price' => ""])
+                    <div class="col">
+                        <label for="product_price">{{ __("Precio unitario") }}</label>
+                        <input id="product_price" name="product_price" class="form-control" readonly="readonly"
+                               :value="(old_product_values) ? old_product_values.price : '' ">
+                    </div>
+                    @include('invoices.products._form', ['quantity' => ""])
                 </div>
                 <br>
                 @include('invoices.products._buttons')
