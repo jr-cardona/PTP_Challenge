@@ -15,11 +15,6 @@
         @enderror
     </div>
     <div class="col">
-        <label for="unit_price" class="required">{{ __("Precio unitario") }}</label>
-        <input type="number" name="unit_price" id="unit_price" value="{{ old('unit_price', $product->unit_price) }}"
-               class="form-control @error('unit_price') is-invalid @enderror" required min="1" max="9999999">
-        @error('unit_price')
-            <span class="invalid-feedback" role="alert">
         <label for="cost" class="required">{{ __("Costo") }}</label>
         <input type="number" name="cost" id="cost" value="{{ old('cost', $product->cost) }}"
                class="form-control @error('cost') is-invalid @enderror" required min="1" max="9999999">

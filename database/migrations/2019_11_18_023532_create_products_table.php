@@ -18,7 +18,8 @@ class CreateProductsTable extends Migration
             $table->timestamps();
             $table->string('name');
             $table->string('description')->nullable();
-            $table->float('unit_price', 11, 2)->unsigned();
+            $table->float('cost', 9, 2)->unsigned();
+            $table->float('price', 9, 2)->unsigned();
         });
     }
 

@@ -30,8 +30,8 @@
                 <td class="table-dark td-title">{{ __("Costo:") }}</td>
                 <td class="td-content">${{ number_format($product->cost, 2) }}</td>
 
-                <td class="table-dark td-title">{{ __("Precio unitario:") }}</td>
-                <td class="td-content">${{ number_format($product->unit_price, 2) }}</td>
+                <td class="table-dark td-title">{{ __("Precio:") }}</td>
+                <td class="td-content">${{ number_format($product->price, 2) }}</td>
             </tr>
             <tr>
                 <td class="table-dark td-title">{{ __("Creado:") }}</td>

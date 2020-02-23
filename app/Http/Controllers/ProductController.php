@@ -50,7 +50,11 @@ class ProductController extends Controller
      */
     public function store(SaveProductRequest $request)
     {
-        $result = Product::create($request->validated());
+        $result = Product::create(array_merge(
+            $request->validated(), [
+                'price' => $request->get('cost') * 1.10
+            ])
+        );
 
         return redirect()->route('products.show', $result->id)->withSuccess(__('Producto creado satisfactoriamente'));
     }
