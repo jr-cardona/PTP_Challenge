@@ -46,7 +46,10 @@ class UpdateInvoiceProductTest extends TestCase
         $user = factory(User::class)->create();
         $product = factory(Product::class)->create();
         $invoice = factory(Invoice::class)->create();
-        $invoice->products()->attach($product->id, ['quantity' => 1, 'unit_price' => 1]);
+        $invoice->products()->attach($product->id, [
+            'quantity' => 1,
+            'unit_price' => $product->price,
+        ]);
 
         $this->actingAs($user)->put(route('invoices.products.update', [$invoice, $product]), $data);
         $this->assertDatabaseHas('invoice_product', $data);
@@ -60,7 +63,6 @@ class UpdateInvoiceProductTest extends TestCase
     {
         return [
             'quantity' => 100,
-            'unit_price' => 1000,
         ];
     }
 }

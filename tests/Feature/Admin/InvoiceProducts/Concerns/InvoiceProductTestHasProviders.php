@@ -20,7 +20,6 @@ trait InvoiceProductTestHasProviders
         $this->baseData = [
             'product_id' => Product::first()->id,
             'quantity' => 1,
-            'unit_price' => 1,
         ];
     }
 
@@ -71,21 +70,6 @@ trait InvoiceProductTestHasProviders
                 array_replace_recursive($this->baseData, ['quantity' => 10000]),
                 'quantity',
                 'cantidad no debe ser mayor a 9999.'
-            ],
-            'unit_price field is not numeric' => [
-                array_replace_recursive($this->baseData, ['unit_price' => 'Invalid numeric test']),
-                'unit_price',
-                'precio unitario debe ser numérico.'
-            ],
-            'unit_price field is too low' => [
-                array_replace_recursive($this->baseData, ['unit_price' => 0]),
-                'unit_price',
-                'El tamaño de precio unitario debe ser de al menos 1.'
-            ],
-            'unit_price field is too high' => [
-                array_replace_recursive($this->baseData, ['unit_price' => 10000000]),
-                'unit_price',
-                'precio unitario no debe ser mayor a 9999999.'
             ],
         ];
     }

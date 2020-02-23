@@ -82,10 +82,11 @@ class StoreInvoiceProductTest extends TestCase
     ) {
         factory(Product::class)->create();
         $invoice = factory(Invoice::class)->create();
-        $invoice->products()->attach(Product::first()->id, [
-                'quantity' => 10,
-                'unit_price' => 45000,
-            ]);
+        $product = Product::first();
+        $invoice->products()->attach($product->id, [
+            'quantity' => 10,
+            'unit_price' => $product->price,
+        ]);
         $user = factory(User::class)->create();
         $response =  $this->actingAs($user)->post(route('invoices.products.store', $invoice), $invoiceData);
 
@@ -118,7 +119,6 @@ class StoreInvoiceProductTest extends TestCase
         return [
             'product_id' => $product->id,
             'quantity' => 1,
-            'unit_price' => 1,
         ];
     }
 }

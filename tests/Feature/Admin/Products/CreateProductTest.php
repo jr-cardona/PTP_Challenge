@@ -42,7 +42,7 @@ class CreateProductTest extends TestCase
 
         $response = $this->actingAs($user)->get(route('products.create'));
         $response->assertSee("Nombre");
-        $response->assertSee("Precio unitario");
+        $response->assertSee("Costo");
         $response->assertSee("Descripción");
         $response->assertSee(route('products.store'));
     }

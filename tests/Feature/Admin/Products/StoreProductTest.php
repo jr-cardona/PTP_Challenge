@@ -80,7 +80,7 @@ class StoreProductTest extends TestCase
     {
         return [
             'name' => 'Test Name',
-            'unit_price' => 1000,
+            'cost' => 1000,
         ];
     }
 }
