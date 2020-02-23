@@ -77,6 +77,8 @@ Route::middleware(['auth'])->group(static function () {
         ->names('sellers')
         ->parameters(['vendedores' => 'seller']);
 
-    Route::get('/invoices-received-check/{invoice}', 'InvoiceController@receivedCheck')
+    Route::get('/invoices/received-check/{invoice}', 'InvoiceController@receivedCheck')
         ->name('invoices.receivedCheck');
+    Route::get('/invoices/annul/{invoice}', 'InvoiceController@annul')
+        ->name('invoices.annul');
 });

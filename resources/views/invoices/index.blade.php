@@ -39,9 +39,7 @@
             <td nowrap>
                 <a href="{{ route('invoices.show', $invoice) }}">
                     {{ $invoice->fullname }}
-                    @if($invoice->isPaid())
-                        <i class="fa fa-check-circle"></i>
-                    @endif
+                    @include('invoices.__symbol')
                 </a>
             </td>
             <td class="text-center" nowrap>{{ $invoice->issued_at->toDateString() }}</td>

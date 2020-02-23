@@ -87,8 +87,8 @@ class InvoiceController extends Controller
         if ($invoice->isPaid()) {
             return redirect()->route('invoices.show', $invoice)->withInfo(__("La factura ya se encuentra pagada y no se puede editar"));
         }
-        if ($invoice->isExpired()) {
-            return redirect()->route('invoices.show', $invoice)->withInfo(__("La factura ya se encuentra vencida y no se puede editar"));
+        if ($invoice->isAnnulled()) {
+            return redirect()->route('invoices.show', $invoice)->withInfo(__("La factura ya se encuentra anulada y no se puede editar"));
         }
         return response()->view('invoices.edit', [
             'invoice' => $invoice,
@@ -104,6 +104,12 @@ class InvoiceController extends Controller
      */
     public function update(SaveInvoiceRequest $request, Invoice $invoice)
     {
+        if ($invoice->isPaid()) {
+            return redirect()->route('invoices.show', $invoice)->withInfo(__("La factura ya se encuentra pagada y no se puede editar"));
+        }
+        if ($invoice->isAnnulled()) {
+            return redirect()->route('invoices.show', $invoice)->withInfo(__("La factura ya se encuentra anulada y no se puede editar"));
+        }
         $invoice->update($request->validated());
 
         return redirect()->route('invoices.show', $invoice)->withSuccess(__('Factura actualizada satisfactoriamente'));
@@ -118,6 +124,9 @@ class InvoiceController extends Controller
      */
     public function destroy(Invoice $invoice)
     {
+        if ($invoice->isPaid()) {
+            return redirect()->route('invoices.show', $invoice)->withInfo(__("La factura ya se encuentra pagada y no se puede eliminar"));
+        }
         $invoice->delete();
 
         return redirect()->route('invoices.index')->withSuccess(__('Factura eliminada satisfactoriamente'));
@@ -125,13 +134,23 @@ class InvoiceController extends Controller
 
     public function receivedCheck(Invoice $invoice)
     {
-        if ($invoice->isPending() && empty($invoice->received_at)) {
+        if (! $invoice->isPaid() && ! $invoice->isAnnulled()) {
             $now = Carbon::now();
             $invoice->update(["received_at" => $now]);
-
             return redirect()->route('invoices.show', $invoice)->withSuccess(__('Marcada correctamente'));
         } else {
             return redirect()->route('invoices.show', $invoice)->withError(__('No se puede marcar'));
+        }
+    }
+
+    public function annul(Invoice $invoice)
+    {
+        if (! $invoice->isPaid() && ! $invoice->isAnnulled()) {
+            $now = Carbon::now();
+            $invoice->update(["annulled_at" => $now]);
+            return redirect()->route('invoices.show', $invoice)->withSuccess(__('Anulada correctamente'));
+        } else {
+            return redirect()->route('invoices.show', $invoice)->withError(__('No se puede anular'));
         }
     }
 }

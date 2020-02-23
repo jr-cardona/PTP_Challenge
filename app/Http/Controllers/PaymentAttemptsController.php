@@ -15,8 +15,8 @@ class PaymentAttemptsController extends Controller
         if ($invoice->isPaid()) {
             return redirect()->route('invoices.show', $invoice)->withError(__("La factura ya se encuentra pagada"));
         }
-        if ($invoice->isExpired()) {
-            return redirect()->route('invoices.show', $invoice)->withError(__("La factura ya se encuentra vencida"));
+        if ($invoice->isAnnulled()) {
+            return redirect()->route('invoices.show', $invoice)->withError(__("La factura se encuentra anulada"));
         }
         if ($invoice->total == 0) {
             return redirect()->route('invoices.show', $invoice)->withInfo(__("La factura no tiene productos a pagar, intente nuevamente"));

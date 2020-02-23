@@ -5,9 +5,12 @@
         <a href="{{ route('invoices.index') }}" class="btn btn-secondary">
             <i class="fa fa-arrow-left"></i> {{ __("Volver") }}
         </a>
-        @if($invoice->isPending())
+        @if(! $invoice->isPaid() && ! $invoice->isAnnulled())
             <a href="{{ route('invoices.payments.create', $invoice) }}" class="btn btn-success">
                 <i class="fa fa-dollar-sign"></i> {{ __("Pagar") }}
+            </a>
+            <a href="{{ route('invoices.annul', $invoice) }}" class="btn btn-warning">
+                <i class="fa fa-exclamation-circle"></i> {{ __("Anular") }}
             </a>
             @empty($invoice->received_at)
                 <a href="{{ route('invoices.receivedCheck', $invoice) }}" class="btn btn-primary">
@@ -24,9 +27,7 @@
 @endsection
 @section('Name')
     {{ $invoice->fullname }}
-    @if($invoice->isPaid())
-        <i class="fa fa-check-circle"></i>
-    @endif
+    @include('invoices.__symbol')
 @endsection
 @section('Buttons')
     @include('invoices._buttons')
@@ -113,7 +114,7 @@
                         <td class="text-right">{{ number_format($product->pivot->unit_price, 2) }}</td>
                         <td class="text-right">${{ number_format($product->pivot->unit_price * $product->pivot->quantity, 2) }}</td>
                         <td class="text-right btn-group btn-group-sm">
-                            @if($invoice->isPending())
+                            @if(! $invoice->isPaid() && ! $invoice->isAnnulled())
                                 <a href="{{ route('invoices.products.edit', [$invoice, $product]) }}" class="btn text-primary">
                                     <i class="fa fa-edit"></i>
                                 </a>
@@ -138,7 +139,7 @@
                 </tr>
             </tbody>
         </table>
-        @if($invoice->isPending())
+        @if(! $invoice->isPaid() && ! $invoice->isAnnulled())
             <a href="{{ route('invoices.products.create', $invoice) }}" class="btn btn-success btn-block">
                 <i class="fa fa-plus"></i> {{ __("Agregar Producto") }}
             </a>

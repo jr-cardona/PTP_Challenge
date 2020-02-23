@@ -87,7 +87,16 @@ class Invoice extends Model
 
     public function isPending()
     {
-        if (empty($this->paid_at) && ! $this->isExpired()) {
+        if (! $this->isPaid() && ! $this->isExpired()) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public function isAnnulled()
+    {
+        if (! empty($this->annulled_at)) {
             return true;
         } else {
             return false;

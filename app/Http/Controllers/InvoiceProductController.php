@@ -19,11 +19,13 @@ class InvoiceProductController extends Controller
     {
         if ($invoice->isPaid()) {
             return redirect()->route('invoices.show', $invoice)->withInfo(__("La factura ya se encuentra pagada y no se puede editar"));
-        } else {
-            return response()->view('invoices.products.create', [
-                'invoice' => $invoice,
-            ]);
         }
+        if ($invoice->isAnnulled()) {
+            return redirect()->route('invoices.show', $invoice)->withInfo(__("La factura ya se encuentra anulada y no se puede editar"));
+        }
+        return response()->view('invoices.products.create', [
+                'invoice' => $invoice,
+        ]);
     }
 
     /**
@@ -35,6 +37,12 @@ class InvoiceProductController extends Controller
      */
     public function store(Invoice $invoice, StoreInvoiceProductRequest $request)
     {
+        if ($invoice->isPaid()) {
+            return redirect()->route('invoices.show', $invoice)->withInfo(__("La factura ya se encuentra pagada y no se puede editar"));
+        }
+        if ($invoice->isAnnulled()) {
+            return redirect()->route('invoices.show', $invoice)->withInfo(__("La factura ya se encuentra anulada y no se puede editar"));
+        }
         $product = Product::find($request->get('product_id'));
         $invoice->products()->attach($product->id, array_merge($request->validated(),
                 ['unit_price' => $product->price]
@@ -55,12 +63,14 @@ class InvoiceProductController extends Controller
     {
         if ($invoice->isPaid()) {
             return redirect()->route('invoices.show', $invoice)->withInfo(__("La factura ya se encuentra pagada y no se puede editar"));
-        } else {
-            return response()->view('invoices.products.edit', [
-                'invoice' => $invoice,
-                'product' => $product
-            ]);
         }
+        if ($invoice->isAnnulled()) {
+            return redirect()->route('invoices.show', $invoice)->withInfo(__("La factura ya se encuentra anulada y no se puede editar"));
+        }
+        return response()->view('invoices.products.edit', [
+            'invoice' => $invoice,
+            'product' => $product
+        ]);
     }
 
     /**
@@ -73,6 +83,12 @@ class InvoiceProductController extends Controller
      */
     public function update(Invoice $invoice, Product $product, UpdateInvoiceProductRequest $request)
     {
+        if ($invoice->isPaid()) {
+            return redirect()->route('invoices.show', $invoice)->withInfo(__("La factura ya se encuentra pagada y no se puede editar"));
+        }
+        if ($invoice->isAnnulled()) {
+            return redirect()->route('invoices.show', $invoice)->withInfo(__("La factura ya se encuentra anulada y no se puede editar"));
+        }
         $invoice->products()->updateExistingPivot($product->id, $request->validated());
 
         return redirect()->route('invoices.show', $invoice)->withSuccess(__('Detalle actualizado satisfactoriamente'));
@@ -88,6 +104,12 @@ class InvoiceProductController extends Controller
      */
     public function destroy(Invoice $invoice, Product $product)
     {
+        if ($invoice->isPaid()) {
+            return redirect()->route('invoices.show', $invoice)->withInfo(__("La factura ya se encuentra pagada y no se puede editar"));
+        }
+        if ($invoice->isAnnulled()) {
+            return redirect()->route('invoices.show', $invoice)->withInfo(__("La factura ya se encuentra anulada y no se puede editar"));
+        }
         $invoice->products()->detach($product->id);
 
         return redirect()->route('invoices.show', $invoice)->withSuccess(__('Detalle eliminado satisfactoriamente'));
