@@ -31,9 +31,9 @@ class EditInvoiceTest extends TestCase
     }
 
     /** @test */
-    public function logged_in_user_cannot_access_to_edit_expired_invoices_view()
+    public function logged_in_user_cannot_access_to_edit_annulled_invoices_view()
     {
-        $invoice = factory(Invoice::class)->create(["issued_at" => Carbon::now()->subMonth()]);
+        $invoice = factory(Invoice::class)->create(["annulled_at" => Carbon::now()]);
         $user = factory(User::class)->create();
 
         $response = $this->actingAs($user)->get(route('invoices.edit', $invoice));
