@@ -13,7 +13,7 @@ $factory->define(Invoice::class, function (Faker $faker) {
     $final_date = Carbon::now();
     return [
         'issued_at' => $faker->dateTimeBetween($start_date, $final_date),
-        'description' => $faker->text,
+        'description' => $faker->realText(30),
         'client_id' => factory(Client::class),
         'seller_id' => factory(Seller::class)
     ];
