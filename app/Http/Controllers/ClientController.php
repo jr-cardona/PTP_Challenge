@@ -24,7 +24,7 @@ class ClientController extends Controller
             ->email($request->get('email'))
             ->orderBy('name');
         $count = $clients->count();
-        $clients = $clients->paginate(10);
+        $clients = $clients->paginate($paginate);
 
         return response()->view('clients.index', [
             'clients' => $clients,

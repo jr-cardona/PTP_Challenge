@@ -29,6 +29,7 @@ class InvoiceController extends Controller
             ->orderBy('id', 'DESC');
         $count = $invoices->count();
         $invoices = $invoices->paginate($paginate);
+
         return response()->view('invoices.index', [
             'invoices' => $invoices,
             'request' => $request,

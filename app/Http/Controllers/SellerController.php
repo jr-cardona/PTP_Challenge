@@ -24,7 +24,7 @@ class SellerController extends Controller
             ->email($request->get('email'))
             ->orderBy('name');
         $count = $sellers->count();
-        $sellers = $sellers->paginate(10);
+        $sellers = $sellers->paginate($paginate);
 
         return response()->view('sellers.index', [
             'sellers' => $sellers,

@@ -20,7 +20,7 @@ class ProductController extends Controller
         $products = Product::orderBy('id')
             ->id($request->get('id'));
         $count = $products->count();
-        $products = $products->paginate(10);
+        $products = $products->paginate($paginate);
 
         return response()->view('products.index', [
             'products' => $products,
