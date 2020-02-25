@@ -126,15 +126,21 @@
                     </tr>
                @endforeach
                 <tr>
-                    <td class="text-right" colspan="5">{{ __("SUBTOTAL") }}</td>
+                    <td class="text-right" colspan="5">
+                        <strong>{{ __("SUBTOTAL") }}</strong>
+                    </td>
                     <td class="text-right">${{ number_format($invoice->subtotal, 2) }}</td>
                 </tr>
                 <tr>
-                    <td class="text-right" colspan="5">{{ __("IVA") }} ({{ Config::get('constants.vat') }})% </td>
+                    <td class="text-right" colspan="5">
+                        <strong>{{ __("IVA") }} ({{ Config::get('constants.vat') }})%</strong>
+                    </td>
                     <td class="text-right">${{ number_format($invoice->ivaamount, 2) }}</td>
                 </tr>
                 <tr>
-                    <td class="text-right" colspan="5">{{ __("VALOR TOTAL") }}</td>
+                    <td class="text-right" colspan="5">
+                        <strong>{{ __("VALOR TOTAL") }}</strong>
+                    </td>
                     <td class="text-right">${{ number_format($invoice->total, 2) }}</td>
                 </tr>
             </tbody>
