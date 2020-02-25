@@ -184,7 +184,7 @@ class Invoice extends Model
             return $query->whereNotNull('paid_at');
         }
         if (trim($state) === "expired") {
-            return $query->whereDate('expires_at', "<=", Carbon::now())->whereNotNull('paid_at');
+            return $query->whereDate('expires_at', "<=", Carbon::now())->whereNull('paid_at');
         }
         if (trim($state) === "pending") {
             return $query->whereNull("paid_at")->whereDate('expires_at', ">", Carbon::now());
