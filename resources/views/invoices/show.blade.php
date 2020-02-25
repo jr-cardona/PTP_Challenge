@@ -9,9 +9,6 @@
             <a href="{{ route('invoices.payments.create', $invoice) }}" class="btn btn-success">
                 <i class="fa fa-dollar-sign"></i> {{ __("Pagar") }}
             </a>
-            <a href="{{ route('invoices.annul', $invoice) }}" class="btn btn-warning">
-                <i class="fa fa-exclamation-circle"></i> {{ __("Anular") }}
-            </a>
             @empty($invoice->received_at)
                 <a href="{{ route('invoices.receivedCheck', $invoice) }}" class="btn btn-primary">
                     <i class="fa fa-check"></i> {{ __("Marcar como recibida") }}

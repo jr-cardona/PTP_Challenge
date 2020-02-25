@@ -109,8 +109,11 @@ class ClientController extends Controller
      */
     public function destroy(Client $client)
     {
-        $client->delete();
-
-        return redirect()->route('clients.index')->withSuccess(__('Cliente eliminado satisfactoriamente'));
+        if ($client->invoices->count() > 0){
+            return redirect()->back()->withError(__('No se puede eliminar, tiene facturas asociadas'));
+        } else{
+            $client->delete();
+            return redirect()->route('clients.index')->withSuccess(__('Cliente eliminado satisfactoriamente'));
+        }
     }
 }
