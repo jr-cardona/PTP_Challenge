@@ -1,9 +1,12 @@
-@if(! $invoice->isPaid())
-    <a href="{{ route('invoices.edit', $invoice) }}" class="btn btn-primary">
+@if(! $invoice->isPaid() && ! $invoice->isAnnulled())
+    <a href="{{ route('invoices.edit', $invoice) }}" class="btn btn-primary" title="Editar">
         <i class="fa fa-edit"></i>@routeIs('invoices.show', $invoice) {{ __("Editar") }} @endif
     </a>
-    <button type="button" class="btn btn-danger" data-route="{{ route('invoices.destroy', $invoice) }}"
-            data-toggle="modal" data-target="#confirmDeleteModal" data-message="Se borrará toda su lista de productos">
-        <i class="fa fa-trash"></i>@routeIs('invoices.show', $invoice)  {{ __("Eliminar") }} @endif
+    <button type="submit" form="annul" class="btn btn-warning" title="Anular">
+        <i class="fa fa-exclamation-circle"></i>@routeIs('invoices.show', $invoice) {{ __("Anular") }} @endif
     </button>
+    <form id="annul" action="{{ route('invoices.destroy', $invoice) }}" method="POST">
+        @csrf
+        @method('DELETE')
+    </form>
 @endif

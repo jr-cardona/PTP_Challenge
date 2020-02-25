@@ -32,7 +32,7 @@
                     <div class="form-group row">
                         <div class="col">
                             <label for="number">{{ __("Número de factura") }}</label>
-                            <input type="number" @if(empty($request->get('number'))) id="number" name="number" @endif class="form-control" placeholder="No. de factura" value="{{ $request->get('number') }}">
+                            <input type="number" id="number" name="number" class="form-control" placeholder="No. de factura" value="{{ $request->get('number') }}">
                         </div>
                         <div class="col">
                             <label>{{ __("Producto") }}</label>

@@ -109,8 +109,11 @@ class ProductController extends Controller
      */
     public function destroy(Product $product)
     {
-        $product->delete();
-
-        return redirect()->route('products.index')->withSuccess(__('Producto eliminado satisfactoriamente'));
+        if ($product->invoices->count() > 0){
+            return redirect()->back()->withError(__('No se puede eliminar, hay facturas asociadas con este producto'));
+        } else{
+            $product->delete();
+            return redirect()->route('products.index')->withSuccess(__('Producto eliminado satisfactoriamente'));
+        }
     }
 }
