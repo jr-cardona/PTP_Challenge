@@ -34,10 +34,10 @@
                 <td class="td-content">${{ number_format($product->price, 2) }}</td>
             </tr>
             <tr>
-                <td class="table-dark td-title">{{ __("Creado:") }}</td>
+                <td class="table-dark td-title">{{ __("Fecha de creación:") }}</td>
                 <td class="td-content">{{ $product->created_at->isoFormat('Y-MM-DD hh:mma') }}</td>
 
-                <td class="table-dark td-title">{{ __("Modificado:") }}</td>
+                <td class="table-dark td-title">{{ __("Fecha de modificación:") }}</td>
                 <td class="td-content">{{ $product->updated_at->isoFormat('Y-MM-DD hh:mma') }}</td>
             </tr>
             <tr>

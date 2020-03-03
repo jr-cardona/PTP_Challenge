@@ -9,6 +9,7 @@
             </div>
             <div class="modal-body">
                 <form id="searchForm" action="{{ route('clients.index') }}" method="get">
+                    <input type="hidden" id="format" name="format">
                     <div class="form-group row">
                         <div class="col">
                             <label>{{ __("Nombre") }}</label>
@@ -51,7 +52,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">
-                    <i class="fa fa-times"></i> Cerrar
+                    <i class="fa fa-times"></i> {{ __("Cerrar") }}
                 </button>
                 <button type="submit" form="searchForm" class="btn btn-primary">
                     <i class="fa fa-search"></i> {{ __("Buscar") }}

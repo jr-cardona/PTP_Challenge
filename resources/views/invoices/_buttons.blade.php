@@ -4,11 +4,8 @@
             <i class="fa fa-edit"></i>@routeIs('invoices.show', $invoice) {{ __("Editar") }} @endif
         </a>
     @endif
-    <button type="submit" form="annul" class="btn btn-warning" title="Anular">
+    <button type="button" class="btn btn-warning" data-toggle="modal" title="Anular"
+            data-route="{{ route("invoices.destroy", $invoice) }}" data-target="#confirmAnnulmentModal">
         <i class="fa fa-exclamation-circle"></i>@routeIs('invoices.show', $invoice) {{ __("Anular") }} @endif
     </button>
-    <form id="annul" action="{{ route('invoices.destroy', $invoice) }}" method="POST">
-        @csrf
-        @method('DELETE')
-    </form>
 @endif

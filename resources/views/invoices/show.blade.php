@@ -79,6 +79,11 @@
             <tr>
                 <td class="table-dark td-title custom-header">{{ __("Descripción:") }}</td>
                 <td class="td-content">{{ $invoice->description }}</td>
+
+                @if(! empty($invoice->annulment_reason))
+                    <td class="table-dark td-title custom-header">{{ __("Motivo de anulación:") }}</td>
+                    <td class="td-content">{{ $invoice->annulment_reason }}</td>
+                @endif
             </tr>
         </table>
     </div>
@@ -177,3 +182,9 @@
         </table>
     </div>
 @endsection
+@push('modals')
+    @include('invoices.__confirm_annulment_modal')
+@endpush
+@push('scripts')
+    <script src="{{ asset(mix('js/annul-modal.js')) }}"></script>
+@endpush

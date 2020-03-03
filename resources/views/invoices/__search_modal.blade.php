@@ -9,6 +9,7 @@
             </div>
             <div class="modal-body">
                 <form id="searchForm" action="{{ route('invoices.index') }}" method="get">
+                    <input type="hidden" id="format" name="format">
                     <div class="form-group row">
                         <div class="col">
                             <label for="issued_init">{{ __("Fecha inicial de expedición") }}</label>
@@ -81,6 +82,7 @@
                                 <option value="paid" {{ $request->get('state') == "paid" ? 'selected' : ''}}>{{ __("Pagada") }}</option>
                                 <option value="expired" {{ $request->get('state') == "expired" ? 'selected' : ''}}>{{ __("Vencida") }}</option>
                                 <option value="pending" {{ $request->get('state') == "pending" ? 'selected' : ''}}>{{ __("Pendiente") }}</option>
+                                <option value="annulled" {{ $request->get('state') == "annulled" ? 'selected' : ''}}>{{ __("Anulada") }}</option>
                             </select>
                         </div>
                     </div>
@@ -88,7 +90,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">
-                    <i class="fa fa-times"></i> Cerrar
+                    <i class="fa fa-times"></i> {{ __("Cerrar") }}
                 </button>
                 <button type="submit" form="searchForm" class="btn btn-primary">
                     <i class="fa fa-search"></i> {{ __("Buscar") }}
