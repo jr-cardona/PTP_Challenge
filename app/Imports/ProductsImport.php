@@ -23,7 +23,8 @@ class ProductsImport extends BaseImport implements ToModel, WithHeadingRow, With
         return new Product([
             'name' => $row['Nombre'],
             'description' => $row['Descripción'],
-            'unit_price' => $row['Precio unitario'],
+            'cost' => $row['Costo'],
+            'price' => $row['Costo'] * 1.10,
         ]);
     }
 
@@ -32,7 +33,7 @@ class ProductsImport extends BaseImport implements ToModel, WithHeadingRow, With
         return [
             'Nombre' => 'required',
             'Descripción' => 'required',
-            'Precio unitario' => 'required',
+            'Costo' => 'required|numeric|min:1|max:9999999',
         ];
     }
 

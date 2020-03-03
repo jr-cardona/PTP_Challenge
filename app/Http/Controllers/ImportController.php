@@ -81,7 +81,7 @@ class ImportController extends Controller
             $import = new ProductsImport();
             Excel::import($import, $file);
             $cant = $import->getRowCount();
-            return redirect()->route('sellers.index')->withSuccess(__("Se importaron {$cant} productos satisfactoriamente"));
+            return redirect()->route('products.index')->withSuccess(__("Se importaron {$cant} productos satisfactoriamente"));
         } catch (\Maatwebsite\Excel\Validators\ValidationException $err) {
             return $this->displayErrors($err, 'products.index');
         }

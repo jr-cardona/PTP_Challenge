@@ -40,12 +40,12 @@ class StoreInvoiceProductRequest extends FormRequest
 
     public function repeatedProduct()
     {
-        $availableProduct = DB::table('products')
-            ->where('id', request('product_id'))
+        $availableProduct = DB::table('products as p')
+            ->where('p.id', request('product_id'))
             ->whereNotExists(function ($query) {
-                $query->select(DB::raw('invoice_product.id'))
-                    ->from('invoice_product')
-                    ->whereRaw('invoice_product.product_id = products.id and invoice_product.invoice_id ='.$this->invoice->id);
+                $query->select(DB::raw('ip.id'))
+                    ->from('invoice_product as ip')
+                    ->whereRaw('ip.product_id = p.id and ip.invoice_id ='.$this->invoice->id);
             })
             ->get()->toArray();
         if (isset($availableProduct[0])) {
