@@ -69,38 +69,22 @@ class Invoice extends Model
     /** DERIVED ATTRIBUTES */
     public function isExpired()
     {
-        if ($this->expires_at <= Carbon::now() && ! $this->isPaid()) {
-            return true;
-        } else {
-            return false;
-        }
+        return ($this->expires_at <= Carbon::now() && ! $this->isPaid());
     }
 
     public function isPaid()
     {
-        if (! empty($this->paid_at)) {
-            return true;
-        } else {
-            return false;
-        }
+        return (! empty($this->paid_at));
     }
 
     public function isPending()
     {
-        if (! $this->isPaid() && ! $this->isExpired()) {
-            return true;
-        } else {
-            return false;
-        }
+        return (! $this->isPaid() && ! $this->isExpired());
     }
 
     public function isAnnulled()
     {
-        if (! empty($this->annulled_at)) {
-            return true;
-        } else {
-            return false;
-        }
+        return (! empty($this->annulled_at));
     }
 
     public function getSubtotalAttribute()
