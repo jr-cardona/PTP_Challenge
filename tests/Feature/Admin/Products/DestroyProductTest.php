@@ -4,6 +4,7 @@ namespace Tests\Feature\Admin\Products;
 
 use App\User;
 use App\Product;
+use App\Invoice;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
@@ -24,32 +25,36 @@ class DestroyProductTest extends TestCase
     }
 
     /** @test */
-    public function logged_in_user_can_delete_products()
+    public function logged_in_user_cannot_delete_products_with_invoices_assigned()
     {
         $user = factory(User::class)->create();
         $product = factory(Product::class)->create();
+        factory(Invoice::class)->create()->products()->attach($product, [
+            'quantity' => 1,
+            'unit_price' => $product->price,
+        ]);
 
-        $response = $this->actingAs($user)->delete(route('products.destroy', $product));
-        $response->assertRedirect();
+        $response = $this->actingAs($user)
+            ->from(route('products.show', $product))
+            ->delete(route('products.destroy', $product));
+        $response->assertRedirect(route('products.show', $product));
+
+        $this->assertDatabaseHas('products', [
+            'id' => $product->id
+        ]);
     }
 
     /** @test */
-    public function when_deleted_a_product_should_redirect_to_products_index_view()
+    public function logged_in_user_can_delete_products_without_invoices_assigned()
     {
         $user = factory(User::class)->create();
         $product = factory(Product::class)->create();
 
-        $response = $this->actingAs($user)->delete(route('products.destroy', $product));
+        $response = $this->actingAs($user)
+            ->from(route('products.show', $product))
+            ->delete(route('products.destroy', $product));
         $response->assertRedirect(route('products.index'));
-    }
 
-    /** @test */
-    public function a_product_can_be_deleted_from_database()
-    {
-        $user = factory(User::class)->create();
-        $product = factory(Product::class)->create();
-
-        $this->actingAs($user)->delete(route('products.destroy', $product));
         $this->assertDatabaseMissing('products', [
             'id' => $product->id
         ]);

@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\Admin\Clients;
 
+use App\Client;
 use App\User;
 use Tests\TestCase;
 use App\Exports\ClientsExport;
@@ -15,13 +16,14 @@ class ExcelClientTest extends TestCase
     /** @test */
     public function user_can_download_clients_export()
     {
+        $clients = factory(Client::class, 10)->create();
         $user = factory(User::class)->create();
         Excel::fake();
 
-        $this->actingAs($user)->get(route('export.clients'));
+        $this->actingAs($user)->get(route('clients.index', ['format' => 'xlsx']));
 
-        Excel::assertDownloaded('clients-list.xlsx', function (ClientsExport $export) {
-            return $export->view()->name() == 'exports.clients';
+        Excel::assertDownloaded('clients-list.xlsx', function (ClientsExport $export) use ($clients) {
+            return $export->collection()->contains($clients->random());
         });
     }
 }

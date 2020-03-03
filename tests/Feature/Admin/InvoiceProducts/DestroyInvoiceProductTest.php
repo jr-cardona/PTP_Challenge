@@ -5,6 +5,7 @@ namespace Tests\Feature\Admin\InvoiceProducts;
 use App\User;
 use App\Invoice;
 use App\Product;
+use Carbon\Carbon;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
@@ -27,6 +28,30 @@ class DestroyInvoiceProductTest extends TestCase
             'invoice_id' => $invoice->id,
             'product_id' => $product->id,
         ]);
+    }
+
+    /** @test */
+    public function logged_in_user_cannot_delete_details_for_paid_invoices_view()
+    {
+        $product = factory(Product::class)->create();
+        $invoice = factory(Invoice::class)->create(["paid_at" => Carbon::now()]);
+        $invoice->products()->attach($product->id, ['quantity' => 1, 'unit_price' => 1]);
+        $user = factory(User::class)->create();
+
+        $response = $this->actingAs($user)->delete(route('invoices.products.destroy', [$invoice, $product]));
+        $response->assertRedirect(route('invoices.show', $invoice));
+    }
+
+    /** @test */
+    public function logged_in_user_cannot_delete_details_for_annulled_invoices_view()
+    {
+        $product = factory(Product::class)->create();
+        $invoice = factory(Invoice::class)->create(["annulled_at" => Carbon::now()]);
+        $invoice->products()->attach($product->id, ['quantity' => 1, 'unit_price' => 1]);
+        $user = factory(User::class)->create();
+
+        $response = $this->actingAs($user)->delete(route('invoices.products.destroy', [$invoice, $product]));
+        $response->assertRedirect(route('invoices.show', $invoice));
     }
 
     /** @test */
