@@ -72,7 +72,7 @@ class PaymentAttemptsController extends Controller
         $response = $placetopay->query($paymentAttempt->requestID);
         $paymentAttempt->update([
             'status' => $response->status()->status(),
-            'amount' => $response->request->payment()->amount()->total()
+            'amount' => $response->request()->payment()->amount()->total()
         ]);
         if ($paymentAttempt->status == 'APPROVED') {
             $invoice->update([

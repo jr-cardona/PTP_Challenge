@@ -20,7 +20,7 @@ class AppServiceProvider extends ServiceProvider
             return new PlacetoPay([
                 'login' => config('services.placetopay.login'),
                 'tranKey' => config('services.placetopay.trankey'),
-                'url' => 'https://test.placetopay.com/redirection/',
+                'url' => config('services.placetopay.url'),
             ]);
         });
     }
