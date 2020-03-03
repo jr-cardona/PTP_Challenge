@@ -132,6 +132,21 @@ class Invoice extends Model
         return __("Factura de venta No. ").str_pad($this->id, 5, "0", STR_PAD_LEFT);
     }
 
+    public function getStateAttribute(){
+        if ($this->isAnnulled()) {
+            return "Anulada";
+        }
+        if ($this->isExpired()) {
+            return "Vencida";
+        }
+        if ($this->isPaid()) {
+            return "Pagada";
+        }
+        if ($this->isPending()) {
+            return "Pendiente";
+        }
+    }
+
     /** Query Scopes */
     public function scopeNumber($query, $number)
     {
@@ -180,6 +195,9 @@ class Invoice extends Model
 
     public function scopeState($query, $state)
     {
+        if (trim($state) === "annulled") {
+            return $query->whereNotNull('annulled_at');
+        }
         if (trim($state) === "paid") {
             return $query->whereNotNull('paid_at');
         }
