@@ -3,21 +3,23 @@
 namespace App\Exports;
 
 use Maatwebsite\Excel\Concerns\Exportable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Maatwebsite\Excel\Concerns\WithMapping;
+use Illuminate\Contracts\Queue\ShouldQueue;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use Illuminate\Contracts\Support\Responsable;
 use Maatwebsite\Excel\Concerns\FromCollection;
 
-class ClientsExport implements FromCollection, Responsable, WithHeadings, WithMapping, ShouldQueue
+class DebtorClientsExport implements FromCollection, Responsable, WithHeadings, WithMapping, ShouldQueue
 {
     use Exportable;
 
     private $clients;
+    private $vat;
 
-    public function __construct($clients)
+    public function __construct($clients, $vat)
     {
         $this->clients = $clients;
+        $this->vat = $vat;
     }
 
     public function collection()
@@ -28,30 +30,24 @@ class ClientsExport implements FromCollection, Responsable, WithHeadings, WithMa
     public function map($client): array
     {
         return [
-            $client->type_document->fullname,
-            $client->document,
-            $client->name,
-            $client->surname,
-            $client->email,
+            $client->id,
+            $client->fullname,
             $client->cell_phone_number,
             $client->phone_number,
             $client->address,
-            $client->type_document_id,
+            $client->total_due * $this->vat,
         ];
     }
 
     public function headings(): array
     {
         return [
-            'Tipo de documento',
-            'Número documento',
-            'Nombre',
-            'Apellido',
-            'Correo electrónico',
-            'Teléfono celular',
+            'ID Cliente',
+            'Nombre completo',
+            'Celular',
             'Teléfono fijo',
             'Dirección',
-            'ID Documento',
+            'Deuda total',
         ];
     }
 }

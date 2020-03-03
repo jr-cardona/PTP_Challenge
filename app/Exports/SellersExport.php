@@ -2,16 +2,56 @@
 
 namespace App\Exports;
 
-use App\Seller;
-use Illuminate\Contracts\View\View;
-use Maatwebsite\Excel\Concerns\FromView;
+use Maatwebsite\Excel\Concerns\Exportable;
+use Illuminate\Contracts\Queue\ShouldQueue;
+use Maatwebsite\Excel\Concerns\WithMapping;
+use Maatwebsite\Excel\Concerns\WithHeadings;
+use Illuminate\Contracts\Support\Responsable;
+use Maatwebsite\Excel\Concerns\FromCollection;
 
-class SellersExport implements FromView
+class SellersExport implements FromCollection, Responsable, WithHeadings, WithMapping, ShouldQueue
 {
-    public function view(): View
+    use Exportable;
+
+    private $sellers;
+
+    public function __construct($sellers)
     {
-        return view('exports.sellers', [
-            'sellers' => Seller::all()
-        ]);
+        $this->sellers = $sellers;
+    }
+
+    public function collection()
+    {
+        return $this->sellers;
+    }
+
+    public function map($seller): array
+    {
+        return [
+            $seller->type_document->fullname,
+            $seller->document,
+            $seller->name,
+            $seller->surname,
+            $seller->email,
+            $seller->cell_phone_number,
+            $seller->phone_number,
+            $seller->address,
+            $seller->type_document_id,
+        ];
+    }
+
+    public function headings(): array
+    {
+        return [
+            'Tipo de documento',
+            'Número documento',
+            'Nombre',
+            'Apellido',
+            'Correo electrónico',
+            'Teléfono celular',
+            'Teléfono fijo',
+            'Dirección',
+            'ID Documento',
+        ];
     }
 }
