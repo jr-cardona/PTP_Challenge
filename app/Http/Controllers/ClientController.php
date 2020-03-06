@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Config;
 use App\Client;
 use Illuminate\Http\Request;
+use App\Exports\ClientsExport;
 use App\Http\Requests\SaveClientRequest;
 
 class ClientController extends Controller
@@ -16,22 +17,27 @@ class ClientController extends Controller
      */
     public function index(Request $request)
     {
-        $paginate = Config::get('constants.paginate');
         $clients = Client::with(["type_document"])
             ->id($request->get('id'))
             ->typedocument($request->get('type_document_id'))
             ->document($request->get('document'))
             ->email($request->get('email'))
             ->orderBy('name');
-        $count = $clients->count();
-        $clients = $clients->paginate(10);
+        if(! empty($request->get('format'))){
+            return (new ClientsExport($clients->get()))
+                ->download('clients-list.'.$request->get('format'));
+        } else {
+            $paginate = Config::get('constants.paginate');
+            $count = $clients->count();
+            $clients = $clients->paginate($paginate);
 
-        return response()->view('clients.index', [
-            'clients' => $clients,
-            'request' => $request,
-            'count' => $count,
-            'paginate' => $paginate
-        ]);
+            return response()->view('clients.index', [
+                'clients' => $clients,
+                'request' => $request,
+                'count' => $count,
+                'paginate' => $paginate
+            ]);
+        }
     }
 
     /**
@@ -109,8 +115,11 @@ class ClientController extends Controller
      */
     public function destroy(Client $client)
     {
-        $client->delete();
-
-        return redirect()->route('clients.index')->withSuccess(__('Cliente eliminado satisfactoriamente'));
+        if ($client->invoices->count() > 0){
+            return redirect()->back()->withError(__('No se puede eliminar, tiene facturas asociadas'));
+        } else{
+            $client->delete();
+            return redirect()->route('clients.index')->withSuccess(__('Cliente eliminado satisfactoriamente'));
+        }
     }
 }

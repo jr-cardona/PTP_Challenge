@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use Config;
 use App\Invoice;
 use Carbon\Carbon;
-use Config;
 use Illuminate\Http\Request;
+use App\Exports\InvoicesExport;
 use App\Http\Requests\SaveInvoiceRequest;
 
 class InvoiceController extends Controller
@@ -17,7 +18,6 @@ class InvoiceController extends Controller
      */
     public function index(Request $request)
     {
-        $paginate = Config::get('constants.paginate');
         $invoices = Invoice::with(["client", "seller", "products"])
             ->number($request->get('number'))
             ->client($request->get('client_id'))
@@ -27,14 +27,21 @@ class InvoiceController extends Controller
             ->expiresDate($request->get('expires_init'), $request->get('expires_final'))
             ->state($request->get('state'))
             ->orderBy('id', 'DESC');
-        $count = $invoices->count();
-        $invoices = $invoices->paginate($paginate);
-        return response()->view('invoices.index', [
-            'invoices' => $invoices,
-            'request' => $request,
-            'count' => $count,
-            'paginate' => $paginate
-        ]);
+        if(! empty($request->get('format'))){
+            return (new InvoicesExport($invoices->get()))
+                ->download('invoices-list.'.$request->get('format'));
+        } else {
+            $paginate = Config::get('constants.paginate');
+            $count = $invoices->count();
+            $invoices = $invoices->paginate($paginate);
+
+            return response()->view('invoices.index', [
+                'invoices' => $invoices,
+                'request' => $request,
+                'count' => $count,
+                'paginate' => $paginate
+            ]);
+        }
     }
 
     /**
@@ -105,10 +112,10 @@ class InvoiceController extends Controller
     public function update(SaveInvoiceRequest $request, Invoice $invoice)
     {
         if ($invoice->isPaid()) {
-            return redirect()->route('invoices.show', $invoice)->withInfo(__("La factura ya se encuentra pagada y no se puede editar"));
+            return redirect()->route('invoices.show', $invoice)->withInfo(__("La factura ya se encuentra pagada y no se puede actualizar"));
         }
         if ($invoice->isAnnulled()) {
-            return redirect()->route('invoices.show', $invoice)->withInfo(__("La factura ya se encuentra anulada y no se puede editar"));
+            return redirect()->route('invoices.show', $invoice)->withInfo(__("La factura ya se encuentra anulada y no se puede actualizar"));
         }
         $invoice->update($request->validated());
 
@@ -122,35 +129,28 @@ class InvoiceController extends Controller
      * @return \Illuminate\Http\RedirectResponse
      * @throws \Exception
      */
-    public function destroy(Invoice $invoice)
+    public function destroy(Invoice $invoice, Request $request)
     {
-        if ($invoice->isPaid()) {
-            return redirect()->route('invoices.show', $invoice)->withInfo(__("La factura ya se encuentra pagada y no se puede eliminar"));
+        if (! $invoice->isAnnulled()) {
+            $now = Carbon::now();
+            $invoice->update([
+                "annulled_at" => $now,
+                "annulment_reason" => $request->get('annulment_reason'),
+            ]);
+            return redirect()->back()->withSuccess(__('Anulada correctamente'));
+        } else {
+            return redirect()->route('invoices.show', $invoice)->withError(__('Ya se encuentra anulada'));
         }
-        $invoice->delete();
-
-        return redirect()->route('invoices.index')->withSuccess(__('Factura eliminada satisfactoriamente'));
     }
 
     public function receivedCheck(Invoice $invoice)
     {
-        if (! $invoice->isPaid() && ! $invoice->isAnnulled()) {
+        if (! $invoice->isPaid() && ! $invoice->isAnnulled() && empty($invoice->received_at)) {
             $now = Carbon::now();
             $invoice->update(["received_at" => $now]);
             return redirect()->route('invoices.show', $invoice)->withSuccess(__('Marcada correctamente'));
         } else {
             return redirect()->route('invoices.show', $invoice)->withError(__('No se puede marcar'));
-        }
-    }
-
-    public function annul(Invoice $invoice)
-    {
-        if (! $invoice->isPaid() && ! $invoice->isAnnulled()) {
-            $now = Carbon::now();
-            $invoice->update(["annulled_at" => $now]);
-            return redirect()->route('invoices.show', $invoice)->withSuccess(__('Anulada correctamente'));
-        } else {
-            return redirect()->route('invoices.show', $invoice)->withError(__('No se puede anular'));
         }
     }
 }

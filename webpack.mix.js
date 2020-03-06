@@ -13,7 +13,10 @@ const mix = require('laravel-mix');
 
 mix.js('resources/js/app.js', 'public/js')
     .js('resources/js/delete-modal', 'public/js')
+    .js('resources/js/annul-modal', 'public/js')
     .js('resources/js/import-modal', 'public/js')
+    .js('resources/js/export-modal', 'public/js')
+    .js('resources/js/assign-format', 'public/js')
     .sass('resources/sass/app.scss', 'public/css')
     .sass('resources/sass/auth.scss', 'public/css')
     .sass('resources/sass/custom.scss', 'public/css')

@@ -3,6 +3,7 @@
 namespace Tests\Feature\Admin\Products;
 
 use App\User;
+use App\Product;
 use Tests\TestCase;
 use App\Exports\ProductsExport;
 use Maatwebsite\Excel\Facades\Excel;
@@ -17,13 +18,14 @@ class ExcelProductTest extends TestCase
      */
     public function user_can_download_products_export()
     {
+        $products = factory(Product::class, 10)->create();
         $user = factory(User::class)->create();
         Excel::fake();
 
-        $this->actingAs($user)->get(route('export.products'));
+        $this->actingAs($user)->get(route('products.index', ['format' => 'xlsx']));
 
-        Excel::assertDownloaded('products-list.xlsx', function (ProductsExport $export) {
-            return $export->view()->name() == 'exports.products';
+        Excel::assertDownloaded('products-list.xlsx', function (ProductsExport $export) use ($products) {
+            return $export->collection()->contains($products->random());
         });
     }
 }

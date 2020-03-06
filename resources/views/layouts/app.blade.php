@@ -51,6 +51,12 @@
                             <i class="fa fa-barcode"></i> {{ __("Productos") }}
                         </a>
                     </li>
+                    <li class="nav-item">
+                        <a href="{{ route('reports.index') }}"
+                           class="nav-link {{ request()->segment(1) == 'reportes' ? 'active' : '' }}">
+                            <i class="fa fa-registered"></i> {{ __("Reportes") }}
+                        </a>
+                    </li>
                 </ul>
                 @endauth
                 <!-- Right Side Of Navbar -->

@@ -10,9 +10,9 @@
     </a>
 @endsection
 @section('Actions')
-    <a class="btn btn-secondary" href="{{ route('export.invoices') }}">
-        <i class="fa fa-file-excel"></i> {{ __("Exportar a Excel") }}
-    </a>
+    <button type="button" class="btn btn-warning" data-route="{{ route('invoices.index') }}" data-toggle="modal" data-target="#exportModal">
+        <i class="fa fa-file"></i> {{ __("Exportar") }}
+    </button>
     <button type="button" class="btn btn-warning" data-route="{{ route('import.invoices') }}" data-toggle="modal" data-target="#importModal">
         <i class="fa fa-file-excel"></i> {{ __("Importar desde Excel") }}
     </button>
@@ -73,3 +73,9 @@
 @section('Links')
     {{ $invoices->appends($request->all())->links() }}
 @endsection
+@push('modals')
+    @include('invoices.__confirm_annulment_modal')
+@endpush
+@push('scripts')
+    <script src="{{ asset(mix('js/annul-modal.js')) }}"></script>
+@endpush

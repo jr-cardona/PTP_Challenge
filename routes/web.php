@@ -27,18 +27,6 @@ Route::middleware(['auth'])->group(static function () {
     Route::get('/vendedores/buscar', 'SearchController@sellers')
         ->name('search.sellers');
 
-    Route::get('/clientes/exportar', 'ExportController@clients')
-        ->name('export.clients');
-
-    Route::get('/facturas/exportar', 'ExportController@invoices')
-        ->name('export.invoices');
-
-    Route::get('/productos/exportar', 'ExportController@products')
-        ->name('export.products');
-
-    Route::get('/vendedores/exportar', 'ExportController@sellers')
-        ->name('export.sellers');
-
     Route::post('/clientes/importar', 'ImportController@clients')
         ->name('import.clients');
 
@@ -77,8 +65,11 @@ Route::middleware(['auth'])->group(static function () {
         ->names('sellers')
         ->parameters(['vendedores' => 'seller']);
 
-    Route::get('/invoices/received-check/{invoice}', 'InvoiceController@receivedCheck')
+    Route::get('/facturas/received-check/{invoice}', 'InvoiceController@receivedCheck')
         ->name('invoices.receivedCheck');
-    Route::get('/invoices/annul/{invoice}', 'InvoiceController@annul')
-        ->name('invoices.annul');
+
+    Route::get('/reportes', 'ReportController@index')
+        ->name('reports.index');
+    Route::get('/reportes/clientes', 'ReportController@clients')
+        ->name('reports.clients');
 });

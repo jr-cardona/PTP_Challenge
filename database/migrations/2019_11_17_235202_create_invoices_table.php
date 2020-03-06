@@ -21,6 +21,7 @@ class CreateInvoicesTable extends Migration
             $table->dateTime('annulled_at')->nullable();
             $table->dateTime('received_at')->nullable();
             $table->string('description')->nullable();
+            $table->string('annulment_reason')->nullable();
             $table->unsignedInteger('client_id');
             $table->unsignedInteger('seller_id');
             $table->foreign('client_id')->references('id')->on('clients')->onDelete('cascade');

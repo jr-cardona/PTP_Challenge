@@ -5,6 +5,7 @@ namespace Tests\Feature\Admin\InvoiceProducts;
 use App\User;
 use App\Product;
 use App\Invoice;
+use Carbon\Carbon;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
@@ -28,6 +29,28 @@ class StoreInvoiceProductTest extends TestCase
 
         $this->post(route('invoices.products.store', $invoice), $data)->assertRedirect(route('login'));
         $this->assertDatabaseMissing('invoice_product', $data);
+    }
+
+    /** @test */
+    public function logged_in_user_cannot_store_paid_invoices_view()
+    {
+        $invoice = factory(Invoice::class)->create(["paid_at" => Carbon::now()]);
+        $user = factory(User::class)->create();
+        $data = $this->data();
+
+        $response = $this->actingAs($user)->post(route('invoices.products.store', $invoice), $data);
+        $response->assertRedirect(route('invoices.show', $invoice));
+    }
+
+    /** @test */
+    public function logged_in_user_cannot_store_annulled_invoices_view()
+    {
+        $invoice = factory(Invoice::class)->create(["annulled_at" => Carbon::now()]);
+        $user = factory(User::class)->create();
+        $data = $this->data();
+
+        $response = $this->actingAs($user)->post(route('invoices.products.store', $invoice), $data);
+        $response->assertRedirect(route('invoices.show', $invoice));
     }
 
     /** @test */

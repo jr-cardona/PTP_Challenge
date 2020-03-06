@@ -9,9 +9,6 @@
             <a href="{{ route('invoices.payments.create', $invoice) }}" class="btn btn-success">
                 <i class="fa fa-dollar-sign"></i> {{ __("Pagar") }}
             </a>
-            <a href="{{ route('invoices.annul', $invoice) }}" class="btn btn-warning">
-                <i class="fa fa-exclamation-circle"></i> {{ __("Anular") }}
-            </a>
             @empty($invoice->received_at)
                 <a href="{{ route('invoices.receivedCheck', $invoice) }}" class="btn btn-primary">
                     <i class="fa fa-check"></i> {{ __("Marcar como recibida") }}
@@ -82,6 +79,11 @@
             <tr>
                 <td class="table-dark td-title custom-header">{{ __("Descripción:") }}</td>
                 <td class="td-content">{{ $invoice->description }}</td>
+
+                @if(! empty($invoice->annulment_reason))
+                    <td class="table-dark td-title custom-header">{{ __("Motivo de anulación:") }}</td>
+                    <td class="td-content">{{ $invoice->annulment_reason }}</td>
+                @endif
             </tr>
         </table>
     </div>
@@ -126,15 +128,21 @@
                     </tr>
                @endforeach
                 <tr>
-                    <td class="text-right" colspan="5">{{ __("SUBTOTAL") }}</td>
+                    <td class="text-right" colspan="5">
+                        <strong>{{ __("SUBTOTAL") }}</strong>
+                    </td>
                     <td class="text-right">${{ number_format($invoice->subtotal, 2) }}</td>
                 </tr>
                 <tr>
-                    <td class="text-right" colspan="5">{{ __("IVA") }} ({{ Config::get('constants.vat') }})% </td>
+                    <td class="text-right" colspan="5">
+                        <strong>{{ __("IVA") }} ({{ Config::get('constants.vat') }})%</strong>
+                    </td>
                     <td class="text-right">${{ number_format($invoice->ivaamount, 2) }}</td>
                 </tr>
                 <tr>
-                    <td class="text-right" colspan="5">{{ __("VALOR TOTAL") }}</td>
+                    <td class="text-right" colspan="5">
+                        <strong>{{ __("VALOR TOTAL") }}</strong>
+                    </td>
                     <td class="text-right">${{ number_format($invoice->total, 2) }}</td>
                 </tr>
             </tbody>
@@ -174,3 +182,9 @@
         </table>
     </div>
 @endsection
+@push('modals')
+    @include('invoices.__confirm_annulment_modal')
+@endpush
+@push('scripts')
+    <script src="{{ asset(mix('js/annul-modal.js')) }}"></script>
+@endpush

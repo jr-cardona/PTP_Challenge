@@ -1,9 +1,11 @@
-@if(! $invoice->isPaid())
-    <a href="{{ route('invoices.edit', $invoice) }}" class="btn btn-primary">
-        <i class="fa fa-edit"></i>@routeIs('invoices.show', $invoice) {{ __("Editar") }} @endif
-    </a>
-    <button type="button" class="btn btn-danger" data-route="{{ route('invoices.destroy', $invoice) }}"
-            data-toggle="modal" data-target="#confirmDeleteModal" data-message="Se borrará toda su lista de productos">
-        <i class="fa fa-trash"></i>@routeIs('invoices.show', $invoice)  {{ __("Eliminar") }} @endif
+@if(! $invoice->isAnnulled())
+    @if(! $invoice->isPaid())
+        <a href="{{ route('invoices.edit', $invoice) }}" class="btn btn-primary" title="Editar">
+            <i class="fa fa-edit"></i>@routeIs('invoices.show', $invoice) {{ __("Editar") }} @endif
+        </a>
+    @endif
+    <button type="button" class="btn btn-warning" data-toggle="modal" title="Anular"
+            data-route="{{ route("invoices.destroy", $invoice) }}" data-target="#confirmAnnulmentModal">
+        <i class="fa fa-exclamation-circle"></i>@routeIs('invoices.show', $invoice) {{ __("Anular") }} @endif
     </button>
 @endif

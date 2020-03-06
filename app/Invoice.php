@@ -69,38 +69,22 @@ class Invoice extends Model
     /** DERIVED ATTRIBUTES */
     public function isExpired()
     {
-        if ($this->expires_at <= Carbon::now() && ! $this->isPaid()) {
-            return true;
-        } else {
-            return false;
-        }
+        return ($this->expires_at <= Carbon::now() && ! $this->isPaid());
     }
 
     public function isPaid()
     {
-        if (! empty($this->paid_at)) {
-            return true;
-        } else {
-            return false;
-        }
+        return (! empty($this->paid_at));
     }
 
     public function isPending()
     {
-        if (! $this->isPaid() && ! $this->isExpired()) {
-            return true;
-        } else {
-            return false;
-        }
+        return (! $this->isPaid() && ! $this->isExpired());
     }
 
     public function isAnnulled()
     {
-        if (! empty($this->annulled_at)) {
-            return true;
-        } else {
-            return false;
-        }
+        return (! empty($this->annulled_at));
     }
 
     public function getSubtotalAttribute()
@@ -130,6 +114,21 @@ class Invoice extends Model
     public function getFullNameAttribute()
     {
         return __("Factura de venta No. ").str_pad($this->id, 5, "0", STR_PAD_LEFT);
+    }
+
+    public function getStateAttribute(){
+        if ($this->isAnnulled()) {
+            return "Anulada";
+        }
+        if ($this->isExpired()) {
+            return "Vencida";
+        }
+        if ($this->isPaid()) {
+            return "Pagada";
+        }
+        if ($this->isPending()) {
+            return "Pendiente";
+        }
     }
 
     /** Query Scopes */
@@ -180,11 +179,14 @@ class Invoice extends Model
 
     public function scopeState($query, $state)
     {
+        if (trim($state) === "annulled") {
+            return $query->whereNotNull('annulled_at');
+        }
         if (trim($state) === "paid") {
             return $query->whereNotNull('paid_at');
         }
         if (trim($state) === "expired") {
-            return $query->whereDate('expires_at', "<=", Carbon::now())->whereNotNull('paid_at');
+            return $query->whereDate('expires_at', "<=", Carbon::now())->whereNull('paid_at');
         }
         if (trim($state) === "pending") {
             return $query->whereNull("paid_at")->whereDate('expires_at', ">", Carbon::now());

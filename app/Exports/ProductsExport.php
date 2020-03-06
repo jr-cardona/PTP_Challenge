@@ -2,16 +2,46 @@
 
 namespace App\Exports;
 
-use App\Product;
-use Illuminate\Contracts\View\View;
-use Maatwebsite\Excel\Concerns\FromView;
+use Maatwebsite\Excel\Concerns\Exportable;
+use Illuminate\Contracts\Queue\ShouldQueue;
+use Maatwebsite\Excel\Concerns\WithMapping;
+use Maatwebsite\Excel\Concerns\WithHeadings;
+use Illuminate\Contracts\Support\Responsable;
+use Maatwebsite\Excel\Concerns\FromCollection;
 
-class ProductsExport implements FromView
+class ProductsExport implements FromCollection, Responsable, WithHeadings, WithMapping, ShouldQueue
 {
-    public function view(): View
+    use Exportable;
+
+    private $products;
+
+    public function __construct($products)
     {
-        return view('exports.products', [
-            'products' => Product::all()
-        ]);
+        $this->products = $products;
+    }
+
+    public function collection()
+    {
+        return $this->products;
+    }
+
+    public function map($product): array
+    {
+        return [
+            $product->name,
+            $product->cost,
+            $product->price,
+            $product->description,
+        ];
+    }
+
+    public function headings(): array
+    {
+        return [
+            'Nombre',
+            'Costo',
+            'Precio',
+            'Descripción',
+        ];
     }
 }

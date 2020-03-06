@@ -44,9 +44,12 @@
 @push('modals')
     @include('partials.__confirm_delete_modal')
     @include('partials.__import_modal')
+    @include('partials.__export_modal')
 @endpush
 @push('scripts')
     <script src="{{ asset(mix('js/app.js')) }}"></script>
     <script src="{{ asset(mix('js/delete-modal.js')) }}"></script>
     <script src="{{ asset(mix('js/import-modal.js')) }}"></script>
+    <script src="{{ asset(mix('js/export-modal.js')) }}"></script>
+    <script src="{{ asset(mix('js/assign-format.js')) }}"></script>
 @endpush

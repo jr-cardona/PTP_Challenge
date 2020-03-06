@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Config;
 use App\Product;
 use Illuminate\Http\Request;
+use App\Exports\ProductsExport;
 use App\Http\Requests\SaveProductRequest;
 
 class ProductController extends Controller
@@ -16,18 +17,23 @@ class ProductController extends Controller
      */
     public function index(Request $request)
     {
-        $paginate = Config::get('constants.paginate');
-        $products = Product::orderBy('id')
-            ->id($request->get('id'));
-        $count = $products->count();
-        $products = $products->paginate(10);
+        $products = Product::id($request->get('id'))
+            ->orderBy('id');
+        if(! empty($request->get('format'))){
+            return (new ProductsExport($products->get()))
+                ->download('products-list.'.$request->get('format'));
+        } else {
+            $paginate = Config::get('constants.paginate');
+            $count = $products->count();
+            $products = $products->paginate($paginate);
 
-        return response()->view('products.index', [
-            'products' => $products,
-            'request' => $request,
-            'count' => $count,
-            'paginate' => $paginate,
-        ]);
+            return response()->view('products.index', [
+                'products' => $products,
+                'request' => $request,
+                'count' => $count,
+                'paginate' => $paginate,
+            ]);
+        }
     }
 
     /**
@@ -95,7 +101,10 @@ class ProductController extends Controller
      */
     public function update(SaveProductRequest $request, Product $product)
     {
-        $product->update($request->validated());
+        $product->update(array_merge(
+            $request->validated(), [
+            'price' => $request->get('cost') * 1.10
+        ]));
 
         return redirect()->route('products.show', $product)->withSuccess(__('Producto actualizado satisfactoriamente'));
     }
@@ -109,8 +118,11 @@ class ProductController extends Controller
      */
     public function destroy(Product $product)
     {
-        $product->delete();
-
-        return redirect()->route('products.index')->withSuccess(__('Producto eliminado satisfactoriamente'));
+        if ($product->invoices->count() > 0){
+            return redirect()->back()->withError(__('No se puede eliminar, hay facturas asociadas con este producto'));
+        } else{
+            $product->delete();
+            return redirect()->route('products.index')->withSuccess(__('Producto eliminado satisfactoriamente'));
+        }
     }
 }

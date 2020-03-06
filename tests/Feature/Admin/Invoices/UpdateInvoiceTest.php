@@ -25,6 +25,28 @@ class UpdateInvoiceTest extends TestCase
     }
 
     /** @test */
+    public function logged_in_user_cannot_update_paid_invoices()
+    {
+        $invoice = factory(Invoice::class)->create(["paid_at" => Carbon::now()]);
+        $user = factory(User::class)->create();
+        $data = $this->data();
+
+        $response = $this->actingAs($user)->put(route('invoices.update', $invoice), $data);
+        $response->assertRedirect(route('invoices.show', $invoice));
+    }
+
+    /** @test */
+    public function logged_in_user_cannot_update_annulled_invoices()
+    {
+        $invoice = factory(Invoice::class)->create(["annulled_at" => Carbon::now()]);
+        $user = factory(User::class)->create();
+        $data = $this->data();
+
+        $response = $this->actingAs($user)->put(route('invoices.update', $invoice), $data);
+        $response->assertRedirect(route('invoices.show', $invoice));
+    }
+
+    /** @test */
     public function logged_in_user_can_update_invoices()
     {
         $invoice = factory(Invoice::class)->create();
@@ -48,7 +70,7 @@ class UpdateInvoiceTest extends TestCase
     }
 
     /** @test */
-    public function datan_invoice_can_be_updated_in_database()
+    public function data_invoice_can_be_updated_in_database()
     {
         $invoice = factory(Invoice::class)->create();
         $user = factory(User::class)->create();

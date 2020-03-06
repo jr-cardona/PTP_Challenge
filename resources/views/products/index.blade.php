@@ -10,9 +10,9 @@
     </a>
 @endsection
 @section('Actions')
-    <a class="btn btn-secondary" href="{{ route('export.products') }}">
-        <i class="fa fa-file-excel"></i> {{ __("Exportar a Excel") }}
-    </a>
+    <button type="button" class="btn btn-warning" data-route="{{ route('products.index') }}" data-toggle="modal" data-target="#exportModal">
+        <i class="fa fa-file"></i> {{ __("Exportar") }}
+    </button>
     <button type="button" class="btn btn-warning" data-route="{{ route('import.products') }}" data-toggle="modal" data-target="#importModal">
         <i class="fa fa-file-excel"></i> {{ __("Importar desde Excel") }}
     </button>
@@ -26,7 +26,8 @@
 @section('Header')
     <th class="text-center" nowrap>{{ __("Código") }}</th>
     <th class="text-center" nowrap>{{ __("Nombre") }}</th>
-    <th class="text-center" nowrap>{{ __("Precio unitario") }}</th>
+    <th class="text-center" nowrap>{{ __("Costo") }}</th>
+    <th class="text-center" nowrap>{{ __("Precio") }}</th>
     <th class="text-center" nowrap>{{ __("Fecha de creación") }}</th>
     <th class="text-center" nowrap>{{ __("Fecha de modificación") }}</th>
     <th class="text-center" nowrap>{{ __("Opciones") }}</th>
@@ -40,6 +41,7 @@
                     {{ $product->name }}
                 </a>
             </td>
+            <td nowrap>$ {{ number_format($product->cost, 2) }}</td>
             <td nowrap>$ {{ number_format($product->price, 2) }}</td>
             <td nowrap>{{ $product->created_at->isoFormat('Y-MM-DD hh:mma') }}</td>
             <td nowrap>{{ $product->updated_at->isoFormat('Y-MM-DD hh:mma') }}</td>

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Config;
 use App\Seller;
 use Illuminate\Http\Request;
+use App\Exports\SellersExport;
 use App\Http\Requests\SaveSellerRequest;
 
 class SellerController extends Controller
@@ -16,22 +17,27 @@ class SellerController extends Controller
      */
     public function index(Request $request)
     {
-        $paginate = Config::get('constants.paginate');
         $sellers = Seller::with(["type_document"])
             ->id($request->get('id'))
             ->typedocument($request->get('type_document_id'))
             ->document($request->get('document'))
             ->email($request->get('email'))
             ->orderBy('name');
-        $count = $sellers->count();
-        $sellers = $sellers->paginate(10);
+        if(! empty($request->get('format'))){
+            return (new SellersExport($sellers->get()))
+                ->download('sellers-list.'.$request->get('format'));
+        } else {
+            $paginate = Config::get('constants.paginate');
+            $count = $sellers->count();
+            $sellers = $sellers->paginate($paginate);
 
-        return response()->view('sellers.index', [
-            'sellers' => $sellers,
-            'request' => $request,
-            'count' => $count,
-            'paginate' => $paginate,
-        ]);
+            return response()->view('sellers.index', [
+                'sellers' => $sellers,
+                'request' => $request,
+                'count' => $count,
+                'paginate' => $paginate,
+            ]);
+        }
     }
 
     /**

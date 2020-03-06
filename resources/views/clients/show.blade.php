@@ -57,7 +57,7 @@
         <div class="card-header justify-content-between d-flex">
             <div class="col-md-1"></div>
             <h3 class="col-md-3">{{ __("Facturas asociadas") }}</h3>
-            <a class="btn btn-success" target="_blank"
+            <a class="btn btn-success"
                href="{{ route('invoices.create', ["client_id" => $client->id, "client" => $client->fullname]) }}" >
                 <i class="fa fa-plus"></i>
             </a>
