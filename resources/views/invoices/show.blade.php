@@ -137,7 +137,7 @@
                     <td class="text-right" colspan="5">
                         <strong>{{ __("IVA") }} ({{ Config::get('constants.vat') }})%</strong>
                     </td>
-                    <td class="text-right">${{ number_format($invoice->ivaamount, 2) }}</td>
+                    <td class="text-right">${{ number_format($invoice->vat_amount, 2) }}</td>
                 </tr>
                 <tr>
                     <td class="text-right" colspan="5">
