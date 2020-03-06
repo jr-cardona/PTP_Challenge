@@ -87,25 +87,6 @@ class Invoice extends Model
         return (! empty($this->annulled_at));
     }
 
-    public function getSubtotalAttribute()
-    {
-        $subtotal = 0;
-        foreach ($this->products as $product) {
-            $subtotal += $product->pivot->unit_price * $product->pivot->quantity;
-        }
-        return $subtotal;
-    }
-
-    public function getIvaAmountAttribute()
-    {
-        return $this->getSubtotalAttribute() * Config::get('constants.vat') / 100;
-    }
-
-    public function getTotalAttribute()
-    {
-        return $this->getSubtotalAttribute() + $this->getIvaAmountAttribute();
-    }
-
     public function getIssuedAttribute()
     {
         return isset($this->issued_at) ? $this->issued_at->toDateString() : Carbon::now()->toDateString();
@@ -129,6 +110,17 @@ class Invoice extends Model
         if ($this->isPending()) {
             return "Pendiente";
         }
+    }
+
+    public function updateValues(){
+        $subtotal = 0;
+        foreach ($this->products as $product) {
+            $subtotal += $product->pivot->unit_price * $product->pivot->quantity;
+        }
+        $this->subtotal = $subtotal;
+        $this->vat_amount = $subtotal * Config::get('constants.vat') / 100;
+        $this->total = $subtotal + $this->vat_amount;
+        $this->save();
     }
 
     /** Query Scopes */
