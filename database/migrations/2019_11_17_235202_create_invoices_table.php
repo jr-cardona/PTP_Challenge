@@ -20,6 +20,9 @@ class CreateInvoicesTable extends Migration
             $table->dateTime('paid_at')->nullable();
             $table->dateTime('annulled_at')->nullable();
             $table->dateTime('received_at')->nullable();
+            $table->float('subtotal')->default(0);
+            $table->float('vat_amount')->default(0);
+            $table->float('total')->default(0);
             $table->string('description')->nullable();
             $table->string('annulment_reason')->nullable();
             $table->unsignedInteger('client_id');
