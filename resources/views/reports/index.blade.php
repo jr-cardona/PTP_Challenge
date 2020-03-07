@@ -10,7 +10,7 @@
                 <ul>
                     <li><a href="{{ route('reports.clients') }}">Reporte de clientes deudores</a></li>
                     <li><a href="#">Reporte de ventas por vendedor</a></li>
-                    <li><a href="#">Reporte de utilidades</a></li>
+                    <li><a href="{{ route('reports.utilities') }}">Reporte de utilidades</a></li>
                 </ul>
             </div>
         </div>

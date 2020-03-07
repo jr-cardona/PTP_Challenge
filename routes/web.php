@@ -72,4 +72,6 @@ Route::middleware(['auth'])->group(static function () {
         ->name('reports.index');
     Route::get('/reportes/clientes', 'ReportController@clients')
         ->name('reports.clients');
+    Route::get('/reportes/utilidades', 'ReportController@utilities')
+        ->name('reports.utilities');
 });
