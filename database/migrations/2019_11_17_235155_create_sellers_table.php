@@ -20,7 +20,7 @@ class CreateSellersTable extends Migration
             $table->unsignedInteger('type_document_id');
             $table->string('name');
             $table->string('surname');
-            $table->string('phone_number')->nullable();
+            $table->string('phone')->nullable();
             $table->string('cellphone');
             $table->string('address');
             $table->string('email')->unique();

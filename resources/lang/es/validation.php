@@ -185,7 +185,7 @@ return [
         'year'                  => 'año',
         'document'              => 'número de documento',
         'type_document_id'      => 'tipo de documento',
-        'phone_number'          => 'número telefónico',
+        'phone'          => 'número telefónico',
         'cellphone'     => 'número de celular',
         'number'                => 'número de factura',
         'received_at'           => 'fecha de facturación',

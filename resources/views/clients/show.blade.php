@@ -38,7 +38,7 @@
             </tr>
             <tr>
                 <td class="table-dark td-title">{{ __("Número telefónico:")}}</td>
-                <td class="td-content">{{ $client->phone_number }}</td>
+                <td class="td-content">{{ $client->phone }}</td>
 
                 <td class="table-dark td-title">{{ __("Celular:")}}</td>
                 <td class="td-content">{{ $client->cellphone }}</td>

@@ -34,7 +34,7 @@ class ClientsExport implements FromCollection, Responsable, WithHeadings, WithMa
             $client->surname,
             $client->email,
             $client->cellphone,
-            $client->phone_number,
+            $client->phone,
             $client->address,
             $client->type_document_id,
         ];

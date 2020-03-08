@@ -33,7 +33,7 @@ class DebtorClientsExport implements FromCollection, Responsable, WithHeadings, 
             $client->id,
             $client->fullname,
             $client->cellphone,
-            $client->phone_number,
+            $client->phone,
             $client->address,
             $client->total_due * $this->vat,
         ];

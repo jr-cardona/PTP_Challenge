@@ -63,10 +63,10 @@
             @enderror
     </div>
     <div class="col">
-        <label for="phone_number">{{ __("Número telefónico") }}</label>
-        <input type="tel" name="phone_number" id="phone_number" value="{{ old('phone_number', $seller->phone_number) }}"
-               class="form-control @error('phone_number') is-invalid @enderror" placeholder="Ingresa el número telefónico">
-        @error('phone_number')
+        <label for="phone">{{ __("Número telefónico") }}</label>
+        <input type="tel" name="phone" id="phone" value="{{ old('phone', $seller->phone) }}"
+               class="form-control @error('phone') is-invalid @enderror" placeholder="Ingresa el número telefónico">
+        @error('phone')
         <span class="invalid-feedback" role="alert">
                 <strong>{{ $message }}</strong>
             </span>

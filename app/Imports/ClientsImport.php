@@ -28,7 +28,7 @@ class ClientsImport extends BaseImport implements ToModel, WithHeadingRow, WithV
             'surname' => $row['Apellido'],
             'email' => $row['Correo electrónico'],
             'cellphone' => $row['Teléfono celular'],
-            'phone_number' => $row['Teléfono fijo'],
+            'phone' => $row['Teléfono fijo'],
             'address' => $row['Dirección'],
         ]);
     }

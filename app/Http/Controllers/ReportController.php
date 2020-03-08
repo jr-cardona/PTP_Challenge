@@ -18,7 +18,7 @@ class ReportController extends Controller
         $vat = (Config::get('constants.vat') / 100) + 1;
         $clients = DB::table('clients as c')
             ->select(DB::raw('c.id, concat(c.name, " " ,c.surname) as fullname, c.cellphone,
-            c.phone_number, c.address, sum(ip.unit_price * ip.quantity) as total_due'))
+            c.phone, c.address, sum(ip.unit_price * ip.quantity) as total_due'))
             ->join('invoices as i', 'i.client_id', '=', 'c.id')
             ->join('invoice_product as ip', 'ip.invoice_id', '=', 'i.id')
             ->join('products as p', 'p.id', '=', 'ip.product_id')

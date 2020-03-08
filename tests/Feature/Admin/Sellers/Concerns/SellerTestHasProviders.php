@@ -116,14 +116,14 @@ trait SellerTestHasProviders
                 'surname',
                 'apellido no debe ser mayor que 50 caracteres.'
             ],
-            'phone_number field is not numeric' => [
-                array_replace_recursive($this->baseData, ['phone_number' => 'Invalid numeric test']),
-                'phone_number',
+            'phone field is not numeric' => [
+                array_replace_recursive($this->baseData, ['phone' => 'Invalid numeric test']),
+                'phone',
                 'número telefónico debe ser numérico.'
             ],
-            'phone_number field length is not 7 characters' => [
-                array_replace_recursive($this->baseData, ['phone_number' => 123]),
-                'phone_number',
+            'phone field length is not 7 characters' => [
+                array_replace_recursive($this->baseData, ['phone' => 123]),
+                'phone',
                 'número telefónico debe tener 7 dígitos.'
             ],
             'cellphone field is null' => [
