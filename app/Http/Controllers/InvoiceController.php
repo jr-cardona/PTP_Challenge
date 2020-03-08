@@ -26,6 +26,7 @@ class InvoiceController extends Controller
             ->issuedDate($request->get('issued_init'), $request->get('issued_final'))
             ->expiresDate($request->get('expires_init'), $request->get('expires_final'))
             ->state($request->get('state'))
+            ->where('owner_id', auth()->id())
             ->orderBy('id', 'DESC');
         if(! empty($request->get('format'))){
             return (new InvoicesExport($invoices->get()))
@@ -92,9 +93,12 @@ class InvoiceController extends Controller
      *
      * @param Invoice $invoice
      * @return \Illuminate\Http\Response | \Illuminate\Http\RedirectResponse
+     * @throws \Illuminate\Auth\Access\AuthorizationException
      */
     public function edit(Invoice $invoice)
     {
+        $this->authorize('view', $invoice);
+
         if ($invoice->isPaid()) {
             return redirect()->route('invoices.show', $invoice)->withInfo(__("La factura ya se encuentra pagada y no se puede editar"));
         }
@@ -112,9 +116,12 @@ class InvoiceController extends Controller
      * @param SaveInvoiceRequest $request
      * @param Invoice $invoice
      * @return \Illuminate\Http\RedirectResponse
+     * @throws \Illuminate\Auth\Access\AuthorizationException
      */
     public function update(SaveInvoiceRequest $request, Invoice $invoice)
     {
+        $this->authorize('update', $invoice);
+
         if ($invoice->isPaid()) {
             return redirect()->route('invoices.show', $invoice)->withInfo(__("La factura ya se encuentra pagada y no se puede actualizar"));
         }
@@ -135,6 +142,8 @@ class InvoiceController extends Controller
      */
     public function destroy(Invoice $invoice, Request $request)
     {
+        $this->authorize('delete', $invoice);
+
         if (! $invoice->isAnnulled()) {
             $now = Carbon::now();
             $invoice->update([

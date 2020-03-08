@@ -19,5 +19,6 @@ mix.js('resources/js/app.js', 'public/js')
     .js('resources/js/assign-format', 'public/js')
     .sass('resources/sass/app.scss', 'public/css')
     .sass('resources/sass/auth.scss', 'public/css')
+    .sass('resources/sass/error.scss', 'public/css')
     .sass('resources/sass/custom.scss', 'public/css')
     .extract();

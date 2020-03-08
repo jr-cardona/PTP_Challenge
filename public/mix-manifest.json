@@ -3,6 +3,7 @@
     "/js/app.js": "/js/app.js",
     "/css/app.css": "/css/app.css",
     "/css/auth.css": "/css/auth.css",
+    "/css/error.css": "/css/error.css",
     "/css/custom.css": "/css/custom.css",
     "/js/assign-format.js": "/js/assign-format.js",
     "/js/delete-modal.js": "/js/delete-modal.js",
