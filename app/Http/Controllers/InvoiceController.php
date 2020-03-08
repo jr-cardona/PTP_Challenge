@@ -18,10 +18,10 @@ class InvoiceController extends Controller
      */
     public function index(Request $request)
     {
-        $invoices = Invoice::with(["client", "seller", "products"])
+        $invoices = Invoice::with(['client', 'owner', 'products'])
             ->number($request->get('number'))
             ->client($request->get('client_id'))
-            ->seller($request->get('seller_id'))
+            ->owner($request->get('owner_id'))
             ->product($request->get('product_id'))
             ->issuedDate($request->get('issued_init'), $request->get('issued_final'))
             ->expiresDate($request->get('expires_init'), $request->get('expires_final'))
@@ -63,11 +63,15 @@ class InvoiceController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function store(SaveInvoiceRequest $request)
+    public function store(SaveInvoiceRequest $request, Invoice $invoice)
     {
-        $result = Invoice::create($request->validated());
+        $invoice->issued_at = $request->input('issued_at');
+        $invoice->client_id = $request->input('client_id');
+        $invoice->owner_id = auth()->id();
+        $invoice->description = $request->input('description');
+        $invoice->save();
 
-        return redirect()->route('invoices.show', $result->id)->withSuccess(__('Factura creada satisfactoriamente'));
+        return redirect()->route('invoices.show', $invoice->id)->withSuccess(__('Factura creada satisfactoriamente'));
     }
 
     /**

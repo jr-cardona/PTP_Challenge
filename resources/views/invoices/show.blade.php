@@ -64,9 +64,7 @@
             <tr>
                 <td class="table-dark td-title custom-header">{{ __("Vendedor:") }}</td>
                 <td class="td-content">
-                    <a href="{{ route('sellers.show', $invoice->seller) }}" target="_blank">
-                        {{ $invoice->seller->fullname }}
-                    </a>
+                    {{ $invoice->owner->name }}
                 </td>
 
                 <td class="table-dark td-title custom-header">{{ __("Cliente:") }}</td>

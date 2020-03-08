@@ -52,9 +52,7 @@
                 </a>
             </td>
             <td nowrap>
-                <a href="{{ route('sellers.show', $invoice->seller) }}" target="_blank">
-                    {{ $invoice->seller->fullname }}
-                </a>
+                {{ $invoice->owner->name }}
             </td>
             <td class="btn-group btn-group-sm" nowrap>
                 @include('invoices._buttons')

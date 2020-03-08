@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\User;
 use App\Client;
 use App\Product;
-use App\Seller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -29,10 +29,10 @@ class SearchController extends Controller
      * @param Request $request
      * @return
      */
-    public function sellers(Request $request)
+    public function owners(Request $request)
     {
-        return Seller::select('id', DB::raw('concat(name, " ", surname) as fullname'))
-            ->where(DB::raw('concat(name, " ", surname)'), 'like', '%'. $request->name .'%')
+        return User::select('id', 'name')
+            ->where('name', 'like', '%'. $request->name .'%')
             ->orderBy('name')
             ->limit('100')
             ->get();

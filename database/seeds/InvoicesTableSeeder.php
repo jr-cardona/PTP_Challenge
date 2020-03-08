@@ -1,5 +1,6 @@
 <?php
 
+use App\User;
 use App\Client;
 use App\Invoice;
 use App\Product;
@@ -16,18 +17,22 @@ class InvoicesTableSeeder extends Seeder
     public function run()
     {
         $clients = Client::all()->count();
-        $invoices = 200;
+        $users = User::all()->count();
+        $invoices = 100;
         for ($j = 1; $j <= $invoices; $j++){
-            $client_id = $j % $clients == 0 ? $clients : ($j % $clients);
+            $clientId = $j % $clients == 0 ? $clients : ($j % $clients);
+            $userId = $j % $users == 0 ? $users : ($j % $users);
             if ($j > ($invoices / 2)){
                 $invoice = factory(Invoice::class)->create([
-                    "client_id" => $client_id,
-                    "paid_at" => Carbon::now(),
+                    'client_id' => $clientId,
+                    'owner_id' => $userId,
+                    'paid_at' => Carbon::now(),
                 ]);
             }else{
                 $invoice = factory(Invoice::class)->create([
-                    "client_id" => $client_id,
-                    "issued_at" => Carbon::now()->subMonth(),
+                    'client_id' => $clientId,
+                    'owner_id' => $userId,
+                    'issued_at' => Carbon::now()->subMonth(),
                 ]);
             }
             for($i = 0; $i < 10; $i++){
@@ -38,6 +43,5 @@ class InvoicesTableSeeder extends Seeder
                 ]);
             }
         }
-        factory(Invoice::class, 10)->create();
     }
 }

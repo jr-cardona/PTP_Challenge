@@ -40,12 +40,12 @@ class Invoice extends Model
     }
 
     /**
-     * Relation between invoices and sellers
+     * Relation between invoices and users
      * @return BelongsTo
      */
-    public function seller(): BelongsTo
+    public function owner(): BelongsTo
     {
-        return $this->belongsTo(Seller::class);
+        return $this->belongsTo(User::class);
     }
 
     /**
@@ -139,17 +139,17 @@ class Invoice extends Model
         }
     }
 
-    public function scopeClient($query, $client_id)
+    public function scopeClient($query, $clientId)
     {
-        if (trim($client_id) !== '') {
-            return $query->where('client_id', $client_id);
+        if (trim($clientId) !== '') {
+            return $query->where('client_id', $clientId);
         }
     }
 
-    public function scopeSeller($query, $seller_id)
+    public function scopeOwner($query, $ownerId)
     {
-        if (trim($seller_id) !== '') {
-            return $query->where('seller_id', $seller_id);
+        if (trim($ownerId) !== '') {
+            return $query->where('owner_id', $ownerId);
         }
     }
 

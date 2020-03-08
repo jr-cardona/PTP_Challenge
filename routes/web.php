@@ -24,8 +24,8 @@ Route::middleware(['auth'])->group(static function () {
     Route::get('/productos/buscar', 'SearchController@products')
         ->name('search.products');
 
-    Route::get('/vendedores/buscar', 'SearchController@sellers')
-        ->name('search.sellers');
+    Route::get('/usuarios/buscar', 'SearchController@owners')
+        ->name('search.owners');
 
     Route::post('/clientes/importar', 'ImportController@clients')
         ->name('import.clients');
