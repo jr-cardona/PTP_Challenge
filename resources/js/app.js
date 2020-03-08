@@ -37,7 +37,7 @@ const app = new Vue({
         },
         old_owner_values: {
             "id": $('#old_owner_id').val(),
-            "fullname" : $('#old_owner_fullname').val(),
+            "name" : $('#old_owner_name').val(),
         },
         old_product_values: {
             "id": $('#old_product_id').val(),

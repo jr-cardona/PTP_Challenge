@@ -35,7 +35,7 @@
     <div class="col">
         <label for="seller_id">{{ __("Vendedor") }}</label>
         <span class="form-control">
-            {{ auth()->user()->name }}
+            {{ isset($invoice->owner->name) ? $invoice->owner->name : auth()->user()->name }}
         </span>
     </div>
 </div>

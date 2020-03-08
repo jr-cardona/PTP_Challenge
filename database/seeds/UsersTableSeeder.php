@@ -1,7 +1,8 @@
 <?php
 
-use Illuminate\Database\Seeder;
 use App\User;
+use Illuminate\Database\Seeder;
+use Spatie\Permission\Models\Role;
 
 class UsersTableSeeder extends Seeder
 {
@@ -12,14 +13,26 @@ class UsersTableSeeder extends Seeder
      */
     public function run()
     {
-        factory(User::class)->create([
+        $adminRole = Role::create(['name' => 'Admin']);
+        $sellerRole = Role::create(['name' => 'Seller']);
+        $clientRole = Role::create(['name' => 'Client']);
+
+        $admin = factory(User::class)->create([
             'name' => 'Admin',
             'email' => 'admin@example.com',
         ]);
+        $admin->assignRole($adminRole);
 
-        factory(User::class)->create([
-            'name' => 'Juan Ricardo',
-            'email' => 'jrrricardo11@gmail.com',
+        $seller = factory(User::class)->create([
+            'name' => 'Seller1',
+            'email' => 'seller1@example.com',
         ]);
+        $seller->assignRole($sellerRole);
+
+        $client = factory(User::class)->create([
+            'name' => 'Client1',
+            'email' => 'client1@example.com',
+        ]);
+        $client->assignRole($clientRole);
     }
 }

@@ -136,6 +136,8 @@ class Invoice extends Model
     {
         if (trim($number) !== '') {
             return $query->where('id', 'LIKE', "%${number}%");
+        } else {
+            return $query;
         }
     }
 
@@ -143,13 +145,21 @@ class Invoice extends Model
     {
         if (trim($clientId) !== '') {
             return $query->where('client_id', $clientId);
+        } else {
+            return $query;
         }
     }
 
     public function scopeOwner($query, $ownerId)
     {
-        if (trim($ownerId) !== '') {
-            return $query->where('owner_id', $ownerId);
+        if (auth()->user()->hasRole('Admin')) {
+            if (trim($ownerId) !== '') {
+                return $query->where('owner_id', $ownerId);
+            } else {
+                return $query;
+            }
+        } else {
+            return $query->where('owner_id', auth()->id());
         }
     }
 
@@ -160,6 +170,8 @@ class Invoice extends Model
                 static function (Builder $query) use ($product_id) {
                 $query->where('product_id', $product_id);
             });
+        } else {
+            return $query;
         }
     }
 
@@ -167,6 +179,8 @@ class Invoice extends Model
     {
         if (trim($issued_init) !== '' && trim($issued_final) !== '') {
             return $query->whereBetween('issued_at', [$issued_init, $issued_final]);
+        } else {
+            return $query;
         }
     }
 
@@ -174,6 +188,8 @@ class Invoice extends Model
     {
         if (trim($expires_init) !== '' && trim($expires_final) !== '') {
             return $query->whereBetween('expires_at', [$expires_init, $expires_final]);
+        } else {
+            return $query;
         }
     }
 
@@ -190,6 +206,8 @@ class Invoice extends Model
         }
         if (trim($state) === "pending") {
             return $query->whereNull("paid_at")->whereDate('expires_at', ">", Carbon::now());
+        } else {
+            return $query;
         }
     }
 }

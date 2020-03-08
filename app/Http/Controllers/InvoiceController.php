@@ -19,14 +19,13 @@ class InvoiceController extends Controller
     public function index(Request $request)
     {
         $invoices = Invoice::with(['client', 'owner', 'products'])
+            ->owner($request->get('owner_id'))
             ->number($request->get('number'))
             ->client($request->get('client_id'))
-            ->owner($request->get('owner_id'))
             ->product($request->get('product_id'))
             ->issuedDate($request->get('issued_init'), $request->get('issued_final'))
             ->expiresDate($request->get('expires_init'), $request->get('expires_final'))
             ->state($request->get('state'))
-            ->where('owner_id', auth()->id())
             ->orderBy('id', 'DESC');
         if(! empty($request->get('format'))){
             return (new InvoicesExport($invoices->get()))
