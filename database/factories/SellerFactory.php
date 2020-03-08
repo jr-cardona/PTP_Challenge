@@ -14,7 +14,7 @@ $factory->define(Seller::class, function (Faker $faker) {
         'name' => $faker->firstName,
         'surname' => $faker->firstName,
         'phone_number' => $faker->numberBetween(1000000, 9999999),
-        'cell_phone_number' => "3".$faker->numberBetween(100000000, 999999999),
+        'cellphone' => "3".$faker->numberBetween(100000000, 999999999),
         'address' => $faker->address,
         'email' => $faker->unique()->safeEmail
     ];

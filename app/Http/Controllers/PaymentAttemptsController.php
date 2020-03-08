@@ -34,7 +34,7 @@ class PaymentAttemptsController extends Controller
                 "email" => $invoice->client->email,
                 "documentType" => $invoice->client->type_document->name,
                 "document" => $invoice->client->document,
-                "mobile" => $invoice->client->cell_phone_number,
+                "mobile" => $invoice->client->cellphone,
                 "address" => [
                     "street" => $invoice->client->address,
                 ]

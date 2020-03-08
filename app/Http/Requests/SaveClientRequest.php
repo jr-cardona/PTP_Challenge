@@ -36,7 +36,7 @@ class SaveClientRequest extends FormRequest
             'name' => 'required|string|min:3|max:50',
             'surname' => 'required|string|min:3|max:50',
             'phone_number' => 'nullable|numeric|digits:7',
-            'cell_phone_number' => 'required|numeric|digits:10|starts_with:3',
+            'cellphone' => 'required|numeric|digits:10|starts_with:3',
             'address' => 'required|string|min:5|max:100',
             'email' => [
                 'required',

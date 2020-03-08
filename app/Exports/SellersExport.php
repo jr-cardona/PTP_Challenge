@@ -33,7 +33,7 @@ class SellersExport implements FromCollection, Responsable, WithHeadings, WithMa
             $seller->name,
             $seller->surname,
             $seller->email,
-            $seller->cell_phone_number,
+            $seller->cellphone,
             $seller->phone_number,
             $seller->address,
             $seller->type_document_id,

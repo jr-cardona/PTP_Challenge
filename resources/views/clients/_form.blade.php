@@ -77,10 +77,10 @@
         @enderror
     </div>
     <div class="col">
-        <label for="cell_phone_number" class="required">{{ __("Número de celular") }}</label>
-        <input type="tel" name="cell_phone_number" id="cell_phone_number" value="{{ old('cell_phone_number', $client->cell_phone_number) }}"
-               class="form-control @error('cell_phone_number') is-invalid @enderror" placeholder="Ingresa el número de celular" required minlength="10" maxlength="10">
-        @error('cell_phone_number')
+        <label for="cellphone" class="required">{{ __("Número de celular") }}</label>
+        <input type="tel" name="cellphone" id="cellphone" value="{{ old('cellphone', $client->cellphone) }}"
+               class="form-control @error('cellphone') is-invalid @enderror" placeholder="Ingresa el número de celular" required minlength="10" maxlength="10">
+        @error('cellphone')
             <span class="invalid-feedback" role="alert">
                 <strong>{{ $message }}</strong>
             </span>

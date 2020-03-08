@@ -41,7 +41,7 @@
                 <td class="td-content">{{ $client->phone_number }}</td>
 
                 <td class="table-dark td-title">{{ __("Celular:")}}</td>
-                <td class="td-content">{{ $client->cell_phone_number }}</td>
+                <td class="td-content">{{ $client->cellphone }}</td>
             </tr>
             <tr>
                 <td class="table-dark td-title">{{ __("Dirección:")}}</td>

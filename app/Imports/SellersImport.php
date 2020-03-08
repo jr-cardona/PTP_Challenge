@@ -27,7 +27,7 @@ class SellersImport extends BaseImport implements ToModel, WithHeadingRow, WithV
             'name' => $row['Nombre'],
             'surname' => $row['Apellido'],
             'email' => $row['Correo electrónico'],
-            'cell_phone_number' => $row['Teléfono celular'],
+            'cellphone' => $row['Teléfono celular'],
             'phone_number' => $row['Teléfono fijo'],
             'address' => $row['Dirección'],
         ]);

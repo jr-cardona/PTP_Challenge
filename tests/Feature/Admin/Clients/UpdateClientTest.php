@@ -57,7 +57,7 @@ class UpdateClientTest extends TestCase
             'type_document_id' => $type_document->id,
             'name' => 'Test Name',
             'surname' => 'Test Surname',
-            'cell_phone_number' => '3000000000',
+            'cellphone' => '3000000000',
             'address' => 'Test Address',
             'email' => 'test@test.com',
         ];

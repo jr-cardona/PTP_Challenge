@@ -40,7 +40,7 @@
             </td>
             <td>{{ $seller->fullname }}</td>
             <td>{{ $seller->email }}</td>
-            <td>{{ $seller->cell_phone_number }}</td>
+            <td>{{ $seller->cellphone }}</td>
             <td class="btn-group btn-group-sm" nowrap>
                 @include('sellers._buttons')
             </td>

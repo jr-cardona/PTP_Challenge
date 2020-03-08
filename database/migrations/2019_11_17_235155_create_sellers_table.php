@@ -21,7 +21,7 @@ class CreateSellersTable extends Migration
             $table->string('name');
             $table->string('surname');
             $table->string('phone_number')->nullable();
-            $table->string('cell_phone_number');
+            $table->string('cellphone');
             $table->string('address');
             $table->string('email')->unique();
             $table->foreign('type_document_id')->references('id')->on('type_documents')->onDelete('cascade');
