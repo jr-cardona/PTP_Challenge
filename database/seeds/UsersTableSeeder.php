@@ -1,5 +1,6 @@
 <?php
 
+use App\Client;
 use App\User;
 use Illuminate\Database\Seeder;
 use Spatie\Permission\Models\Role;
@@ -13,26 +14,40 @@ class UsersTableSeeder extends Seeder
      */
     public function run()
     {
-        $adminRole = Role::create(['name' => 'Admin']);
-        $sellerRole = Role::create(['name' => 'Seller']);
-        $clientRole = Role::create(['name' => 'Client']);
-
-        $admin = factory(User::class)->create([
+        factory(User::class)->create([
             'name' => 'Admin',
+            'surname' => 'Admin',
             'email' => 'admin@example.com',
-        ]);
-        $admin->assignRole($adminRole);
+        ])
+            ->assignRole(Role::where('name', 'Admin')->get());
 
-        $seller = factory(User::class)->create([
-            'name' => 'Seller1',
+        factory(User::class)->create([
+            'name' => 'Seller',
+            'surname' => '1',
             'email' => 'seller1@example.com',
-        ]);
-        $seller->assignRole($sellerRole);
+        ])
+            ->assignRole(Role::where('name', 'Seller')->get());
 
-        $client = factory(User::class)->create([
-            'name' => 'Client1',
+        $user = factory(User::class)->create([
+            'name' => 'Client',
+            'surname' => '1',
             'email' => 'client1@example.com',
-        ]);
-        $client->assignRole($clientRole);
+        ])
+            ->assignRole(Role::where('name', 'Client')->get());
+        factory(Client::class)->create(['user_id' => $user->id]);
+
+        factory(User::class)->create([
+            'name' => 'Accountant',
+            'surname' => '1',
+            'email' => 'accountant@example.com',
+        ])
+            ->assignRole(Role::where('name', 'Accountant')->get());
+
+        factory(User::class)->create([
+            'name' => 'Stock',
+            'surname' => '1',
+            'email' => 'stock1@example.com',
+        ])
+            ->assignRole(Role::where('name', 'Stock')->get());
     }
 }
