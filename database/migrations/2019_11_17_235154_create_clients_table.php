@@ -17,13 +17,12 @@ class CreateClientsTable extends Migration
             $table->increments('id');
             $table->timestamps();
             $table->string('document')->unique();
-            $table->unsignedInteger('type_document_id');
-            $table->string('name');
-            $table->string('surname');
             $table->string('phone')->nullable();
             $table->string('cellphone');
             $table->string('address');
-            $table->string('email')->unique();
+            $table->unsignedInteger('type_document_id');
+            $table->unsignedInteger('user_id')->unique();
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->foreign('type_document_id')->references('id')->on('type_documents')->onDelete('cascade');
         });
     }
