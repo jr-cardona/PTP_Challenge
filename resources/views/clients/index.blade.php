@@ -25,22 +25,22 @@
 @endsection
 @section('Header')
     <th class="text-center" nowrap>{{ __("Nombre completo") }}</th>
-    <th class="text-center" nowrap>{{ __("Tipo de documento") }}</th>
-    <th class="text-center" nowrap>{{ __("Número de documento") }}</th>
+    <th class="text-center" nowrap>{{ __("Documento") }}</th>
     <th class="text-center" nowrap>{{ __("Correo electrónico") }}</th>
     <th class="text-center" nowrap>{{ __("Celular") }}</th>
+    <th class="text-center" nowrap>{{ __("Creado por") }}</th>
     <th></th>
 @endsection
 @section('Body')
     @forelse($clients as $client)
         <tr class="text-center">
             <td>
-                <a href="{{ route('clients.show', $client) }}">{{ $client->fullname }}</a>
+                <a href="{{ route('clients.show', $client) }}">{{ $client->user->fullname }}</a>
             </td>
-            <td>{{ $client->type_document->name }}</td>
-            <td>{{ $client->document }}</td>
-            <td>{{ $client->email }}</td>
+            <td>{{ $client->type_document->name . ". " . $client->document }}</td>
+            <td>{{ $client->user->email }}</td>
             <td>{{ $client->cellphone }}</td>
+            <td>{{ $client->user->owner->fullname }}</td>
             <td class="btn-group btn-group-sm" nowrap>
                 @include('clients._buttons')
             </td>

@@ -46,4 +46,14 @@ class User extends Authenticatable
     {
         return $this->hasMany(Invoice::class, 'owner_id');
     }
+
+    /**
+     * Relation between users and clients
+     * @return HasOne
+     */
+    public function client(): HasOne
+    {
+        return $this->hasOne(Client::class);
+    }
+
 }

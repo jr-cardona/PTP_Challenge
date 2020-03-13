@@ -13,7 +13,7 @@
     </div>
 @endsection
 @section('Name')
-    {{ $client->fullname }}
+    {{ $client->user->fullname }}
 @endsection
 @section('Buttons')
     @include('clients._buttons')
@@ -48,7 +48,11 @@
                 <td class="td-content">{{ $client->address }}</td>
 
                 <td class="table-dark td-title">{{ __("Correo electrónico:")}}</td>
-                <td class="td-content">{{ $client->email }}</td>
+                <td class="td-content">{{ $client->user->email }}</td>
+            </tr>
+            <tr>
+                <td class="table-dark td-title">{{ __("Creado por:")}}</td>
+                <td class="td-content">{{ $client->user->owner->fullname }}</td>
             </tr>
         </table>
     </div>
@@ -58,7 +62,7 @@
             <div class="col-md-1"></div>
             <h3 class="col-md-3">{{ __("Facturas asociadas") }}</h3>
             <a class="btn btn-success"
-               href="{{ route('invoices.create', ["client_id" => $client->id, "client" => $client->fullname]) }}" >
+               href="{{ route('invoices.create', ["client_id" => $client->id, "client" => $client->user->fullname]) }}" >
                 <i class="fa fa-plus"></i>
             </a>
         </div>

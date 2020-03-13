@@ -2,7 +2,7 @@
 <div class="row">
     <div class="col form-group">
         <label for="name" class="required">{{ __("Nombre") }}</label>
-        <input type="text" name="name" id="name" value="{{ old('name', $client->name) }}" required minlength="3" maxlength="50"
+        <input type="text" name="name" id="name" value="{{ old('name', isset($client->user->name) ? $client->user->name : '') }}" required minlength="3" maxlength="50"
                class="form-control @error('name') is-invalid @enderror" placeholder="Ingresa el nombre">
         @error('name')
             <span class="invalid-feedback" role="alert">
@@ -16,7 +16,7 @@
     </div>
     <div class="col form-group">
         <label for="surname" class="required">{{ __("Apellido") }}</label>
-        <input type="text" name="surname" id="surname" value="{{ old('surname', $client->surname) }}" required minlength="3" maxlength="50"
+        <input type="text" name="surname" id="surname" value="{{ old('surname', isset($client->user->surname) ? $client->user->surname : '') }}" required minlength="3" maxlength="50"
                class="form-control @error('surname') is-invalid @enderror" placeholder="Ingresa el apellido">
         @error('surname')
             <span class="invalid-feedback" role="alert">
@@ -109,7 +109,7 @@
     </div>
     <div class="col">
         <label for="email" class="required">{{ __("Email") }}</label>
-        <input type="email" name="email" id="email" value="{{ old('email', $client->email) }}" required minlength="5" maxlength="100"
+        <input type="email" name="email" id="email" value="{{ old('email', isset($client->user->email) ? $client->user->email : '') }}" required minlength="5" maxlength="100"
                class="form-control @error('email') is-invalid @enderror" placeholder="Ingresa el correo electrónico">
         @error('email')
             <span class="invalid-feedback" role="alert">

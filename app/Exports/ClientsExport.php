@@ -30,13 +30,15 @@ class ClientsExport implements FromCollection, Responsable, WithHeadings, WithMa
         return [
             $client->type_document->fullname,
             $client->document,
-            $client->name,
-            $client->surname,
-            $client->email,
+            $client->user->name,
+            $client->user->surname,
+            $client->user->email,
             $client->cellphone,
             $client->phone,
             $client->address,
+            $client->user->owner->fullname,
             $client->type_document_id,
+            $client->user->owner->id,
         ];
     }
 
@@ -51,7 +53,9 @@ class ClientsExport implements FromCollection, Responsable, WithHeadings, WithMa
             'Teléfono celular',
             'Teléfono fijo',
             'Dirección',
+            'Creado por',
             'ID Documento',
+            'ID Creador',
         ];
     }
 }

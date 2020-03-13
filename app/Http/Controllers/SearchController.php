@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\User;
-use App\Client;
 use App\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -17,9 +16,11 @@ class SearchController extends Controller
      */
     public function clients(Request $request)
     {
-        return Client::select('id', DB::raw('concat(name, " ", surname) as fullname'))
-            ->where(DB::raw('concat(name, " ", surname)'), 'like', '%'. $request->name .'%')
-            ->orderBy('name')
+        return DB::table('users as u')
+            ->selectRaw('c.id, concat(u.name, " ", u.surname) as fullname')
+            ->join('clients as c', 'c.user_id', '=', 'u.id')
+            ->whereRaw('concat(u.name, " ", u.surname) like "%' . $request->name . '%"')
+            ->orderBy('fullname')
             ->limit('100')
             ->get();
     }

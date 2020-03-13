@@ -7,7 +7,6 @@ use Illuminate\Foundation\Http\FormRequest;
 
 class SaveClientRequest extends FormRequest
 {
-
     /**
      * Determine if the user is authorized to make this request.
      *
@@ -21,10 +20,12 @@ class SaveClientRequest extends FormRequest
     /**
      * Get the validation rules that apply to the request.
      *
+     * @param $client
      * @return array
      */
     public function rules()
     {
+        $userId = isset($this->client->user->id) ? $this->client->user->id : '';
         return [
             'document' => [
                 'required',
@@ -44,7 +45,7 @@ class SaveClientRequest extends FormRequest
                 'email',
                 'min:6',
                 'max:100',
-                Rule::unique('clients')->ignore($this->route('client'))
+                'unique:users,email,'.$userId
             ]
         ];
     }
