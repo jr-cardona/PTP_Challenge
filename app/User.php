@@ -48,6 +48,15 @@ class User extends Authenticatable
     }
 
     /**
+     * Relation between users and products
+     * @return HasMany
+     */
+    public function products(): HasMany
+    {
+        return $this->hasMany(Invoice::class, 'owner_id');
+    }
+
+    /**
      * Relation between users and clients
      * @return HasOne
      */

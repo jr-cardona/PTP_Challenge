@@ -3,21 +3,31 @@
 namespace App\Http\Controllers;
 
 use Config;
+use App\User;
+use Exception;
 use App\Product;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use App\Exports\ProductsExport;
+use Illuminate\Http\RedirectResponse;
 use App\Http\Requests\SaveProductRequest;
+use Illuminate\Auth\Access\AuthorizationException;
 
 class ProductController extends Controller
 {
     /**
      * Display a listing of the resource.
      * @param Request $request
-     * @return \Illuminate\Http\Response
+     * @return Response
+     * @throws AuthorizationException
      */
     public function index(Request $request)
     {
-        $products = Product::id($request->get('id'))
+        $this->authorize('index', new Product());
+
+        $products = Product::with(['owner'])
+            ->owner()
+            ->id($request->get('id'))
             ->orderBy('id');
         if(! empty($request->get('format'))){
             return (new ProductsExport($products->get()))
@@ -39,40 +49,52 @@ class ProductController extends Controller
     /**
      * Show the form for creating a new resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return Response
+     * @throws AuthorizationException
      */
-    public function create()
+    public function create(Product $product)
     {
+        $this->authorize('create', $product);
+
         return response()->view('products.create', [
-            'product' => new Product()
+            'product' => new $product,
         ]);
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\RedirectResponse
+     * @param SaveProductRequest $request
+     * @param Product $product
+     * @param User $user
+     * @return RedirectResponse
+     * @throws AuthorizationException
      */
-    public function store(SaveProductRequest $request)
+    public function store(SaveProductRequest $request, Product $product)
     {
-        $result = Product::create(array_merge(
-            $request->validated(), [
-                'price' => $request->get('cost') * 1.10
-            ])
-        );
+        $this->authorize('create', $product);
 
-        return redirect()->route('products.show', $result->id)->withSuccess(__('Producto creado satisfactoriamente'));
+        $product->name = $request->input('name');
+        $product->cost = $request->input('cost');
+        $product->price = $request->input('cost') * 1.10;
+        $product->description = $request->input('description');
+        $product->owner_id = auth()->user()->id;
+        $product->save();
+
+        return redirect()->route('products.show', $product->id)->withSuccess(__('Producto creado satisfactoriamente'));
     }
 
     /**
      * Display the specified resource.
      *
      * @param Product $product
-     * @return \Illuminate\Http\Response
+     * @return Response
+     * @throws AuthorizationException
      */
     public function show(Product $product)
     {
+        $this->authorize('view', $product);
+
         return response()->view('products.show', [
             'product' => $product,
             'side_effect' => ''
@@ -83,10 +105,13 @@ class ProductController extends Controller
      * Show the form for editing the specified resource.
      *
      * @param Product $product
-     * @return \Illuminate\Http\Response
+     * @return Response
+     * @throws AuthorizationException
      */
     public function edit(Product $product)
     {
+        $this->authorize('edit', $product);
+
         return response()->view('products.edit', [
             'product' => $product
         ]);
@@ -97,14 +122,18 @@ class ProductController extends Controller
      *
      * @param SaveProductRequest $request
      * @param Product $product
-     * @return \Illuminate\Http\RedirectResponse
+     * @return RedirectResponse
+     * @throws AuthorizationException
      */
     public function update(SaveProductRequest $request, Product $product)
     {
-        $product->update(array_merge(
-            $request->validated(), [
-            'price' => $request->get('cost') * 1.10
-        ]));
+        $this->authorize('edit', $product);
+
+        $product->name = $request->input('name');
+        $product->cost = $request->input('cost');
+        $product->price = $request->input('cost') * 1.10;
+        $product->description = $request->input('description');
+        $product->save();
 
         return redirect()->route('products.show', $product)->withSuccess(__('Producto actualizado satisfactoriamente'));
     }
@@ -113,11 +142,13 @@ class ProductController extends Controller
      * Remove the specified resource from storage.
      *
      * @param Product $product
-     * @return \Illuminate\Http\RedirectResponse
-     * @throws \Exception
+     * @return RedirectResponse
+     * @throws Exception
      */
     public function destroy(Product $product)
     {
+        $this->authorize('delete', $product);
+
         if ($product->invoices->count() > 0){
             return redirect()->back()->withError(__('No se puede eliminar, hay facturas asociadas con este producto'));
         } else{
