@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Client;
+use App\Invoice;
+use App\Product;
 use Illuminate\Http\Request;
 use App\Imports\InvoicesImport;
 use App\Imports\ClientsImport;
@@ -19,6 +22,8 @@ class ImportController extends Controller
      */
     public function invoices(Request $request)
     {
+        $this->authorize('Import invoices', new Invoice());
+
         $this->validate($request, [
             'file' => 'required|mimes:xls,xlsx'
         ]);
@@ -41,6 +46,8 @@ class ImportController extends Controller
      */
     public function clients(Request $request)
     {
+        $this->authorize('Import invoices', new Client());
+
         $this->validate($request, [
             'file' => 'required|mimes:xls,xlsx'
         ]);
@@ -73,6 +80,8 @@ class ImportController extends Controller
 
     public function products(Request $request)
     {
+        $this->authorize('Import invoices', new Product());
+
         $this->validate($request, [
             'file' => 'required|mimes:xls,xlsx'
         ]);

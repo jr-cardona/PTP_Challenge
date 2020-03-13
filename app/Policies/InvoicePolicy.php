@@ -10,6 +10,10 @@ class InvoicePolicy
 {
     use HandlesAuthorization;
 
+    /**
+     * @param $user
+     * @return bool
+     */
     public function before($user)
     {
         if ($user->hasRole('Admin'))
@@ -19,84 +23,133 @@ class InvoicePolicy
     }
 
     /**
-     * Determine whether the user can view any invoices.
-     *
-     * @param  \App\User  $user
-     * @return mixed
+     * @param User $user
+     * @return bool
      */
-    public function viewAny(User $user)
+    public function index(User $user, Invoice $invoice)
     {
-        //
+        return $user->hasPermissionTo('View any invoices')
+            || $user->hasPermissionTo('View invoices');
     }
 
     /**
-     * Determine whether the user can view the invoice.
+     * Determine whether the user can view invoices.
      *
-     * @param  \App\User  $user
-     * @param  \App\Invoice  $invoice
+     * @param User $user
+     * @param Invoice $invoice
      * @return mixed
      */
     public function view(User $user, Invoice $invoice)
     {
-        return $user->id === $invoice->owner_id;
+        if ($user->hasPermissionTo('View any invoices')) {
+            return true;
+        } elseif ($user->hasPermissionTo('View invoices')) {
+            return $user->id === $invoice->owner_id || $user->id === $invoice->client->user->id;
+        } else {
+            return false;
+        }
     }
 
     /**
      * Determine whether the user can create invoices.
      *
-     * @param  \App\User  $user
+     * @param User $user
      * @return mixed
      */
-    public function create(User $user)
+    public function create(User $user, Invoice $invoice)
     {
-        //
+        return $user->hasPermissionTo('Create invoices');
     }
 
     /**
-     * Determine whether the user can update the invoice.
+     * Determine whether the user can edit invoices.
      *
-     * @param  \App\User  $user
-     * @param  \App\Invoice  $invoice
+     * @param User $user
+     * @param Invoice $invoice
      * @return mixed
      */
-    public function update(User $user, Invoice $invoice)
+    public function edit(User $user, Invoice $invoice)
     {
-        return $user->id === $invoice->owner_id;
+        if ($user->hasPermissionTo('Edit any invoices')) {
+            return true;
+        } elseif ($user->hasPermissionTo('Edit invoices')) {
+            return $user->id === $invoice->owner_id;
+        } else {
+            return false;
+        }
     }
 
     /**
-     * Determine whether the user can delete the invoice.
+     * Determine whether the user can annul invoices.
      *
-     * @param  \App\User  $user
-     * @param  \App\Invoice  $invoice
+     * @param User $user
+     * @param Invoice $invoice
      * @return mixed
      */
     public function delete(User $user, Invoice $invoice)
     {
-        return $user->id === $invoice->owner_id;
+        if ($user->hasPermissionTo('Annul any invoices')) {
+            return true;
+        } elseif ($user->hasPermissionTo('Annul invoices')) {
+            return $user->id === $invoice->owner_id;
+        } else {
+            return false;
+        }
     }
 
     /**
-     * Determine whether the user can restore the invoice.
+     * Determine whether the user can export invoices.
      *
-     * @param  \App\User  $user
-     * @param  \App\Invoice  $invoice
+     * @param User $user
+     * @param Invoice $invoice
      * @return mixed
      */
-    public function restore(User $user, Invoice $invoice)
+    public function export(User $user, Invoice $invoice)
     {
-        //
+        return $user->hasPermissionTo('Export invoices');
     }
 
     /**
-     * Determine whether the user can permanently delete the invoice.
+     * Determine whether the user can import invoices.
      *
-     * @param  \App\User  $user
-     * @param  \App\Invoice  $invoice
+     * @param User $user
+     * @param Invoice $invoice
      * @return mixed
      */
-    public function forceDelete(User $user, Invoice $invoice)
+    public function import(User $user, Invoice $invoice)
     {
-        //
+        if ($user->hasPermissionTo('Import any invoices')) {
+            return true;
+        } elseif ($user->hasPermissionTo('Import invoices')) {
+            return $user->id === $invoice->owner_id;
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * Determine whether the user can pay his invoices.
+     *
+     * @param User $user
+     * @param Invoice $invoice
+     * @return mixed
+     */
+    public function pay(User $user, Invoice $invoice)
+    {
+        return $user->hasPermissionTo('Pay invoices')
+            && $user->id === $invoice->client->user->id;
+    }
+
+    /**
+     * Determine whether the user can receive his invoices.
+     *
+     * @param User $user
+     * @param Invoice $invoice
+     * @return mixed
+     */
+    public function receive(User $user, Invoice $invoice)
+    {
+        return $user->hasPermissionTo('Receive invoices')
+            && $user->id === $invoice->client->user->id;
     }
 }

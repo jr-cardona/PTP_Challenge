@@ -3,21 +3,28 @@
 namespace App\Http\Controllers;
 
 use Config;
+use Exception;
 use App\Invoice;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use App\Exports\InvoicesExport;
+use Illuminate\Http\RedirectResponse;
 use App\Http\Requests\SaveInvoiceRequest;
+use Illuminate\Auth\Access\AuthorizationException;
 
 class InvoiceController extends Controller
 {
     /**
      * Display a listing of the resource.
      * @param Request $request
-     * @return \Illuminate\Http\Response
+     * @return Response
+     * @throws AuthorizationException
      */
     public function index(Request $request)
     {
+        $this->authorize('index', new Invoice());
+
         $invoices = Invoice::with(['client', 'owner', 'products'])
             ->owner($request->get('owner_id'))
             ->number($request->get('number'))
@@ -28,6 +35,7 @@ class InvoiceController extends Controller
             ->state($request->get('state'))
             ->orderBy('id', 'DESC');
         if(! empty($request->get('format'))){
+            $this->authorize('export', new Invoice());
             return (new InvoicesExport($invoices->get()))
                 ->download('invoices-list.'.$request->get('format'));
         } else {
@@ -47,28 +55,37 @@ class InvoiceController extends Controller
     /**
      * Show the form for creating a new resource.
      *
-     * @return \Illuminate\Http\Response
+     * @param Request $request
+     * @param Invoice $invoice
+     * @return Response
+     * @throws AuthorizationException
      */
-    public function create(Request $request)
+    public function create(Request $request, Invoice $invoice)
     {
+        $this->authorize('create', $invoice);
+
         return response()->view('invoices.create', [
-            'invoice' => new Invoice(),
-            'request' => $request
+            'invoice' => $invoice,
+            'request' => $request,
         ]);
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\RedirectResponse
+     * @param SaveInvoiceRequest $request
+     * @param Invoice $invoice
+     * @return RedirectResponse
+     * @throws AuthorizationException
      */
     public function store(SaveInvoiceRequest $request, Invoice $invoice)
     {
+        $this->authorize('create', $invoice);
+
         $invoice->issued_at = $request->input('issued_at');
         $invoice->client_id = $request->input('client_id');
-        $invoice->owner_id = auth()->id();
         $invoice->description = $request->input('description');
+        $invoice->owner_id = auth()->id();
         $invoice->save();
 
         return redirect()->route('invoices.show', $invoice->id)->withSuccess(__('Factura creada satisfactoriamente'));
@@ -78,10 +95,13 @@ class InvoiceController extends Controller
      * Display the specified resource.
      *
      * @param Invoice $invoice
-     * @return \Illuminate\Http\Response
+     * @return Response
+     * @throws AuthorizationException
      */
     public function show(Invoice $invoice)
     {
+        $this->authorize('view', $invoice);
+
         return response()->view('invoices.show', [
             'invoice' => $invoice,
         ]);
@@ -91,12 +111,12 @@ class InvoiceController extends Controller
      * Show the form for editing the specified resource.
      *
      * @param Invoice $invoice
-     * @return \Illuminate\Http\Response | \Illuminate\Http\RedirectResponse
-     * @throws \Illuminate\Auth\Access\AuthorizationException
+     * @return Response | RedirectResponse
+     * @throws AuthorizationException
      */
-    public function edit(Invoice $invoice)
+    public function edit(Invoice $invoice, Request $request)
     {
-        $this->authorize('view', $invoice);
+        $this->authorize('edit', $invoice);
 
         if ($invoice->isPaid()) {
             return redirect()->route('invoices.show', $invoice)->withInfo(__("La factura ya se encuentra pagada y no se puede editar"));
@@ -106,6 +126,7 @@ class InvoiceController extends Controller
         }
         return response()->view('invoices.edit', [
             'invoice' => $invoice,
+            'request' => $request,
         ]);
     }
 
@@ -114,20 +135,22 @@ class InvoiceController extends Controller
      *
      * @param SaveInvoiceRequest $request
      * @param Invoice $invoice
-     * @return \Illuminate\Http\RedirectResponse
-     * @throws \Illuminate\Auth\Access\AuthorizationException
+     * @return RedirectResponse
+     * @throws AuthorizationException
      */
     public function update(SaveInvoiceRequest $request, Invoice $invoice)
     {
-        $this->authorize('update', $invoice);
+        $this->authorize('edit', $invoice);
 
-        if ($invoice->isPaid()) {
-            return redirect()->route('invoices.show', $invoice)->withInfo(__("La factura ya se encuentra pagada y no se puede actualizar"));
+        if ($invoice->isPaid() || $invoice->isAnnulled()) {
+            return redirect()->route('invoices.show', $invoice)->withInfo(__("La factura ya se encuentra pagada o anulada y no se puede actualizar"));
         }
-        if ($invoice->isAnnulled()) {
-            return redirect()->route('invoices.show', $invoice)->withInfo(__("La factura ya se encuentra anulada y no se puede actualizar"));
-        }
-        $invoice->update($request->validated());
+
+        $invoice->issued_at = $request->input('issued_at');
+        $invoice->client_id = $request->input('client_id');
+        $invoice->description = $request->input('description');
+        $invoice->owner_id = auth()->id();
+        $invoice->save();
 
         return redirect()->route('invoices.show', $invoice)->withSuccess(__('Factura actualizada satisfactoriamente'));
     }
@@ -136,8 +159,8 @@ class InvoiceController extends Controller
      * Remove the specified resource from storage.
      *
      * @param Invoice $invoice
-     * @return \Illuminate\Http\RedirectResponse
-     * @throws \Exception
+     * @return RedirectResponse
+     * @throws Exception
      */
     public function destroy(Invoice $invoice, Request $request)
     {
@@ -155,8 +178,15 @@ class InvoiceController extends Controller
         }
     }
 
+    /**
+     * @param Invoice $invoice
+     * @return mixed
+     * @throws AuthorizationException
+     */
     public function receivedCheck(Invoice $invoice)
     {
+        $this->authorize('receive', $invoice);
+
         if (! $invoice->isPaid() && ! $invoice->isAnnulled() && empty($invoice->received_at)) {
             $now = Carbon::now();
             $invoice->update(["received_at" => $now]);

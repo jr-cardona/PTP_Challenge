@@ -12,11 +12,11 @@
                         <h3 class="page-header text-center">{{ __("Información del Comprador") }}</h3>
 
                         <div class="form-group text-center">
-                            {{ __("Nombre:") }} <span class="form-control text-center">{{ $invoice->client->name }}</span>
+                            {{ __("Nombre:") }} <span class="form-control text-center">{{ $invoice->client->user->name }}</span>
                         </div>
 
                         <div class="form-group text-center">
-                            {{ __("Apellido:") }} <span class="form-control text-center">{{ $invoice->client->surname }}</span>
+                            {{ __("Apellido:") }} <span class="form-control text-center">{{ $invoice->client->user->surname }}</span>
                         </div>
 
                         <div class="form-group text-center">
@@ -28,7 +28,7 @@
                         </div>
 
                         <div class="form-group text-center">
-                            {{ __("Email:") }} <span class="form-control text-center">{{ $invoice->client->email }}</span>
+                            {{ __("Email:") }} <span class="form-control text-center">{{ $invoice->client->user->email }}</span>
                         </div>
                     </div>
                     <div class="panel-footer">

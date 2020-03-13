@@ -29,6 +29,7 @@ class StoreInvoiceProductRequest extends FormRequest
             'quantity' => 'required|numeric|min:1|max:9999',
         ];
     }
+
     public function withValidator($validator)
     {
         $validator->after(function ($validator) {

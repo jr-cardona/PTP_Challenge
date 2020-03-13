@@ -63,14 +63,14 @@
                         </div>
                         <div class="col">
                             <label>{{ __("Vendedor") }}</label>
-                            <input type="hidden" id="old_owner_name" name="old_owner_name" value="{{ $request->get('owner') }}">
+                            <input type="hidden" id="old_owner_fullname" name="old_owner_fullname" value="{{ $request->get('owner') }}">
                             <input type="hidden" id="old_owner_id" name="old_owner_id" value="{{ $request->get('owner_id') }}">
-                            <v-select class="form-control" v-model="old_owner_values" label="name" :filterable="false" :options="options" @search="searchOwner">
+                            <v-select class="form-control" v-model="old_owner_values" label="fullname" :filterable="false" :options="options" @search="searchOwner">
                                 <template slot="no-options">
                                     {{ __("Ingresa el nombre del vendedor...") }}
                                 </template>
                             </v-select>
-                            <input type="hidden" name="owner" id="owner" :value="(old_owner_values) ? old_owner_values.name : '' ">
+                            <input type="hidden" name="owner" id="owner" :value="(old_owner_values) ? old_owner_values.fullname : '' ">
                             <input type="hidden" name="owner_id" id="owner_id" :value="(old_owner_values) ? old_owner_values.id : '' ">
                         </div>
                     </div>

@@ -70,7 +70,7 @@
                 <td class="table-dark td-title custom-header">{{ __("Cliente:") }}</td>
                 <td class="td-content">
                     <a href="{{ route('clients.show', $invoice->client) }}" target="_blank">
-                        {{ $invoice->client->fullname }}
+                        {{ $invoice->client->user->fullname }}
                     </a>
                 </td>
             </tr>

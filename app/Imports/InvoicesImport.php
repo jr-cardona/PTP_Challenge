@@ -2,6 +2,7 @@
 
 namespace App\Imports;
 
+use App\User;
 use App\Invoice;
 use Carbon\Carbon;
 use Maatwebsite\Excel\Concerns\ToModel;
@@ -27,7 +28,7 @@ class InvoicesImport extends BaseImport implements ToModel, WithHeadingRow, With
             'received_at' => Carbon::create($row['Fecha de recibo']),
             'description' => $row['Descripción'],
             'client_id' => $row['ID Cliente'],
-            'seller_id' => $row['ID Vendedor'],
+            'owner_id' => $row['ID Vendedor'],
         ]);
     }
 
@@ -39,7 +40,21 @@ class InvoicesImport extends BaseImport implements ToModel, WithHeadingRow, With
             'Fecha de recibo' => 'nullable|date|after:issued_at|before:expires_at',
             'Descripción' => 'nullable|string|max:255',
             'ID Cliente' => 'required|numeric|exists:clients,id',
-            'ID Vendedor' => 'required|numeric|exists:sellers,id',
+            'ID Vendedor' => ['required','numeric',
+                function($attribute, $value, $onFailure){
+                    if (auth()->user()->hasPermissionTo('Import any invoices')){
+                        if (User::where('id', $value)->count() == 0) {
+                            $onFailure("Este vendedor no existe");
+                        }
+                    } elseif (auth()->user()->hasPermissionTo('Import invoices')) {
+                        if ($value != auth()->id()){
+                            $onFailure("No tiene permisos de importar facturas de otros vendedores");
+                        }
+                    } else {
+                        $onFailure("No tiene permisos de importar facturas");
+                    }
+                }
+            ]
         ];
     }
 

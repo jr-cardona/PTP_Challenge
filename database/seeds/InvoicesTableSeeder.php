@@ -17,7 +17,7 @@ class InvoicesTableSeeder extends Seeder
     public function run()
     {
         $clients = Client::all()->count();
-        $users = User::all()->count();
+        $users = User::whereIn('name', ['Admin', 'Seller'])->count();
         $invoices = 100;
         for ($j = 1; $j <= $invoices; $j++){
             $clientId = $j % $clients == 0 ? $clients : ($j % $clients);

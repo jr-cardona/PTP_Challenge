@@ -152,14 +152,20 @@ class Invoice extends Model
 
     public function scopeOwner($query, $ownerId)
     {
-        if (auth()->user()->hasRole('Admin')) {
+        if (auth()->user()->hasPermissionTo('View any invoices') || auth()->user()->hasRole('Admin')) {
             if (trim($ownerId) !== '') {
                 return $query->where('owner_id', $ownerId);
             } else {
                 return $query;
             }
+        } elseif (auth()->user()->hasPermissionTo('View invoices')) {
+            if (auth()->user()->hasRole('Client')) {
+                $query->where('client_id', auth()->user()->client->id);
+            } else {
+                $query->where('owner_id', auth()->user()->id);
+            }
         } else {
-            return $query->where('owner_id', auth()->id());
+            return $query->where('owner_id', '-1');
         }
     }
 

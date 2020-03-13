@@ -48,7 +48,7 @@
             @include('invoices.status_label')
             <td nowrap>
                 <a href="{{ route('clients.show', $invoice->client) }}" target="_blank">
-                    {{ $invoice->client->fullname }}
+                    {{ $invoice->client->user->fullname }}
                 </a>
             </td>
             <td nowrap>
