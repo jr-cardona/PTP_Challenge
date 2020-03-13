@@ -4,7 +4,9 @@ namespace App;
 
 use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
 class User extends Authenticatable
@@ -17,7 +19,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password',
+        'name', 'surname', 'email', 'owner_id', 'password',
     ];
 
     /**
@@ -65,4 +67,27 @@ class User extends Authenticatable
         return $this->hasOne(Client::class);
     }
 
+    /**
+     * Relation between users and users
+     * @return HasMany
+     */
+    public function users(): HasMany
+    {
+        return $this->hasMany(User::class, 'owner_id');
+    }
+
+    /**
+     * Relation between users and users
+     * @return BelongsTo
+     */
+    public function owner(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    /** Derived attributes */
+    public function getFullNameAttribute()
+    {
+        return $this->name . " " . $this->surname;
+    }
 }

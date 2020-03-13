@@ -32,9 +32,9 @@ class SearchController extends Controller
      */
     public function owners(Request $request)
     {
-        return User::select('id', 'name')
-            ->where('name', 'like', '%'. $request->name .'%')
-            ->orderBy('name')
+        return User::selectRaw('id, concat(name, " ", surname) as fullname')
+            ->whereRaw('concat(name, " ", surname) like "%' . $request->name . '%"')
+            ->orderBy('fullname')
             ->limit('100')
             ->get();
     }
