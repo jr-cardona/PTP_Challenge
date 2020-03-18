@@ -71,10 +71,12 @@ Route::middleware(['auth'])->group(static function () {
     Route::get('/facturas/received-check/{invoice}', 'InvoiceController@receivedCheck')
         ->name('invoices.receivedCheck');
 
-    Route::get('/reportes', 'ReportController@index')
-        ->name('reports.index');
-    Route::get('/reportes/clientes', 'ReportController@clients')
-        ->name('reports.clients');
-    Route::get('/reportes/utilidades', 'ReportController@utilities')
-        ->name('reports.utilities');
+    Route::group(['middleware' => ['role_or_permission:Admin|View any reports']], function () {
+        Route::get('/reportes', 'ReportController@index')
+            ->name('reports.index');
+        Route::get('/reportes/clientes', 'ReportController@clients')
+            ->name('reports.clients');
+        Route::get('/reportes/utilidades', 'ReportController@utilities')
+            ->name('reports.utilities');
+    });
 });
