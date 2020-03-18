@@ -39,7 +39,7 @@ class ClientsImport extends BaseImport implements ToCollection, WithHeadingRow, 
             ],
             '*.ID Documento' => 'required|numeric|exists:type_documents,id',
             '*.Nombre' => 'required|string|min:3|max:50',
-            '*.Apellido' => 'required|string|min:3|max:50',
+            '*.Apellidos' => 'required|string|min:3|max:50',
             '*.Teléfono celular' => 'required|numeric|digits:10',
             '*.Teléfono fijo' => 'nullable|numeric|digits:7',
             '*.Dirección' => 'required|string|min:5|max:100',
@@ -65,7 +65,7 @@ class ClientsImport extends BaseImport implements ToCollection, WithHeadingRow, 
             ++$this->rows;
             $user = User::create([
                 'name' => $row['Nombre'],
-                'surname' => $row['Apellido'],
+                'surname' => $row['Apellidos'],
                 'email' => $row['Correo electrónico'],
                 'password' => 'secret',
                 'creator_id' => auth()->user()->id

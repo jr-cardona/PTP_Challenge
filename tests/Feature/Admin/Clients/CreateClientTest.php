@@ -42,7 +42,7 @@ class CreateClientTest extends TestCase
 
         $response = $this->actingAs($user)->get(route('clients.create'));
         $response->assertSee("Nombre");
-        $response->assertSee("Apellido");
+        $response->assertSee("Apellidos");
         $response->assertSee("Tipo de documento");
         $response->assertSee("Número de documento");
         $response->assertSee("Número telefónico");

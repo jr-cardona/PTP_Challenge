@@ -48,7 +48,7 @@ class ClientsExport implements FromCollection, Responsable, WithHeadings, WithMa
             'Tipo de documento',
             'Número documento',
             'Nombre',
-            'Apellido',
+            'Apellidos',
             'Correo electrónico',
             'Teléfono celular',
             'Teléfono fijo',
