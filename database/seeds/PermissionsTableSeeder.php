@@ -19,7 +19,7 @@ class PermissionsTableSeeder extends Seeder
         Permission::create(['name' => 'Edit invoices']);
         Permission::create(['name' => 'Annul any invoices']);
         Permission::create(['name' => 'Annul invoices']);
-        Permission::create(['name' => 'Export invoices']);
+        Permission::create(['name' => 'Export any invoices']);
         Permission::create(['name' => 'Import any invoices']);
         Permission::create(['name' => 'Import invoices']);
         Permission::create(['name' => 'Pay invoices']);
@@ -31,7 +31,7 @@ class PermissionsTableSeeder extends Seeder
         Permission::create(['name' => 'Edit clients']);
         Permission::create(['name' => 'Delete any clients']);
         Permission::create(['name' => 'Delete clients']);
-        Permission::create(['name' => 'Export clients']);
+        Permission::create(['name' => 'Export any clients']);
         Permission::create(['name' => 'Import any clients']);
         Permission::create(['name' => 'Import clients']);
 
@@ -39,18 +39,20 @@ class PermissionsTableSeeder extends Seeder
         Permission::create(['name' => 'Create products']);
         Permission::create(['name' => 'Edit any products']);
         Permission::create(['name' => 'Delete any products']);
-        Permission::create(['name' => 'Export products']);
+        Permission::create(['name' => 'Export any products']);
         Permission::create(['name' => 'Import any products']);
 
-        Permission::create(['name' => 'View any user']);
+        Permission::create(['name' => 'View any users']);
         Permission::create(['name' => 'View user']);
         Permission::create(['name' => 'Create users']);
         Permission::create(['name' => 'Edit any users']);
         Permission::create(['name' => 'Edit user']);
         Permission::create(['name' => 'Delete any users']);
         Permission::create(['name' => 'Delete user']);
+        Permission::create(['name' => 'Export any users']);
+        Permission::create(['name' => 'Import any users']);
 
-        Permission::create(['name' => 'View reports']);
+        Permission::create(['name' => 'View any reports']);
         Permission::create(['name' => 'Export reports']);
     }
 }

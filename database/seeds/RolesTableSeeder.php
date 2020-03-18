@@ -19,12 +19,12 @@ class RolesTableSeeder extends Seeder
             ->givePermissionTo('Create invoices')
             ->givePermissionTo('Edit invoices')
             ->givePermissionTo('Import invoices')
-            ->givePermissionTo('Export invoices')
+            ->givePermissionTo('Export any invoices')
             ->givePermissionTo('View any clients')
             ->givePermissionTo('Create clients')
             ->givePermissionTo('Edit clients')
             ->givePermissionTo('Delete clients')
-            ->givePermissionTo('Export clients')
+            ->givePermissionTo('Export any clients')
             ->givePermissionTo('Import clients')
             ->givePermissionTo('View user')
             ->givePermissionTo('Edit user');
@@ -32,12 +32,14 @@ class RolesTableSeeder extends Seeder
         Role::create(['name' => 'Client'])
             ->givePermissionTo('View invoices')
             ->givePermissionTo('Pay invoices')
-            ->givePermissionTo('Receive invoices');
+            ->givePermissionTo('Receive invoices')
+            ->givePermissionTo('View user')
+            ->givePermissionTo('Edit user');
 
         Role::create(['name' => 'Accountant'])
             ->givePermissionTo('View any invoices')
-            ->givePermissionTo('Export invoices')
-            ->givePermissionTo('View reports')
+            ->givePermissionTo('Export any invoices')
+            ->givePermissionTo('View any reports')
             ->givePermissionTo('Export reports')
             ->givePermissionTo('View user')
             ->givePermissionTo('Edit user');
@@ -47,7 +49,7 @@ class RolesTableSeeder extends Seeder
             ->givePermissionTo('Create products')
             ->givePermissionTo('Edit any products')
             ->givePermissionTo('Delete any products')
-            ->givePermissionTo('Export products')
+            ->givePermissionTo('Export any products')
             ->givePermissionTo('Import any products')
             ->givePermissionTo('View user')
             ->givePermissionTo('Edit user');

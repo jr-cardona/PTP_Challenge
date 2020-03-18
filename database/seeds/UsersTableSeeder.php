@@ -28,14 +28,6 @@ class UsersTableSeeder extends Seeder
         ])
             ->assignRole(Role::where('name', 'Seller')->get());
 
-        $user = factory(User::class)->create([
-            'name' => 'Client',
-            'surname' => '1',
-            'email' => 'client1@example.com',
-        ])
-            ->assignRole(Role::where('name', 'Client')->get());
-        factory(Client::class)->create(['user_id' => $user->id]);
-
         factory(User::class)->create([
             'name' => 'Accountant',
             'surname' => '1',
