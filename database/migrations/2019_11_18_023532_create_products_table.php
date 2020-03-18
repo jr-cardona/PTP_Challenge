@@ -18,8 +18,8 @@ class CreateProductsTable extends Migration
             $table->timestamps();
             $table->string('name');
             $table->string('description')->nullable();
-            $table->float('cost', 9, 2)->unsigned();
-            $table->float('price', 9, 2)->unsigned();
+            $table->unsignedDecimal('cost', 9, 2);
+            $table->unsignedDecimal('price', 9, 2);
             $table->unsignedInteger('creator_id');
             $table->foreign('creator_id')->references('id')->on('users')->onDelete('cascade');
         });
