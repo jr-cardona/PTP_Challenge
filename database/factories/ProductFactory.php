@@ -2,6 +2,7 @@
 
 /** @var \Illuminate\Database\Eloquent\Factory $factory */
 
+use App\User;
 use App\Product;
 use Faker\Generator as Faker;
 
@@ -12,5 +13,6 @@ $factory->define(Product::class, function (Faker $faker) {
         'description' => $faker->realText(30),
         'cost' => $cost,
         'price' => $cost * 1.10,
+        'creator_id' => User::where('name', 'Stock')->first()->id,
     ];
 });

@@ -40,12 +40,12 @@ class Invoice extends Model
     }
 
     /**
-     * Relation between invoices and sellers
+     * Relation between invoices and users
      * @return BelongsTo
      */
-    public function seller(): BelongsTo
+    public function creator(): BelongsTo
     {
-        return $this->belongsTo(Seller::class);
+        return $this->belongsTo(User::class);
     }
 
     /**
@@ -54,7 +54,10 @@ class Invoice extends Model
      */
     public function products(): BelongsToMany
     {
-        return $this->belongsToMany(Product::class)->withTimestamps()->withPivot('quantity', 'unit_price')->orderBy('id');
+        return $this->belongsToMany(Product::class)
+            ->withTimestamps()
+            ->withPivot('quantity', 'unit_price')
+            ->orderBy('id');
     }
 
     /**
@@ -139,18 +142,29 @@ class Invoice extends Model
         }
     }
 
-    public function scopeClient($query, $client_id)
+    public function scopeClient($query, $clientId)
     {
-        if (trim($client_id) !== '') {
-            return $query->where('client_id', $client_id);
+        if (trim($clientId) !== '') {
+            return $query->where('client_id', $clientId);
         }
     }
 
-    public function scopeSeller($query, $seller_id)
+    public function scopeCreator($query, $creatorId)
     {
-        if (trim($seller_id) !== '') {
-            return $query->where('seller_id', $seller_id);
+        if (auth()->user()->hasPermissionTo('View any invoices') || auth()->user()->hasRole('Admin')) {
+            if (trim($creatorId) !== '') {
+                return $query->where('creator_id', $creatorId);
+            }
+            return $query;
         }
+        if (auth()->user()->hasPermissionTo('View invoices')) {
+            if (auth()->user()->hasRole('Client')) {
+                return $query->where('client_id', auth()->user()->client->id);
+            } else {
+                return $query->where('creator_id', auth()->user()->id);
+            }
+        }
+        return $query->where('creator_id', '-1');
     }
 
     public function scopeProduct($query, $product_id)

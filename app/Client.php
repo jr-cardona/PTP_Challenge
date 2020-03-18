@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class Client extends Model
 {
     protected $guarded = [];
+    protected $with = ['user.creator'];
 
     /**
      * Relation between clients and invoices
@@ -17,6 +18,15 @@ class Client extends Model
     public function invoices(): HasMany
     {
         return $this->hasMany(Invoice::class);
+    }
+
+    /**
+     * Relation between clients and users
+     * @return BelongsTo
+     */
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
     }
 
     /**
@@ -35,6 +45,15 @@ class Client extends Model
     }
 
     /** Query Scopes */
+    public function scopeCreator($query)
+    {
+        if (auth()->user()->hasPermissionTo('View any clients') || auth()->user()->hasRole('Admin')) {
+            return $query;
+        } else {
+            return $query->where('id', '-1');
+        }
+    }
+
     public function scopeId($query, $id)
     {
         if (trim($id) !== '') {
@@ -61,11 +80,5 @@ class Client extends Model
         if (trim($email) !== '') {
             return $query->where('email', 'LIKE', "%${email}%");
         }
-    }
-
-    /** Derived attributes */
-    public function getFullNameAttribute()
-    {
-        return $this->name . " " . $this->surname;
     }
 }

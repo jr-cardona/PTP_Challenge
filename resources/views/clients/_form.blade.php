@@ -2,7 +2,7 @@
 <div class="row">
     <div class="col form-group">
         <label for="name" class="required">{{ __("Nombre") }}</label>
-        <input type="text" name="name" id="name" value="{{ old('name', $client->name) }}" required minlength="3" maxlength="50"
+        <input type="text" name="name" id="name" value="{{ old('name', isset($client->user->name) ? $client->user->name : '') }}" required minlength="3" maxlength="50"
                class="form-control @error('name') is-invalid @enderror" placeholder="Ingresa el nombre">
         @error('name')
             <span class="invalid-feedback" role="alert">
@@ -15,8 +15,8 @@
         @enderror
     </div>
     <div class="col form-group">
-        <label for="surname" class="required">{{ __("Apellido") }}</label>
-        <input type="text" name="surname" id="surname" value="{{ old('surname', $client->surname) }}" required minlength="3" maxlength="50"
+        <label for="surname" class="required">{{ __("Apellidos") }}</label>
+        <input type="text" name="surname" id="surname" value="{{ old('surname', isset($client->user->surname) ? $client->user->surname : '') }}" required minlength="3" maxlength="50"
                class="form-control @error('surname') is-invalid @enderror" placeholder="Ingresa el apellido">
         @error('surname')
             <span class="invalid-feedback" role="alert">
@@ -63,10 +63,10 @@
         @enderror
     </div>
     <div class="col">
-        <label for="phone_number">{{ __("Número telefónico") }}</label>
-        <input type="tel" name="phone_number" id="phone_number" value="{{ old('phone_number', $client->phone_number) }}"
-               class="form-control @error('phone_number') is-invalid @enderror" placeholder="Ingresa el número telefónico">
-        @error('phone_number')
+        <label for="phone">{{ __("Número telefónico") }}</label>
+        <input type="tel" name="phone" id="phone" value="{{ old('phone', $client->phone) }}"
+               class="form-control @error('phone') is-invalid @enderror" placeholder="Ingresa el número telefónico">
+        @error('phone')
             <span class="invalid-feedback" role="alert">
                 <strong>{{ $message }}</strong>
             </span>
@@ -77,10 +77,10 @@
         @enderror
     </div>
     <div class="col">
-        <label for="cell_phone_number" class="required">{{ __("Número de celular") }}</label>
-        <input type="tel" name="cell_phone_number" id="cell_phone_number" value="{{ old('cell_phone_number', $client->cell_phone_number) }}"
-               class="form-control @error('cell_phone_number') is-invalid @enderror" placeholder="Ingresa el número de celular" required minlength="10" maxlength="10">
-        @error('cell_phone_number')
+        <label for="cellphone" class="required">{{ __("Número de celular") }}</label>
+        <input type="tel" name="cellphone" id="cellphone" value="{{ old('cellphone', $client->cellphone) }}"
+               class="form-control @error('cellphone') is-invalid @enderror" placeholder="Ingresa el número de celular" required minlength="10" maxlength="10">
+        @error('cellphone')
             <span class="invalid-feedback" role="alert">
                 <strong>{{ $message }}</strong>
             </span>
@@ -109,7 +109,7 @@
     </div>
     <div class="col">
         <label for="email" class="required">{{ __("Email") }}</label>
-        <input type="email" name="email" id="email" value="{{ old('email', $client->email) }}" required minlength="5" maxlength="100"
+        <input type="email" name="email" id="email" value="{{ old('email', isset($client->user->email) ? $client->user->email : '') }}" required minlength="5" maxlength="100"
                class="form-control @error('email') is-invalid @enderror" placeholder="Ingresa el correo electrónico">
         @error('email')
             <span class="invalid-feedback" role="alert">

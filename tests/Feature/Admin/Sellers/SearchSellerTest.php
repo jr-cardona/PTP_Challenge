@@ -19,13 +19,13 @@ class SearchSellerTest extends TestCase
         factory(Seller::class)->create(["name" => "bbb"]);
         factory(Seller::class)->create(["name" => "ccc"]);
 
-        $response = $this->actingAs($user)->get(route('search.sellers'));
+        $response = $this->actingAs($user)->get(route('search.users'));
         $response->assertSuccessful();
         $response->assertSeeText("aaa");
         $response->assertSeeText("bbb");
         $response->assertSeeText("ccc");
 
-        $response = $this->actingAs($user)->get(route('search.sellers', ['name' => "ccc"]));
+        $response = $this->actingAs($user)->get(route('search.users', ['name' => "ccc"]));
         $response->assertSuccessful();
         $response->assertDontSeeText("aaa");
         $response->assertDontSeeText("bbb");

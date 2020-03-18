@@ -24,8 +24,11 @@ Route::middleware(['auth'])->group(static function () {
     Route::get('/productos/buscar', 'SearchController@products')
         ->name('search.products');
 
-    Route::get('/vendedores/buscar', 'SearchController@sellers')
-        ->name('search.sellers');
+    Route::get('/usuarios/buscar', 'SearchController@creators')
+        ->name('search.creators');
+
+    Route::get('/permisos/buscar', 'SearchController@permissions')
+        ->name('search.permissions');
 
     Route::post('/clientes/importar', 'ImportController@clients')
         ->name('import.clients');
@@ -36,8 +39,8 @@ Route::middleware(['auth'])->group(static function () {
     Route::post('/productos/importar', 'ImportController@products')
         ->name('import.products');
 
-    Route::post('/vendedores/importar', 'ImportController@sellers')
-        ->name('import.sellers');
+    Route::post('/usuarios/importar', 'ImportController@users')
+        ->name('import.users');
 
     Route::resource('/facturas/{invoice}/producto', 'InvoiceProductController')
         ->except('index', 'show')
@@ -61,17 +64,19 @@ Route::middleware(['auth'])->group(static function () {
         ->names('products')
         ->parameters(['productos' => 'product']);
 
-    Route::resource('/vendedores', 'SellerController')
-        ->names('sellers')
-        ->parameters(['vendedores' => 'seller']);
+    Route::resource('/usuarios', 'UserController')
+        ->names('users')
+        ->parameters(['usuarios' => 'user']);
 
     Route::get('/facturas/received-check/{invoice}', 'InvoiceController@receivedCheck')
         ->name('invoices.receivedCheck');
 
-    Route::get('/reportes', 'ReportController@index')
-        ->name('reports.index');
-    Route::get('/reportes/clientes', 'ReportController@clients')
-        ->name('reports.clients');
-    Route::get('/reportes/utilidades', 'ReportController@utilities')
-        ->name('reports.utilities');
+    Route::group(['middleware' => ['role_or_permission:Admin|View any reports']], function () {
+        Route::get('/reportes', 'ReportController@index')
+            ->name('reports.index');
+        Route::get('/reportes/clientes', 'ReportController@clients')
+            ->name('reports.clients');
+        Route::get('/reportes/utilidades', 'ReportController@utilities')
+            ->name('reports.utilities');
+    });
 });

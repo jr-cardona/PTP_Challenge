@@ -16,7 +16,7 @@ class EditSellerTest extends TestCase
     {
         $seller = factory(Seller::class)->create();
 
-        $this->get(route('sellers.edit', $seller))->assertRedirect(route('login'));
+        $this->get(route('users.edit', $seller))->assertRedirect(route('login'));
     }
 
     /** @test */
@@ -25,7 +25,7 @@ class EditSellerTest extends TestCase
         $seller = factory(Seller::class)->create();
         $user = factory(User::class)->create();
 
-        $response = $this->actingAs($user)->get(route('sellers.edit', $seller));
+        $response = $this->actingAs($user)->get(route('users.edit', $seller));
         $response->assertOk();
     }
 
@@ -35,8 +35,8 @@ class EditSellerTest extends TestCase
         $seller = factory(Seller::class)->create();
         $user = factory(User::class)->create();
 
-        $response = $this->actingAs($user)->get(route('sellers.edit', $seller));
-        $response->assertViewIs("sellers.edit");
+        $response = $this->actingAs($user)->get(route('users.edit', $seller));
+        $response->assertViewIs("users.edit");
         $response->assertSee("Editar Vendedor");
     }
 
@@ -46,7 +46,7 @@ class EditSellerTest extends TestCase
         $seller = factory(Seller::class)->create();
         $user = factory(User::class)->create();
 
-        $response = $this->actingAs($user)->get(route('sellers.edit', $seller));
+        $response = $this->actingAs($user)->get(route('users.edit', $seller));
         $response->assertSee($seller->name);
         $response->assertSee($seller->surname);
         $response->assertSee($seller->document);

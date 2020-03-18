@@ -2,24 +2,32 @@
 @section('Title', 'Ver Factura')
 @section('Back')
     <div>
-        <a href="{{ route('invoices.index') }}" class="btn btn-secondary">
-            <i class="fa fa-arrow-left"></i> {{ __("Volver") }}
-        </a>
-        @if(! $invoice->isPaid() && ! $invoice->isAnnulled())
-            <a href="{{ route('invoices.payments.create', $invoice) }}" class="btn btn-success">
-                <i class="fa fa-dollar-sign"></i> {{ __("Pagar") }}
+        @can('index', $invoice)
+            <a href="{{ route('invoices.index') }}" class="btn btn-secondary">
+                <i class="fa fa-arrow-left"></i> {{ __("Volver") }}
             </a>
-            @empty($invoice->received_at)
-                <a href="{{ route('invoices.receivedCheck', $invoice) }}" class="btn btn-primary">
-                    <i class="fa fa-check"></i> {{ __("Marcar como recibida") }}
+        @endcan
+        @if(! $invoice->isPaid() && ! $invoice->isAnnulled())
+            @can('pay', $invoice)
+                <a href="{{ route('invoices.payments.create', $invoice) }}" class="btn btn-success">
+                    <i class="fa fa-dollar-sign"></i> {{ __("Pagar") }}
                 </a>
-            @endempty
+            @endcan
+            @can('receive', $invoice)
+                @empty($invoice->received_at)
+                    <a href="{{ route('invoices.receivedCheck', $invoice) }}" class="btn btn-primary">
+                        <i class="fa fa-check"></i> {{ __("Marcar como recibida") }}
+                    </a>
+                @endempty
+            @endcan
         @endif
     </div>
     <div>
-        <a class="btn btn-success" href="{{ route('invoices.create') }}">
-            <i class="fa fa-plus"></i> {{ __("Crear nueva factura") }}
-        </a>
+        @can('create', App\Invoice::class)
+            <a class="btn btn-success" href="{{ route('invoices.create') }}">
+                <i class="fa fa-plus"></i> {{ __("Crear nueva factura") }}
+            </a>
+        @endcan
     </div>
 @endsection
 @section('Name')
@@ -64,15 +72,19 @@
             <tr>
                 <td class="table-dark td-title custom-header">{{ __("Vendedor:") }}</td>
                 <td class="td-content">
-                    <a href="{{ route('sellers.show', $invoice->seller) }}" target="_blank">
-                        {{ $invoice->seller->fullname }}
+                    <a @can('view', $invoice->creator)
+                       href="{{ route('users.show', $invoice->creator) }}" target="_blank"
+                        @endcan>
+                        {{ $invoice->creator->fullname }}
                     </a>
                 </td>
 
                 <td class="table-dark td-title custom-header">{{ __("Cliente:") }}</td>
                 <td class="td-content">
-                    <a href="{{ route('clients.show', $invoice->client) }}" target="_blank">
-                        {{ $invoice->client->fullname }}
+                    <a @can('view', $invoice->client)
+                       href="{{ route('clients.show', $invoice->client) }}" target="_blank"
+                        @endcan>
+                        {{ $invoice->client->user->fullname }}
                     </a>
                 </td>
             </tr>
@@ -106,7 +118,9 @@
                 @foreach($invoice->products as $product)
                     <tr>
                         <td class="text-center">
-                            <a href="{{ route('products.show', $product) }}">
+                            <a @can('view', $product)
+                               href="{{ route('products.show', $product) }}"
+                                @endcan>
                                 {{ $product->id }}
                             </a>
                         </td>
@@ -117,12 +131,14 @@
                         <td class="text-right">${{ number_format($product->pivot->unit_price * $product->pivot->quantity, 2) }}</td>
                         <td class="text-right btn-group btn-group-sm">
                             @if(! $invoice->isPaid() && ! $invoice->isAnnulled())
-                                <a href="{{ route('invoices.products.edit', [$invoice, $product]) }}" class="btn text-primary">
-                                    <i class="fa fa-edit"></i>
-                                </a>
-                                <button type="button" class="btn text-danger" data-route="{{ route('invoices.products.destroy', [$invoice, $product]) }}" data-toggle="modal" data-target="#confirmDeleteModal">
-                                    <i class="fa fa-trash"></i>
-                                </button>
+                                @can('edit', $invoice)
+                                    <a href="{{ route('invoices.products.edit', [$invoice, $product]) }}" class="btn text-primary">
+                                        <i class="fa fa-edit"></i>
+                                    </a>
+                                    <button type="button" class="btn text-danger" data-route="{{ route('invoices.products.destroy', [$invoice, $product]) }}" data-toggle="modal" data-target="#confirmDeleteModal">
+                                        <i class="fa fa-trash"></i>
+                                    </button>
+                                @endcan
                             @endif
                         </td>
                     </tr>
@@ -148,9 +164,11 @@
             </tbody>
         </table>
         @if(! $invoice->isPaid() && ! $invoice->isAnnulled())
-            <a href="{{ route('invoices.products.create', $invoice) }}" class="btn btn-success btn-block">
-                <i class="fa fa-plus"></i> {{ __("Agregar Producto") }}
-            </a>
+            @can('edit', $invoice)
+                <a href="{{ route('invoices.products.create', $invoice) }}" class="btn btn-success btn-block">
+                    <i class="fa fa-plus"></i> {{ __("Agregar Producto") }}
+                </a>
+            @endcan
         @endif
     </div>
     <br>
@@ -182,9 +200,11 @@
         </table>
     </div>
 @endsection
-@push('modals')
-    @include('invoices.__confirm_annulment_modal')
-@endpush
-@push('scripts')
-    <script src="{{ asset(mix('js/annul-modal.js')) }}"></script>
-@endpush
+@can('delete', $invoice)
+    @push('modals')
+        @include('invoices.__confirm_annulment_modal')
+    @endpush
+    @push('scripts')
+        <script src="{{ asset(mix('js/annul-modal.js')) }}"></script>
+    @endpush
+@endcan

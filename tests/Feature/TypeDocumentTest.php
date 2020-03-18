@@ -32,7 +32,7 @@ class TypeDocumentsTest extends TestCase
         $sellers = factory(Seller::class, 3)->create(["type_document_id" => $type_document->id]);
 
         foreach ($sellers as $seller) {
-            $this->assertDatabaseHas('sellers', [
+            $this->assertDatabaseHas('users', [
                 'id' => $type_document->sellers->find($seller->id)->id
             ]);
         }

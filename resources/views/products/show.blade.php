@@ -2,14 +2,18 @@
 @section('Title', 'Ver Producto')
 @section('Back')
     <div>
-        <a href="{{ route('products.index') }}" class="btn btn-secondary">
-            <i class="fa fa-arrow-left"></i> {{ __("Volver") }}
-        </a>
+        @can('index', App\Product::class)
+            <a href="{{ route('products.index') }}" class="btn btn-secondary">
+                <i class="fa fa-arrow-left"></i> {{ __("Volver") }}
+            </a>
+        @endcan
     </div>
     <div>
-        <a class="btn btn-success" href="{{ route('products.create') }}">
-            <i class="fa fa-plus"></i> {{ __("Crear nuevo producto") }}
-        </a>
+        @can('create', App\Product::class)
+            <a class="btn btn-success" href="{{ route('products.create') }}">
+                <i class="fa fa-plus"></i> {{ __("Crear nuevo producto") }}
+            </a>
+        @endcan
     </div>
 @endsection
 @section('Name')
@@ -25,6 +29,15 @@
             <tr>
                 <td class="table-dark td-title">{{ __("Nombre:") }}</td>
                 <td class="td-content">{{ $product->name }}</td>
+
+                <td class="table-dark td-title">{{ __("Creado por:") }}</td>
+                <td class="td-content">
+                    <a @can('view', $product->creator)
+                       href="{{ route('users.show', $product->creator) }}"
+                        @endcan>
+                        {{ $product->creator->fullname }}
+                    </a>
+                </td>
             </tr>
             <tr>
                 <td class="table-dark td-title">{{ __("Costo:") }}</td>

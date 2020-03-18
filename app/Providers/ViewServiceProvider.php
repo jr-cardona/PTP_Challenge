@@ -26,7 +26,7 @@ class ViewServiceProvider extends ServiceProvider
     {
         // Compose a list of Types document
         View::composer(
-            ['clients._form', 'clients.index', 'sellers._form', 'sellers.index'],
+            ['clients._form', 'clients.index', 'users._form', 'users.index'],
             TypeDocumentComposer::class
         );
     }

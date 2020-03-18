@@ -2,11 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use App\Exports\DebtorClientsExport;
-use App\Exports\UtilitiesExport;
 use Config;
+use App\User;
+use Illuminate\View\View;
 use Illuminate\Http\Request;
+use App\Exports\UtilitiesExport;
 use Illuminate\Support\Facades\DB;
+use App\Exports\DebtorClientsExport;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 class ReportController extends Controller
 {
@@ -14,11 +17,16 @@ class ReportController extends Controller
         return view('reports.index');
     }
 
+    /**
+     * @param Request $request
+     * @return View|BinaryFileResponse
+     */
     public function clients(Request $request){
         $vat = (Config::get('constants.vat') / 100) + 1;
-        $clients = DB::table('clients as c')
-            ->select(DB::raw('c.id, concat(c.name, " " ,c.surname) as fullname, c.cell_phone_number,
-            c.phone_number, c.address, sum(ip.unit_price * ip.quantity) as total_due'))
+        $clients = DB::table('users as u')
+            ->select(DB::raw('c.id, concat(u.name, " " ,u.surname) as fullname, c.cellphone,
+            c.phone, c.address, sum(ip.unit_price * ip.quantity) as total_due'))
+            ->join('clients as c', 'c.user_id', '=', 'u.id')
             ->join('invoices as i', 'i.client_id', '=', 'c.id')
             ->join('invoice_product as ip', 'ip.invoice_id', '=', 'i.id')
             ->join('products as p', 'p.id', '=', 'ip.product_id')
@@ -42,12 +50,13 @@ class ReportController extends Controller
     public function utilities(Request $request){
         $vat = (Config::get('constants.vat') / 100) + 1;
         $invoices = DB::table('invoices as i')
-            ->select(DB::raw('i.id, c.id as client_id, concat(c.name, " " ,c.surname) as client_fullname,
+            ->select(DB::raw('i.id, c.id as client_id, concat(u.name, " " , u.surname) as client_fullname,
              SUM(p.price * ip.quantity) AS income, SUM(p.cost * ip.quantity) AS expenses,
              (SUM(p.price * ip.quantity) - SUM(p.cost * ip.quantity)) as utility, i.paid_at'))
             ->join('invoice_product as ip', 'ip.invoice_id', '=', 'i.id')
             ->join('products as p', 'p.id', '=', 'ip.product_id')
             ->join('clients as c', 'i.client_id', '=', 'c.id')
+            ->join('users as u', 'u.id', '=', 'c.user_id')
             ->whereNotNull('i.paid_at')
             ->whereNull('i.annulled_at')
             ->groupBy('i.id')

@@ -16,9 +16,9 @@ class DestroySellerTest extends TestCase
     {
         $seller = factory(Seller::class)->create();
 
-        $this->delete(route('sellers.destroy', $seller))->assertRedirect(route('login'));
+        $this->delete(route('users.destroy', $seller))->assertRedirect(route('login'));
 
-        $this->assertDatabaseHas('sellers', [
+        $this->assertDatabaseHas('users', [
             'id' => $seller->id,
         ]);
     }
@@ -29,7 +29,7 @@ class DestroySellerTest extends TestCase
         $user = factory(User::class)->create();
         $seller = factory(Seller::class)->create();
 
-        $response = $this->actingAs($user)->delete(route('sellers.destroy', $seller));
+        $response = $this->actingAs($user)->delete(route('users.destroy', $seller));
         $response->assertRedirect();
     }
 
@@ -39,8 +39,8 @@ class DestroySellerTest extends TestCase
         $user = factory(User::class)->create();
         $seller = factory(Seller::class)->create();
 
-        $response = $this->actingAs($user)->delete(route('sellers.destroy', $seller));
-        $response->assertRedirect(route('sellers.index'));
+        $response = $this->actingAs($user)->delete(route('users.destroy', $seller));
+        $response->assertRedirect(route('users.index'));
     }
 
     /** @test */
@@ -49,8 +49,8 @@ class DestroySellerTest extends TestCase
         $user = factory(User::class)->create();
         $seller = factory(Seller::class)->create();
 
-        $this->actingAs($user)->delete(route('sellers.destroy', $seller));
-        $this->assertDatabaseMissing('sellers', [
+        $this->actingAs($user)->delete(route('users.destroy', $seller));
+        $this->assertDatabaseMissing('users', [
             'id' => $seller->id
         ]);
     }

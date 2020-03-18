@@ -22,7 +22,7 @@ trait ClientTestHasProviders
             'type_document_id' => $type_document->id,
             'name' => 'Test Name',
             'surname' => 'Test Surname',
-            'cell_phone_number' => 3000000000,
+            'cellphone' => 3000000000,
             'address' => 'Test Address',
             'email' => 'test@test.com',
         ];
@@ -116,34 +116,34 @@ trait ClientTestHasProviders
                 'surname',
                 'apellido no debe ser mayor que 50 caracteres.'
             ],
-            'phone_number field is not numeric' => [
-                array_replace_recursive($this->baseData, ['phone_number' => 'Invalid numeric test']),
-                'phone_number',
+            'phone field is not numeric' => [
+                array_replace_recursive($this->baseData, ['phone' => 'Invalid numeric test']),
+                'phone',
                 'número telefónico debe ser numérico.'
             ],
-            'phone_number field length is not 7 characters' => [
-                array_replace_recursive($this->baseData, ['phone_number' => 123]),
-                'phone_number',
+            'phone field length is not 7 characters' => [
+                array_replace_recursive($this->baseData, ['phone' => 123]),
+                'phone',
                 'número telefónico debe tener 7 dígitos.'
             ],
-            'cell_phone_number field is null' => [
-                array_replace_recursive($this->baseData, ['cell_phone_number' => null]),
-                'cell_phone_number',
+            'cellphone field is null' => [
+                array_replace_recursive($this->baseData, ['cellphone' => null]),
+                'cellphone',
                 'El campo número de celular es obligatorio.'
             ],
-            'cell_phone_number field is not numeric' => [
-                array_replace_recursive($this->baseData, ['cell_phone_number' => 'Invalid numeric test']),
-                'cell_phone_number',
+            'cellphone field is not numeric' => [
+                array_replace_recursive($this->baseData, ['cellphone' => 'Invalid numeric test']),
+                'cellphone',
                 'número de celular debe ser numérico.'
             ],
-            'cell_phone_number field length is not 10 characters' => [
-                array_replace_recursive($this->baseData, ['cell_phone_number' => 123]),
-                'cell_phone_number',
+            'cellphone field length is not 10 characters' => [
+                array_replace_recursive($this->baseData, ['cellphone' => 123]),
+                'cellphone',
                 'número de celular debe tener 10 dígitos.'
             ],
-            'cell_phone_number field not starts with 3' => [
-                array_replace_recursive($this->baseData, ['cell_phone_number' => 1234567890]),
-                'cell_phone_number',
+            'cellphone field not starts with 3' => [
+                array_replace_recursive($this->baseData, ['cellphone' => 1234567890]),
+                'cellphone',
                 'El campo número de celular debe comenzar con uno de los siguientes valores: 3'
             ],
             'address field is null' => [

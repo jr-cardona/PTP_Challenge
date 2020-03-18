@@ -33,22 +33,10 @@
         @enderror
     </div>
     <div class="col">
-        <label for="seller_id" class="required">{{ __("Vendedor") }}</label>
-        <input type="hidden" id="old_seller_fullname" name="old_seller_fullname" value="{{ old('seller', isset($invoice->seller->fullname) ? $invoice->seller->fullname : '') }}">
-        <input type="hidden" id="old_seller_id" name="old_seller_id" value="{{ old('seller_id', isset($invoice->seller->id) ? $invoice->seller->id : '') }}">
-        <v-select v-model="old_seller_values" label="fullname" :filterable="false" :options="options" @search="searchSeller"
-                  class="form-control @error('seller_id') is-invalid @enderror" >
-            <template slot="no-options">
-                {{ __("Ingresa el nombre del vendedor...") }}
-            </template>
-        </v-select>
-        <input type="hidden" name="seller" id="seller" :value="(old_seller_values) ? old_seller_values.fullname : '' ">
-        <input type="hidden" name="seller_id" id="seller_id" :value="(old_seller_values) ? old_seller_values.id : '' ">
-        @error('seller_id')
-            <span class="invalid-feedback" role="alert">
-                    <strong>{{ $message }}</strong>
-            </span>
-        @enderror
+        <label for="seller_id">{{ __("Vendedor") }}</label>
+        <span class="form-control">
+            {{ isset($invoice->creator->name) ? $invoice->creator->name : auth()->user()->name }}
+        </span>
     </div>
 </div>
 <br>

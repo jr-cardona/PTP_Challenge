@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Client;
+use App\User;
 use App\Product;
-use App\Seller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Spatie\Permission\Models\Permission;
+use Spatie\Permission\Models\Role;
 
 class SearchController extends Controller
 {
@@ -17,9 +18,11 @@ class SearchController extends Controller
      */
     public function clients(Request $request)
     {
-        return Client::select('id', DB::raw('concat(name, " ", surname) as fullname'))
-            ->where(DB::raw('concat(name, " ", surname)'), 'like', '%'. $request->name .'%')
-            ->orderBy('name')
+        return DB::table('users as u')
+            ->selectRaw('c.id, concat(u.name, " ", u.surname) as fullname')
+            ->join('clients as c', 'c.user_id', '=', 'u.id')
+            ->whereRaw('concat(u.name, " ", u.surname) like "%' . $request->name . '%"')
+            ->orderBy('fullname')
             ->limit('100')
             ->get();
     }
@@ -29,11 +32,14 @@ class SearchController extends Controller
      * @param Request $request
      * @return
      */
-    public function sellers(Request $request)
+    public function creators(Request $request)
     {
-        return Seller::select('id', DB::raw('concat(name, " ", surname) as fullname'))
-            ->where(DB::raw('concat(name, " ", surname)'), 'like', '%'. $request->name .'%')
-            ->orderBy('name')
+        return DB::table('users as u')
+            ->selectRaw('u.id, concat(u.name, " ", u.surname) as fullname')
+            ->leftJoin('clients as c', 'c.user_id', '=', 'u.id')
+            ->whereNull('c.id')
+            ->whereRaw('concat(name, " ", surname) like "%' . $request->name . '%"')
+            ->orderBy('fullname')
             ->limit('100')
             ->get();
     }
@@ -49,5 +55,22 @@ class SearchController extends Controller
             ->orderBy('name')
             ->limit('100')
             ->get();
+    }
+
+    /**
+     * Display the specified resource filtering by rol.
+     * @param Request $request
+     * @return
+     */
+    public function permissions(Request $request)
+    {
+        $permissions = DB::table('role_has_permissions as rp')
+            ->select('rp.permission_id as id')
+            ->where('role_id', $request->role_id)
+            ->get();
+
+        return response()->json([
+            'permissions' => $permissions,
+        ]);
     }
 }

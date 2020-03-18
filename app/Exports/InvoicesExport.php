@@ -39,10 +39,10 @@ class InvoicesExport implements FromCollection, Responsable, WithHeadings, WithM
             Config::get('constants.vat'),
             $invoice->total,
             $invoice->description,
-            $invoice->client->fullname,
-            $invoice->seller->fullname,
+            $invoice->client->user->fullname,
+            $invoice->creator->name,
             $invoice->client_id,
-            $invoice->seller_id,
+            $invoice->creator_id,
         ];
     }
 

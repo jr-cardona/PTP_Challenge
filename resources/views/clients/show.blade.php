@@ -2,18 +2,22 @@
 @section('Title', 'Ver Cliente')
 @section('Back')
     <div>
-        <a href="{{ route('clients.index') }}" class="btn btn-secondary">
-            <i class="fa fa-arrow-left"></i> {{ __("Volver") }}
-        </a>
+        @can('index', $client)
+            <a href="{{ route('clients.index') }}" class="btn btn-secondary">
+                <i class="fa fa-arrow-left"></i> {{ __("Volver") }}
+            </a>
+        @endcan
     </div>
     <div>
-        <a class="btn btn-success" href="{{ route('clients.create') }}">
-            <i class="fa fa-plus"></i> {{ __("Crear nuevo cliente") }}
-        </a>
+        @can('create', App\Client::class)
+            <a class="btn btn-success" href="{{ route('clients.create') }}">
+                <i class="fa fa-plus"></i> {{ __("Crear nuevo cliente") }}
+            </a>
+        @endcan
     </div>
 @endsection
 @section('Name')
-    {{ $client->fullname }}
+    {{ $client->user->fullname }}
 @endsection
 @section('Buttons')
     @include('clients._buttons')
@@ -38,17 +42,21 @@
             </tr>
             <tr>
                 <td class="table-dark td-title">{{ __("Número telefónico:")}}</td>
-                <td class="td-content">{{ $client->phone_number }}</td>
+                <td class="td-content">{{ $client->phone }}</td>
 
                 <td class="table-dark td-title">{{ __("Celular:")}}</td>
-                <td class="td-content">{{ $client->cell_phone_number }}</td>
+                <td class="td-content">{{ $client->cellphone }}</td>
             </tr>
             <tr>
                 <td class="table-dark td-title">{{ __("Dirección:")}}</td>
                 <td class="td-content">{{ $client->address }}</td>
 
                 <td class="table-dark td-title">{{ __("Correo electrónico:")}}</td>
-                <td class="td-content">{{ $client->email }}</td>
+                <td class="td-content">{{ $client->user->email }}</td>
+            </tr>
+            <tr>
+                <td class="table-dark td-title">{{ __("Creado por:")}}</td>
+                <td class="td-content">{{ $client->user->creator->fullname }}</td>
             </tr>
         </table>
     </div>
@@ -57,10 +65,14 @@
         <div class="card-header justify-content-between d-flex">
             <div class="col-md-1"></div>
             <h3 class="col-md-3">{{ __("Facturas asociadas") }}</h3>
-            <a class="btn btn-success"
-               href="{{ route('invoices.create', ["client_id" => $client->id, "client" => $client->fullname]) }}" >
-                <i class="fa fa-plus"></i>
-            </a>
+            @can('Create invoices')
+                <a class="btn btn-success"
+                   href="{{ route('invoices.create', ["client_id" => $client->id, "client" => $client->user->fullname]) }}" >
+                    <i class="fa fa-plus"></i>
+                </a>
+            @else
+                <div class="col-md-1"></div>
+            @endcan
         </div>
         <table class="table table-sm">
             <thead>
@@ -74,17 +86,21 @@
             </thead>
             <tbody>
             @foreach($client->invoices as $invoice)
-                <tr>
-                    <td>
-                        <a href="{{ route('invoices.show', $invoice) }}" target="_blank">
-                            {{ __("Factura de venta No.")}} {{ $invoice->id }}
-                        </a>
-                    </td>
-                    <td>{{ $invoice->issued_at->toDateString() }}</td>
-                    <td>{{ $invoice->expires_at->toDateString() }}</td>
-                    <td>${{ number_format($invoice->total, 2) }}</td>
-                    @include('invoices.status_label')
-                </tr>
+                @can('view', $invoice)
+                    <tr>
+                        <td>
+                            <a @can('view', $invoice)
+                                href="{{ route('invoices.show', $invoice) }}" target="_blank"
+                                @endcan>
+                                {{ __("Factura de venta No.")}} {{ $invoice->id }}
+                            </a>
+                        </td>
+                        <td>{{ $invoice->issued_at->toDateString() }}</td>
+                        <td>{{ $invoice->expires_at->toDateString() }}</td>
+                        <td>${{ number_format($invoice->total, 2) }}</td>
+                        @include('invoices.status_label')
+                    </tr>
+                @endcan
             @endforeach
             </tbody>
         </table>
