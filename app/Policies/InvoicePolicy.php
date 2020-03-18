@@ -26,7 +26,7 @@ class InvoicePolicy
      * @param User $user
      * @return bool
      */
-    public function index(User $user, Invoice $invoice)
+    public function index(User $user, Invoice $invoice = null)
     {
         return $user->hasPermissionTo('View any invoices')
             || $user->hasPermissionTo('View invoices');
@@ -56,7 +56,7 @@ class InvoicePolicy
      * @param User $user
      * @return mixed
      */
-    public function create(User $user, Invoice $invoice)
+    public function create(User $user, Invoice $invoice = null)
     {
         return $user->hasPermissionTo('Create invoices');
     }
@@ -86,7 +86,7 @@ class InvoicePolicy
      * @param Invoice $invoice
      * @return mixed
      */
-    public function delete(User $user, Invoice $invoice)
+    public function delete(User $user, Invoice $invoice = null)
     {
         if ($user->hasPermissionTo('Annul any invoices')) {
             return true;
@@ -104,9 +104,9 @@ class InvoicePolicy
      * @param Invoice $invoice
      * @return mixed
      */
-    public function export(User $user, Invoice $invoice)
+    public function export(User $user, Invoice $invoice = null)
     {
-        return $user->hasPermissionTo('Export invoices');
+        return $user->hasPermissionTo('Export any invoices');
     }
 
     /**
@@ -116,15 +116,10 @@ class InvoicePolicy
      * @param Invoice $invoice
      * @return mixed
      */
-    public function import(User $user, Invoice $invoice)
+    public function import(User $user, Invoice $invoice = null)
     {
-        if ($user->hasPermissionTo('Import any invoices')) {
-            return true;
-        } elseif ($user->hasPermissionTo('Import invoices')) {
-            return $user->id === $invoice->owner_id;
-        } else {
-            return false;
-        }
+        return $user->hasPermissionTo('Import any invoices')
+            || $user->hasPermissionTo('Import invoices');
     }
 
     /**
@@ -137,7 +132,7 @@ class InvoicePolicy
     public function pay(User $user, Invoice $invoice)
     {
         return $user->hasPermissionTo('Pay invoices')
-            && $user->id === $invoice->client->user->id;
+            && $user->id === $invoice->client->user_id;
     }
 
     /**
@@ -150,6 +145,6 @@ class InvoicePolicy
     public function receive(User $user, Invoice $invoice)
     {
         return $user->hasPermissionTo('Receive invoices')
-            && $user->id === $invoice->client->user->id;
+            && $user->id === $invoice->client->user_id;
     }
 }

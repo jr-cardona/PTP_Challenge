@@ -27,7 +27,7 @@ class ProductPolicy
      * @param Product $product
      * @return bool
      */
-    public function index(User $user, Product $product)
+    public function index(User $user, Product $product = null)
     {
         return $user->hasPermissionTo('View any products');
     }
@@ -43,11 +43,8 @@ class ProductPolicy
     {
         if ($user->hasPermissionTo('View any products')) {
             return true;
-        } elseif ($user->hasPermissionTo('View products')) {
-            return $user->id === $product->user->owner_id;
-        } else {
-            return false;
         }
+        return false;
     }
 
     /**
@@ -56,7 +53,7 @@ class ProductPolicy
      * @param User $user
      * @return mixed
      */
-    public function create(User $user)
+    public function create(User $user, Product $product = null)
     {
         return $user->hasPermissionTo('Create products');
     }
@@ -73,7 +70,7 @@ class ProductPolicy
         if ($user->hasPermissionTo('Edit any products')) {
             return true;
         } elseif ($user->hasPermissionTo('Edit products')) {
-            return $user->id === $product->user->owner_id;
+            return $user->id === $product->user->creator_id;
         } else {
             return false;
         }
@@ -91,7 +88,7 @@ class ProductPolicy
         if ($user->hasPermissionTo('Delete any products')) {
             return true;
         } elseif ($user->hasPermissionTo('Delete products')) {
-            return $user->id === $product->user->owner_id;
+            return $user->id === $product->user->creator_id;
         } else {
             return false;
         }
@@ -104,9 +101,9 @@ class ProductPolicy
      * @param Product $product
      * @return mixed
      */
-    public function export(User $user, Product $product)
+    public function export(User $user, Product $product = null)
     {
-        return $user->hasPermissionTo('Export products');
+        return $user->hasPermissionTo('Export any products');
     }
 
     /**
@@ -116,14 +113,8 @@ class ProductPolicy
      * @param Product $product
      * @return mixed
      */
-    public function import(User $user, Product $product)
+    public function import(User $user, Product $product = null)
     {
-        if ($user->hasPermissionTo('Import any products')) {
-            return true;
-        } elseif ($user->hasPermissionTo('Import products')) {
-            return $user->id === $product->owner_id;
-        } else {
-            return false;
-        }
+        return $user->hasPermissionTo('Import any products');
     }
 }

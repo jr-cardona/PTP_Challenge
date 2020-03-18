@@ -27,7 +27,7 @@ class ClientPolicy
      * @param Client $client
      * @return bool
      */
-    public function index(User $user, Client $client)
+    public function index(User $user, Client $client = null)
     {
         return $user->hasPermissionTo('View any clients');
     }
@@ -43,11 +43,8 @@ class ClientPolicy
     {
         if ($user->hasPermissionTo('View any clients')) {
             return true;
-        } elseif ($user->hasPermissionTo('View clients')) {
-            return $user->id === $client->user->owner_id;
-        } else {
-            return false;
         }
+        return false;
     }
 
     /**
@@ -56,7 +53,7 @@ class ClientPolicy
      * @param User $user
      * @return mixed
      */
-    public function create(User $user)
+    public function create(User $user, Client $client = null)
     {
         return $user->hasPermissionTo('Create clients');
     }
@@ -73,7 +70,7 @@ class ClientPolicy
         if ($user->hasPermissionTo('Edit any clients')) {
             return true;
         } elseif ($user->hasPermissionTo('Edit clients')) {
-            return $user->id === $client->user->owner_id;
+            return $user->id === $client->user->creator_id;
         } else {
             return false;
         }
@@ -91,7 +88,7 @@ class ClientPolicy
         if ($user->hasPermissionTo('Delete any clients')) {
             return true;
         } elseif ($user->hasPermissionTo('Delete clients')) {
-            return $user->id === $client->user->owner_id;
+            return $user->id === $client->user->creator_id;
         } else {
             return false;
         }
@@ -104,9 +101,9 @@ class ClientPolicy
      * @param Client $client
      * @return mixed
      */
-    public function export(User $user, Client $client)
+    public function export(User $user, Client $client = null)
     {
-        return $user->hasPermissionTo('Export clients');
+        return $user->hasPermissionTo('Export any clients');
     }
 
     /**
@@ -116,14 +113,9 @@ class ClientPolicy
      * @param Client $client
      * @return mixed
      */
-    public function import(User $user, Client $client)
+    public function import(User $user, Client $client = null)
     {
-        if ($user->hasPermissionTo('Import any clients')) {
-            return true;
-        } elseif ($user->hasPermissionTo('Import clients')) {
-            return $user->id === $client->owner_id;
-        } else {
-            return false;
-        }
+        return $user->hasPermissionTo('Import any clients')
+            || $user->hasPermissionTo('Import clients');
     }
 }
