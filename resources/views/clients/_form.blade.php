@@ -15,7 +15,7 @@
         @enderror
     </div>
     <div class="col form-group">
-        <label for="surname" class="required">{{ __("Apellido") }}</label>
+        <label for="surname" class="required">{{ __("Apellidos") }}</label>
         <input type="text" name="surname" id="surname" value="{{ old('surname', isset($client->user->surname) ? $client->user->surname : '') }}" required minlength="3" maxlength="50"
                class="form-control @error('surname') is-invalid @enderror" placeholder="Ingresa el apellido">
         @error('surname')

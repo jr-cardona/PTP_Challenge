@@ -16,7 +16,7 @@
                         </div>
 
                         <div class="form-group text-center">
-                            {{ __("Apellido:") }} <span class="form-control text-center">{{ $invoice->client->user->surname }}</span>
+                            {{ __("Apellidos:") }} <span class="form-control text-center">{{ $invoice->client->user->surname }}</span>
                         </div>
 
                         <div class="form-group text-center">

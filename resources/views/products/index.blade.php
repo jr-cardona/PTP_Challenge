@@ -10,15 +10,21 @@
     </a>
 @endsection
 @section('Actions')
-    <button type="button" class="btn btn-warning" data-route="{{ route('products.index') }}" data-toggle="modal" data-target="#exportModal">
-        <i class="fa fa-file"></i> {{ __("Exportar") }}
-    </button>
-    <button type="button" class="btn btn-warning" data-route="{{ route('import.products') }}" data-toggle="modal" data-target="#importModal">
-        <i class="fa fa-file-excel"></i> {{ __("Importar desde Excel") }}
-    </button>
-    <a class="btn btn-success" href="{{ route('products.create') }}">
-        <i class="fa fa-plus"></i> {{ __("Crear nuevo producto") }}
-    </a>
+    @can('export', App\Product::class)
+        <button type="button" class="btn btn-warning" data-route="{{ route('products.index') }}" data-toggle="modal" data-target="#exportModal">
+            <i class="fa fa-file"></i> {{ __("Exportar") }}
+        </button>
+    @endcan
+    @can('import', App\Product::class)
+        <button type="button" class="btn btn-warning" data-route="{{ route('import.products') }}" data-toggle="modal" data-target="#importModal">
+            <i class="fa fa-file-excel"></i> {{ __("Importar desde Excel") }}
+        </button>
+    @endcan
+    @can('create', App\Product::class)
+        <a class="btn btn-success" href="{{ route('products.create') }}">
+            <i class="fa fa-plus"></i> {{ __("Crear nuevo producto") }}
+        </a>
+    @endcan
 @endsection
 @section('Search')
     @include('products.__search_modal')
@@ -37,7 +43,9 @@
         <tr class="text-center">
             <td>{{ $product->id }}</td>
             <td>
-                <a href="{{ route('products.show', $product) }}">
+                <a @can('view', $product)
+                   href="{{ route('products.show', $product) }}"
+                    @endcan>
                     {{ $product->name }}
                 </a>
             </td>

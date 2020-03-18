@@ -49,30 +49,34 @@
                         </div>
                     </div>
                     <div class="form-group row">
-                        <div class="col">
-                            <label>{{ __("Cliente") }}</label>
-                            <input type="hidden" id="old_client_fullname" name="old_client_fullname" value="{{ $request->get('client') }}">
-                            <input type="hidden" id="old_client_id" name="old_client_id" value="{{ $request->get('client_id') }}">
-                            <v-select class="form-control" v-model="old_client_values" label="fullname" :filterable="false" :options="options" @search="searchClient">
-                                <template slot="no-options">
-                                    {{ __("Ingresa el nombre del cliente...") }}
-                                </template>
-                            </v-select>
-                            <input type="hidden" name="client" id="client" :value="(old_client_values) ? old_client_values.fullname : '' ">
-                            <input type="hidden" name="client_id" id="client_id" :value="(old_client_values) ? old_client_values.id : '' ">
-                        </div>
-                        <div class="col">
-                            <label>{{ __("Vendedor") }}</label>
-                            <input type="hidden" id="old_owner_fullname" name="old_owner_fullname" value="{{ $request->get('owner') }}">
-                            <input type="hidden" id="old_owner_id" name="old_owner_id" value="{{ $request->get('owner_id') }}">
-                            <v-select class="form-control" v-model="old_owner_values" label="fullname" :filterable="false" :options="options" @search="searchOwner">
-                                <template slot="no-options">
-                                    {{ __("Ingresa el nombre del vendedor...") }}
-                                </template>
-                            </v-select>
-                            <input type="hidden" name="owner" id="owner" :value="(old_owner_values) ? old_owner_values.fullname : '' ">
-                            <input type="hidden" name="owner_id" id="owner_id" :value="(old_owner_values) ? old_owner_values.id : '' ">
-                        </div>
+                        @can('index', App\Client::class)
+                            <div class="col">
+                                <label>{{ __("Cliente") }}</label>
+                                <input type="hidden" id="old_client_fullname" name="old_client_fullname" value="{{ $request->get('client') }}">
+                                <input type="hidden" id="old_client_id" name="old_client_id" value="{{ $request->get('client_id') }}">
+                                <v-select class="form-control" v-model="old_client_values" label="fullname" :filterable="false" :options="options" @search="searchClient">
+                                    <template slot="no-options">
+                                        {{ __("Ingresa el nombre del cliente...") }}
+                                    </template>
+                                </v-select>
+                                <input type="hidden" name="client" id="client" :value="(old_client_values) ? old_client_values.fullname : '' ">
+                                <input type="hidden" name="client_id" id="client_id" :value="(old_client_values) ? old_client_values.id : '' ">
+                            </div>
+                        @endcan
+                        @can('index', App\User::class)
+                            <div class="col">
+                                <label>{{ __("Vendedor") }}</label>
+                                <input type="hidden" id="old_creator_fullname" name="old_creator_fullname" value="{{ $request->get('creator') }}">
+                                <input type="hidden" id="old_creator_id" name="old_creator_id" value="{{ $request->get('creator_id') }}">
+                                <v-select class="form-control" v-model="old_creator_values" label="fullname" :filterable="false" :options="options" @search="searchCreator">
+                                    <template slot="no-options">
+                                        {{ __("Ingresa el nombre del vendedor...") }}
+                                    </template>
+                                </v-select>
+                                <input type="hidden" name="creator" id="creator" :value="(old_creator_values) ? old_creator_values.fullname : '' ">
+                                <input type="hidden" name="creator_id" id="creator_id" :value="(old_creator_values) ? old_creator_values.id : '' ">
+                            </div>
+                        @endcan
                     </div>
                     <div class="form-group row">
                         <div class="col">

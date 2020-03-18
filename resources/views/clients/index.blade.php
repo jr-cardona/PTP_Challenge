@@ -10,15 +10,21 @@
     </a>
 @endsection
 @section('Actions')
-    <button type="button" class="btn btn-warning" data-route="{{ route('clients.index') }}" data-toggle="modal" data-target="#exportModal">
-        <i class="fa fa-file"></i> {{ __("Exportar") }}
-    </button>
-    <button type="button" class="btn btn-warning" data-route="{{ route('import.clients') }}" data-toggle="modal" data-target="#importModal">
-        <i class="fa fa-file-excel"></i> {{ __("Importar desde Excel") }}
-    </button>
-    <a class="btn btn-success" href="{{ route('clients.create') }}">
-        <i class="fa fa-plus"></i> {{ __("Crear nuevo cliente") }}
-    </a>
+    @can('export', App\Client::class)
+        <button type="button" class="btn btn-warning" data-route="{{ route('clients.index') }}" data-toggle="modal" data-target="#exportModal">
+            <i class="fa fa-file"></i> {{ __("Exportar") }}
+        </button>
+    @endcan
+    @can('import', App\Client::class)
+        <button type="button" class="btn btn-warning" data-route="{{ route('import.clients') }}" data-toggle="modal" data-target="#importModal">
+            <i class="fa fa-file-excel"></i> {{ __("Importar desde Excel") }}
+        </button>
+    @endcan
+    @can('create', App\Client::class)
+        <a class="btn btn-success" href="{{ route('clients.create') }}">
+            <i class="fa fa-plus"></i> {{ __("Crear nuevo cliente") }}
+        </a>
+    @endcan
 @endsection
 @section('Search')
     @include('clients.__search_modal')
