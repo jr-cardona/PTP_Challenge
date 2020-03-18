@@ -25,8 +25,8 @@ class ClientController extends Controller
     {
         $this->authorize('index', new Client());
 
-        $clients = Client::with(['type_document', 'invoices', 'user'])
-            ->owner()
+        $clients = Client::with(['type_document', 'invoices'])
+            ->creator()
             ->id($request->get('id'))
             ->typedocument($request->get('type_document_id'))
             ->document($request->get('document'))
@@ -80,7 +80,7 @@ class ClientController extends Controller
         $user->surname = $request->input('surname');
         $user->email = $request->input('email');
         $user->password = bcrypt('secret');
-        $user->owner_id = auth()->id();
+        $user->creator_id = auth()->id();
         $user->save();
 
         $client->user_id = $user->id;

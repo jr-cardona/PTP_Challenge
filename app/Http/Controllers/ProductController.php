@@ -25,8 +25,8 @@ class ProductController extends Controller
     {
         $this->authorize('index', new Product());
 
-        $products = Product::with(['owner'])
-            ->owner()
+        $products = Product::with(['creator', 'invoices'])
+            ->creator()
             ->id($request->get('id'))
             ->orderBy('id');
         if(! empty($request->get('format'))){
@@ -78,7 +78,7 @@ class ProductController extends Controller
         $product->cost = $request->input('cost');
         $product->price = $request->input('cost') * 1.10;
         $product->description = $request->input('description');
-        $product->owner_id = auth()->user()->id;
+        $product->creator_id = auth()->user()->id;
         $product->save();
 
         return redirect()->route('products.show', $product->id)->withSuccess(__('Producto creado satisfactoriamente'));

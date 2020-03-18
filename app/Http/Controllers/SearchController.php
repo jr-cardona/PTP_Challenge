@@ -30,7 +30,7 @@ class SearchController extends Controller
      * @param Request $request
      * @return
      */
-    public function owners(Request $request)
+    public function creators(Request $request)
     {
         return User::selectRaw('id, concat(name, " ", surname) as fullname')
             ->whereRaw('concat(name, " ", surname) like "%' . $request->name . '%"')

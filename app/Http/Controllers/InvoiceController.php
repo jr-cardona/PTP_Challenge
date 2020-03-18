@@ -25,8 +25,8 @@ class InvoiceController extends Controller
     {
         $this->authorize('index', new Invoice());
 
-        $invoices = Invoice::with(['client', 'owner', 'products'])
-            ->owner($request->get('owner_id'))
+        $invoices = Invoice::with(['client', 'creator', 'products'])
+            ->creator($request->get('creator_id'))
             ->number($request->get('number'))
             ->client($request->get('client_id'))
             ->product($request->get('product_id'))
@@ -85,7 +85,7 @@ class InvoiceController extends Controller
         $invoice->issued_at = $request->input('issued_at');
         $invoice->client_id = $request->input('client_id');
         $invoice->description = $request->input('description');
-        $invoice->owner_id = auth()->id();
+        $invoice->creator_id = auth()->id();
         $invoice->save();
 
         return redirect()->route('invoices.show', $invoice->id)->withSuccess(__('Factura creada satisfactoriamente'));
@@ -149,7 +149,7 @@ class InvoiceController extends Controller
         $invoice->issued_at = $request->input('issued_at');
         $invoice->client_id = $request->input('client_id');
         $invoice->description = $request->input('description');
-        $invoice->owner_id = auth()->id();
+        $invoice->creator_id = auth()->id();
         $invoice->save();
 
         return redirect()->route('invoices.show', $invoice)->withSuccess(__('Factura actualizada satisfactoriamente'));

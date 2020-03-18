@@ -25,6 +25,15 @@
             <tr>
                 <td class="table-dark td-title">{{ __("Nombre:") }}</td>
                 <td class="td-content">{{ $product->name }}</td>
+
+                <td class="table-dark td-title">{{ __("Creado por:") }}</td>
+                <td class="td-content">
+                    <a @can('view', $product->creator)
+                       href="{{ route('users.show', $product->creator) }}"
+                        @endcan>
+                        {{ $product->creator->fullname }}
+                    </a>
+                </td>
             </tr>
             <tr>
                 <td class="table-dark td-title">{{ __("Costo:") }}</td>

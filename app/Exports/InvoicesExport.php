@@ -40,9 +40,9 @@ class InvoicesExport implements FromCollection, Responsable, WithHeadings, WithM
             $invoice->total,
             $invoice->description,
             $invoice->client->fullname,
-            $invoice->owner->name,
+            $invoice->creator->name,
             $invoice->client_id,
-            $invoice->owner_id,
+            $invoice->creator_id,
         ];
     }
 

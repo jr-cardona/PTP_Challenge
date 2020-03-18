@@ -44,7 +44,7 @@ class Client extends Model
     }
 
     /** Query Scopes */
-    public function scopeOwner($query)
+    public function scopeCreator($query)
     {
         if (auth()->user()->hasPermissionTo('View any clients') || auth()->user()->hasRole('Admin')) {
             return $query;

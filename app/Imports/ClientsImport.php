@@ -68,7 +68,7 @@ class ClientsImport extends BaseImport implements ToCollection, WithHeadingRow, 
                 'surname' => $row['Apellido'],
                 'email' => $row['Correo electrónico'],
                 'password' => 'secret',
-                'owner_id' => auth()->user()->id
+                'creator_id' => auth()->user()->id
             ]);
             Client::create([
                 'user_id' => $user->id,

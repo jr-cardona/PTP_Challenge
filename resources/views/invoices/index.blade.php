@@ -52,7 +52,11 @@
                 </a>
             </td>
             <td nowrap>
-                {{ $invoice->owner->name }}
+                <a @can('view', $invoice->creator)
+                   href="{{ route('users.show', $invoice->creator) }}" target="_blank"
+                    @endcan>
+                    {{ $invoice->creator->fullname }}
+                </a>
             </td>
             <td class="btn-group btn-group-sm" nowrap>
                 @include('invoices._buttons')

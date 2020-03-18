@@ -64,7 +64,11 @@
             <tr>
                 <td class="table-dark td-title custom-header">{{ __("Vendedor:") }}</td>
                 <td class="td-content">
-                    {{ $invoice->owner->name }}
+                    <a @can('view', $invoice->creator)
+                       href="{{ route('users.show', $invoice->creator) }}" target="_blank"
+                        @endcan>
+                        {{ $invoice->creator->fullname }}
+                    </a>
                 </td>
 
                 <td class="table-dark td-title custom-header">{{ __("Cliente:") }}</td>

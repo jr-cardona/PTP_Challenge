@@ -44,7 +44,7 @@ class InvoicePolicy
         if ($user->hasPermissionTo('View any invoices')) {
             return true;
         } elseif ($user->hasPermissionTo('View invoices')) {
-            return $user->id === $invoice->owner_id || $user->id === $invoice->client->user->id;
+            return $user->id === $invoice->creator_id || $user->id === $invoice->client->user_id;
         } else {
             return false;
         }
@@ -73,7 +73,7 @@ class InvoicePolicy
         if ($user->hasPermissionTo('Edit any invoices')) {
             return true;
         } elseif ($user->hasPermissionTo('Edit invoices')) {
-            return $user->id === $invoice->owner_id;
+            return $user->id === $invoice->creator_id;
         } else {
             return false;
         }
@@ -91,7 +91,7 @@ class InvoicePolicy
         if ($user->hasPermissionTo('Annul any invoices')) {
             return true;
         } elseif ($user->hasPermissionTo('Annul invoices')) {
-            return $user->id === $invoice->owner_id;
+            return $user->id === $invoice->creator_id;
         } else {
             return false;
         }

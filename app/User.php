@@ -19,7 +19,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'surname', 'email', 'owner_id', 'password',
+        'name', 'surname', 'email', 'creator_id', 'password',
     ];
 
     /**
@@ -46,7 +46,7 @@ class User extends Authenticatable
      */
     public function invoices(): HasMany
     {
-        return $this->hasMany(Invoice::class, 'owner_id');
+        return $this->hasMany(Invoice::class, 'creator_id');
     }
 
     /**
@@ -55,7 +55,7 @@ class User extends Authenticatable
      */
     public function products(): HasMany
     {
-        return $this->hasMany(Invoice::class, 'owner_id');
+        return $this->hasMany(Product::class, 'creator_id');
     }
 
     /**
@@ -73,14 +73,14 @@ class User extends Authenticatable
      */
     public function users(): HasMany
     {
-        return $this->hasMany(User::class, 'owner_id');
+        return $this->hasMany(User::class, 'creator_id');
     }
 
     /**
      * Relation between users and users
      * @return BelongsTo
      */
-    public function owner(): BelongsTo
+    public function creator(): BelongsTo
     {
         return $this->belongsTo(User::class);
     }

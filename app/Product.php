@@ -23,7 +23,7 @@ class Product extends Model
      * Relation between products and users
      * @return BelongsTo
      */
-    public function owner(): BelongsTo
+    public function creator(): BelongsTo
     {
         return $this->belongsTo(User::class);
     }
@@ -36,14 +36,14 @@ class Product extends Model
         }
     }
 
-    public function scopeOwner($query)
+    public function scopeCreator($query)
     {
         if (auth()->user()->hasPermissionTo('View any products') || auth()->user()->hasRole('Admin')) {
             return $query;
         } elseif (auth()->user()->hasPermissionTo('View products')) {
-            $query->where('owner_id', auth()->user()->id);
+            $query->where('creator_id', auth()->user()->id);
         } else {
-            return $query->where('owner_id', '-1');
+            return $query->where('creator_id', '-1');
         }
     }
 }

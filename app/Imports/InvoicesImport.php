@@ -28,7 +28,7 @@ class InvoicesImport extends BaseImport implements ToModel, WithHeadingRow, With
             'received_at' => Carbon::create($row['Fecha de recibo']),
             'description' => $row['Descripción'],
             'client_id' => $row['ID Cliente'],
-            'owner_id' => $row['ID Vendedor'],
+            'creator_id' => $row['ID Vendedor'],
         ]);
     }
 

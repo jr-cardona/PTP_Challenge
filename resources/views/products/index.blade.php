@@ -29,7 +29,7 @@
     <th class="text-center" nowrap>{{ __("Costo") }}</th>
     <th class="text-center" nowrap>{{ __("Precio") }}</th>
     <th class="text-center" nowrap>{{ __("Fecha de creación") }}</th>
-    <th class="text-center" nowrap>{{ __("Fecha de modificación") }}</th>
+    <th class="text-center" nowrap>{{ __("Creado por") }}</th>
     <th class="text-center" nowrap>{{ __("Opciones") }}</th>
 @endsection
 @section('Body')
@@ -44,7 +44,13 @@
             <td nowrap>$ {{ number_format($product->cost, 2) }}</td>
             <td nowrap>$ {{ number_format($product->price, 2) }}</td>
             <td nowrap>{{ $product->created_at->isoFormat('Y-MM-DD hh:mma') }}</td>
-            <td nowrap>{{ $product->updated_at->isoFormat('Y-MM-DD hh:mma') }}</td>
+            <td nowrap>
+                <a @can('view', $product->creator)
+                   href="{{ route('users.show', $product->creator) }}"
+                    @endcan>
+                    {{ $product->creator->fullname }}
+                </a>
+            </td>
             <td class="btn-group btn-group-sm" nowrap>
                 @include('products._buttons')
             </td>

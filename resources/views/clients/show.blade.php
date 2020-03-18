@@ -52,7 +52,7 @@
             </tr>
             <tr>
                 <td class="table-dark td-title">{{ __("Creado por:")}}</td>
-                <td class="td-content">{{ $client->user->owner->fullname }}</td>
+                <td class="td-content">{{ $client->user->creator->fullname }}</td>
             </tr>
         </table>
     </div>
