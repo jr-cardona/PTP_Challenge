@@ -13,7 +13,7 @@ class CreateSellerTest extends TestCase
     /** @test */
     public function guest_user_cannot_access_to_create_sellers_view()
     {
-        $this->get(route('sellers.create'))->assertRedirect(route('login'));
+        $this->get(route('users.create'))->assertRedirect(route('login'));
     }
 
     /** @test */
@@ -21,7 +21,7 @@ class CreateSellerTest extends TestCase
     {
         $user = factory(User::class)->create();
 
-        $response = $this->actingAs($user)->get(route('sellers.create'));
+        $response = $this->actingAs($user)->get(route('users.create'));
         $response->assertOk();
     }
 
@@ -30,8 +30,8 @@ class CreateSellerTest extends TestCase
     {
         $user = factory(User::class)->create();
 
-        $response = $this->actingAs($user)->get(route('sellers.create'));
-        $response->assertViewIs("sellers.create");
+        $response = $this->actingAs($user)->get(route('users.create'));
+        $response->assertViewIs("users.create");
         $response->assertSee("Crear Vendedor");
     }
 
@@ -40,15 +40,15 @@ class CreateSellerTest extends TestCase
     {
         $user = factory(User::class)->create();
 
-        $response = $this->actingAs($user)->get(route('sellers.create'));
+        $response = $this->actingAs($user)->get(route('users.create'));
         $response->assertSee("Nombre");
-        $response->assertSee("Apellido");
+        $response->assertSee("Apellidos");
         $response->assertSee("Tipo de documento");
         $response->assertSee("Número de documento");
         $response->assertSee("Número telefónico");
         $response->assertSee("Número de celular");
         $response->assertSee("Dirección");
         $response->assertSee("Email");
-        $response->assertSee(route('sellers.store'));
+        $response->assertSee(route('users.store'));
     }
 }

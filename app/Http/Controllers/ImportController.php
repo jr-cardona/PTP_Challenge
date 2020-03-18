@@ -7,8 +7,8 @@ use App\Invoice;
 use App\Product;
 use Illuminate\Http\Request;
 use App\Imports\InvoicesImport;
+use App\Imports\UsersImport;
 use App\Imports\ClientsImport;
-use App\Imports\SellersImport;
 use App\Imports\ProductsImport;
 use Maatwebsite\Excel\Facades\Excel;
 
@@ -62,19 +62,25 @@ class ImportController extends Controller
         }
     }
 
-    public function sellers(Request $request)
+    /**
+     * @param Request $request
+     * @return Response
+     * @throws ValidationException
+     * @throws AuthorizationException
+     */
+    public function users(Request $request)
     {
         $this->validate($request, [
             'file' => 'required|mimes:xls,xlsx'
         ]);
         $file = $request->file('file');
         try {
-            $import = new SellersImport();
+            $import = new UsersImport();
             Excel::import($import, $file);
             $cant = $import->getRowCount();
-            return redirect()->route('sellers.index')->withSuccess(__("Se importaron {$cant} vendedores satisfactoriamente"));
+            return redirect()->route('users.index')->withSuccess(__("Se importaron {$cant} vendedores satisfactoriamente"));
         } catch (\Maatwebsite\Excel\Validators\ValidationException $err) {
-            return $this->displayErrors($err, 'sellers.index');
+            return $this->displayErrors($err, 'users.index');
         }
     }
 

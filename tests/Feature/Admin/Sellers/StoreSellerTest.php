@@ -25,8 +25,8 @@ class StoreSellerTest extends TestCase
     {
         $data = $this->data();
 
-        $this->post(route('sellers.store'), $data)->assertRedirect(route('login'));
-        $this->assertDatabaseMissing('sellers', $data);
+        $this->post(route('users.store'), $data)->assertRedirect(route('login'));
+        $this->assertDatabaseMissing('users', $data);
     }
 
     /** @test */
@@ -35,8 +35,8 @@ class StoreSellerTest extends TestCase
         $user = factory(User::class)->create();
         $data = $this->data();
 
-        $response = $this->actingAs($user)->post(route('sellers.store'), $data);
-        $response->assertRedirect(route('sellers.show', Seller::first()));
+        $response = $this->actingAs($user)->post(route('users.store'), $data);
+        $response->assertRedirect(route('users.show', Seller::first()));
         $response->assertSessionHasNoErrors();
     }
 
@@ -46,8 +46,8 @@ class StoreSellerTest extends TestCase
         $user = factory(User::class)->create();
         $data = $this->data();
 
-        $this->actingAs($user)->post(route('sellers.store'), $data);
-        $this->assertDatabaseHas('sellers', $data);
+        $this->actingAs($user)->post(route('users.store'), $data);
+        $this->assertDatabaseHas('users', $data);
     }
 
     /**
@@ -68,7 +68,7 @@ class StoreSellerTest extends TestCase
     ) {
         $user = factory(User::class)->create();
         factory(Seller::class)->create(["document" => 12345678, "email" => "repeated@email.com"]);
-        $response =  $this->actingAs($user)->post(route('sellers.store'), $sellerData);
+        $response =  $this->actingAs($user)->post(route('users.store'), $sellerData);
 
         $response->assertSessionHasErrors([$field => $message]);
     }

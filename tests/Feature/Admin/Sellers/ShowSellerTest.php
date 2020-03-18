@@ -16,7 +16,7 @@ class ShowSellerTest extends TestCase
     {
         $seller = factory(Seller::class)->create();
 
-        $this->get(route('sellers.show', $seller))->assertRedirect(route('login'));
+        $this->get(route('users.show', $seller))->assertRedirect(route('login'));
     }
 
     /** @test */
@@ -25,7 +25,7 @@ class ShowSellerTest extends TestCase
         $seller = factory(Seller::class)->create();
         $user = factory(User::class)->create();
 
-        $response = $this->actingAs($user)->get(route('sellers.show', $seller));
+        $response = $this->actingAs($user)->get(route('users.show', $seller));
         $response->assertOk();
     }
 
@@ -35,8 +35,8 @@ class ShowSellerTest extends TestCase
         $seller = factory(Seller::class)->create();
         $user = factory(User::class)->create();
 
-        $response = $this->actingAs($user)->get(route('sellers.show', $seller));
-        $response->assertViewIs("sellers.show");
+        $response = $this->actingAs($user)->get(route('users.show', $seller));
+        $response->assertViewIs("users.show");
         $response->assertSee("Vendedores");
     }
 
@@ -46,7 +46,7 @@ class ShowSellerTest extends TestCase
         $seller = factory(Seller::class)->create();
         $user = factory(User::class)->create();
 
-        $response = $this->actingAs($user)->get(route('sellers.index'));
+        $response = $this->actingAs($user)->get(route('users.index'));
         $response->assertSeeText($seller->fullname);
         $response->assertSeeText($seller->document);
     }

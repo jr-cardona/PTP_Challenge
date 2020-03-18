@@ -15,7 +15,7 @@ class IndexSellerTest extends TestCase
     /** @test */
     public function guest_user_cannot_access_to_sellers_index()
     {
-        $this->get(route('sellers.index'))->assertRedirect(route('login'));
+        $this->get(route('users.index'))->assertRedirect(route('login'));
     }
 
     /** @test */
@@ -23,7 +23,7 @@ class IndexSellerTest extends TestCase
     {
         $user = factory(User::class)->create();
 
-        $response = $this->actingAs($user)->get(route('sellers.index'));
+        $response = $this->actingAs($user)->get(route('users.index'));
         $response->assertOk();
     }
 
@@ -32,8 +32,8 @@ class IndexSellerTest extends TestCase
     {
         $user = factory(User::class)->create();
 
-        $response = $this->actingAs($user)->get(route('sellers.index'));
-        $response->assertViewIs("sellers.index");
+        $response = $this->actingAs($user)->get(route('users.index'));
+        $response->assertViewIs("users.index");
         $response->assertSee("Vendedores");
     }
 
@@ -43,9 +43,9 @@ class IndexSellerTest extends TestCase
         factory(Seller::class, 5)->create();
         $user = factory(User::class)->create();
 
-        $response = $this->actingAs($user)->get(route('sellers.index'));
+        $response = $this->actingAs($user)->get(route('users.index'));
 
-        $response->assertViewHas('sellers');
+        $response->assertViewHas('users');
     }
 
     /** @test */
@@ -54,10 +54,10 @@ class IndexSellerTest extends TestCase
         factory(Seller::class, 5)->create();
         $user = factory(User::class)->create();
 
-        $response = $this->actingAs($user)->get(route('sellers.index'));
+        $response = $this->actingAs($user)->get(route('users.index'));
         $this->assertInstanceOf(
             LengthAwarePaginator::class,
-            $response->original->gatherData()['sellers']
+            $response->original->gatherData()['users']
         );
     }
 
@@ -66,7 +66,7 @@ class IndexSellerTest extends TestCase
     {
         $user = factory(User::class)->create();
 
-        $response = $this->actingAs($user)->get(route('sellers.index'));
+        $response = $this->actingAs($user)->get(route('users.index'));
         $response->assertSee(__('No se encontraron vendedores'));
     }
 
@@ -78,12 +78,12 @@ class IndexSellerTest extends TestCase
         $seller2 = factory(Seller::class)->create();
         $seller3 = factory(Seller::class)->create();
 
-        $response = $this->actingAs($user)->get(route('sellers.index'));
+        $response = $this->actingAs($user)->get(route('users.index'));
         $response->assertSeeText($seller1->fullname);
         $response->assertSeeText($seller2->fullname);
         $response->assertSeeText($seller3->fullname);
 
-        $response = $this->actingAs($user)->get(route('sellers.index', ['id' => $seller3->id]));
+        $response = $this->actingAs($user)->get(route('users.index', ['id' => $seller3->id]));
         $response->assertDontSeeText($seller1->fullname);
         $response->assertDontSeeText($seller2->fullname);
         $response->assertSeeText($seller3->fullname);
@@ -97,12 +97,12 @@ class IndexSellerTest extends TestCase
         $seller2 = factory(Seller::class)->create();
         $seller3 = factory(Seller::class)->create();
 
-        $response = $this->actingAs($user)->get(route('sellers.index'));
+        $response = $this->actingAs($user)->get(route('users.index'));
         $response->assertSeeText($seller1->fullname);
         $response->assertSeeText($seller2->fullname);
         $response->assertSeeText($seller3->fullname);
 
-        $response = $this->actingAs($user)->get(route('sellers.index', ['type_document_id' => $seller3->type_document_id]));
+        $response = $this->actingAs($user)->get(route('users.index', ['type_document_id' => $seller3->type_document_id]));
         $response->assertDontSeeText($seller1->fullname);
         $response->assertDontSeeText($seller2->fullname);
         $response->assertSeeText($seller3->fullname);
@@ -116,12 +116,12 @@ class IndexSellerTest extends TestCase
         $seller2 = factory(Seller::class)->create();
         $seller3 = factory(Seller::class)->create();
 
-        $response = $this->actingAs($user)->get(route('sellers.index'));
+        $response = $this->actingAs($user)->get(route('users.index'));
         $response->assertSeeText($seller1->fullname);
         $response->assertSeeText($seller2->fullname);
         $response->assertSeeText($seller3->fullname);
 
-        $response = $this->actingAs($user)->get(route('sellers.index', ['document' => $seller3->document]));
+        $response = $this->actingAs($user)->get(route('users.index', ['document' => $seller3->document]));
         $response->assertDontSeeText($seller1->fullname);
         $response->assertDontSeeText($seller2->fullname);
         $response->assertSeeText($seller3->fullname);
@@ -135,12 +135,12 @@ class IndexSellerTest extends TestCase
         $seller2 = factory(Seller::class)->create();
         $seller3 = factory(Seller::class)->create();
 
-        $response = $this->actingAs($user)->get(route('sellers.index'));
+        $response = $this->actingAs($user)->get(route('users.index'));
         $response->assertSeeText($seller1->fullname);
         $response->assertSeeText($seller2->fullname);
         $response->assertSeeText($seller3->fullname);
 
-        $response = $this->actingAs($user)->get(route('sellers.index', ['email' => $seller3->email]));
+        $response = $this->actingAs($user)->get(route('users.index', ['email' => $seller3->email]));
         $response->assertDontSeeText($seller1->fullname);
         $response->assertDontSeeText($seller2->fullname);
         $response->assertSeeText($seller3->fullname);

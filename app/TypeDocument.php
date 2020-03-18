@@ -17,7 +17,7 @@ class TypeDocument extends Model
     }
 
     /**
-     * Relation between type documents and sellers
+     * Relation between type documents and users
      * @return HasMany
      */
     public function sellers(): HasMany

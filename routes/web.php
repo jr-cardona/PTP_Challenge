@@ -36,8 +36,8 @@ Route::middleware(['auth'])->group(static function () {
     Route::post('/productos/importar', 'ImportController@products')
         ->name('import.products');
 
-    Route::post('/vendedores/importar', 'ImportController@sellers')
-        ->name('import.sellers');
+    Route::post('/usuarios/importar', 'ImportController@users')
+        ->name('import.users');
 
     Route::resource('/facturas/{invoice}/producto', 'InvoiceProductController')
         ->except('index', 'show')
@@ -61,9 +61,9 @@ Route::middleware(['auth'])->group(static function () {
         ->names('products')
         ->parameters(['productos' => 'product']);
 
-    Route::resource('/vendedores', 'SellerController')
-        ->names('sellers')
-        ->parameters(['vendedores' => 'seller']);
+    Route::resource('/usuarios', 'UserController')
+        ->names('users')
+        ->parameters(['usuarios' => 'user']);
 
     Route::get('/facturas/received-check/{invoice}', 'InvoiceController@receivedCheck')
         ->name('invoices.receivedCheck');

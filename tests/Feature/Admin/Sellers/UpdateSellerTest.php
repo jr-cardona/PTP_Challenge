@@ -18,8 +18,8 @@ class UpdateSellerTest extends TestCase
         $seller = factory(Seller::class)->create();
         $data = $this->data();
 
-        $this->put(route('sellers.update', $seller), $data)->assertRedirect('login');
-        $this->assertDatabaseMissing('sellers', $this->data());
+        $this->put(route('users.update', $seller), $data)->assertRedirect('login');
+        $this->assertDatabaseMissing('users', $this->data());
     }
 
     /** @test */
@@ -29,8 +29,8 @@ class UpdateSellerTest extends TestCase
         $user = factory(User::class)->create();
         $data = $this->data();
 
-        $response = $this->actingAs($user)->put(route('sellers.update', $seller), $data);
-        $response->assertRedirect(route('sellers.show', $seller));
+        $response = $this->actingAs($user)->put(route('users.update', $seller), $data);
+        $response->assertRedirect(route('users.show', $seller));
         $response->assertSessionHasNoErrors();
     }
 
@@ -41,8 +41,8 @@ class UpdateSellerTest extends TestCase
         $user = factory(User::class)->create();
         $data = $this->data();
 
-        $this->actingAs($user)->put(route('sellers.update', $seller), $data);
-        $this->assertDatabaseHas('sellers', $data);
+        $this->actingAs($user)->put(route('users.update', $seller), $data);
+        $this->assertDatabaseHas('users', $data);
     }
 
     /**
