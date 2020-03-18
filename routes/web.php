@@ -27,6 +27,9 @@ Route::middleware(['auth'])->group(static function () {
     Route::get('/usuarios/buscar', 'SearchController@creators')
         ->name('search.creators');
 
+    Route::get('/permisos/buscar', 'SearchController@permissions')
+        ->name('search.permissions');
+
     Route::post('/clientes/importar', 'ImportController@clients')
         ->name('import.clients');
 

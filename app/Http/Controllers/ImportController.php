@@ -6,23 +6,27 @@ use App\Client;
 use App\Invoice;
 use App\Product;
 use Illuminate\Http\Request;
-use App\Imports\InvoicesImport;
 use App\Imports\UsersImport;
+use Illuminate\Http\Response;
 use App\Imports\ClientsImport;
+use App\Imports\InvoicesImport;
 use App\Imports\ProductsImport;
 use Maatwebsite\Excel\Facades\Excel;
+use Illuminate\Validation\ValidationException;
+use Illuminate\Auth\Access\AuthorizationException;
 
 class ImportController extends Controller
 {
     /**
      * Imports a listing of the resource.
      * @param Request $request
-     * @return \Illuminate\Http\Response | \Illuminate\Http\RedirectResponse
-     * @throws \Illuminate\Validation\ValidationException
+     * @return Response
+     * @throws ValidationException
+     * @throws AuthorizationException
      */
     public function invoices(Request $request)
     {
-        $this->authorize('Import invoices', new Invoice());
+        $this->authorize('import', new Invoice());
 
         $this->validate($request, [
             'file' => 'required|mimes:xls,xlsx'
@@ -41,12 +45,13 @@ class ImportController extends Controller
     /**
      * Imports a listing of the resource.
      * @param Request $request
-     * @return \Illuminate\Http\Response | \Illuminate\Http\RedirectResponse
-     * @throws \Illuminate\Validation\ValidationException
+     * @return Response
+     * @throws ValidationException
+     * @throws AuthorizationException
      */
     public function clients(Request $request)
     {
-        $this->authorize('Import invoices', new Client());
+        $this->authorize('import', new Client());
 
         $this->validate($request, [
             'file' => 'required|mimes:xls,xlsx'
@@ -70,6 +75,8 @@ class ImportController extends Controller
      */
     public function users(Request $request)
     {
+        $this->authorize('import', new User());
+
         $this->validate($request, [
             'file' => 'required|mimes:xls,xlsx'
         ]);
@@ -84,6 +91,12 @@ class ImportController extends Controller
         }
     }
 
+    /**
+     * @param Request $request
+     * @return Response
+     * @throws AuthorizationException
+     * @throws ValidationException
+     */
     public function products(Request $request)
     {
         $this->authorize('Import invoices', new Product());
