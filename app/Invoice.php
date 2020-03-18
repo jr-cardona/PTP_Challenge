@@ -54,7 +54,10 @@ class Invoice extends Model
      */
     public function products(): BelongsToMany
     {
-        return $this->belongsToMany(Product::class)->withTimestamps()->withPivot('quantity', 'unit_price')->orderBy('id');
+        return $this->belongsToMany(Product::class)
+            ->withTimestamps()
+            ->withPivot('quantity', 'unit_price')
+            ->orderBy('id');
     }
 
     /**
@@ -136,8 +139,6 @@ class Invoice extends Model
     {
         if (trim($number) !== '') {
             return $query->where('id', 'LIKE', "%${number}%");
-        } else {
-            return $query;
         }
     }
 
@@ -145,8 +146,6 @@ class Invoice extends Model
     {
         if (trim($clientId) !== '') {
             return $query->where('client_id', $clientId);
-        } else {
-            return $query;
         }
     }
 
@@ -156,9 +155,11 @@ class Invoice extends Model
             if (trim($creatorId) !== '') {
                 return $query->where('creator_id', $creatorId);
             }
-        } elseif (auth()->user()->hasPermissionTo('View invoices')) {
+            return $query;
+        }
+        if (auth()->user()->hasPermissionTo('View invoices')) {
             if (auth()->user()->hasRole('Client')) {
-                $query->where('client_id', auth()->user()->client->id);
+                return $query->where('client_id', auth()->user()->client->id);
             } else {
                 return $query->where('creator_id', auth()->user()->id);
             }
@@ -173,8 +174,6 @@ class Invoice extends Model
                 static function (Builder $query) use ($product_id) {
                 $query->where('product_id', $product_id);
             });
-        } else {
-            return $query;
         }
     }
 
@@ -182,8 +181,6 @@ class Invoice extends Model
     {
         if (trim($issued_init) !== '' && trim($issued_final) !== '') {
             return $query->whereBetween('issued_at', [$issued_init, $issued_final]);
-        } else {
-            return $query;
         }
     }
 
@@ -191,8 +188,6 @@ class Invoice extends Model
     {
         if (trim($expires_init) !== '' && trim($expires_final) !== '') {
             return $query->whereBetween('expires_at', [$expires_init, $expires_final]);
-        } else {
-            return $query;
         }
     }
 
@@ -209,8 +204,6 @@ class Invoice extends Model
         }
         if (trim($state) === "pending") {
             return $query->whereNull("paid_at")->whereDate('expires_at', ">", Carbon::now());
-        } else {
-            return $query;
         }
     }
 }

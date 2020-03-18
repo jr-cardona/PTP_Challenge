@@ -90,4 +90,24 @@ class User extends Authenticatable
     {
         return $this->name . " " . $this->surname;
     }
+
+    /** Query Scopes */
+    public function scopeId($query, $id)
+    {
+        if (trim($id) !== "") {
+            return $query->where('id', $id);
+        }
+    }
+
+    public function scopeEmail($query, $email)
+    {
+        if (trim($email) !== '') {
+            return $query->where('email', 'LIKE', "%${email}%");
+        }
+    }
+
+    public function canBeDeleted(){
+        return $this->invoices->count() == 0 && $this->products->count() == 0
+            && $this->users->count() == 0 && empty($this->client);
+    }
 }
