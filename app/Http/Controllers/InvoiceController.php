@@ -102,6 +102,8 @@ class InvoiceController extends Controller
     {
         $this->authorize('view', $invoice);
 
+        $invoice->load('paymentAttempts');
+
         return response()->view('invoices.show', [
             'invoice' => $invoice,
         ]);

@@ -107,7 +107,7 @@ class User extends Authenticatable
     }
 
     public function canBeDeleted(){
-        return $this->invoices->count() == 0 && $this->products->count() == 0
-            && $this->users->count() == 0 && empty($this->client);
+        return empty($this->invoices->first()) && empty($this->products->first())
+            && empty($this->users->first()) && empty($this->client);
     }
 }

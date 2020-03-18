@@ -106,9 +106,10 @@ class ClientController extends Controller
     {
         $this->authorize('view', $client);
 
+        $client->load('invoices.products');
+
         return response()->view('clients.show', [
             'client' => $client,
-            'side_effect' => __('Se borrarán todas sus facturas asociadas')
         ]);
     }
 

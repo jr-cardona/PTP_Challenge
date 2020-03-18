@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class Client extends Model
 {
     protected $guarded = [];
-    protected $with = ['user'];
+    protected $with = ['user.creator'];
 
     /**
      * Relation between clients and invoices

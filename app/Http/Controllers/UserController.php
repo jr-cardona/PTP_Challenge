@@ -27,7 +27,14 @@ class UserController extends Controller
     {
         $this->authorize('index', new User());
 
-        $users = User::with(['invoices', 'client', 'products', 'users', 'creator', 'roles', 'permissions'])
+        $users = User::with([
+            'invoices:id,creator_id',
+            'client:id,user_id',
+            'products:id,creator_id',
+            'users:id,creator_id',
+            'roles.permissions',
+            'permissions'
+        ])
             ->select(['users.id', 'users.name', 'users.surname', 'users.email'])
             ->leftJoin('clients as c', 'c.user_id', '=', 'users.id')
             ->id($request->get('id'))
@@ -92,7 +99,8 @@ class UserController extends Controller
         $user->password = bcrypt($request->input('password'));
         $user->creator_id = auth()->user()->id;
         $user->save();
-        $user->syncRoles($request->roles);
+
+        if ($user->hasRole('Admin')) $user->syncRoles($request->roles);
 
         return redirect()->route('users.show', $user)->withSuccess(__('Usuario creado satisfactoriamente'));
     }
@@ -160,7 +168,8 @@ class UserController extends Controller
             $user->password = bcrypt($request->input('password'));
         }
         $user->update();
-        $user->syncRoles($request->roles);
+
+        if ($user->hasRole('Admin')) $user->syncRoles($request->roles);
 
         return redirect()->route('users.show', $user)->withSuccess(__('Usuario actualizado satisfactoriamente'));
     }
