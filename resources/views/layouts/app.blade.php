@@ -88,12 +88,16 @@
                             </a>
 
                             <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
-                                <a class="dropdown-item" href="{{ route('users.show', auth()->user()) }}">
-                                    <i class="fa fa-user-tie"></i> {{ __("Mi perfil") }}
-                                </a>
-                                <a class="dropdown-item" href="{{ route('users.edit', auth()->user()) }}">
-                                    <i class="fa fa-user-edit"></i> {{ __("Editar perfil") }}
-                                </a>
+                                @can('view', auth()->user())
+                                    <a class="dropdown-item" href="{{ route('users.show', auth()->user()) }}">
+                                        <i class="fa fa-user-tie"></i> {{ __("Mi perfil") }}
+                                    </a>
+                                @endcan
+                                @can('edit', auth()->user())
+                                    <a class="dropdown-item" href="{{ route('users.edit', auth()->user()) }}">
+                                        <i class="fa fa-user-edit"></i> {{ __("Editar perfil") }}
+                                    </a>
+                                @endcan
                                 <a class="dropdown-item" href="{{ route('logout') }}"
                                    onclick="event.preventDefault();
                                                  document.getElementById('logout-form').submit();">
