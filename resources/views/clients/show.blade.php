@@ -65,7 +65,7 @@
         <div class="card-header justify-content-between d-flex">
             <div class="col-md-1"></div>
             <h3 class="col-md-3">{{ __("Facturas asociadas") }}</h3>
-            @can('Create invoices')
+            @can('create', App\Invoice::class)
                 <a class="btn btn-success"
                    href="{{ route('invoices.create', ["client_id" => $client->id, "client" => $client->user->fullname]) }}" >
                     <i class="fa fa-plus"></i>

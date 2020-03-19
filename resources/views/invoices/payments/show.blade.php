@@ -26,7 +26,7 @@
         </tr>
         <tr>
             <td class="table-dark td-title">{{ __("Mensaje:") }}</td>
-            @if(isset($response->payment) && !$paymentAttempt->isApproved())
+            @if(isset($response->payment) && ! $paymentAttempt->isApproved())
                 <td class="td-content">{{ $response->payment[0]->status()->message() }}</td>
             @else
                 <td class="td-content">{{ $response->status()->message() }}</td>

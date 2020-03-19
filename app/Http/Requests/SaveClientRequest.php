@@ -25,7 +25,7 @@ class SaveClientRequest extends FormRequest
      */
     public function rules()
     {
-        $userId = isset($this->client->user->id) ? $this->client->user->id : '';
+        $userId = $this->client->user_id ?? '';
         return [
             'document' => [
                 'required',
