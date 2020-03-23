@@ -25,6 +25,8 @@ class ProductsImport extends BaseImport implements ToModel, WithHeadingRow, With
             'description' => $row['Descripción'],
             'cost' => $row['Costo'],
             'price' => $row['Costo'] * 1.10,
+            'created_by' => auth()->user()->id,
+            'updated_by' => auth()->user()->id,
         ]);
     }
 

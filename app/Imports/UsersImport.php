@@ -26,6 +26,8 @@ class UsersImport extends BaseImport implements ToModel, WithHeadingRow, WithVal
             'surname' => $row['Apellidos'],
             'email' => $row['Correo electrónico'],
             'password' => bcrypt('secret'),
+            'created_by' => auth()->user()->id,
+            'updated_by' => auth()->user()->id,
         ]);
     }
 

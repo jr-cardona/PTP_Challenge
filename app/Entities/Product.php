@@ -15,6 +15,7 @@ class Product extends Model
         'cost',
         'price',
         'created_by',
+        'updated_by',
     ];
 
     /**

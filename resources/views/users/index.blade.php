@@ -15,9 +15,14 @@
             <i class="fa fa-file"></i> {{ __("Exportar") }}
         </button>
     @endcan
-    @can('export', App\User::class)
-        <button type="button" class="btn btn-warning" data-route="{{ route('import.users') }}" data-toggle="modal" data-target="#importModal">
-            <i class="fa fa-file-excel"></i> {{ __("Importar desde Excel") }}
+    @can('import', App\Entities\User::class)
+        <button type="button" class="btn btn-primary"
+                data-toggle="modal"
+                data-target="#importModal"
+                data-redirect="users.index"
+                data-model="App\Entities\User"
+                data-import-model="App\Imports\UsersImport">
+            <i class="fa fa-file-excel"></i> {{ __("Importar") }}
         </button>
     @endcan
     @can('create', App\User::class)

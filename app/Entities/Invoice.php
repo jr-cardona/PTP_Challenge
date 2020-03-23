@@ -17,6 +17,7 @@ class Invoice extends Model
         'client_id',
         'description',
         'created_by',
+        'updated_by',
         'expires_at',
     ];
 

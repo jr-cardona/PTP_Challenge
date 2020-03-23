@@ -30,17 +30,8 @@ Route::middleware(['auth'])->group(static function () {
     Route::get('/permisos/buscar', 'SearchController@permissions')
         ->name('search.permissions');
 
-    Route::post('/clientes/importar', 'ImportController@clients')
-        ->name('import.clients');
-
-    Route::post('/facturas/importar', 'ImportController@invoices')
-        ->name('import.invoices');
-
-    Route::post('/productos/importar', 'ImportController@products')
-        ->name('import.products');
-
-    Route::post('/usuarios/importar', 'ImportController@users')
-        ->name('import.users');
+    // Imports
+    Route::post('/importar', 'ImportController@import')->name('import');
 
     Route::resource('/facturas/{invoice}/producto', 'InvoiceProductController')
         ->except('index', 'show')

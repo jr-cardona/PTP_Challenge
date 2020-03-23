@@ -15,9 +15,14 @@
             <i class="fa fa-file"></i> {{ __("Exportar") }}
         </button>
     @endcan
-    @can('import', App\Product::class)
-        <button type="button" class="btn btn-warning" data-route="{{ route('import.products') }}" data-toggle="modal" data-target="#importModal">
-            <i class="fa fa-file-excel"></i> {{ __("Importar desde Excel") }}
+    @can('import', App\Entities\Product::class)
+        <button type="button" class="btn btn-primary"
+                data-toggle="modal"
+                data-target="#importModal"
+                data-redirect="products.index"
+                data-model="App\Entities\Product"
+                data-import-model="App\Imports\ProductsImport">
+            <i class="fa fa-file-excel"></i> {{ __("Importar") }}
         </button>
     @endcan
     @can('create', App\Product::class)
