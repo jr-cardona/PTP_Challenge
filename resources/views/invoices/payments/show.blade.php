@@ -18,11 +18,11 @@
 @section('Body')
     <table class="table border-rounded table-sm">
         <tr>
-            <td class="table-dark td-title">{{ __("Estado") }}</td>
+            <td class="table-dark td-title">{{ __("Estado:") }}</td>
             @include('invoices.payments.status_label')
 
             <td class="table-dark td-title">{{ __("Fecha:") }}</td>
-            <td class="td-content">{{ date_format(date_create($response->status()->date()), 'Y-m-d h:ia') }}</td>
+            <td class="td-content">{{ $paymentAttempt->created_at->isoFormat('Y-MM-DD hh:mma') }}</td>
         </tr>
         <tr>
             <td class="table-dark td-title">{{ __("Mensaje:") }}</td>

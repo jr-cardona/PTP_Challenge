@@ -27,7 +27,7 @@
             <i class="fa fa-file-excel"></i> {{ __("Importar") }}
         </button>
     @endcan
-    @can('create', App\Invoice::class)
+    @can('create', App\Entities\Invoice::class)
         <a class="btn btn-success" href="{{ route('invoices.create') }}">
             <i class="fa fa-plus"></i> {{ __("Crear nueva factura") }}
         </a>
@@ -63,18 +63,18 @@
                 <a @can('view', $invoice->client)
                    href="{{ route('clients.show', $invoice->client) }}" target="_blank"
                     @endcan>
-                    {{ $invoice->client->user->fullname }}
+                    {{ $invoice->client->fullname }}
                 </a>
             </td>
             <td nowrap>
-                <a @can('view', $invoice->creator)
-                   href="{{ route('users.show', $invoice->creator) }}" target="_blank"
+                <a @can('view', $invoice->seller)
+                   href="{{ route('users.show', $invoice->seller) }}" target="_blank"
                     @endcan>
-                    {{ $invoice->creator->fullname }}
+                    {{ $invoice->seller->fullname }}
                 </a>
             </td>
             <td class="btn-group btn-group-sm" nowrap>
-                @include('invoices._buttons')
+                @include('invoices.__buttons')
             </td>
         </tr>
     @empty
@@ -90,11 +90,9 @@
 @section('Links')
     {{ $invoices->appends($request->all())->links() }}
 @endsection
-@can('delete', App\Invoice::class)
-    @push('modals')
-        @include('invoices.__confirm_annulment_modal')
-    @endpush
-    @push('scripts')
-        <script src="{{ asset(mix('js/annul-modal.js')) }}"></script>
-    @endpush
-@endcan
+@push('modals')
+    @include('invoices.__confirm_annulment_modal')
+@endpush
+@push('scripts')
+    <script src="{{ asset(mix('js/annul-modal.js')) }}"></script>
+@endpush
