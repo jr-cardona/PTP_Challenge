@@ -68,7 +68,7 @@ class ClientPolicy
      */
     public function delete(User $user, Client $client)
     {
-        if (! $client->user->canBeDeleted()) return false;
+        if (! $client->canBeDeleted()) return false;
         if ($user->can('Delete any clients')) return true;
         if ($user->can('Delete clients')) return $user->id === $client->user->created_by;
         return false;

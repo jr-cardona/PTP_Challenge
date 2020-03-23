@@ -44,7 +44,7 @@ class ClientController extends Controller
 
     public function destroy(Client $client)
     {
-        $client->user->delete();
+        $client->delete();
 
         return response()->json([
             'success' => true,

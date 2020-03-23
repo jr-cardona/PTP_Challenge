@@ -117,4 +117,8 @@ class Client extends Model
             return $query->where('email', 'LIKE', "%${email}%");
         }
     }
+
+    public function canBeDeleted(){
+        return empty($this->invoices->first());
+    }
 }
