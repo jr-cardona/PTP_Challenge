@@ -43,14 +43,15 @@ class PermissionsTableSeeder extends Seeder
         Permission::create(['name' => 'Import any products']);
 
         Permission::create(['name' => 'View any users']);
-        Permission::create(['name' => 'View user']);
+        Permission::create(['name' => 'View profile']);
         Permission::create(['name' => 'Create users']);
         Permission::create(['name' => 'Edit any users']);
-        Permission::create(['name' => 'Edit user']);
+        Permission::create(['name' => 'Edit profile']);
         Permission::create(['name' => 'Delete any users']);
         Permission::create(['name' => 'Delete user']);
         Permission::create(['name' => 'Export any users']);
         Permission::create(['name' => 'Import any users']);
+        Permission::create(['name' => 'Sync roles']);
 
         Permission::create(['name' => 'View any reports']);
         Permission::create(['name' => 'Export reports']);
