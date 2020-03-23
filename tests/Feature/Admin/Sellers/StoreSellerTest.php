@@ -2,10 +2,10 @@
 
 namespace Tests\Feature\Admin\Sellers;
 
-use App\User;
+use App\Entities\User;
 use App\Seller;
 use Tests\TestCase;
-use App\TypeDocument;
+use App\Entities\TypeDocument;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class StoreSellerTest extends TestCase

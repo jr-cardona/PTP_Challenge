@@ -1,14 +1,22 @@
 <?php
 
-namespace App;
+namespace App\Entities;
 
+use App\Entities\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Product extends Model
 {
-    protected $guarded = [];
+    protected $fillable = [
+        'name',
+        'description',
+        'cost',
+        'price',
+        'created_by',
+        'updated_by',
+    ];
 
     /**
      * Relation between products and invoices
@@ -25,7 +33,16 @@ class Product extends Model
      */
     public function creator(): BelongsTo
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class, 'created_by');
+    }
+
+    /**
+     * Relation between invoices and updaters
+     * @return BelongsTo
+     */
+    public function updater(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'updated_by');
     }
 
     /** Query Scopes */
@@ -38,12 +55,12 @@ class Product extends Model
 
     public function scopeCreator($query)
     {
-        if (auth()->user()->hasPermissionTo('View any products') || auth()->user()->hasRole('Admin')) {
+        if (auth()->user()->can('View any products') || auth()->user()->hasRole('SuperAdmin')) {
             return $query;
         } elseif (auth()->user()->hasPermissionTo('View products')) {
-            $query->where('creator_id', auth()->user()->id);
+            $query->where('created_by', auth()->user()->id);
         } else {
-            return $query->where('creator_id', '-1');
+            return $query->where('created_by', '-1');
         }
     }
 }

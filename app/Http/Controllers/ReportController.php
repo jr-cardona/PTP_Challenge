@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Config;
-use App\User;
+use App\Entities\User;
 use Illuminate\View\View;
 use Illuminate\Http\Request;
 use App\Exports\UtilitiesExport;
@@ -26,7 +26,7 @@ class ReportController extends Controller
         $clients = DB::table('users as u')
             ->select(DB::raw('c.id, concat(u.name, " " ,u.surname) as fullname, c.cellphone,
             c.phone, c.address, sum(ip.unit_price * ip.quantity) as total_due'))
-            ->join('clients as c', 'c.user_id', '=', 'u.id')
+            ->join('clients as c', 'c.id', '=', 'u.id')
             ->join('invoices as i', 'i.client_id', '=', 'c.id')
             ->join('invoice_product as ip', 'ip.invoice_id', '=', 'i.id')
             ->join('products as p', 'p.id', '=', 'ip.product_id')
@@ -56,7 +56,7 @@ class ReportController extends Controller
             ->join('invoice_product as ip', 'ip.invoice_id', '=', 'i.id')
             ->join('products as p', 'p.id', '=', 'ip.product_id')
             ->join('clients as c', 'i.client_id', '=', 'c.id')
-            ->join('users as u', 'u.id', '=', 'c.user_id')
+            ->join('users as u', 'u.id', '=', 'c.id')
             ->whereNotNull('i.paid_at')
             ->whereNull('i.annulled_at')
             ->groupBy('i.id')

@@ -10,17 +10,24 @@
     </a>
 @endsection
 @section('Actions')
-    @can('export', App\Client::class)
-        <button type="button" class="btn btn-warning" data-route="{{ route('clients.index') }}" data-toggle="modal" data-target="#exportModal">
-            <i class="fa fa-file"></i> {{ __("Exportar") }}
+    @can('export', App\Entities\Client::class)
+        <button type="button" class="btn btn-warning"
+                data-route="{{ route('clients.index') }}"
+                data-toggle="modal" data-target="#exportModal">
+            <i class="fa fa-file-excel"></i> {{ __("Exportar") }}
         </button>
     @endcan
-    @can('import', App\Client::class)
-        <button type="button" class="btn btn-warning" data-route="{{ route('import.clients') }}" data-toggle="modal" data-target="#importModal">
-            <i class="fa fa-file-excel"></i> {{ __("Importar desde Excel") }}
+    @can('import', App\Entities\Client::class)
+        <button type="button" class="btn btn-primary"
+                data-toggle="modal"
+                data-target="#importModal"
+                data-redirect="clients.index"
+                data-model="App\Entities\Client"
+                data-import-model="App\Imports\ClientsImport">
+            <i class="fa fa-file-excel"></i> {{ __("Importar") }}
         </button>
     @endcan
-    @can('create', App\Client::class)
+    @can('create', App\Entities\Client::class)
         <a class="btn btn-success" href="{{ route('clients.create') }}">
             <i class="fa fa-plus"></i> {{ __("Crear nuevo cliente") }}
         </a>
@@ -41,12 +48,12 @@
     @forelse($clients as $client)
         <tr class="text-center">
             <td>
-                <a href="{{ route('clients.show', $client) }}">{{ $client->user->fullname }}</a>
+                <a href="{{ route('clients.show', $client) }}">{{ $client->fullname }}</a>
             </td>
             <td>{{ $client->type_document->name . ". " . $client->document }}</td>
-            <td>{{ $client->user->email }}</td>
+            <td>{{ $client->email }}</td>
             <td>{{ $client->cellphone }}</td>
-            <td>{{ $client->user->creator->fullname }}</td>
+            <td>{{ $client->creator->fullname }}</td>
             <td class="btn-group btn-group-sm" nowrap>
                 @include('clients._buttons')
             </td>

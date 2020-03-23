@@ -49,7 +49,7 @@
                         </div>
                     </div>
                     <div class="form-group row">
-                        @can('index', App\Client::class)
+                        @can('viewAny', App\Entities\Client::class)
                             <div class="col">
                                 <label>{{ __("Cliente") }}</label>
                                 <input type="hidden" id="old_client_fullname" name="old_client_fullname" value="{{ $request->get('client') }}">
@@ -63,18 +63,18 @@
                                 <input type="hidden" name="client_id" id="client_id" :value="(old_client_values) ? old_client_values.id : '' ">
                             </div>
                         @endcan
-                        @can('index', App\User::class)
+                        @can('viewAny', App\Entities\User::class)
                             <div class="col">
                                 <label>{{ __("Vendedor") }}</label>
-                                <input type="hidden" id="old_creator_fullname" name="old_creator_fullname" value="{{ $request->get('creator') }}">
-                                <input type="hidden" id="old_creator_id" name="old_creator_id" value="{{ $request->get('creator_id') }}">
-                                <v-select class="form-control" v-model="old_creator_values" label="fullname" :filterable="false" :options="options" @search="searchCreator">
+                                <input type="hidden" id="old_user_fullname" name="old_user_fullname" value="{{ $request->get('user') }}">
+                                <input type="hidden" id="old_created_by" name="old_created_by" value="{{ $request->get('created_by') }}">
+                                <v-select class="form-control" v-model="old_user_values" label="fullname" :filterable="false" :options="options" @search="searchUser">
                                     <template slot="no-options">
                                         {{ __("Ingresa el nombre del vendedor...") }}
                                     </template>
                                 </v-select>
-                                <input type="hidden" name="creator" id="creator" :value="(old_creator_values) ? old_creator_values.fullname : '' ">
-                                <input type="hidden" name="creator_id" id="creator_id" :value="(old_creator_values) ? old_creator_values.id : '' ">
+                                <input type="hidden" name="user" id="user" :value="(old_user_values) ? old_user_values.fullname : '' ">
+                                <input type="hidden" name="created_by" id="created_by" :value="(old_user_values) ? old_user_values.id : '' ">
                             </div>
                         @endcan
                     </div>

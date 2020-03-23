@@ -1,9 +1,10 @@
 <?php
 
-/** @var \Illuminate\Database\Eloquent\Factory $factory */
+/** @var Factory $factory */
 
-use App\TypeDocument;
 use Faker\Generator as Faker;
+use App\Entities\TypeDocument;
+use Illuminate\Database\Eloquent\Factory;
 
 $factory->define(TypeDocument::class, function (Faker $faker) {
     return [

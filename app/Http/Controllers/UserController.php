@@ -3,175 +3,127 @@
 namespace App\Http\Controllers;
 
 use Config;
-use App\User;
 use Exception;
+use App\Entities\User;
 use Illuminate\Http\Request;
 use App\Exports\UsersExport;
 use Illuminate\Http\Response;
 use Spatie\Permission\Models\Role;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Http\RedirectResponse;
-use App\Http\Requests\StoreUserRequest;
-use App\Http\Requests\UpdateUserRequest;
+use App\Actions\Users\GetUsersAction;
+use App\Http\Requests\SaveUserRequest;
+use App\Actions\Users\StoreUsersAction;
+use Spatie\Permission\Models\Permission;
+use App\Actions\Users\UpdateUsersAction;
+use App\Http\Requests\ChangePasswordRequest;
 use Illuminate\Auth\Access\AuthorizationException;
 
 class UserController extends Controller
 {
+    public function __construct()
+    {
+        $this->authorizeResource(User::class);
+    }
+
     /**
      * Display a listing of the resource.
+     * @param GetUsersAction $action
      * @param Request $request
      * @return Response
      * @throws AuthorizationException
      */
-    public function index(Request $request)
+    public function index(GetUsersAction $action, Request $request)
     {
-        $this->authorize('index', new User());
+        $users = $action->execute(new User(), $request);
 
-        $users = User::with([
-            'invoices:id,creator_id',
-            'client:id,user_id',
-            'products:id,creator_id',
-            'users:id,creator_id',
-            'roles.permissions',
-            'permissions'
-        ])
-            ->select(['users.id', 'users.name', 'users.surname', 'users.email'])
-            ->leftJoin('clients as c', 'c.user_id', '=', 'users.id')
-            ->id($request->get('id'))
-            ->email($request->get('email'))
-            ->whereNull('c.id')
-            ->orderBy('name');
-
-        if(! empty($request->get('format'))){
+        if($format = $request->get('format')){
+            $this->authorize('export', User::class);
             return (new UsersExport($users->get()))
-                ->download('users-list.'.$request->get('format'));
-        } else {
-            $paginate = Config::get('constants.paginate');
-            $count = $users->count();
-            $users = $users->paginate($paginate);
-
-            return response()->view('users.index', [
-                'users' => $users,
-                'request' => $request,
-                'count' => $count,
-                'paginate' => $paginate,
-            ]);
+                ->download('users-list.' . $format);
         }
+
+        $paginate = Config::get('constants.paginate');
+        $count = $users->count();
+        $users = $users->paginate($paginate);
+
+        return response()->view('users.index', compact(
+                'users', 'request', 'count', 'paginate')
+        );
     }
 
     /**
      * Show the form for creating a new resource.
      *
+     * @param User $user
      * @return Response
-     * @throws AuthorizationException
      */
     public function create(User $user)
     {
-        $this->authorize('create', $user);
         $roles = Role::pluck('name', 'id');
-        $permissions = DB::table('role_has_permissions as rp')
-            ->join('permissions as p', 'p.id', '=', 'rp.permission_id')
-            ->groupBy('rp.permission_id')
-            ->pluck('p.name', 'p.id');
+        $permissions = Permission::pluck('name', 'id');
 
-        return response()->view('users.create', [
-            'user' => $user,
-            'roles' => $roles,
-            'permissions' => $permissions,
-        ]);
+        return response()->view('users.create', compact('user', 'roles', 'permissions'));
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param StoreUserRequest $request
-     * @param User $user
+     * @param StoreUsersAction $action
+     * @param SaveUserRequest $request
      * @return RedirectResponse
-     * @throws AuthorizationException
      */
-    public function store(StoreUserRequest $request, User $user)
+    public function store(StoreUsersAction $action, SaveUserRequest $request)
     {
-        $this->authorize('create', $user);
+        $user = $action->execute(new User(), $request);
 
-        $user->name = $request->input('name');
-        $user->surname = $request->input('surname');
-        $user->email = $request->input('email');
-        $user->password = bcrypt($request->input('password'));
-        $user->creator_id = auth()->user()->id;
-        $user->save();
-
-        if ($user->hasRole('Admin')) $user->syncRoles($request->roles);
-
-        return redirect()->route('users.show', $user)->withSuccess(__('Usuario creado satisfactoriamente'));
+        return redirect()->route('users.show', $user)
+            ->withSuccess(__('Usuario creado satisfactoriamente'));
     }
 
     /**
      * Display the specified resource.
      *
      * @param User $user
-     * @return Response
-     * @throws AuthorizationException
+     * @return RedirectResponse|Response
      */
     public function show(User $user)
     {
-        $this->authorize('view', $user);
+        if ($user->isClient()) return redirect()->route('clients.show', $user->client);
 
-        if (isset($user->client)){
-            return response()->view('clients.show', [
-                'client' => $user->client,
-            ]);
-        }
-        return response()->view('users.show', [
-            'user' => $user,
-        ]);
+        return response()->view('users.show', compact('user'));
     }
 
     /**
      * Show the form for editing the specified resource.
      *
      * @param User $user
-     * @return Response
-     * @throws AuthorizationException
+     * @return RedirectResponse|Response
      */
     public function edit(User $user)
     {
-        $this->authorize('edit', $user);
-        $roles = Role::pluck('name', 'id');
-        $permissions = DB::table('role_has_permissions as rp')
-            ->join('permissions as p', 'p.id', '=', 'rp.permission_id')
-            ->groupBy('rp.permission_id')
-            ->pluck('p.name', 'p.id');
+        if ($user->isClient()) return redirect()->route('clients.edit', $user->client);
 
-        return response()->view('users.edit', [
-            'user' => $user,
-            'roles' => $roles,
-            'permissions' => $permissions,
-        ]);
+        $roles = Role::pluck('name', 'id');
+        $permissions = Permission::pluck('name', 'id');
+
+        return response()->view('users.edit', compact('user', 'roles', 'permissions'));
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param UpdateUserRequest $request
+     * @param UpdateUsersAction $action
+     * @param SaveUserRequest $request
      * @param User $user
      * @return RedirectResponse
-     * @throws AuthorizationException
      */
-    public function update(UpdateUserRequest $request, User $user)
+    public function update(UpdateUsersAction $action, User $user,
+                           SaveUserRequest $request)
     {
-        $this->authorize('edit', $user);
+        $user = $action->execute($user, $request);
 
-        $user->name = $request->input('name');
-        $user->surname = $request->input('surname');
-        $user->email = $request->input('email');
-        if ($request->filled('password')){
-            $user->password = bcrypt($request->input('password'));
-        }
-        $user->update();
-
-        if ($user->hasRole('Admin')) $user->syncRoles($request->roles);
-
-        return redirect()->route('users.show', $user)->withSuccess(__('Usuario actualizado satisfactoriamente'));
+        return redirect()->route('users.show', $user)
+            ->withSuccess(__('Usuario actualizado satisfactoriamente'));
     }
 
     /**
@@ -183,12 +135,38 @@ class UserController extends Controller
      */
     public function destroy(User $user)
     {
-        $this->authorize('delete', $user);
-
-        if (! $user->canBeDeleted()){
-            return redirect()->back()->withError(__('No se puede eliminar, tiene registros asociado'));
-        }
         $user->delete();
-        return redirect()->route('users.index')->withSuccess(__('Usuario eliminado satisfactoriamente'));
+        return redirect()->route('users.index')
+            ->withSuccess(__('Usuario eliminado satisfactoriamente'));
+    }
+
+    /**
+     * @param User $user
+     * @return Response
+     * @throws AuthorizationException
+     */
+    public function editPassword(User $user){
+        $this->authorize('update', $user);
+
+        return response()->view('users.edit-password', compact('user'));
+    }
+
+    /**
+     * @param User $user
+     * @param ChangePasswordRequest $request
+     * @return RedirectResponse
+     * @throws AuthorizationException
+     */
+    public function updatePassword(User $user, ChangePasswordRequest $request){
+        $this->authorize('update', $user);
+
+        $user->password = $request->input('password');
+        $user->update();
+
+        if ($user->isClient()) return redirect()->route('clients.show', $user->client)
+            ->withSuccess(__('Contraseña actualizada satisfactoriamente'));
+
+        return redirect()->route('users.show', $user)
+            ->withSuccess(__('Contraseña actualizada satisfactoriamente'));
     }
 }

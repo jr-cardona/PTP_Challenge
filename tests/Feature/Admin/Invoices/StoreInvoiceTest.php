@@ -2,10 +2,10 @@
 
 namespace Tests\Feature\Admin\Invoices;
 
-use App\User;
-use App\Client;
+use App\Entities\User;
+use App\Entities\Client;
 use App\Seller;
-use App\Invoice;
+use App\Entities\Invoice;
 use Carbon\Carbon;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;

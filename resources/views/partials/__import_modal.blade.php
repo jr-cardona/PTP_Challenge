@@ -8,9 +8,16 @@
                 </button>
             </div>
             <div class="modal-body">
-                <form id="import" action="" method="post" enctype="multipart/form-data">
-                    <input type="file" name="file" required accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel">
+                <form id="import" action="{{ route('import') }}"
+                      method="post" enctype="multipart/form-data">
                     @csrf()
+                    <input type="file" name="file" required
+                           accept=".csv,
+                           application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,
+                           application/vnd.ms-excel">
+                    <input type="hidden" id="model" name="model">
+                    <input type="hidden" id="redirect" name="redirect">
+                    <input type="hidden" id="import-model" name="import-model">
                 </form>
             </div>
             <div class="modal-footer">

@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\User;
-use App\Product;
+use App\Entities\User;
+use App\Entities\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Spatie\Permission\Models\Permission;
@@ -19,8 +19,8 @@ class SearchController extends Controller
     public function clients(Request $request)
     {
         return DB::table('users as u')
-            ->selectRaw('c.id, concat(u.name, " ", u.surname) as fullname')
-            ->join('clients as c', 'c.user_id', '=', 'u.id')
+            ->selectRaw('u.id, concat(u.name, " ", u.surname) as fullname')
+            ->join('clients as c', 'c.id', '=', 'u.id')
             ->whereRaw('concat(u.name, " ", u.surname) like "%' . $request->name . '%"')
             ->orderBy('fullname')
             ->limit('100')
@@ -32,12 +32,12 @@ class SearchController extends Controller
      * @param Request $request
      * @return
      */
-    public function creators(Request $request)
+    public function users(Request $request)
     {
-        return DB::table('users as u')
-            ->selectRaw('u.id, concat(u.name, " ", u.surname) as fullname')
-            ->leftJoin('clients as c', 'c.user_id', '=', 'u.id')
-            ->whereNull('c.id')
+        return User::selectRaw('id, concat(name, " ", surname) as fullname')
+            ->whereDoesntHave('client', function($query){
+                $query->where('id', '!=', 'id');
+            })
             ->whereRaw('concat(name, " ", surname) like "%' . $request->name . '%"')
             ->orderBy('fullname')
             ->limit('100')

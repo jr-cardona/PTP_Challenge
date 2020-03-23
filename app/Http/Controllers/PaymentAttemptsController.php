@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Invoice;
 use Carbon\Carbon;
-use App\PaymentAttempt;
+use App\Entities\Invoice;
 use Illuminate\View\View;
 use Illuminate\Http\Request;
+use App\Entities\PaymentAttempt;
 use Dnetix\Redirection\PlacetoPay;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Auth\Access\AuthorizationException;
@@ -23,15 +23,6 @@ class PaymentAttemptsController extends Controller
     {
         $this->authorize('pay', $invoice);
 
-        if ($invoice->isPaid()) {
-            return redirect()->route('invoices.show', $invoice)->withError(__("La factura ya se encuentra pagada"));
-        }
-        if ($invoice->isAnnulled()) {
-            return redirect()->route('invoices.show', $invoice)->withError(__("La factura se encuentra anulada"));
-        }
-        if ($invoice->total == 0) {
-            return redirect()->route('invoices.show', $invoice)->withInfo(__("La factura no tiene productos a pagar, intente nuevamente"));
-        }
         return view('invoices.payments.create', compact('invoice'));
     }
 
@@ -76,16 +67,14 @@ class PaymentAttemptsController extends Controller
             'returnUrl' => route('invoices.payments.show', [$invoice, $paymentAttempt]),
         ];
         $response = $placetopay->request($request_c);
-        //dd($response);
+
         if ($response->isSuccessful()) {
-            // STORE THE $response->requestId() and $response->processUrl() on your DB associated with the payment order
             $paymentAttempt->update([
                 'invoice_id' => $invoice->id,
                 'requestID' => $response->requestId(),
                 'processUrl' => $response->processUrl(),
                 'status' => $response->status()->status(),
             ]);
-            // Redirect the client to the processUrl or display it on the JS extension
             return redirect()->away($response->processUrl());
         }
     }

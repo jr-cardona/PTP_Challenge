@@ -2,7 +2,7 @@
 
 namespace App\Imports;
 
-use App\User;
+use App\Entities\User;
 use Illuminate\Validation\Rule;
 use Maatwebsite\Excel\Concerns\ToModel;
 use Maatwebsite\Excel\Concerns\Importable;
@@ -26,6 +26,8 @@ class UsersImport extends BaseImport implements ToModel, WithHeadingRow, WithVal
             'surname' => $row['Apellidos'],
             'email' => $row['Correo electrónico'],
             'password' => bcrypt('secret'),
+            'created_by' => auth()->user()->id,
+            'updated_by' => auth()->user()->id,
         ]);
     }
 

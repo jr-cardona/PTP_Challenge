@@ -30,15 +30,15 @@ class ClientsExport implements FromCollection, Responsable, WithHeadings, WithMa
         return [
             $client->type_document->fullname,
             $client->document,
-            $client->user->name,
-            $client->user->surname,
-            $client->user->email,
+            $client->name,
+            $client->surname,
+            $client->email,
             $client->cellphone,
             $client->phone,
             $client->address,
-            $client->user->creator->fullname,
+            $client->creator->fullname,
             $client->type_document_id,
-            $client->user->creator->id,
+            $client->creator->id,
         ];
     }
 

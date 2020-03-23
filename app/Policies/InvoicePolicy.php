@@ -2,8 +2,8 @@
 
 namespace App\Policies;
 
-use App\User;
-use App\Invoice;
+use App\Entities\User;
+use App\Entities\Invoice;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
 class InvoicePolicy
@@ -11,25 +11,13 @@ class InvoicePolicy
     use HandlesAuthorization;
 
     /**
-     * @param $user
-     * @return bool
-     */
-    public function before($user)
-    {
-        if ($user->hasRole('Admin'))
-        {
-            return true;
-        }
-    }
-
-    /**
      * @param User $user
+     * @param Invoice $invoice
      * @return bool
      */
-    public function index(User $user, Invoice $invoice = null)
+    public function viewAny(User $user, Invoice $invoice = null)
     {
-        return $user->hasPermissionTo('View any invoices')
-            || $user->hasPermissionTo('View invoices');
+        return $user->can('View any invoices') || $user->can('View invoices');
     }
 
     /**
@@ -41,10 +29,10 @@ class InvoicePolicy
      */
     public function view(User $user, Invoice $invoice)
     {
-        if ($user->hasPermissionTo('View any invoices')) {
+        if ($user->can('View any invoices')) {
             return true;
-        } elseif ($user->hasPermissionTo('View invoices')) {
-            return $user->id === $invoice->creator_id || $user->id === $invoice->client->user_id;
+        } elseif ($user->can('View invoices')) {
+            return $user->id === $invoice->created_by || $user->id === $invoice->client_id;
         } else {
             return false;
         }
@@ -58,7 +46,7 @@ class InvoicePolicy
      */
     public function create(User $user, Invoice $invoice = null)
     {
-        return $user->hasPermissionTo('Create invoices');
+        return $user->can('Create invoices');
     }
 
     /**
@@ -68,15 +56,18 @@ class InvoicePolicy
      * @param Invoice $invoice
      * @return mixed
      */
-    public function edit(User $user, Invoice $invoice)
+    public function update(User $user, Invoice $invoice)
     {
-        if ($user->hasPermissionTo('Edit any invoices')) {
-            return true;
-        } elseif ($user->hasPermissionTo('Edit invoices')) {
-            return $user->id === $invoice->creator_id;
-        } else {
+        if ($invoice->isPaid() || $invoice->isAnnulled()) {
             return false;
         }
+        if ($user->can('Edit any invoices')) {
+            return true;
+        }
+        if ($user->can('Edit invoices')) {
+            return $user->id === $invoice->created_by;
+        }
+        return false;
     }
 
     /**
@@ -86,15 +77,18 @@ class InvoicePolicy
      * @param Invoice $invoice
      * @return mixed
      */
-    public function delete(User $user, Invoice $invoice = null)
+    public function delete(User $user, Invoice $invoice)
     {
-        if ($user->hasPermissionTo('Annul any invoices')) {
-            return true;
-        } elseif ($user->hasPermissionTo('Annul invoices')) {
-            return $user->id === $invoice->creator_id;
-        } else {
+        if ($invoice->isAnnulled()){
             return false;
         }
+        if ($user->can('Annul any invoices')){
+            return true;
+        }
+        if ($user->can('Annul invoices')) {
+            return $user->id === $invoice->created_by;
+        }
+        return false;
     }
 
     /**
@@ -106,7 +100,7 @@ class InvoicePolicy
      */
     public function export(User $user, Invoice $invoice = null)
     {
-        return $user->hasPermissionTo('Export any invoices');
+        return $user->can('Export any invoices');
     }
 
     /**
@@ -118,8 +112,7 @@ class InvoicePolicy
      */
     public function import(User $user, Invoice $invoice = null)
     {
-        return $user->hasPermissionTo('Import any invoices')
-            || $user->hasPermissionTo('Import invoices');
+        return $user->can('Import any invoices') || $user->can('Import invoices');
     }
 
     /**
@@ -131,8 +124,14 @@ class InvoicePolicy
      */
     public function pay(User $user, Invoice $invoice)
     {
-        return $user->hasPermissionTo('Pay invoices')
-            && $user->id === $invoice->client->user_id;
+        if ($invoice->isPaid() || $invoice->isAnnulled() || $invoice->total == 0) {
+            return false;
+        }
+        if ($user->can('Pay invoices') &&
+            $user->id === $invoice->client_id){
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -144,7 +143,13 @@ class InvoicePolicy
      */
     public function receive(User $user, Invoice $invoice)
     {
-        return $user->hasPermissionTo('Receive invoices')
-            && $user->id === $invoice->client->user_id;
+        if ($invoice->isAnnulled() || empty($invoice->received_at)){
+            return false;
+        }
+        if ($user->can('Receive invoices') &&
+            $user->id === $invoice->client_id){
+            return true;
+        }
+        return false;
     }
 }

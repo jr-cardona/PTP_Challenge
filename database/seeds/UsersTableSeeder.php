@@ -1,7 +1,6 @@
 <?php
 
-use App\Client;
-use App\User;
+use App\Entities\User;
 use Illuminate\Database\Seeder;
 use Spatie\Permission\Models\Role;
 
@@ -18,28 +17,36 @@ class UsersTableSeeder extends Seeder
             'name' => 'Admin',
             'surname' => 'Admin',
             'email' => 'admin@example.com',
-        ])
-            ->assignRole(Role::where('name', 'Admin')->get());
+        ])->assignRole('Admin');
 
         factory(User::class)->create([
             'name' => 'Seller',
             'surname' => '1',
             'email' => 'seller1@example.com',
-        ])
-            ->assignRole(Role::where('name', 'Seller')->get());
+        ])->assignRole('Seller');
+
+        factory(User::class)->create([
+            'name' => 'Seller',
+            'surname' => '2',
+            'email' => 'seller2@example.com',
+        ])->assignRole('Seller');
 
         factory(User::class)->create([
             'name' => 'Accountant',
             'surname' => '1',
-            'email' => 'accountant@example.com',
-        ])
-            ->assignRole(Role::where('name', 'Accountant')->get());
+            'email' => 'accountant1@example.com',
+        ])->assignRole('Accountant');
 
         factory(User::class)->create([
             'name' => 'Stock',
             'surname' => '1',
             'email' => 'stock1@example.com',
-        ])
-            ->assignRole(Role::where('name', 'Stock')->get());
+        ])->assignRole('Stock');
+
+        factory(User::class)->create([
+            'name' => 'Super',
+            'surname' => 'Admin',
+            'email' => 'superadmin@example.com',
+        ])->assignRole('SuperAdmin');
     }
 }

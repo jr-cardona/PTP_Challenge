@@ -2,8 +2,8 @@
 
 namespace Tests\Feature\Admin\Invoices;
 
-use App\User;
-use App\Invoice;
+use App\Entities\User;
+use App\Entities\Invoice;
 use Illuminate\Http\UploadedFile;
 use Tests\TestCase;
 use App\Exports\InvoicesExport;

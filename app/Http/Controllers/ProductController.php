@@ -3,85 +3,75 @@
 namespace App\Http\Controllers;
 
 use Config;
-use App\User;
 use Exception;
-use App\Product;
+use App\Entities\Product;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use App\Exports\ProductsExport;
 use Illuminate\Http\RedirectResponse;
 use App\Http\Requests\SaveProductRequest;
+use App\Actions\Products\GetProductsAction;
+use App\Actions\Products\StoreProductsAction;
+use App\Actions\Products\UpdateProductsAction;
 use Illuminate\Auth\Access\AuthorizationException;
 
 class ProductController extends Controller
 {
+    public function __construct()
+    {
+        $this->authorizeResource(Product::class);
+    }
+
     /**
      * Display a listing of the resource.
+     * @param GetProductsAction $action
      * @param Request $request
      * @return Response
      * @throws AuthorizationException
      */
-    public function index(Request $request)
+    public function index(GetProductsAction $action, Request $request)
     {
-        $this->authorize('index', new Product());
+        $products = $action->execute(new Product(), $request);
 
-        $products = Product::with(['creator', 'invoices'])
-            ->creator()
-            ->id($request->get('id'))
-            ->orderBy('id');
-        if(! empty($request->get('format'))){
+        if($format = $request->get('format')){
+            $this->authorize('export', Product::class);
             return (new ProductsExport($products->get()))
-                ->download('products-list.'.$request->get('format'));
-        } else {
-            $paginate = Config::get('constants.paginate');
-            $count = $products->count();
-            $products = $products->paginate($paginate);
-
-            return response()->view('products.index', [
-                'products' => $products,
-                'request' => $request,
-                'count' => $count,
-                'paginate' => $paginate,
-            ]);
+                ->download('products-list.' . $format);
         }
+
+        $paginate = Config::get('constants.paginate');
+        $count = $products->count();
+        $products = $products->paginate($paginate);
+
+        return response()->view('products.index', compact(
+                'products', 'request', 'count', 'paginate')
+        );
     }
 
     /**
      * Show the form for creating a new resource.
      *
+     * @param Product $product
      * @return Response
-     * @throws AuthorizationException
      */
     public function create(Product $product)
     {
-        $this->authorize('create', $product);
-
-        return response()->view('products.create', [
-            'product' => new $product,
-        ]);
+        return response()->view('products.create', compact('product'));
     }
 
     /**
      * Store a newly created resource in storage.
      *
+     * @param StoreProductsAction $action
      * @param SaveProductRequest $request
-     * @param Product $product
-     * @param User $user
      * @return RedirectResponse
-     * @throws AuthorizationException
      */
-    public function store(SaveProductRequest $request, Product $product)
+    public function store(StoreProductsAction $action, SaveProductRequest $request)
     {
-        $this->authorize('create', $product);
+        $product = $action->execute(new Product(), $request);
 
-        $product->name = $request->input('name');
-        $product->cost = $request->input('cost');
-        $product->price = $request->input('cost') * 1.10;
-        $product->description = $request->input('description');
-        $product->creator_id = auth()->user()->id;
-        $product->save();
-
-        return redirect()->route('products.show', $product->id)->withSuccess(__('Producto creado satisfactoriamente'));
+        return redirect()->route('products.show', $product->id)
+            ->withSuccess(__('Producto creado satisfactoriamente'));
     }
 
     /**
@@ -89,16 +79,10 @@ class ProductController extends Controller
      *
      * @param Product $product
      * @return Response
-     * @throws AuthorizationException
      */
     public function show(Product $product)
     {
-        $this->authorize('view', $product);
-
-        return response()->view('products.show', [
-            'product' => $product,
-            'side_effect' => ''
-        ]);
+        return response()->view('products.show', compact('product'));
     }
 
     /**
@@ -106,36 +90,27 @@ class ProductController extends Controller
      *
      * @param Product $product
      * @return Response
-     * @throws AuthorizationException
      */
     public function edit(Product $product)
     {
-        $this->authorize('edit', $product);
-
-        return response()->view('products.edit', [
-            'product' => $product
-        ]);
+        return response()->view('products.edit', compact('product'));
     }
 
     /**
      * Update the specified resource in storage.
      *
+     * @param UpdateProductsAction $action
      * @param SaveProductRequest $request
      * @param Product $product
      * @return RedirectResponse
-     * @throws AuthorizationException
      */
-    public function update(SaveProductRequest $request, Product $product)
+    public function update(UpdateProductsAction $action, Product $product,
+                           SaveProductRequest $request)
     {
-        $this->authorize('edit', $product);
+        $product = $action->execute($product, $request);
 
-        $product->name = $request->input('name');
-        $product->cost = $request->input('cost');
-        $product->price = $request->input('cost') * 1.10;
-        $product->description = $request->input('description');
-        $product->save();
-
-        return redirect()->route('products.show', $product)->withSuccess(__('Producto actualizado satisfactoriamente'));
+        return redirect()->route('products.show', $product)
+            ->withSuccess(__('Producto actualizado satisfactoriamente'));
     }
 
     /**
@@ -147,13 +122,8 @@ class ProductController extends Controller
      */
     public function destroy(Product $product)
     {
-        $this->authorize('delete', $product);
+        $product->delete();
 
-        if ($product->invoices->count() > 0){
-            return redirect()->back()->withError(__('No se puede eliminar, hay facturas asociadas con este producto'));
-        } else{
-            $product->delete();
-            return redirect()->route('products.index')->withSuccess(__('Producto eliminado satisfactoriamente'));
-        }
+        return redirect()->route('products.index')->withSuccess(__('Producto eliminado satisfactoriamente'));
     }
 }

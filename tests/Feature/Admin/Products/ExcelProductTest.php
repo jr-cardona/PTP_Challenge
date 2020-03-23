@@ -2,8 +2,8 @@
 
 namespace Tests\Feature\Admin\Products;
 
-use App\User;
-use App\Product;
+use App\Entities\User;
+use App\Entities\Product;
 use Tests\TestCase;
 use App\Exports\ProductsExport;
 use Maatwebsite\Excel\Facades\Excel;

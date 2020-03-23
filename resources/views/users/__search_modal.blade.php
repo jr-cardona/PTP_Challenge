@@ -13,16 +13,16 @@
                     <div class="form-group row">
                         <div class="col">
                             <label>{{ __("Nombre") }}</label>
-                            <input type="hidden" id="old_creator_fullname" name="old_creator_fullname" value="{{ $request->get('creator') }}">
-                            <input type="hidden" id="old_creator_id" name="old_creator_id" value="{{ $request->get('id') }}">
-                            <v-select v-model="old_creator_values" label="fullname" :filterable="false" :options="options" @search="searchOwner"
+                            <input type="hidden" id="old_user_fullname" name="old_user_fullname" value="{{ $request->get('user') }}">
+                            <input type="hidden" id="old_created_by" name="old_created_by" value="{{ $request->get('id') }}">
+                            <v-select v-model="old_user_values" label="fullname" :filterable="false" :options="options" @search="searchUser"
                                       class="form-control">
                                 <template slot="no-options">
                                     {{ __("Ingresa el nombre...") }}
                                 </template>
                             </v-select>
-                            <input type="hidden" name="creator" id="creator" :value="(old_creator_values) ? old_creator_values.fullname : '' ">
-                            <input type="hidden" name="id" id="id" :value="(old_creator_values) ? old_creator_values.id : '' ">
+                            <input type="hidden" name="user" id="user" :value="(old_user_values) ? old_user_values.fullname : '' ">
+                            <input type="hidden" name="id" id="id" :value="(old_user_values) ? old_user_values.id : '' ">
                         </div>
                     </div>
                     <div class="form-group row">

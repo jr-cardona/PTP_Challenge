@@ -3,96 +3,75 @@
 namespace App\Http\Controllers;
 
 use Config;
-use App\User;
 use Exception;
-use App\Client;
+use App\Entities\Client;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use App\Exports\ClientsExport;
 use Illuminate\Http\RedirectResponse;
 use App\Http\Requests\SaveClientRequest;
+use App\Actions\Clients\GetClientsAction;
+use App\Actions\Clients\StoreClientsAction;
+use App\Actions\Clients\UpdateClientsAction;
 use Illuminate\Auth\Access\AuthorizationException;
 
 class ClientController extends Controller
 {
+    public function __construct()
+    {
+        $this->authorizeResource(Client::class);
+    }
+
     /**
      * Display a listing of the resource.
+     * @param GetClientsAction $action
      * @param Request $request
      * @return Response
      * @throws AuthorizationException
      */
-    public function index(Request $request)
+    public function index(GetClientsAction $action, Request $request)
     {
-        $this->authorize('index', new Client());
+        $clients = $action->execute(new Client(), $request);
 
-        $clients = Client::with(['type_document', 'invoices'])
-            ->creator()
-            ->id($request->get('id'))
-            ->typedocument($request->get('type_document_id'))
-            ->document($request->get('document'))
-            ->email($request->get('email'));
-        if(! empty($request->get('format'))){
+        if($format = $request->get('format')){
+            $this->authorize('export', Client::class);
             return (new ClientsExport($clients->get()))
-                ->download('clients-list.'.$request->get('format'));
-        } else {
-            $paginate = Config::get('constants.paginate');
-            $count = $clients->count();
-            $clients = $clients->paginate($paginate);
-
-            return response()->view('clients.index', [
-                'clients' => $clients,
-                'request' => $request,
-                'count' => $count,
-                'paginate' => $paginate
-            ]);
+                ->download('clients-list.' . $format);
         }
+
+        $paginate = Config::get('constants.paginate');
+        $count = $clients->count();
+        $clients = $clients->paginate($paginate);
+
+        return response()->view('clients.index', compact(
+            'clients', 'request', 'count', 'paginate')
+        );
     }
 
     /**
      * Show the form for creating a new resource.
      *
+     * @param Client $client
      * @return Response
-     * @throws AuthorizationException
      */
     public function create(Client $client)
     {
-        $this->authorize('create', $client);
-
-        return response()->view('clients.create', [
-            'client' => $client,
-        ]);
+        return response()->view('clients.create', compact('client'));
     }
 
     /**
      * Store a newly created resource in storage.
      *
+     * @param StoreClientsAction $action
      * @param SaveClientRequest $request
-     * @param Client $client
-     * @param User $user
      * @return RedirectResponse
-     * @throws AuthorizationException
      */
-    public function store(SaveClientRequest $request, Client $client, User $user)
+    public function store(StoreClientsAction $action, SaveClientRequest $request)
     {
-        $this->authorize('create', $client);
+        $client = $action->execute(new Client(), $request);
 
-        $user->name = $request->input('name');
-        $user->surname = $request->input('surname');
-        $user->email = $request->input('email');
-        $user->password = bcrypt('secret');
-        $user->creator_id = auth()->id();
-        $user->save();
-        $user->assignRole('Client');
-
-        $client->user_id = $user->id;
-        $client->type_document_id = $request->input('type_document_id');
-        $client->document = $request->input('document');
-        $client->phone = $request->input('phone');
-        $client->cellphone = $request->input('cellphone');
-        $client->address = $request->input('address');
-        $client->save();
-
-        return redirect()->route('clients.show', $client->id)->withSuccess(__('Cliente creado satisfactoriamente'));
+        return redirect()->route('clients.show', $client->id)
+            ->withSuccess(__('Cliente creado satisfactoriamente'));
     }
 
     /**
@@ -100,17 +79,12 @@ class ClientController extends Controller
      *
      * @param Client $client
      * @return Response
-     * @throws AuthorizationException
      */
     public function show(Client $client)
     {
-        $this->authorize('view', $client);
-
         $client->load('invoices.products');
 
-        return response()->view('clients.show', [
-            'client' => $client,
-        ]);
+        return response()->view('clients.show', compact('client'));
     }
 
     /**
@@ -118,43 +92,27 @@ class ClientController extends Controller
      *
      * @param Client $client
      * @return Response
-     * @throws AuthorizationException
      */
     public function edit(Client $client)
     {
-        $this->authorize('edit', $client);
-
-        return response()->view('clients.edit', [
-            'client' => $client,
-        ]);
+        return response()->view('clients.edit', compact('client'));
     }
 
     /**
      * Update the specified resource in storage.
      *
+     * @param UpdateClientsAction $action
      * @param SaveClientRequest $request
      * @param Client $client
      * @return RedirectResponse
-     * @throws AuthorizationException
      */
-    public function update(SaveClientRequest $request, Client $client)
+    public function update(UpdateClientsAction $action, Client $client,
+                           SaveClientRequest $request)
     {
-        $this->authorize('edit', $client);
+        $client = $action->execute($client, $request);
 
-        $user = User::find($client->user_id);
-        $user->name = $request->input('name');
-        $user->surname = $request->input('surname');
-        $user->email = $request->input('email');
-        $user->update();
-
-        $client->type_document_id = $request->input('type_document_id');
-        $client->document = $request->input('document');
-        $client->phone = $request->input('phone');
-        $client->cellphone = $request->input('cellphone');
-        $client->address = $request->input('address');
-        $client->update();
-
-        return redirect()->route('clients.show', $client)->withSuccess(__('Cliente actualizado satisfactoriamente'));
+        return redirect()->route('clients.show', $client)
+            ->withSuccess(__('Cliente actualizado satisfactoriamente'));
     }
 
     /**
@@ -166,12 +124,8 @@ class ClientController extends Controller
      */
     public function destroy(Client $client)
     {
-        $this->authorize('delete', $client);
-
-        if ($client->invoices->count() > 0){
-            return redirect()->back()->withError(__('No se puede eliminar, tiene facturas asociadas'));
-        }
         $client->user->delete();
+
         return redirect()->route('clients.index')->withSuccess(__('Cliente eliminado satisfactoriamente'));
     }
 }

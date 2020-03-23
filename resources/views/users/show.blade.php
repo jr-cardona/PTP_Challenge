@@ -2,14 +2,14 @@
 @section('Title', 'Ver Vendedor')
 @section('Back')
     <div>
-        @can('index', App\User::class)
+        @can('viewAny', App\Entities\User::class)
             <a href="{{ route('users.index') }}" class="btn btn-secondary">
                 <i class="fa fa-arrow-left"></i> {{ __("Volver") }}
             </a>
         @endcan
     </div>
     <div>
-        @can('create', App\User::class)
+        @can('create', App\Entities\User::class)
             <a class="btn btn-success" href="{{ route('users.create') }}">
                 <i class="fa fa-plus"></i> {{ __("Crear nuevo usuario") }}
             </a>
@@ -37,22 +37,24 @@
                 <td class="table-dark td-title">{{ __("Creado por:")}}</td>
                 <td class="td-content">{{ $user->creator->fullname }}</td>
 
+                <td class="table-dark td-title">{{ __("Modificado por:")}}</td>
+                <td class="td-content">{{ $user->updater->fullname }}</td>
+            </tr>
+            <tr>
                 <td class="table-dark td-title">{{ __("Correo electrónico:")}}</td>
                 <td class="td-content">{{ $user->email }}</td>
             </tr>
         </table>
     </div>
-    @if(auth()->user()->hasRole('Admin'))
-        <br/>
-        <div class="shadow">
-            <div class="card-header text-center"><h3>{{ __("Roles asociados") }}</h3></div>
-            <ul class="list-group">
-                @foreach($user->roles as $role)
-                    <li class="list-group-item">
-                        <h4>{{ $role->name }}</h4>
-                    </li>
-                @endforeach
-            </ul>
-        </div>
-    @endif
+    <br/>
+    <div class="shadow">
+        <div class="card-header text-center"><h3>{{ __("Roles asociados") }}</h3></div>
+        <ul class="list-group">
+            @foreach($user->roles as $role)
+                <li class="list-group-item">
+                    <h4>{{ $role->name }}</h4>
+                </li>
+            @endforeach
+        </ul>
+    </div>
 @endsection

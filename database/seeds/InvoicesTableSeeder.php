@@ -1,25 +1,29 @@
 <?php
 
-use App\User;
-use App\Client;
-use App\Invoice;
-use App\Product;
 use Carbon\Carbon;
+use App\Entities\User;
+use App\Entities\Client;
+use App\Entities\Invoice;
+use App\Entities\Product;
 use Illuminate\Database\Seeder;
 
 class InvoicesTableSeeder extends Seeder
 {
-    protected $total_clients;
-    protected $total_owners;
     protected $total_invoices;
     protected $total_details;
+    protected $clients;
+    protected $sellers;
+    protected $total_clients;
+    protected $total_sellers;
 
     public function __construct()
     {
-        $this->total_clients = Client::all()->count();
-        $this->total_owners = User::whereIn('name', ['Admin', 'Seller'])->count();
         $this->total_invoices = 100;
         $this->total_details = 10;
+        $this->clients = Client::select('id')->without('user')->orderBy('id')->get();
+        $this->sellers = User::select('id')->Role('Seller')->orderBy('id')->get();
+        $this->total_clients = count($this->clients);
+        $this->total_sellers = count($this->sellers);
     }
 
     /**
@@ -29,19 +33,17 @@ class InvoicesTableSeeder extends Seeder
      */
     public function run()
     {
-        for ($i = 1; $i <= $this->total_invoices; $i++) {
-            $clientId = $this->getId($this->total_clients, $i);
-            $ownerId = $this->getId($this->total_owners, $i);
-
+        for ($i = 0; $i < $this->total_invoices; $i++) {
             $invoice = new Invoice();
-            $invoice->client_id = $clientId;
-            $invoice->creator_id = $ownerId;
+            $invoice->issued_at = Carbon::now();
+            $invoice->client_id = $this->getClientId($i);
+            $invoice->created_by = $this->getSellerId($i);
 
-            if ($i > ($this->total_invoices / 2)) {
-                $invoice->issued_at = Carbon::now();
+            /** One half paid and other half expired. */
+            if ($this->onHalf($i)) {
                 $invoice->paid_at = Carbon::now();
             } else {
-                $invoice->issued_at = Carbon::now()->subMonth();
+                $invoice->issued_at->subMonth();
             }
 
             $invoice->save();
@@ -49,8 +51,14 @@ class InvoicesTableSeeder extends Seeder
         }
     }
 
-    public function getId($total, $i){
-        return $i % $total == 0 ? $total : ($i % $total);
+    public function getClientId($i){
+        $index = $i % $this->total_clients;
+        return $this->clients[$index]->id;
+    }
+
+    public function getSellerId($i){
+        $index = $i % $this->total_sellers;
+        return $this->sellers[$index]->id;
     }
 
     public function assignProducts($invoice){
@@ -61,5 +69,9 @@ class InvoicesTableSeeder extends Seeder
                     'unit_price' => $product->price,
                 ]);
             });
+    }
+
+    public function onHalf($i){
+        return $i > ($this->total_invoices / 2);
     }
 }

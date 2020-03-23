@@ -2,7 +2,7 @@
 
 namespace Tests\Feature\Admin\Sellers;
 
-use App\User;
+use App\Entities\User;
 use App\Seller;
 use Tests\TestCase;
 use App\Exports\UsersExport;

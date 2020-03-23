@@ -35,9 +35,9 @@ const app = new Vue({
             "id": $('#old_client_id').val(),
             "fullname" : $('#old_client_fullname').val(),
         },
-        old_creator_values: {
-            "id": $('#old_creator_id').val(),
-            "fullname" : $('#old_creator_fullname').val(),
+        old_user_values: {
+            "id": $('#old_created_by').val(),
+            "fullname" : $('#old_user_fullname').val(),
         },
         old_product_values: {
             "id": $('#old_product_id').val(),
@@ -55,7 +55,7 @@ const app = new Vue({
                 loading(false);
             });
         },
-        searchCreator(search, loading) {
+        searchUser(search, loading) {
             loading(true);
             fetch(
                 `/usuarios/buscar?name=${escape(search)}`

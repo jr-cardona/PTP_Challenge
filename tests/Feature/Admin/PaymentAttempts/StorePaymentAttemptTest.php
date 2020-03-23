@@ -2,7 +2,7 @@
 
 namespace Tests\Feature\Admin\PaymentAttempts;
 
-use App\Invoice;
+use App\Entities\Invoice;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 

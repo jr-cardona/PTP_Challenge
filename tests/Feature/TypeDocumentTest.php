@@ -2,10 +2,10 @@
 
 namespace Tests\Feature;
 
-use App\Client;
+use App\Entities\Client;
 use App\Seller;
 use Tests\TestCase;
-use App\TypeDocument;
+use App\Entities\TypeDocument;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class TypeDocumentsTest extends TestCase

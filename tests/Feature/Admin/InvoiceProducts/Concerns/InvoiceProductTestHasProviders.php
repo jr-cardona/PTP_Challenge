@@ -2,7 +2,7 @@
 
 namespace Tests\Feature\Admin\InvoiceProducts\Concerns;
 
-use App\Product;
+use App\Entities\Product;
 use Illuminate\Support\Str;
 
 trait InvoiceProductTestHasProviders
