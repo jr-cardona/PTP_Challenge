@@ -27,7 +27,7 @@
             <i class="fa fa-file-excel"></i> {{ __("Importar") }}
         </button>
     @endcan
-    @can('create', App\Client::class)
+    @can('create', App\Entities\Client::class)
         <a class="btn btn-success" href="{{ route('clients.create') }}">
             <i class="fa fa-plus"></i> {{ __("Crear nuevo cliente") }}
         </a>
@@ -48,12 +48,12 @@
     @forelse($clients as $client)
         <tr class="text-center">
             <td>
-                <a href="{{ route('clients.show', $client) }}">{{ $client->user->fullname }}</a>
+                <a href="{{ route('clients.show', $client) }}">{{ $client->fullname }}</a>
             </td>
             <td>{{ $client->type_document->name . ". " . $client->document }}</td>
-            <td>{{ $client->user->email }}</td>
+            <td>{{ $client->email }}</td>
             <td>{{ $client->cellphone }}</td>
-            <td>{{ $client->user->creator->fullname }}</td>
+            <td>{{ $client->creator->fullname }}</td>
             <td class="btn-group btn-group-sm" nowrap>
                 @include('clients._buttons')
             </td>

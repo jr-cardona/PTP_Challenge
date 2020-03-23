@@ -2,14 +2,14 @@
 @section('Title', 'Ver Cliente')
 @section('Back')
     <div>
-        @can('index', $client)
+        @can('viewAny', App\Entities\Client::class)
             <a href="{{ route('clients.index') }}" class="btn btn-secondary">
                 <i class="fa fa-arrow-left"></i> {{ __("Volver") }}
             </a>
         @endcan
     </div>
     <div>
-        @can('create', App\Client::class)
+        @can('create', App\Entities\Client::class)
             <a class="btn btn-success" href="{{ route('clients.create') }}">
                 <i class="fa fa-plus"></i> {{ __("Crear nuevo cliente") }}
             </a>
@@ -17,7 +17,7 @@
     </div>
 @endsection
 @section('Name')
-    {{ $client->user->fullname }}
+    {{ $client->fullname }}
 @endsection
 @section('Buttons')
     @include('clients._buttons')
@@ -41,6 +41,25 @@
                 <td class="td-content">{{ $client->updated_at->isoFormat('Y-MM-DD hh:mma') }}</td>
             </tr>
             <tr>
+                <td class="table-dark td-title">{{ __("Creado por:") }}</td>
+                <td class="td-content">
+                    <a @can('view', $client->creator)
+                       href="{{ route('users.show', $client->creator) }}"
+                        @endcan>
+                        {{ $client->creator->fullname }}
+                    </a>
+                </td>
+
+                <td class="table-dark td-title">{{ __("Modificado por:")}}</td>
+                <td class="td-content">
+                    <a @can('view', $client->updater)
+                       href="{{ route('users.show', $client->updater) }}"
+                        @endcan>
+                        {{ $client->updater->fullname }}
+                    </a>
+                </td>
+            </tr>
+            <tr>
                 <td class="table-dark td-title">{{ __("Número telefónico:")}}</td>
                 <td class="td-content">{{ $client->phone }}</td>
 
@@ -52,11 +71,7 @@
                 <td class="td-content">{{ $client->address }}</td>
 
                 <td class="table-dark td-title">{{ __("Correo electrónico:")}}</td>
-                <td class="td-content">{{ $client->user->email }}</td>
-            </tr>
-            <tr>
-                <td class="table-dark td-title">{{ __("Creado por:")}}</td>
-                <td class="td-content">{{ $client->user->creator->fullname }}</td>
+                <td class="td-content">{{ $client->email }}</td>
             </tr>
         </table>
     </div>
@@ -65,9 +80,9 @@
         <div class="card-header justify-content-between d-flex">
             <div class="col-md-1"></div>
             <h3 class="col-md-3">{{ __("Facturas asociadas") }}</h3>
-            @can('create', App\Invoice::class)
+            @can('create', App\Entities\Invoice::class)
                 <a class="btn btn-success"
-                   href="{{ route('invoices.create', ["client_id" => $client->id, "client" => $client->user->fullname]) }}" >
+                   href="{{ route('invoices.create', ["client_id" => $client->id, "client" => $client->fullname]) }}" >
                     <i class="fa fa-plus"></i>
                 </a>
             @else
@@ -89,9 +104,7 @@
                 @can('view', $invoice)
                     <tr>
                         <td>
-                            <a @can('view', $invoice)
-                                href="{{ route('invoices.show', $invoice) }}" target="_blank"
-                                @endcan>
+                            <a href="{{ route('invoices.show', $invoice) }}" target="_blank">
                                 {{ __("Factura de venta No.")}} {{ $invoice->id }}
                             </a>
                         </td>

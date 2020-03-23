@@ -2,7 +2,7 @@
 <div class="row">
     <div class="col form-group">
         <label for="name" class="required">{{ __("Nombre") }}</label>
-        <input type="text" name="name" id="name" value="{{ old('name', $client->user->name ?? '') }}"
+        <input type="text" name="name" id="name" value="{{ old('name', $client->name) }}"
                required minlength="3" maxlength="50"
                class="form-control @error('name') is-invalid @enderror" placeholder="Ingresa el nombre">
         @error('name')
@@ -17,7 +17,7 @@
     </div>
     <div class="col form-group">
         <label for="surname" class="required">{{ __("Apellidos") }}</label>
-        <input type="text" name="surname" id="surname" value="{{ old('surname', $client->user->surname ?? '') }}"
+        <input type="text" name="surname" id="surname" value="{{ old('surname', $client->surname ?? '') }}"
                required minlength="3" maxlength="50"
                class="form-control @error('surname') is-invalid @enderror" placeholder="Ingresa el apellido">
         @error('surname')
@@ -115,7 +115,7 @@
     </div>
     <div class="col">
         <label for="email" class="required">{{ __("Email") }}</label>
-        <input type="email" name="email" id="email" value="{{ old('email', $client->user->email ?? '') }}"
+        <input type="email" name="email" id="email" value="{{ old('email', $client->email ?? '') }}"
                required minlength="5" maxlength="100"
                class="form-control @error('email') is-invalid @enderror" placeholder="Ingresa el correo electrónico">
         @error('email')
