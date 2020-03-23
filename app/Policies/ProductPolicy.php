@@ -11,25 +11,13 @@ class ProductPolicy
     use HandlesAuthorization;
 
     /**
-     * @param $user
-     * @return bool
-     */
-    public function before($user)
-    {
-        if ($user->hasRole('Admin'))
-        {
-            return true;
-        }
-    }
-
-    /**
      * @param User $user
      * @param Product $product
      * @return bool
      */
-    public function index(User $user, Product $product = null)
+    public function viewAny(User $user, Product $product = null)
     {
-        return $user->hasPermissionTo('View any products');
+        return $user->can('View any products');
     }
 
     /**
@@ -41,7 +29,7 @@ class ProductPolicy
      */
     public function view(User $user, Product $product)
     {
-        if ($user->hasPermissionTo('View any products')) {
+        if ($user->can('View any products')) {
             return true;
         }
         return false;
@@ -55,7 +43,7 @@ class ProductPolicy
      */
     public function create(User $user, Product $product = null)
     {
-        return $user->hasPermissionTo('Create products');
+        return $user->can('Create products');
     }
 
     /**
@@ -65,15 +53,15 @@ class ProductPolicy
      * @param Product $product
      * @return mixed
      */
-    public function edit(User $user, Product $product)
+    public function update(User $user, Product $product)
     {
-        if ($user->hasPermissionTo('Edit any products')) {
+        if ($user->can('Edit any products')) {
             return true;
-        } elseif ($user->hasPermissionTo('Edit products')) {
-            return $user->id === $product->user->creator_id;
-        } else {
-            return false;
         }
+        if ($user->can('Edit products')) {
+            return $user->id === $product->user->created_by;
+        }
+        return false;
     }
 
     /**
@@ -85,13 +73,16 @@ class ProductPolicy
      */
     public function delete(User $user, Product $product)
     {
-        if ($user->hasPermissionTo('Delete any products')) {
-            return true;
-        } elseif ($user->hasPermissionTo('Delete products')) {
-            return $user->id === $product->user->creator_id;
-        } else {
+        if ($product->invoices->count() > 0){
             return false;
         }
+        if ($user->can('Delete any products')) {
+            return true;
+        }
+        if ($user->can('Delete products')) {
+            return $user->id === $product->user->created_by;
+        }
+        return false;
     }
 
     /**
@@ -103,7 +94,7 @@ class ProductPolicy
      */
     public function export(User $user, Product $product = null)
     {
-        return $user->hasPermissionTo('Export any products');
+        return $user->can('Export any products');
     }
 
     /**
@@ -115,6 +106,6 @@ class ProductPolicy
      */
     public function import(User $user, Product $product = null)
     {
-        return $user->hasPermissionTo('Import any products');
+        return $user->can('Import any products');
     }
 }

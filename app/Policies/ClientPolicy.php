@@ -11,25 +11,13 @@ class ClientPolicy
     use HandlesAuthorization;
 
     /**
-     * @param $user
-     * @return bool
-     */
-    public function before($user)
-    {
-        if ($user->hasRole('Admin'))
-        {
-            return true;
-        }
-    }
-
-    /**
      * @param User $user
      * @param Client $client
      * @return bool
      */
-    public function index(User $user, Client $client = null)
+    public function viewAny(User $user, Client $client = null)
     {
-        return $user->hasPermissionTo('View any clients');
+        return $user->can('View any clients');
     }
 
     /**
@@ -41,9 +29,8 @@ class ClientPolicy
      */
     public function view(User $user, Client $client)
     {
-        if ($user->hasPermissionTo('View any clients')) {
-            return true;
-        }
+        if ($user->can('View any clients')) return true;
+        if ($user->can('View profile')) return $user->id === $client->id;
         return false;
     }
 
@@ -55,7 +42,7 @@ class ClientPolicy
      */
     public function create(User $user, Client $client = null)
     {
-        return $user->hasPermissionTo('Create clients');
+        return $user->can('Create clients');
     }
 
     /**
@@ -65,15 +52,11 @@ class ClientPolicy
      * @param Client $client
      * @return mixed
      */
-    public function edit(User $user, Client $client)
+    public function update(User $user, Client $client)
     {
-        if ($user->hasPermissionTo('Edit any clients')) {
-            return true;
-        } elseif ($user->hasPermissionTo('Edit clients')) {
-            return $user->id === $client->user->creator_id;
-        } else {
-            return false;
-        }
+        if ($user->can('Edit any clients')) return true;
+        if ($user->can('Edit profile')) return $user->id === $client->id;
+        return false;
     }
 
     /**
@@ -85,13 +68,10 @@ class ClientPolicy
      */
     public function delete(User $user, Client $client)
     {
-        if ($user->hasPermissionTo('Delete any clients')) {
-            return true;
-        } elseif ($user->hasPermissionTo('Delete clients')) {
-            return $user->id === $client->user->creator_id;
-        } else {
-            return false;
-        }
+        if (! $client->user->canBeDeleted()) return false;
+        if ($user->can('Delete any clients')) return true;
+        if ($user->can('Delete clients')) return $user->id === $client->user->created_by;
+        return false;
     }
 
     /**
@@ -103,7 +83,7 @@ class ClientPolicy
      */
     public function export(User $user, Client $client = null)
     {
-        return $user->hasPermissionTo('Export any clients');
+        return $user->can('Export any clients');
     }
 
     /**
@@ -115,7 +95,7 @@ class ClientPolicy
      */
     public function import(User $user, Client $client = null)
     {
-        return $user->hasPermissionTo('Import any clients')
-            || $user->hasPermissionTo('Import clients');
+        return $user->can('Import any clients')
+            || $user->can('Import clients');
     }
 }
