@@ -23,10 +23,12 @@ class CreateInvoicesTable extends Migration
             $table->string('description')->nullable();
             $table->string('annulment_reason')->nullable();
             $table->unsignedInteger('client_id');
-            $table->unsignedInteger('creator_id');
-            $table->foreign('client_id')->references('id')->on('clients')->onDelete('cascade');
-            $table->foreign('creator_id')->references('id')->on('users')->onDelete('cascade');
+            $table->unsignedInteger('created_by');
+            $table->unsignedInteger('updated_by');
             $table->timestamps();
+            $table->foreign('client_id')->references('id')->on('clients')->onDelete('cascade');
+            $table->foreign('created_by')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('updated_by')->references('id')->on('users')->onDelete('cascade');
         });
     }
 

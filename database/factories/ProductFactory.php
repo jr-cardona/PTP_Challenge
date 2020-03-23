@@ -1,10 +1,11 @@
 <?php
 
-/** @var \Illuminate\Database\Eloquent\Factory $factory */
+/** @var Factory $factory */
 
 use App\Entities\User;
 use App\Entities\Product;
 use Faker\Generator as Faker;
+use Illuminate\Database\Eloquent\Factory;
 
 $factory->define(Product::class, function (Faker $faker) {
     $cost = $faker->numberBetween(0, 99999);
@@ -13,6 +14,7 @@ $factory->define(Product::class, function (Faker $faker) {
         'description' => $faker->realText(30),
         'cost' => $cost,
         'price' => $cost * 1.10,
-        'creator_id' => User::where('name', 'Stock')->first()->id,
+        'created_by' => User::Role('Stock')->inRandomOrder()->first()->id,
+        'updated_by' => User::Role('Stock')->inRandomOrder()->first()->id,
     ];
 });

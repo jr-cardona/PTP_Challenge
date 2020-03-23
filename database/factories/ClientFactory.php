@@ -1,21 +1,21 @@
 <?php
 
-/** @var \Illuminate\Database\Eloquent\Factory $factory */
+/** @var Factory $factory */
 
 use App\Entities\User;
 use App\Entities\Client;
 use Faker\Generator as Faker;
-use Spatie\Permission\Models\Role;
 use App\Entities\TypeDocument;
+use Illuminate\Database\Eloquent\Factory;
 
 $factory->define(Client::class, function (Faker $faker) {
     return [
-        'document' => $faker->unique()->numberBetween(10000000, 9999999999),
+        'id' => factory(User::class)->create()->assignRole('Client'),
+        'document' => $faker->unique()->randomNumber(9),
         'type_document_id' => TypeDocument::whereIn('name', ['CC', 'NIT', 'PPN', 'TI', 'CE'])
                 ->inRandomOrder()->first()->id ?? factory(TypeDocument::class),
-        'user_id' => factory(User::class)->create()->assignRole('Client'),
-        'phone' => $faker->numberBetween(1000000, 9999999),
-        'cellphone' => "3".$faker->numberBetween(100000000, 999999999),
+        'phone' => $faker->randomNumber(7),
+        'cellphone' => "3" . $faker->randomNumber(9),
         'address' => $faker->address,
     ];
 });
