@@ -27,7 +27,7 @@
             <i class="fa fa-file-excel"></i> {{ __("Importar") }}
         </button>
     @endcan
-    @can('create', App\Product::class)
+    @can('create', App\Entities\Product::class)
         <a class="btn btn-success" href="{{ route('products.create') }}">
             <i class="fa fa-plus"></i> {{ __("Crear nuevo producto") }}
         </a>
