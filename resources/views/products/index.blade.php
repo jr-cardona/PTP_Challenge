@@ -10,9 +10,11 @@
     </a>
 @endsection
 @section('Actions')
-    @can('export', App\Product::class)
-        <button type="button" class="btn btn-warning" data-route="{{ route('products.index') }}" data-toggle="modal" data-target="#exportModal">
-            <i class="fa fa-file"></i> {{ __("Exportar") }}
+    @can('export', App\Entities\Product::class)
+        <button type="button" class="btn btn-warning"
+                data-route="{{ route('products.index') }}"
+                data-toggle="modal" data-target="#exportModal">
+            <i class="fa fa-file-excel"></i> {{ __("Exportar") }}
         </button>
     @endcan
     @can('import', App\Entities\Product::class)
