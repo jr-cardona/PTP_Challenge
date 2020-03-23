@@ -27,7 +27,7 @@
                 <!-- Left Side Of Navbar -->
                 @auth
                 <ul class="navbar-nav mr-auto">
-                    @can('index', App\Invoice::class)
+                    @can('viewAny', App\Entities\Invoice::class)
                         <li class="nav-item">
                             <a href="{{ route('invoices.index') }}"
                                class="nav-link {{ request()->segment(1) == 'facturas' ? 'active' : '' }}">
@@ -35,7 +35,7 @@
                             </a>
                         </li>
                     @endcan
-                    @can('index', App\Client::class)
+                    @can('viewAny', App\Entities\Client::class)
                         <li class="nav-item">
                             <a href="{{ route('clients.index') }}"
                                class="nav-link {{ request()->segment(1) == 'clientes' ? 'active' : '' }}">
@@ -43,7 +43,7 @@
                             </a>
                         </li>
                     @endcan
-                    @can('index', App\Product::class)
+                    @can('viewAny', App\Entities\Product::class)
                         <li class="nav-item">
                             <a href="{{ route('products.index') }}"
                                class="nav-link {{ request()->segment(1) == 'productos' ? 'active' : '' }}">
@@ -51,7 +51,7 @@
                             </a>
                         </li>
                     @endcan
-                    @if(auth()->user()->can('View any reports') || auth()->user()->hasRole('Admin'))
+                    @if(auth()->user()->can('View any reports') || auth()->user()->hasRole('SuperAdmin'))
                         <li class="nav-item">
                             <a href="{{ route('reports.index') }}"
                                class="nav-link {{ request()->segment(1) == 'reportes' ? 'active' : '' }}">
@@ -74,7 +74,7 @@
                             </li>
                         @endif
                     @else
-                        @can('index', App\User::class)
+                        @can('viewAny', App\Entities\User::class)
                             <li class="nav-item">
                                 <a href="{{ route('users.index') }}"
                                    class="nav-link {{ request()->segment(1) == 'usuarios' ? 'active' : '' }}">
@@ -84,7 +84,7 @@
                         @endcan
                         <li class="nav-item dropdown">
                             <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
-                                {{ Auth::user()->name }} <span class="caret"></span>
+                                {{ auth()->user()->fullname }} <span class="caret"></span>
                             </a>
 
                             <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
@@ -93,9 +93,14 @@
                                         <i class="fa fa-user-tie"></i> {{ __("Mi perfil") }}
                                     </a>
                                 @endcan
-                                @can('edit', auth()->user())
+                                @can('update', auth()->user())
                                     <a class="dropdown-item" href="{{ route('users.edit', auth()->user()) }}">
                                         <i class="fa fa-user-edit"></i> {{ __("Editar perfil") }}
+                                    </a>
+                                @endcan
+                                @can('update', auth()->user())
+                                    <a class="dropdown-item" href="{{ route('users.edit-password', auth()->user()) }}">
+                                        <i class="fa fa-key"></i> {{ __("Editar contraseña") }}
                                     </a>
                                 @endcan
                                 <a class="dropdown-item" href="{{ route('logout') }}"
