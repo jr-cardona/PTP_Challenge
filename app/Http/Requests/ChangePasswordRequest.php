@@ -2,11 +2,10 @@
 
 namespace App\Http\Requests;
 
-use Illuminate\Validation\Rule;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Hash;
 
-class UpdateUserRequest extends FormRequest
+class ChangePasswordRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -25,24 +24,10 @@ class UpdateUserRequest extends FormRequest
      */
     public function rules()
     {
-        $rules = [
-            'name' => 'required|string|min:3|max:50',
-            'surname' => 'required|string|min:3|max:50',
-            'email' => [
-                'required',
-                'string',
-                'email',
-                'min:6',
-                'max:100',
-                Rule::unique('users')->ignore($this->route('user'))
-            ],
+        return [
+            'current_password' => 'required',
+            'password' => 'required|confirmed|min:8',
         ];
-
-        if ($this->filled('password') || $this->filled('current_password')){
-            $rules['password'] = ['required', 'string', 'min:8', 'confirmed'];
-        }
-
-        return $rules;
     }
 
     /**
@@ -53,9 +38,9 @@ class UpdateUserRequest extends FormRequest
         if ($this->filled('password') || $this->filled('current_password')) {
             $validator->after(function ($validator) {
                 if (! $this->passwordMatches()) {
-                    $validator->errors()->add('current_password', 'No coincide con la contraseña actual');
+                    $validator->errors()->add('current_password', 'Contraseña incorrecta');
                 } elseif($this->samePassword()) {
-                    $validator->errors()->add('password', 'No puede ser igual que la contraseña actual');
+                    $validator->errors()->add('password', 'Debe ser una contraseña distinta a la actual');
                 }
             });
         }

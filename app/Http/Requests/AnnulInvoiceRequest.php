@@ -2,11 +2,9 @@
 
 namespace App\Http\Requests;
 
-use Illuminate\Validation\Rule;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Foundation\Http\FormRequest;
 
-class StoreUserRequest extends FormRequest
+class AnnulInvoiceRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -26,10 +24,7 @@ class StoreUserRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => 'required|string|min:3|max:50',
-            'surname' => 'required|string|min:3|max:50',
-            'email' => 'required|string|email|min:6|max:100|unique:users',
-            'password' => 'required|string|min:8|confirmed',
+            'annulment_reason' => 'required|min:10'
         ];
     }
 }
