@@ -15,10 +15,9 @@ class Client extends Model
         'phone',
         'cellphone',
         'address',
-        'user_id',
+        'created_by',
+        'updated_by',
     ];
-
-    protected $with = ['user.creator'];
 
     public $incrementing = false;
 
@@ -38,6 +37,24 @@ class Client extends Model
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class, 'id');
+    }
+
+    /**
+     * Relation between products and users
+     * @return BelongsTo
+     */
+    public function creator(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'created_by');
+    }
+
+    /**
+     * Relation between invoices and updaters
+     * @return BelongsTo
+     */
+    public function updater(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'updated_by');
     }
 
     /**
@@ -65,14 +82,6 @@ class Client extends Model
     public function getEmailAttribute()
     {
         return $this->user->email ?? '';
-    }
-    public function getCreatorAttribute()
-    {
-        return $this->user->creator ?? '';
-    }
-    public function getUpdaterAttribute()
-    {
-        return $this->user->updater ?? '';
     }
 
     /** Query Scopes */

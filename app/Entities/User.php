@@ -31,55 +31,36 @@ class User extends Authenticatable implements JWTSubject
         'email_verified_at' => 'datetime',
     ];
 
-    /**
-     * Relation between users and invoices
-     * @return HasMany
-     */
     public function invoices(): HasMany
     {
         return $this->hasMany(Invoice::class, 'created_by');
     }
 
-    /**
-     * Relation between users and products
-     * @return HasMany
-     */
+    public function clients(): HasMany
+    {
+        return $this->hasMany(Client::class, 'created_by');
+    }
+
     public function products(): HasMany
     {
         return $this->hasMany(Product::class, 'created_by');
     }
 
-    /**
-     * Relation between users and clients
-     * @return HasOne
-     */
-    public function client(): HasOne
-    {
-        return $this->hasOne(Client::class, 'id');
-    }
-
-    /**
-     * Relation between users and users
-     * @return HasMany
-     */
     public function users(): HasMany
     {
         return $this->hasMany(User::class, 'created_by');
     }
 
-    /**
-     * Relation between users and users
-     * @return BelongsTo
-     */
+    public function client(): HasOne
+    {
+        return $this->hasOne(Client::class, 'id');
+    }
+
     public function creator(): BelongsTo
     {
         return $this->belongsTo(User::class, 'created_by');
     }
 
-    /**
-     * Relation between users and users
-     * @return BelongsTo
-     */
     public function updater(): BelongsTo
     {
         return $this->belongsTo(User::class, 'updated_by');

@@ -11,7 +11,7 @@ class GetClientsAction extends Action
 {
     public function action(Model $client, Request $request)
     {
-        return $client->with(['type_document', 'invoices'])
+        return $client->with(['type_document', 'invoices', 'user', 'creator'])
             ->id($request->get('id'))
             ->typedocument($request->get('type_document_id'))
             ->document($request->get('document'))

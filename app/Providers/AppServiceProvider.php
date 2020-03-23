@@ -2,10 +2,12 @@
 
 namespace App\Providers;
 
+use App\Entities\Client;
 use App\Entities\User;
 use App\Entities\Invoice;
 use App\Entities\Product;
 use App\Entities\PaymentAttempt;
+use App\Observers\ClientsObserver;
 use App\Observers\UsersObserver;
 use Dnetix\Redirection\PlacetoPay;
 use App\Observers\InvoicesObserver;
@@ -43,6 +45,7 @@ class AppServiceProvider extends ServiceProvider
         PaymentAttempt::observe(PaymentAttemptsObserver::class);
         Product::observe(ProductsObserver::class);
         Invoice::observe(InvoicesObserver::class);
+        Client::observe(ClientsObserver::class);
         User::observe(UsersObserver::class);
 
         Route::resourceVerbs([
