@@ -1,10 +1,10 @@
 <?php
 
-use App\User;
-use App\Client;
-use App\Invoice;
-use App\Product;
 use Carbon\Carbon;
+use App\Entities\User;
+use App\Entities\Client;
+use App\Entities\Invoice;
+use App\Entities\Product;
 use Illuminate\Database\Seeder;
 
 class InvoicesTableSeeder extends Seeder

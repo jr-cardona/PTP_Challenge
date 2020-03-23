@@ -1,10 +1,9 @@
 <?php
 
-namespace App;
+namespace App\Entities;
 
 use Config;
 use Carbon\Carbon;
-use App\Events\InvoiceCreated;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -13,21 +12,26 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Invoice extends Model
 {
-    protected $guarded = [];
+    protected $fillable = [
+        'issued_at',
+        'client_id',
+        'description',
+        'created_by',
+        'expires_at',
+    ];
+
     protected $dates = [
         'issued_at',
         'expires_at',
         'received_at',
         'paid_at',
     ];
+
     protected $casts = [
         'issued_at' => 'date:Y-m-d',
         'expires_at' => 'date:Y-m-d',
         'received_at' => 'date:Y-m-d',
         'paid_at' => 'date:Y-m-d',
-    ];
-    protected $dispatchesEvents = [
-        'created' => InvoiceCreated::class,
     ];
 
     /**
@@ -40,12 +44,21 @@ class Invoice extends Model
     }
 
     /**
-     * Relation between invoices and users
+     * Relation between invoices and sellers
      * @return BelongsTo
      */
-    public function creator(): BelongsTo
+    public function seller(): BelongsTo
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class, 'created_by');
+    }
+
+    /**
+     * Relation between invoices and updaters
+     * @return BelongsTo
+     */
+    public function updater(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'updated_by');
     }
 
     /**
@@ -69,7 +82,6 @@ class Invoice extends Model
         return $this->hasMany(PaymentAttempt::class);
     }
 
-    /** DERIVED ATTRIBUTES */
     public function isExpired()
     {
         return ($this->expires_at <= Carbon::now() && ! $this->isPaid());
@@ -90,6 +102,7 @@ class Invoice extends Model
         return (! empty($this->annulled_at));
     }
 
+    /** Getters */
     public function getSubtotalAttribute()
     {
         $subtotal = 0;
@@ -149,22 +162,23 @@ class Invoice extends Model
         }
     }
 
-    public function scopeCreator($query, $creatorId)
+    public function scopeSeller($query, $sellerId)
     {
-        if (auth()->user()->hasPermissionTo('View any invoices') || auth()->user()->hasRole('Admin')) {
-            if (trim($creatorId) !== '') {
-                return $query->where('creator_id', $creatorId);
+        if (auth()->user()->can('View any invoices') ||
+            auth()->user()->hasRole('SuperAdmin')) {
+            if (trim($sellerId) !== '') {
+                return $query->where('created_by', $sellerId);
             }
             return $query;
         }
-        if (auth()->user()->hasPermissionTo('View invoices')) {
-            if (auth()->user()->hasRole('Client')) {
-                return $query->where('client_id', auth()->user()->client->id);
+        if (auth()->user()->can('View invoices')) {
+            if (auth()->user()->isClient()) {
+                return $query->where('client_id', auth()->user()->id);
             } else {
-                return $query->where('creator_id', auth()->user()->id);
+                return $query->where('created_by', auth()->user()->id);
             }
         }
-        return $query->where('creator_id', '-1');
+        return $query->where('created_by', '-1');
     }
 
     public function scopeProduct($query, $product_id)
@@ -193,17 +207,20 @@ class Invoice extends Model
 
     public function scopeState($query, $state)
     {
-        if (trim($state) === "annulled") {
+        if (trim($state) === 'annulled') {
             return $query->whereNotNull('annulled_at');
         }
-        if (trim($state) === "paid") {
+        if (trim($state) === 'paid') {
             return $query->whereNotNull('paid_at');
         }
-        if (trim($state) === "expired") {
-            return $query->whereDate('expires_at', "<=", Carbon::now())->whereNull('paid_at');
+        if (trim($state) === 'expired') {
+            return $query->whereDate('expires_at', '<=', Carbon::now())
+                ->whereNull('paid_at');
         }
-        if (trim($state) === "pending") {
-            return $query->whereNull("paid_at")->whereDate('expires_at', ">", Carbon::now());
+        if (trim($state) === 'pending') {
+            return $query->whereNull('annulled_at')
+                ->whereNull('paid_at')
+                ->whereDate('expires_at', '>', Carbon::now());
         }
     }
 }

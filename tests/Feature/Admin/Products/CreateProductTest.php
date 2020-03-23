@@ -2,7 +2,7 @@
 
 namespace Tests\Feature\Admin\Products;
 
-use App\User;
+use App\Entities\User;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 

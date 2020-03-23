@@ -2,9 +2,9 @@
 
 namespace Tests\Feature\Admin\InvoiceProducts;
 
-use App\User;
-use App\Invoice;
-use App\Product;
+use App\Entities\User;
+use App\Entities\Invoice;
+use App\Entities\Product;
 use Carbon\Carbon;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;

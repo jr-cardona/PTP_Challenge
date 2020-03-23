@@ -3,8 +3,8 @@
 namespace App\Http\Controllers;
 
 use Exception;
-use App\Product;
-use App\Invoice;
+use App\Entities\Product;
+use App\Entities\Invoice;
 use Illuminate\Http\Response;
 use Illuminate\Http\RedirectResponse;
 use App\Http\Requests\SaveInvoiceProductRequest;

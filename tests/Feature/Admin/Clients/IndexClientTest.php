@@ -2,8 +2,8 @@
 
 namespace Tests\Feature\Admin\Clients;
 
-use App\User;
-use App\Client;
+use App\Entities\User;
+use App\Entities\Client;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;

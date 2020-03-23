@@ -2,8 +2,8 @@
 
 namespace App\Policies;
 
-use App\User;
-use App\Client;
+use App\Entities\User;
+use App\Entities\Client;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
 class ClientPolicy

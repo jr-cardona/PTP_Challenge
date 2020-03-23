@@ -3,7 +3,7 @@
 namespace Tests\Feature\Admin\Sellers;
 
 use App\Seller;
-use App\User;
+use App\Entities\User;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 

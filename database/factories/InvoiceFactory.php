@@ -2,10 +2,10 @@
 
 /** @var \Illuminate\Database\Eloquent\Factory $factory */
 
-use App\User;
-use App\Client;
-use App\Invoice;
 use Carbon\Carbon;
+use App\Entities\User;
+use App\Entities\Client;
+use App\Entities\Invoice;
 use Faker\Generator as Faker;
 
 $factory->define(Invoice::class, function (Faker $faker) {

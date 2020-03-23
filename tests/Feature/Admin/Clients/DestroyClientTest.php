@@ -2,9 +2,9 @@
 
 namespace Tests\Feature\Admin\Clients;
 
-use App\User;
-use App\Client;
-use App\Invoice;
+use App\Entities\User;
+use App\Entities\Client;
+use App\Entities\Invoice;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 

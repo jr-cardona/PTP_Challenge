@@ -2,9 +2,10 @@
 
 /** @var \Illuminate\Database\Eloquent\Factory $factory */
 
-use App\Invoice;
-use App\PaymentAttempt;
+use App\Entities\User;
+use App\Entities\Invoice;
 use Faker\Generator as Faker;
+use App\Entities\PaymentAttempt;
 
 $factory->define(PaymentAttempt::class, function (Faker $faker) {
     return [

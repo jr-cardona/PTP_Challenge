@@ -2,12 +2,12 @@
 
 namespace Tests\Feature\Admin\PaymentAttempts;
 
-use App\User;
-use App\Invoice;
-use App\Product;
+use App\Entities\User;
+use App\Entities\Invoice;
+use App\Entities\Product;
 use Carbon\Carbon;
 use Tests\TestCase;
-use App\PaymentAttempt;
+use App\Entities\PaymentAttempt;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class CreatePaymentAttemptTest extends TestCase

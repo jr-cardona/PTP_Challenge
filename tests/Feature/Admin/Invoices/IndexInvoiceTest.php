@@ -2,9 +2,9 @@
 
 namespace Tests\Feature\Admin\Invoices;
 
-use App\Product;
-use App\User;
-use App\Invoice;
+use App\Entities\Product;
+use App\Entities\User;
+use App\Entities\Invoice;
 use Carbon\Carbon;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Tests\TestCase;

@@ -2,8 +2,8 @@
 
 namespace Tests\Feature\Admin\Invoices;
 
-use App\User;
-use App\Invoice;
+use App\Entities\User;
+use App\Entities\Invoice;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 

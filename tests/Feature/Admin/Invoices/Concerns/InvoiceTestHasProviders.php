@@ -2,7 +2,7 @@
 
 namespace Tests\Feature\Admin\Invoices\Concerns;
 
-use App\Client;
+use App\Entities\Client;
 use App\Seller;
 use Carbon\Carbon;
 use Illuminate\Support\Str;

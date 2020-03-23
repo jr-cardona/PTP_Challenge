@@ -2,7 +2,7 @@
 
 namespace Tests\Feature\Admin\Sellers\Concerns;
 
-use App\TypeDocument;
+use App\Entities\TypeDocument;
 use Illuminate\Support\Str;
 
 trait SellerTestHasProviders

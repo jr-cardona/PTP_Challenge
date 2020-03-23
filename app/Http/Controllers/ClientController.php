@@ -3,9 +3,8 @@
 namespace App\Http\Controllers;
 
 use Config;
-use App\User;
 use Exception;
-use App\Client;
+use App\Entities\Client;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use App\Exports\ClientsExport;

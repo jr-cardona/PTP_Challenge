@@ -1,7 +1,6 @@
 <?php
 
-use App\Client;
-use App\User;
+use App\Entities\User;
 use Illuminate\Database\Seeder;
 use Spatie\Permission\Models\Role;
 

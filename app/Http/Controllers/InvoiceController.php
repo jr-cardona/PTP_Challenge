@@ -4,8 +4,8 @@ namespace App\Http\Controllers;
 
 use Config;
 use Exception;
-use App\Invoice;
 use Carbon\Carbon;
+use App\Entities\Invoice;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use App\Exports\InvoicesExport;

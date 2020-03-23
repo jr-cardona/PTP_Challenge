@@ -2,9 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Client;
-use App\Invoice;
-use App\Product;
 use Illuminate\Http\Request;
 use App\Imports\UsersImport;
 use Illuminate\Http\Response;

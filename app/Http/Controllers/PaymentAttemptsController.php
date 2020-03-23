@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Invoice;
 use Carbon\Carbon;
-use App\PaymentAttempt;
+use App\Entities\Invoice;
 use Illuminate\View\View;
 use Illuminate\Http\Request;
+use App\Entities\PaymentAttempt;
 use Dnetix\Redirection\PlacetoPay;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Auth\Access\AuthorizationException;

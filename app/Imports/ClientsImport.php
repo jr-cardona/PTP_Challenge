@@ -2,8 +2,8 @@
 
 namespace App\Imports;
 
-use App\User;
-use App\Client;
+use App\Entities\User;
+use App\Entities\Client;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Validator;

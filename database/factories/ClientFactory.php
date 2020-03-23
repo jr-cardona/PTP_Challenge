@@ -2,11 +2,11 @@
 
 /** @var \Illuminate\Database\Eloquent\Factory $factory */
 
-use App\User;
-use App\Client;
-use App\TypeDocument;
+use App\Entities\User;
+use App\Entities\Client;
 use Faker\Generator as Faker;
 use Spatie\Permission\Models\Role;
+use App\Entities\TypeDocument;
 
 $factory->define(Client::class, function (Faker $faker) {
     return [

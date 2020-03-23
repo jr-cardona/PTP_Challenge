@@ -2,7 +2,7 @@
 
 namespace App\Imports;
 
-use App\User;
+use App\Entities\User;
 use Illuminate\Validation\Rule;
 use Maatwebsite\Excel\Concerns\ToModel;
 use Maatwebsite\Excel\Concerns\Importable;

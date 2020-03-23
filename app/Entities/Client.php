@@ -1,6 +1,6 @@
 <?php
 
-namespace App;
+namespace App\Entities;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -8,8 +8,18 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Client extends Model
 {
-    protected $guarded = [];
+    protected $fillable = [
+        'document',
+        'type_document_id',
+        'phone',
+        'cellphone',
+        'address',
+        'user_id',
+    ];
+
     protected $with = ['user.creator'];
+
+    public $incrementing = false;
 
     /**
      * Relation between clients and invoices
@@ -26,7 +36,7 @@ class Client extends Model
      */
     public function user(): BelongsTo
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class, 'id');
     }
 
     /**
@@ -38,27 +48,43 @@ class Client extends Model
         return $this->belongsTo(TypeDocument::class);
     }
 
-    /** Mutator */
-    public function setEmailAttribute($value)
+    /** Derived attributes */
+    public function getNameAttribute()
     {
-        $this->attributes['email'] = strtolower($value);
+        return $this->user->name ?? '';
+    }
+    public function getSurnameAttribute()
+    {
+        return $this->user->surname ?? '';
+    }
+    public function getFullNameAttribute()
+    {
+        return $this->user->fullname ?? '';
+    }
+    public function getEmailAttribute()
+    {
+        return $this->user->email ?? '';
+    }
+    public function getCreatorAttribute()
+    {
+        return $this->user->creator ?? '';
+    }
+    public function getUpdaterAttribute()
+    {
+        return $this->user->updater ?? '';
     }
 
     /** Query Scopes */
-    public function scopeCreator($query)
-    {
-        if (auth()->user()->hasPermissionTo('View any clients') || auth()->user()->hasRole('Admin')) {
-            return $query;
-        } else {
-            return $query->where('id', '-1');
-        }
-    }
-
     public function scopeId($query, $id)
     {
-        if (trim($id) !== '') {
-            return $query->where('id', $id);
+        if (auth()->user()->can('View any clients') ||
+            auth()->user()->hasRole('SuperAdmin')) {
+            if (trim($id) !== '') {
+                return $query->where('id', $id);
+            }
+            return $query;
         }
+        return $query->where('id', '-1');
     }
 
     public function scopeTypeDocument($query, $type_document_id)

@@ -2,9 +2,9 @@
 
 namespace App\Imports;
 
-use App\User;
-use App\Invoice;
 use Carbon\Carbon;
+use App\Entities\User;
+use App\Entities\Invoice;
 use Maatwebsite\Excel\Concerns\ToModel;
 use Maatwebsite\Excel\Concerns\Importable;
 use Maatwebsite\Excel\Concerns\WithValidation;

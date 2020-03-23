@@ -1,41 +1,27 @@
 <?php
 
-namespace App;
+namespace App\Entities;
 
 use Spatie\Permission\Traits\HasRoles;
+use Tymon\JWTAuth\Contracts\JWTSubject;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
-class User extends Authenticatable
+class User extends Authenticatable implements JWTSubject
 {
     use Notifiable, HasRoles;
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array
-     */
     protected $fillable = [
-        'name', 'surname', 'email', 'creator_id', 'password',
+        'name', 'surname', 'email', 'created_by', 'password',
     ];
 
-    /**
-     * The attributes that should be hidden for arrays.
-     *
-     * @var array
-     */
     protected $hidden = [
         'password', 'remember_token',
     ];
 
-    /**
-     * The attributes that should be cast to native types.
-     *
-     * @var array
-     */
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
@@ -46,7 +32,7 @@ class User extends Authenticatable
      */
     public function invoices(): HasMany
     {
-        return $this->hasMany(Invoice::class, 'creator_id');
+        return $this->hasMany(Invoice::class, 'created_by');
     }
 
     /**
@@ -55,7 +41,7 @@ class User extends Authenticatable
      */
     public function products(): HasMany
     {
-        return $this->hasMany(Product::class, 'creator_id');
+        return $this->hasMany(Product::class, 'created_by');
     }
 
     /**
@@ -64,7 +50,7 @@ class User extends Authenticatable
      */
     public function client(): HasOne
     {
-        return $this->hasOne(Client::class);
+        return $this->hasOne(Client::class, 'id');
     }
 
     /**
@@ -73,7 +59,7 @@ class User extends Authenticatable
      */
     public function users(): HasMany
     {
-        return $this->hasMany(User::class, 'creator_id');
+        return $this->hasMany(User::class, 'created_by');
     }
 
     /**
@@ -82,13 +68,33 @@ class User extends Authenticatable
      */
     public function creator(): BelongsTo
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class, 'created_by');
+    }
+
+    /**
+     * Relation between users and users
+     * @return BelongsTo
+     */
+    public function updater(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'updated_by');
     }
 
     /** Derived attributes */
     public function getFullNameAttribute()
     {
         return $this->name . " " . $this->surname;
+    }
+
+    /** Mutators */
+    public function setPasswordAttribute($password)
+    {
+        $this->attributes['password'] = bcrypt($password);
+    }
+
+    public function setEmailAttribute($email)
+    {
+        $this->attributes['email'] = strtolower($email);
     }
 
     /** Query Scopes */
@@ -109,5 +115,29 @@ class User extends Authenticatable
     public function canBeDeleted(){
         return empty($this->invoices->first()) && empty($this->products->first())
             && empty($this->users->first()) && empty($this->client);
+    }
+
+    public function isClient(){
+        return isset($this->client);
+    }
+
+    /**
+     * Get the identifier that will be stored in the subject claim of the JWT.
+     *
+     * @return mixed
+     */
+    public function getJWTIdentifier()
+    {
+        return $this->getKey();
+    }
+
+    /**
+     * Return a key value array, containing any custom claims to be added to the JWT.
+     *
+     * @return array
+     */
+    public function getJWTCustomClaims()
+    {
+        return [];
     }
 }
