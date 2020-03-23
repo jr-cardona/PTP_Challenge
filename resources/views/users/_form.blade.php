@@ -49,62 +49,8 @@
                 </div>
             </div>
         </div>
-        <br/>
-        <div class="card">
-            <div class="card-header">
-                <h3 class="card-title text-center">{{ __("Contraseña") }}</h3>
-            </div>
-            <div class="card-body">
-                @if($edit)
-                    <div class="form-group">
-                        <label for="current_password">{{ __("Contraseña actual") }}</label>
-                        <div class="input-group form-group">
-                            <div class="input-group-prepend">
-                                <span class="input-group-text"><i class="fas fa-key"></i></span>
-                            </div>
-                            <input id="current_password" name="current_password" type="password" placeholder="Ingresa la contraseña actual"
-                                   class="form-control @error('current_password') is-invalid @enderror" @if(!$edit) required @endif>
-                            @error('current_password')
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
-                            @enderror
-                        </div>
-                    </div>
-                @endif
-                <div class="form-group">
-                    <label for="password" @if(!$edit) class="required" @endif>
-                        {{ __("Nueva contraseña") }}
-                    </label>
-                    <div class="input-group form-group">
-                        <div class="input-group-prepend">
-                            <span class="input-group-text"><i class="fas fa-key"></i></span>
-                        </div>
-                        <input id="password" name="password" type="password" placeholder="Ingresa la contraseña" autocomplete="new-password"
-                               class="form-control @error('password') is-invalid @enderror" @if(!$edit) required @endif>
-                        @error('password')
-                            <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $message }}</strong>
-                            </span>
-                        @enderror
-                    </div>
-                </div>
-                <label for="password-confirm" @if(!$edit) class="required" @endif>
-                    {{ __("Confirmar contraseña") }}
-                </label>
-                <div class="form-group">
-                    <div class="input-group form-group">
-                        <div class="input-group-prepend">
-                            <span class="input-group-text"><i class="fas fa-key"></i></span>
-                        </div>
-                        <input id="password-confirm" name="password_confirmation" type="password" placeholder="Confirma la contraseña" autocomplete="new-password"
-                               class="form-control" @if(!$edit) required @endif>
-                    </div>
-                </div>
-            </div>
-        </div>
     </div>
-    @role('Admin')
+    @can('syncRoles', App\Entities\User::class)
         <div class="col">
             <div class="card">
                 <div class="card-header">
@@ -148,7 +94,7 @@
                 </div>
             </div>
         </div>
-    @endrole
+    @endcan
 </div>
 @push('scripts')
     <script>

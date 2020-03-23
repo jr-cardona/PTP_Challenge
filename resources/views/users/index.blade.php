@@ -27,7 +27,7 @@
             <i class="fa fa-file-excel"></i> {{ __("Importar") }}
         </button>
     @endcan
-    @can('create', App\User::class)
+    @can('create', App\Entities\User::class)
         <a class="btn btn-success" href="{{ route('users.create') }}">
             <i class="fa fa-plus"></i> {{ __("Crear nuevo usuario") }}
         </a>

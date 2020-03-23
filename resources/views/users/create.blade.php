@@ -3,7 +3,7 @@
 @section('content')
     <form action="{{ route('users.store') }}" class="form-group" method="POST">
         @csrf
-        @include('users._form', ['edit' => false])
+        @include('users._form')
         <br/>
         <div class="form-group">
             <button type="submit" class="btn btn-success btn-block">
