@@ -10,6 +10,7 @@ window.Vue = require('vue');
 
 import Vue from 'vue';
 import 'vue-select/dist/vue-select.css';
+import VueSelect from 'vue-select/dist/vue-select.js';
 
 /**
  * The following block of code may be used to automatically register your
@@ -18,8 +19,8 @@ import 'vue-select/dist/vue-select.css';
  *
  * Eg. ./components/ExampleComponent.vue -> <example-component></example-component>
  */
+Vue.component('v-select', VueSelect);
 
-Vue.component('v-select', VueSelect.VueSelect);
 /**
  * Next, we will create a fresh Vue application instance and attach it to
  * the page. Then, you may begin adding components to this application
@@ -32,55 +33,45 @@ const app = new Vue({
         options: [],
         old_client_values: {
             "id": $('#old_client_id').val(),
-            "name" : $('#old_client_name').val()
+            "fullname" : $('#old_client_fullname').val(),
         },
-        old_seller_values: {
-            "id": $('#old_seller_id').val(),
-            "name" : $('#old_seller_name').val()
+        old_user_values: {
+            "id": $('#old_created_by').val(),
+            "fullname" : $('#old_user_fullname').val(),
         },
         old_product_values: {
             "id": $('#old_product_id').val(),
-            "name" : $('#old_product_name').val()
+            "name" : $('#old_product_name').val(),
+            "price" : $('#old_product_price').val(),
         },
     },
     methods: {
         searchClient(search, loading) {
             loading(true);
-            this.searchC(loading, search, this);
-        },
-        searchC: _.debounce((loading, search, vm) => {
             fetch(
                 `/clientes/buscar?name=${escape(search)}`
             ).then(res => {
-                res.json().then(json => (vm.options = json));
+                res.json().then(json => (this.options = json));
                 loading(false);
             });
-        }, 350),
-
-        searchSeller(search, loading) {
-            loading(true);
-            this.searchS(loading, search, this);
         },
-        searchS: _.debounce((loading, search, vm) => {
+        searchUser(search, loading) {
+            loading(true);
             fetch(
-                `/vendedores/buscar?name=${escape(search)}`
+                `/usuarios/buscar?name=${escape(search)}`
             ).then(res => {
-                res.json().then(json => (vm.options = json));
+                res.json().then(json => (this.options = json));
                 loading(false);
             });
-        }, 350),
-
+        },
         searchProduct(search, loading) {
             loading(true);
-            this.searchP(loading, search, this);
-        },
-        searchP: _.debounce((loading, search, vm) => {
             fetch(
                 `/productos/buscar?name=${escape(search)}`
             ).then(res => {
-                res.json().then(json => (vm.options = json));
+                res.json().then(json => (this.options = json));
                 loading(false);
             });
-        }, 350)
+        },
     }
 });

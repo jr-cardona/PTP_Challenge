@@ -2,43 +2,53 @@
 
 namespace App\Http\Controllers;
 
-use App\Invoice;
 use Carbon\Carbon;
-use App\PaymentAttempt;
+use App\Entities\Invoice;
+use Illuminate\View\View;
 use Illuminate\Http\Request;
+use App\Entities\PaymentAttempt;
 use Dnetix\Redirection\PlacetoPay;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Auth\Access\AuthorizationException;
+use Dnetix\Redirection\Exceptions\PlacetoPayException;
 
 class PaymentAttemptsController extends Controller
 {
-
+    /**
+     * @param Invoice $invoice
+     * @return View
+     * @throws AuthorizationException
+     */
     public function create(Invoice $invoice)
     {
-        if ($invoice->total == 0){
-            return redirect()->route('invoices.show', $invoice)->with('message', __("La factura no tiene productos a pagar, intente nuevamente"));
-        }elseif ($invoice->state_id == 2){
-            return redirect()->route('invoices.show', $invoice)->with('message', __("La factura ya se encuentra pagada"));
-        }
+        $this->authorize('pay', $invoice);
+
         return view('invoices.payments.create', compact('invoice'));
     }
 
-    public function store(Invoice $invoice, Request $request)
+    /**
+     * @param PaymentAttempt $paymentAttempt
+     * @param Invoice $invoice
+     * @param Request $request
+     * @param PlacetoPay $placetopay
+     * @return RedirectResponse
+     * @throws AuthorizationException
+     * @throws PlacetoPayException
+     */
+    public function store(Invoice $invoice, PaymentAttempt $paymentAttempt,
+                          Request $request, PlacetoPay $placetopay)
     {
-        if ($this->issetLoginAndTrankey()){
-            $placetopay = $this->authenticate();
-        } else {
-            return redirect()->route('invoices.show', $invoice)->with('message', __("No ha configurado login y trankey en su archivo de configuración"));
-        }
+        $this->authorize('pay', $invoice);
 
-        $paymentAttempt = PaymentAttempt::create();
-
+        $paymentAttempt->save();
         $request_c = [
             "buyer" => [
-                "name" => $invoice->client->name,
-                "surname" => $invoice->client->surname,
-                "email" => $invoice->client->email,
+                "name" => $invoice->client->user->name,
+                "surname" => $invoice->client->user->surname,
+                "email" => $invoice->client->user->email,
                 "documentType" => $invoice->client->type_document->name,
                 "document" => $invoice->client->document,
-                "mobile" => $invoice->client->cell_phone_number,
+                "mobile" => $invoice->client->cellphone,
                 "address" => [
                     "street" => $invoice->client->address,
                 ]
@@ -57,41 +67,39 @@ class PaymentAttemptsController extends Controller
             'returnUrl' => route('invoices.payments.show', [$invoice, $paymentAttempt]),
         ];
         $response = $placetopay->request($request_c);
-        //dd($response);
+
         if ($response->isSuccessful()) {
-            // STORE THE $response->requestId() and $response->processUrl() on your DB associated with the payment order
             $paymentAttempt->update([
                 'invoice_id' => $invoice->id,
                 'requestID' => $response->requestId(),
                 'processUrl' => $response->processUrl(),
                 'status' => $response->status()->status(),
             ]);
-            // Redirect the client to the processUrl or display it on the JS extension
             return redirect()->away($response->processUrl());
-        } else {
-            // There was some error so check the message and log it
-            dd($response->status()->message());
         }
     }
 
-    public function show(Invoice $invoice, PaymentAttempt $paymentAttempt)
+    /**
+     * @param Invoice $invoice
+     * @param PaymentAttempt $paymentAttempt
+     * @param PlacetoPay $placetopay
+     * @return View
+     * @throws AuthorizationException
+     */
+    public function show(Invoice $invoice, PaymentAttempt $paymentAttempt, PlacetoPay $placetopay)
     {
-        if ($this->issetLoginAndTrankey()){
-            $placetopay = $this->authenticate();
-        } else {
-            return redirect()->route('invoices.show', $invoice)->with('message', __("No ha configurado login y trankey en su archivo de configuración"));
-        }
+        $this->authorize('pay', $invoice);
 
         $response = $placetopay->query($paymentAttempt->requestID);
         $paymentAttempt->update([
             'status' => $response->status()->status(),
-            'amount' => $response->request->payment()->amount()->total()
+            'amount' => $response->request()->payment()->amount()->total()
         ]);
-        if ($paymentAttempt->status == 'APPROVED'){
+        if ($paymentAttempt->status == 'APPROVED') {
             $invoice->update([
-                'state_id' => '2',
+                'paid_at' => Carbon::now(),
             ]);
-            if (empty($invoice->received_at)){
+            if (empty($invoice->received_at)) {
                 $invoice->update([
                     'received_at' => Carbon::now()
                 ]);
@@ -101,24 +109,6 @@ class PaymentAttemptsController extends Controller
             'invoice' => $invoice,
             'paymentAttempt' => $paymentAttempt,
             'response' => $response
-        ]);
-    }
-
-    public function issetLoginAndTrankey()
-    {
-        if (empty(getenv('LOGIN')) || empty(getenv('TRANKEY'))) {
-            return false;
-        } else {
-            return true;
-        }
-    }
-
-    public function authenticate()
-    {
-        return new PlacetoPay([
-            'login' => env('LOGIN'),
-            'tranKey' => env('TRANKEY'),
-            'url' => 'https://test.placetopay.com/redirection/',
         ]);
     }
 }

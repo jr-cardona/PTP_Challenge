@@ -2,92 +2,103 @@
 
 namespace App\Http\Controllers;
 
-use App\State;
-use App\Invoice;
+use Config;
 use Carbon\Carbon;
+use App\Entities\Invoice;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use App\Exports\InvoicesExport;
-use App\Imports\InvoicesImport;
+use Illuminate\Http\RedirectResponse;
 use App\Http\Requests\SaveInvoiceRequest;
-use Maatwebsite\Excel\Facades\Excel;
+use App\Http\Requests\AnnulInvoiceRequest;
+use App\Actions\Invoices\GetInvoicesAction;
+use App\Actions\Invoices\StoreInvoicesAction;
+use App\Actions\Invoices\UpdateInvoicesAction;
+use Illuminate\Auth\Access\AuthorizationException;
 
 class InvoiceController extends Controller
 {
+    public function __construct()
+    {
+        $this->authorizeResource(Invoice::class);
+    }
+
     /**
      * Display a listing of the resource.
+     * @param GetInvoicesAction $action
      * @param Request $request
-     * @return \Illuminate\Http\Response
+     * @return Response
+     * @throws AuthorizationException
      */
-    public function index(Request $request) {
-        $invoices = Invoice::with(["client", "seller", "state", "products"])
-            ->number($request->get('number'))
-            ->state($request->get('state_id'))
-            ->client($request->get('client_id'))
-            ->seller($request->get('seller_id'))
-            ->product($request->get('product_id'))
-            ->issuedDate($request->get('issued_init'), $request->get('issued_final'))
-            ->overduedDate($request->get('overdued_init'), $request->get('overdued_final'))
-            ->orderBy('id', 'DESC')
-            ->paginate(10);
-        return response()->view('invoices.index', [
-            'invoices' => $invoices,
-            'request' => $request,
-            'side_effect' => __('Se borrarán todos sus detalles asociados'),
-            'states' => State::all()
-        ]);
+    public function index(GetInvoicesAction $action, Request $request)
+    {
+        $invoices = $action->execute(new Invoice(), $request);
+
+        if($format = $request->get('format')){
+            $this->authorize('export', Invoice::class);
+            return (new InvoicesExport($invoices->get()))
+                ->download('invoices-list.' . $format);
+        }
+
+        $paginate = Config::get('constants.paginate');
+        $count = $invoices->count();
+        $invoices = $invoices->paginate($paginate);
+
+        return response()->view('invoices.index', compact(
+            'invoices', 'request', 'count', 'paginate')
+        );
     }
 
     /**
      * Show the form for creating a new resource.
      *
-     * @return \Illuminate\Http\Response
+     * @param Request $request
+     * @param Invoice $invoice
+     * @return Response
      */
-    public function create() {
-        return response()->view('invoices.create', [
-            'invoice' => new Invoice,
-        ]);
+    public function create(Request $request, Invoice $invoice)
+    {
+        return response()->view('invoices.create', compact('request', 'invoice'));
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\RedirectResponse
+     * @param SaveInvoiceRequest $request
+     * @param StoreInvoicesAction $action
+     * @return RedirectResponse
      */
-    public function store(SaveInvoiceRequest $request) {
-        $state = State::where('name', 'Pendiente')->first();
-        $result = Invoice::create(array_merge($request->validated(), ["state_id" => $state->id]));
+    public function store(SaveInvoiceRequest $request, StoreInvoicesAction $action)
+    {
+        $invoice = $action->execute(new Invoice(), $request);
 
-        return redirect()->route('invoices.show', $result->id)->with('message', __('Factura creada satisfactoriamente'));
+        return redirect()->route('invoices.show', $invoice)
+            ->withSuccess(__('Factura creada satisfactoriamente'));
     }
 
     /**
      * Display the specified resource.
      *
      * @param Invoice $invoice
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
-    public function show(Invoice $invoice) {
-        return response()->view('invoices.show', [
-            'invoice' => $invoice,
-            'side_effect' => __('Se borrarán todos sus detalles asociados')
-        ]);
+    public function show(Invoice $invoice)
+    {
+        $invoice->load('products', 'paymentAttempts');
+
+        return response()->view('invoices.show', compact('invoice'));
     }
 
     /**
      * Show the form for editing the specified resource.
      *
      * @param Invoice $invoice
-     * @return \Illuminate\Http\Response | \Illuminate\Http\RedirectResponse
+     * @param Request $request
+     * @return Response | RedirectResponse
      */
-    public function edit(Invoice $invoice) {
-        if ($invoice->isPaid()){
-            return redirect()->route('invoices.show', $invoice)->with('message', __("La factura ya se encuentra pagada y no se puede editar"));
-        } else {
-            return response()->view('invoices.edit', [
-                'invoice' => $invoice,
-            ]);
-        }
+    public function edit(Invoice $invoice, Request $request)
+    {
+        return response()->view('invoices.edit', compact('invoice', 'request'));
     }
 
     /**
@@ -95,67 +106,48 @@ class InvoiceController extends Controller
      *
      * @param SaveInvoiceRequest $request
      * @param Invoice $invoice
-     * @return \Illuminate\Http\RedirectResponse
+     * @param UpdateInvoicesAction $action
+     * @return RedirectResponse
      */
-    public function update(SaveInvoiceRequest $request, Invoice $invoice) {
-        $invoice->update($request->validated());
+    public function update(SaveInvoiceRequest $request, Invoice $invoice,
+                           UpdateInvoicesAction $action)
+    {
+        $invoice = $action->execute($invoice, $request);
 
-        return redirect()->route('invoices.show', $invoice)->with('message', __('Factura actualizada satisfactoriamente'));
+        return redirect()->route('invoices.show', $invoice)
+            ->withSuccess(__('Factura actualizada satisfactoriamente'));
     }
 
     /**
      * Remove the specified resource from storage.
      *
      * @param Invoice $invoice
-     * @return \Illuminate\Http\RedirectResponse
-     * @throws \Exception
+     * @param AnnulInvoiceRequest $request
+     * @return RedirectResponse
      */
-    public function destroy(Invoice $invoice) {
-        $invoice->delete();
+    public function destroy(Invoice $invoice, AnnulInvoiceRequest $request)
+    {
+        $invoice->annulled_at = Carbon::now();
+        $invoice->annulment_reason = $request->input('annulment_reason');
+        $invoice->update();
 
-        return redirect()->route('invoices.index')->with('message', __('Factura eliminada satisfactoriamente'));
+        return redirect()->back()
+            ->withSuccess(__('Anulada correctamente'));
     }
 
     /**
-     * Export a listing of the resource.
-     * @param Request $request
-     * @return \Symfony\Component\HttpFoundation\BinaryFileResponse
+     * @param Invoice $invoice
+     * @return mixed
+     * @throws AuthorizationException
      */
-    public function exportExcel() {
-        return Excel::download(new InvoicesExport, 'invoices-list.xlsx');
-    }
+    public function receivedCheck(Invoice $invoice)
+    {
+        $this->authorize('receive', $invoice);
 
-    /**
-     * Display a listing of the resource.
-     * @param Request $request
-     * @return \Illuminate\Http\Response | \Illuminate\Http\RedirectResponse
-     * @throws \Illuminate\Validation\ValidationException
-     */
-    public function importExcel(Request $request) {
-        $this->validate($request, [
-            'invoices' => 'required|mimes:xls,xlsx'
-        ]);
-        $file = $request->file('invoices');
-        try {
-            Excel::import(new InvoicesImport(), $file);
-            return redirect()->route('invoices.index')->with('message', __('Importación completada correctamente'));
-        }
-        catch (\Maatwebsite\Excel\Validators\ValidationException $e) {
-            $failures_unsorted = $e->failures();
-            $failures_sorted = array();
-            foreach($failures_unsorted as $failure) {
-                $failures_sorted[$failure->row()][$failure->attribute()] = $failure->errors()[0];
-            }
-            return response()->view('invoices.importErrors', [
-                'failures' => $failures_sorted,
-            ]);
-        }
-    }
+        $invoice->received_at = Carbon::now();
+        $invoice->update();
 
-    public function receivedCheck(Invoice $invoice){
-        $now = Carbon::now();
-        $invoice->update(["received_at" => $now]);
-
-        return redirect()->route('invoices.show', $invoice)->with('message', __('Marcada correctamente'));
+        return redirect()->route('invoices.show', $invoice)
+            ->withSuccess(__('Marcada correctamente'));
     }
 }

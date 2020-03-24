@@ -9,15 +9,19 @@
             </div>
             <div class="modal-body">
                 <p>{{ __("¡Esta acción no se puede deshacer!") }}</p>
-                @isset($side_effect) <p>{{ $side_effect }}</p> @endisset
+                <p id="message"></p>
                 <form id="deleteForm" action="" method="post">
                     @method('DELETE')
                     @csrf()
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">{{ __("Cerrar") }}</button>
-                <button type="submit" form="deleteForm" class="btn btn-danger">{{ __("Eliminar") }}</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                    <i class="fa fa-times"></i> {{ __("Cerrar") }}
+                </button>
+                <button type="submit" form="deleteForm" class="btn btn-danger">
+                    <i class="fa fa-trash"></i> {{ __("Eliminar") }}
+                </button>
             </div>
         </div>
     </div>

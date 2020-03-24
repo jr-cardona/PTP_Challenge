@@ -1,22 +1,22 @@
 <?php
 
-/** @var \Illuminate\Database\Eloquent\Factory $factory */
+/** @var Factory $factory */
 
-use App\Client;
-use App\Seller;
-use App\Invoice;
-use App\State;
+use Carbon\Carbon;
+use App\Entities\User;
+use App\Entities\Client;
+use App\Entities\Invoice;
 use Faker\Generator as Faker;
+use Illuminate\Database\Eloquent\Factory;
 
 $factory->define(Invoice::class, function (Faker $faker) {
-    $state = State::where('name', 'Pendiente')->first();
-    $issued_at = $faker->dateTime;
+    $start_date = Carbon::now()->subWeek();
+    $final_date = Carbon::now();
     return [
-        'issued_at' => $issued_at,
-        'description' => $faker->text,
-        'vat' => $faker->numberBetween(0,100),
-        'state_id' => $state->id,
+        'issued_at' => $faker->dateTimeBetween($start_date, $final_date),
+        'description' => $faker->realText(30),
         'client_id' => factory(Client::class),
-        'seller_id' => factory(Seller::class)
+        'created_by' => User::first()->id,
+        'updated_by' => User::first()->id,
     ];
 });

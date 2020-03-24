@@ -3,7 +3,7 @@
 @section('content')
     <div class="card">
         <div class="card-header">
-            <h1>{{ __("Editar") }} {{ $client->name }}</h1>
+            <h1>{{ __("Editar") }} {{ $client->fullname }}</h1>
         </div>
         <div class="card-body">
             <form action="{{ route('clients.update', $client) }}" class="form-group" method="POST">
