@@ -9,69 +9,51 @@ use Illuminate\Database\Seeder;
 
 class InvoicesTableSeeder extends Seeder
 {
-    protected $total_invoices;
-    protected $total_details;
-    protected $clients;
-    protected $sellers;
-    protected $total_clients;
-    protected $total_sellers;
-
-    public function __construct()
-    {
-        $this->total_invoices = 100;
-        $this->total_details = 10;
-        $this->clients = Client::select('id')->without('user')->orderBy('id')->get();
-        $this->sellers = User::select('id')->Role('Seller')->orderBy('id')->get();
-        $this->total_clients = count($this->clients);
-        $this->total_sellers = count($this->sellers);
-    }
-
     /**
      * Run the database seeds.
      *
+     * @param null $data
      * @return void
      */
-    public function run()
+    public function run($data = null)
     {
-        for ($i = 0; $i < $this->total_invoices; $i++) {
+        $clients = $data["clients"] ?? factory(Client::class, 10)->create();
+        $totalClients = $clients->count();
+        $sellers = User::select('id')->Role('Seller')->orderBy('id')->get();
+        $totalSellers = $sellers->count();
+        $totalInvoices = $data["totalInvoices"] ?? 20;
+        $productsPerInvoice = $data["productsPerInvoice"] ?? 5;
+
+        for ($i = 0; $i < $totalInvoices; $i++) {
             $invoice = new Invoice();
             $invoice->issued_at = Carbon::now();
-            $invoice->client_id = $this->getClientId($i);
-            $invoice->created_by = $this->getSellerId($i);
+            $invoice->client_id = $this->getId($i, $clients, $totalClients);
+            $invoice->created_by = $this->getId($i, $sellers, $totalSellers);
 
             /** One half paid and other half expired. */
-            if ($this->onHalf($i)) {
+            if ($i >= ($totalInvoices / 2)) {
                 $invoice->paid_at = Carbon::now();
             } else {
-                $invoice->issued_at->subMonth();
+                $invoice->issued_at = $invoice->issued_at->subMonth();
             }
 
             $invoice->save();
-            $this->assignProducts($invoice);
+            if ($productsPerInvoice > 0) $this->assignProducts($invoice, $productsPerInvoice);
         }
     }
 
-    public function getClientId($i){
-        $index = $i % $this->total_clients;
-        return $this->clients[$index]->id;
+    public function getId($i, $model, $total){
+        $index = $i % $total;
+        return $model[$index]->id;
     }
 
-    public function getSellerId($i){
-        $index = $i % $this->total_sellers;
-        return $this->sellers[$index]->id;
-    }
-
-    public function assignProducts($invoice){
-        factory(Product::class, $this->total_details)->create()->each(
+    public function assignProducts($invoice, $total){
+        factory(Product::class, $total)->create()->each(
             function($product) use ($invoice){
                 $invoice->products()->attach($product->id, [
                     'quantity' => rand(1, 9),
                     'unit_price' => $product->price,
                 ]);
             });
-    }
-
-    public function onHalf($i){
-        return $i > ($this->total_invoices / 2);
     }
 }
