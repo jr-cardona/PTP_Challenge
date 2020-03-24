@@ -118,7 +118,7 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach($invoice->products as $product)
+                @forelse($invoice->products as $product)
                     <tr>
                         <td class="text-center">
                             <a @can('view', $product)
@@ -143,25 +143,38 @@
                             @endcan
                         </td>
                     </tr>
-               @endforeach
-                <tr>
-                    <td class="text-right" colspan="5">
-                        <strong>{{ __("SUBTOTAL") }}</strong>
-                    </td>
-                    <td class="text-right">${{ number_format($invoice->subtotal, 2) }}</td>
-                </tr>
-                <tr>
-                    <td class="text-right" colspan="5">
-                        <strong>{{ __("IVA") }} ({{ Config::get('constants.vat') }})%</strong>
-                    </td>
-                    <td class="text-right">${{ number_format($invoice->ivaamount, 2) }}</td>
-                </tr>
-                <tr>
-                    <td class="text-right" colspan="5">
-                        <strong>{{ __("VALOR TOTAL") }}</strong>
-                    </td>
-                    <td class="text-right">${{ number_format($invoice->total, 2) }}</td>
-                </tr>
+                @empty
+                    <tr>
+                        <td colspan="7" class="p-3">
+                            <p class="alert alert-secondary text-center">
+                                {{ __('No se encontraron productos asociados') }}
+                            </p>
+                        </td>
+                    </tr>
+                @endforelse
+                @isset($invoice->products[0])
+                    <tr>
+                        <td colspan="4"></td>
+                        <td class="text-right custom-header">
+                            {{ __("SUBTOTAL") }}
+                        </td>
+                        <td class="text-right">${{ number_format($invoice->subtotal, 2) }}</td>
+                    </tr>
+                    <tr>
+                        <td colspan="4"></td>
+                        <td class="text-right custom-header">
+                            {{ __("IVA") }} ({{ Config::get('constants.vat') }})%
+                        </td>
+                        <td class="text-right">${{ number_format($invoice->ivaamount, 2) }}</td>
+                    </tr>
+                    <tr>
+                        <td colspan="4"></td>
+                        <td class="text-right custom-header">
+                            {{ __("VALOR TOTAL") }}
+                        </td>
+                        <td class="text-right">${{ number_format($invoice->total, 2) }}</td>
+                    </tr>
+                @endisset
             </tbody>
         </table>
         @can('update', $invoice)
