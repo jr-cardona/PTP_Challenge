@@ -62,7 +62,7 @@
                 <td class="table-dark td-title custom-header">{{ __("Vendedor:") }}</td>
                 <td class="td-content">
                     <a @can('view', $invoice->seller)
-                       href="{{ route('users.show', $invoice->seller) }}" target="_blank"
+                       href="{{ route('users.show', $invoice->seller) }}"
                         @endcan>
                         {{ $invoice->seller->fullname }}
                     </a>
@@ -71,7 +71,7 @@
                 <td class="table-dark td-title custom-header">{{ __("Modificado por:") }}</td>
                 <td class="td-content">
                     <a @can('view', $invoice->updater)
-                       href="{{ route('users.show', $invoice->updater) }}" target="_blank"
+                       href="{{ route('users.show', $invoice->updater) }}"
                         @endcan>
                         {{ $invoice->updater->fullname }}
                     </a>
@@ -81,7 +81,7 @@
                 <td class="table-dark td-title custom-header">{{ __("Cliente:") }}</td>
                 <td class="td-content">
                     <a @can('view', $invoice->client)
-                       href="{{ route('clients.show', $invoice->client) }}" target="_blank"
+                       href="{{ route('clients.show', $invoice->client) }}"
                         @endcan>
                         {{ $invoice->client->fullname }}
                     </a>

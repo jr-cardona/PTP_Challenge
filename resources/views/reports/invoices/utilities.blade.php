@@ -40,12 +40,12 @@
         @forelse($invoices as $invoice)
             <tr>
                 <td class="text-center">
-                    <a href="{{ route('invoices.show', $invoice->id) }}" target="_blank">
+                    <a href="{{ route('invoices.show', $invoice->id) }}">
                         {{ $invoice->id }}
                     </a>
                 </td>
                 <td class="text-center">
-                    <a href="{{ route('clients.show', $invoice->client_id) }}" target="_blank">
+                    <a href="{{ route('clients.show', $invoice->client_id) }}">
                         {{ $invoice->client_fullname }}
                     </a>
                 </td>

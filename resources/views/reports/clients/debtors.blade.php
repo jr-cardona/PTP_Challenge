@@ -39,7 +39,7 @@
         @forelse($clients as $client)
             <tr>
                 <td class="text-center">
-                    <a href="{{ route('clients.show', $client->id) }}" target="_blank">
+                    <a href="{{ route('clients.show', $client->id) }}">
                         {{ $client->fullname }}
                     </a>
                 </td>

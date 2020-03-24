@@ -61,14 +61,14 @@
             @include('invoices.status_label')
             <td nowrap>
                 <a @can('view', $invoice->client)
-                   href="{{ route('clients.show', $invoice->client) }}" target="_blank"
+                   href="{{ route('clients.show', $invoice->client) }}"
                     @endcan>
                     {{ $invoice->client->fullname }}
                 </a>
             </td>
             <td nowrap>
                 <a @can('view', $invoice->seller)
-                   href="{{ route('users.show', $invoice->seller) }}" target="_blank"
+                   href="{{ route('users.show', $invoice->seller) }}"
                     @endcan>
                     {{ $invoice->seller->fullname }}
                 </a>

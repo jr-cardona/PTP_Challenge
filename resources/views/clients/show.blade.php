@@ -104,7 +104,7 @@
                 @can('view', $invoice)
                     <tr>
                         <td>
-                            <a href="{{ route('invoices.show', $invoice) }}" target="_blank">
+                            <a href="{{ route('invoices.show', $invoice) }}">
                                 {{ __("Factura de venta No.")}} {{ $invoice->id }}
                             </a>
                         </td>
