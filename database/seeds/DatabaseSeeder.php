@@ -18,8 +18,6 @@ class DatabaseSeeder extends Seeder
             $this->command->info("Data cleared, starting from blank database.");
         } else {
             $this->command->call('migrate');
-            $this->command->call('cache:forget', ['key' => 'spatie.permission.cache']);
-            $this->truncateTables(['type_documents', 'permissions', 'roles']);
         }
 
         $this->call([
@@ -44,17 +42,6 @@ class DatabaseSeeder extends Seeder
                 ]);
             }
         }
-    }
-
-    public function truncateTables(array $tables)
-    {
-        DB::statement('SET FOREIGN_KEY_CHECKS = 0;');
-
-        foreach ($tables as $table) {
-            DB::table($table)->truncate();
-        }
-
-        DB::statement('SET FOREIGN_KEY_CHECKS = 1;');
     }
 
     public function customCall($class, $data){
