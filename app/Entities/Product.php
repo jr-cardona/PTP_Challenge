@@ -55,7 +55,7 @@ class Product extends Model
 
     public function scopeCreator($query)
     {
-        if (auth()->user()->can('View any products') || auth()->user()->hasRole('SuperAdmin')) {
+        if (auth()->user()->can('View all products') || auth()->user()->hasRole('SuperAdmin')) {
             return $query;
         } elseif (auth()->user()->hasPermissionTo('View products')) {
             $query->where('created_by', auth()->user()->id);

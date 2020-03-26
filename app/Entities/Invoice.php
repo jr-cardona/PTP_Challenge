@@ -165,7 +165,7 @@ class Invoice extends Model
 
     public function scopeSeller($query, $sellerId)
     {
-        if (auth()->user()->can('View any invoices') ||
+        if (auth()->user()->can('View all invoices') ||
             auth()->user()->hasRole('SuperAdmin')) {
             if (trim($sellerId) !== '') {
                 return $query->where('created_by', $sellerId);

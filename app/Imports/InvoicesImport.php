@@ -44,7 +44,7 @@ class InvoicesImport extends BaseImport implements ToModel, WithHeadingRow,
             'ID Cliente' => 'required|numeric|exists:clients,id',
             'ID Vendedor' => ['required', 'numeric',
                 function($attribute, $userId, $onFailure){
-                    if (auth()->user()->can('Import any invoices')
+                    if (auth()->user()->can('Import all invoices')
                         || auth()->user()->hasRole('SuperAdmin')){
                         if (User::where('id', $userId)->count() == 0) {
                             $onFailure("Este vendedor no existe");

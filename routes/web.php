@@ -65,7 +65,7 @@ Route::middleware(['auth'])->group(static function () {
         ->name('users.update-password');
 
     // Reports
-    Route::group(['middleware' => ['role_or_permission:SuperAdmin|View any reports']], function () {
+    Route::group(['middleware' => ['role_or_permission:SuperAdmin|View all reports']], function () {
         Route::get('/reportes', 'ReportController@index')
             ->name('reports.index');
         Route::get('/reportes/clientes', 'ReportController@clients')

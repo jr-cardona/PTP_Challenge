@@ -51,7 +51,7 @@
                             </a>
                         </li>
                     @endcan
-                    @if(auth()->user()->can('View any reports') || auth()->user()->hasRole('SuperAdmin'))
+                    @if(auth()->user()->can('View all reports') || auth()->user()->hasRole('SuperAdmin'))
                         <li class="nav-item">
                             <a href="{{ route('reports.index') }}"
                                class="nav-link {{ request()->segment(1) == 'reportes' ? 'active' : '' }}">

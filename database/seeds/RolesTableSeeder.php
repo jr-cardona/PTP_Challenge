@@ -29,12 +29,12 @@ class RolesTableSeeder extends Seeder
             ->givePermissionTo('Create invoices')
             ->givePermissionTo('Edit invoices')
             ->givePermissionTo('Import invoices')
-            ->givePermissionTo('Export any invoices')
-            ->givePermissionTo('View any clients')
+            ->givePermissionTo('Export all invoices')
+            ->givePermissionTo('View all clients')
             ->givePermissionTo('Create clients')
             ->givePermissionTo('Edit clients')
             ->givePermissionTo('Delete clients')
-            ->givePermissionTo('Export any clients')
+            ->givePermissionTo('Export all clients')
             ->givePermissionTo('Import clients')
             ->givePermissionTo('View profile')
             ->givePermissionTo('Edit profile');
@@ -47,20 +47,20 @@ class RolesTableSeeder extends Seeder
             ->givePermissionTo('Edit profile');
 
         Role::create(['name' => 'Accountant'])
-            ->givePermissionTo('View any invoices')
-            ->givePermissionTo('Export any invoices')
-            ->givePermissionTo('View any reports')
+            ->givePermissionTo('View all invoices')
+            ->givePermissionTo('Export all invoices')
+            ->givePermissionTo('View all reports')
             ->givePermissionTo('Export reports')
             ->givePermissionTo('View profile')
             ->givePermissionTo('Edit profile');
 
         Role::create(['name' => 'Stock'])
-            ->givePermissionTo('View any products')
+            ->givePermissionTo('View all products')
             ->givePermissionTo('Create products')
-            ->givePermissionTo('Edit any products')
-            ->givePermissionTo('Delete any products')
-            ->givePermissionTo('Export any products')
-            ->givePermissionTo('Import any products')
+            ->givePermissionTo('Edit all products')
+            ->givePermissionTo('Delete all products')
+            ->givePermissionTo('Export all products')
+            ->givePermissionTo('Import all products')
             ->givePermissionTo('View profile')
             ->givePermissionTo('Edit profile');
     }
