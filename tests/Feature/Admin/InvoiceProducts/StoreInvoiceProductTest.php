@@ -2,11 +2,12 @@
 
 namespace Tests\Feature\Admin\InvoiceProducts;
 
+use Carbon\Carbon;
+use Tests\TestCase;
 use App\Entities\User;
 use App\Entities\Product;
 use App\Entities\Invoice;
-use Carbon\Carbon;
-use Tests\TestCase;
+use Spatie\Permission\Models\Permission;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class StoreInvoiceProductTest extends TestCase
@@ -22,68 +23,68 @@ class StoreInvoiceProductTest extends TestCase
     }
 
     /** @test */
-    public function guest_user_cannot_store_invoice_products()
+    public function guests_cannot_store_invoice_products()
     {
         $invoice = factory(Invoice::class)->create();
         $data = $this->data();
 
-        $this->post(route('invoices.products.store', $invoice), $data)->assertRedirect(route('login'));
+        $this->post(route('invoices.products.store', $invoice), $data)
+            ->assertRedirect(route('login'));
         $this->assertDatabaseMissing('invoice_product', $data);
     }
 
     /** @test */
-    public function logged_in_user_cannot_store_paid_invoices_view()
+    public function unauthorized_user_cannot_store_invoice_details()
     {
-        $invoice = factory(Invoice::class)->create(["paid_at" => Carbon::now()]);
         $user = factory(User::class)->create();
-        $data = $this->data();
-
-        $response = $this->actingAs($user)->post(route('invoices.products.store', $invoice), $data);
-        $response->assertRedirect(route('invoices.show', $invoice));
-    }
-
-    /** @test */
-    public function logged_in_user_cannot_store_annulled_invoices_view()
-    {
-        $invoice = factory(Invoice::class)->create(["annulled_at" => Carbon::now()]);
-        $user = factory(User::class)->create();
-        $data = $this->data();
-
-        $response = $this->actingAs($user)->post(route('invoices.products.store', $invoice), $data);
-        $response->assertRedirect(route('invoices.show', $invoice));
-    }
-
-    /** @test */
-    public function logged_in_user_can_store_invoice_products()
-    {
         $invoice = factory(Invoice::class)->create();
-        $user = factory(User::class)->create();
-        $data = $this->data();
 
-        $response = $this->actingAs($user)->post(route('invoices.products.store', $invoice), $data);
-        $response->assertRedirect();
+        $this->actingAs($user)->post(route('invoices.products.store', $invoice), $this->data())
+            ->assertStatus(403);
+        $this->assertDatabaseMissing('invoice_product', [
+            'invoice_id' => $invoice->id,
+        ]);
     }
 
     /** @test */
-    public function when_stored_a_invoice_product_should_redirect_to_invoice_show_view_without_errors()
+    public function authorized_user_cannot_store_details_for_paid_invoices()
     {
-        $invoice = factory(Invoice::class)->create();
-        $user = factory(User::class)->create();
+        $permission = Permission::create(['name' => 'Edit all invoices']);
+        $user = factory(User::class)->create()->givePermissionTo($permission);
+        $invoice = factory(Invoice::class)->create(['paid_at' => Carbon::now()]);
+
+        $this->actingAs($user)->post(route('invoices.products.store', $invoice), $this->data())
+            ->assertStatus(403);
+        $this->assertDatabaseMissing('invoice_product', [
+            'invoice_id' => $invoice->id,
+        ]);
+    }
+
+    /** @test */
+    public function authorized_user_cannot_store_details_for_annulled_invoices()
+    {
+        $permission = Permission::create(['name' => 'Edit all invoices']);
+        $user = factory(User::class)->create()->givePermissionTo($permission);
+        $invoice = factory(Invoice::class)->create(['annulled_at' => Carbon::now()]);
+
+        $this->actingAs($user)->post(route('invoices.products.store', $invoice), $this->data())
+            ->assertStatus(403);
+        $this->assertDatabaseMissing('invoice_product', [
+            'invoice_id' => $invoice->id,
+        ]);
+    }
+
+    /** @test */
+    public function authorized_user_can_store_invoice_products()
+    {
         $data = $this->data();
+        $permission = Permission::create(['name' => 'Edit all invoices']);
+        $user = factory(User::class)->create()->givePermissionTo($permission);
+        $invoice = factory(Invoice::class)->create();
 
         $response = $this->actingAs($user)->post(route('invoices.products.store', $invoice), $data);
         $response->assertRedirect(route('invoices.show', $invoice));
         $response->assertSessionHasNoErrors();
-    }
-
-    /** @test */
-    public function an_invoice_product_can_be_stored_in_database()
-    {
-        $invoice = factory(Invoice::class)->create();
-        $user = factory(User::class)->create();
-        $data = $this->data();
-
-        $this->actingAs($user)->post(route('invoices.products.store', $invoice), $data);
         $this->assertDatabaseHas('invoice_product', $data);
     }
 
@@ -103,16 +104,16 @@ class StoreInvoiceProductTest extends TestCase
         string $field,
         string $message
     ) {
-        factory(Product::class)->create();
+        $permission = Permission::create(['name' => 'Edit all invoices']);
+        $user = factory(User::class)->create()->givePermissionTo($permission);
         $invoice = factory(Invoice::class)->create();
-        $product = Product::first();
+        $product = factory(Product::class)->create();
         $invoice->products()->attach($product->id, [
-            'quantity' => 10,
+            'quantity' => 1,
             'unit_price' => $product->price,
         ]);
-        $user = factory(User::class)->create();
-        $response =  $this->actingAs($user)->post(route('invoices.products.store', $invoice), $invoiceData);
 
+        $response =  $this->actingAs($user)->post(route('invoices.products.store', $invoice), $invoiceData);
         $response->assertSessionHasErrors([$field => $message]);
     }
 

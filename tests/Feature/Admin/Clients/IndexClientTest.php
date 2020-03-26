@@ -2,9 +2,10 @@
 
 namespace Tests\Feature\Admin\Clients;
 
+use Tests\TestCase;
 use App\Entities\User;
 use App\Entities\Client;
-use Tests\TestCase;
+use Spatie\Permission\Models\Permission;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 
@@ -13,26 +14,27 @@ class IndexClientTest extends TestCase
     use RefreshDatabase;
 
     /** @test */
-    public function guest_user_cannot_access_to_clients_index()
+    public function guests_cannot_access_to_clients_index()
     {
         $this->get(route('clients.index'))->assertRedirect(route('login'));
     }
 
     /** @test */
-    public function logged_in_user_can_access_to_clients_index()
+    public function unauthorized_user_cannot_access_to_clients_index()
     {
         $user = factory(User::class)->create();
 
-        $response = $this->actingAs($user)->get(route('clients.index'));
-        $response->assertOk();
+        $this->actingAs($user)->get(route('clients.index'))->assertStatus(403);
     }
 
     /** @test */
-    public function the_clients_index_route_redirect_to_the_correct_view()
+    public function authorized_user_can_access_to_clients_index()
     {
-        $user = factory(User::class)->create();
+        $permission = Permission::create(['name' => 'View all clients']);
+        $user = factory(User::class)->create()->givePermissionTo($permission);
 
         $response = $this->actingAs($user)->get(route('clients.index'));
+        $response->assertOk();
         $response->assertViewIs("clients.index");
         $response->assertSee("Clientes");
     }
@@ -41,18 +43,18 @@ class IndexClientTest extends TestCase
     public function the_index_of_clients_has_clients()
     {
         factory(Client::class, 5)->create();
-        $user = factory(User::class)->create();
+        $permission = Permission::create(['name' => 'View all clients']);
+        $user = factory(User::class)->create()->givePermissionTo($permission);
 
-        $response = $this->actingAs($user)->get(route('clients.index'));
-
-        $response->assertViewHas('clients');
+        $this->actingAs($user)->get(route('clients.index'))->assertViewHas('clients');
     }
 
     /** @test */
     public function the_index_of_clients_has_client_paginated()
     {
         factory(Client::class, 5)->create();
-        $user = factory(User::class)->create();
+        $permission = Permission::create(['name' => 'View all clients']);
+        $user = factory(User::class)->create()->givePermissionTo($permission);
 
         $response = $this->actingAs($user)->get(route('clients.index'));
         $this->assertInstanceOf(
@@ -64,16 +66,18 @@ class IndexClientTest extends TestCase
     /** @test */
     public function display_message_to_the_user_when_no_clients_where_found()
     {
-        $user = factory(User::class)->create();
+        $permission = Permission::create(['name' => 'View all clients']);
+        $user = factory(User::class)->create()->givePermissionTo($permission);
 
-        $response = $this->actingAs($user)->get(route('clients.index'));
-        $response->assertSee(__('No se encontraron clientes'));
+        $this->actingAs($user)->get(route('clients.index'))
+            ->assertSee(__('No se encontraron clientes'));
     }
 
     /** @test */
     public function clients_can_be_found_by_id()
     {
-        $user = factory(User::class)->create();
+        $permission = Permission::create(['name' => 'View all clients']);
+        $user = factory(User::class)->create()->givePermissionTo($permission);
         $client1 = factory(Client::class)->create();
         $client2 = factory(Client::class)->create();
         $client3 = factory(Client::class)->create();
@@ -92,7 +96,8 @@ class IndexClientTest extends TestCase
     /** @test */
     public function clients_can_be_found_by_type_document()
     {
-        $user = factory(User::class)->create();
+        $permission = Permission::create(['name' => 'View all clients']);
+        $user = factory(User::class)->create()->givePermissionTo($permission);
         $client1 = factory(Client::class)->create();
         $client2 = factory(Client::class)->create();
         $client3 = factory(Client::class)->create();
@@ -111,7 +116,8 @@ class IndexClientTest extends TestCase
     /** @test */
     public function clients_can_be_found_by_document()
     {
-        $user = factory(User::class)->create();
+        $permission = Permission::create(['name' => 'View all clients']);
+        $user = factory(User::class)->create()->givePermissionTo($permission);
         $client1 = factory(Client::class)->create();
         $client2 = factory(Client::class)->create();
         $client3 = factory(Client::class)->create();
@@ -128,9 +134,30 @@ class IndexClientTest extends TestCase
     }
 
     /** @test */
+    public function clients_can_be_found_by_cellphone()
+    {
+        $permission = Permission::create(['name' => 'View all clients']);
+        $user = factory(User::class)->create()->givePermissionTo($permission);
+        $client1 = factory(Client::class)->create();
+        $client2 = factory(Client::class)->create();
+        $client3 = factory(Client::class)->create();
+
+        $response = $this->actingAs($user)->get(route('clients.index'));
+        $response->assertSeeText($client1->fullname);
+        $response->assertSeeText($client2->fullname);
+        $response->assertSeeText($client3->fullname);
+
+        $response = $this->actingAs($user)->get(route('clients.index', ['cellphone' => $client3->cellphone]));
+        $response->assertDontSeeText($client1->fullname);
+        $response->assertDontSeeText($client2->fullname);
+        $response->assertSeeText($client3->fullname);
+    }
+
+    /** @test */
     public function clients_can_be_found_by_email()
     {
-        $user = factory(User::class)->create();
+        $permission = Permission::create(['name' => 'View all clients']);
+        $user = factory(User::class)->create()->givePermissionTo($permission);
         $client1 = factory(Client::class)->create();
         $client2 = factory(Client::class)->create();
         $client3 = factory(Client::class)->create();

@@ -16,9 +16,8 @@ trait InvoiceProductTestHasProviders
 
     public function __construct()
     {
-        factory(Product::class)->create();
         $this->baseData = [
-            'product_id' => Product::first()->id,
+            'product_id' => 1,
             'quantity' => 1,
         ];
     }
@@ -45,11 +44,6 @@ trait InvoiceProductTestHasProviders
                 array_replace_recursive($this->baseData, ['product_id' => -1]),
                 'product_id',
                 'producto es inválido.'
-            ],
-            'product_id is repeated' => [
-                $this->baseData,
-                'product_id',
-                '¡Este producto ya se encuentra registrado en la factura!'
             ],
             'quantity field is null' => [
                 array_replace_recursive($this->baseData, ['quantity' => null]),

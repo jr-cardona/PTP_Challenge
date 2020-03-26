@@ -4,6 +4,8 @@ namespace Tests\Feature\Admin\Clients;
 
 use App\Entities\User;
 use App\Entities\Client;
+use Spatie\Permission\Models\Permission;
+use Spatie\Permission\Models\Role;
 use Tests\TestCase;
 use App\Entities\TypeDocument;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -21,33 +23,42 @@ class StoreClientTest extends TestCase
     }
 
     /** @test */
-    public function guest_user_cannot_store_clients()
+    public function guests_cannot_store_clients()
     {
         $data = $this->data();
 
         $this->post(route('clients.store'), $data)->assertRedirect(route('login'));
-        $this->assertDatabaseMissing('clients', $data);
+        $this->assertDatabaseMissing('clients', [
+            'document' => $data["document"]
+        ]);
     }
 
     /** @test */
-    public function logged_in_user_can_store_clients()
+    public function unauthorized_user_cannot_store_clients()
     {
         $user = factory(User::class)->create();
+        $data = $this->data();
+
+        $this->actingAs($user)->post(route('clients.store'), $data)->assertStatus(403);
+        $this->assertDatabaseMissing('clients', [
+            'document' => $data["document"]
+        ]);
+    }
+
+    /** @test */
+    public function authorized_user_can_store_clients()
+    {
+        $permission = Permission::create(['name' => 'Create clients']);
+        Role::create(['name' => 'Client']);
+        $user = factory(User::class)->create()->givePermissionTo($permission);
         $data = $this->data();
 
         $response = $this->actingAs($user)->post(route('clients.store'), $data);
         $response->assertRedirect(route('clients.show', Client::first()));
         $response->assertSessionHasNoErrors();
-    }
-
-    /** @test */
-    public function a_client_can_be_stored_in_database()
-    {
-        $user = factory(User::class)->create();
-        $data = $this->data();
-
-        $this->actingAs($user)->post(route('clients.store'), $data);
-        $this->assertDatabaseHas('clients', $data);
+        $this->assertDatabaseHas('clients', [
+            'document' => $data["document"]
+        ]);
     }
 
     /**
@@ -66,10 +77,13 @@ class StoreClientTest extends TestCase
         string $field,
         string $message
     ) {
-        $user = factory(User::class)->create();
-        factory(Client::class)->create(["document" => 12345678, "email" => "repeated@email.com"]);
-        $response =  $this->actingAs($user)->post(route('clients.store'), $clientData);
+        $permission = Permission::create(['name' => 'Create clients']);
+        $user = factory(User::class)->create()->givePermissionTo($permission);
 
+        $client = factory(User::class)->create(['email' => 'repeated@email.com']);
+        factory(Client::class)->create(['id' => $client->id, 'document' => 12345678]);
+
+        $response =  $this->actingAs($user)->post(route('clients.store'), $clientData);
         $response->assertSessionHasErrors([$field => $message]);
     }
 
