@@ -6,14 +6,14 @@ use App\Entities\Client;
 
 class ClientsObserver
 {
-    public function creating(Client $user)
+    public function creating(Client $client)
     {
-        $user->created_by = auth()->user()->id ?? 1;
-        $user->updated_by = $user->created_by;
+        if (! $client->created_by) $client->created_by = auth()->user()->id;
+        $client->updated_by = $client->created_by;
     }
 
-    public function updating(Client $user)
+    public function updating(Client $client)
     {
-        $user->updated_by = auth()->user()->id;
+        $client->updated_by = auth()->user()->id;
     }
 }

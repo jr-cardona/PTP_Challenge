@@ -17,7 +17,7 @@ class ProductPolicy
      */
     public function viewAny(User $user, Product $product = null)
     {
-        return $user->can('View any products');
+        return $user->can('View all products');
     }
 
     /**
@@ -29,7 +29,7 @@ class ProductPolicy
      */
     public function view(User $user, Product $product)
     {
-        if ($user->can('View any products')) {
+        if ($user->can('View all products')) {
             return true;
         }
         return false;
@@ -55,7 +55,7 @@ class ProductPolicy
      */
     public function update(User $user, Product $product)
     {
-        if ($user->can('Edit any products')) {
+        if ($user->can('Edit all products')) {
             return true;
         }
         if ($user->can('Edit products')) {
@@ -76,7 +76,7 @@ class ProductPolicy
         if ($product->invoices->count() > 0){
             return false;
         }
-        if ($user->can('Delete any products')) {
+        if ($user->can('Delete all products')) {
             return true;
         }
         if ($user->can('Delete products')) {
@@ -94,7 +94,7 @@ class ProductPolicy
      */
     public function export(User $user, Product $product = null)
     {
-        return $user->can('Export any products');
+        return $user->can('Export all products');
     }
 
     /**
@@ -106,6 +106,6 @@ class ProductPolicy
      */
     public function import(User $user, Product $product = null)
     {
-        return $user->can('Import any products');
+        return $user->can('Import all products');
     }
 }

@@ -17,7 +17,7 @@ class ClientPolicy
      */
     public function viewAny(User $user, Client $client = null)
     {
-        return $user->can('View any clients');
+        return $user->can('View all clients');
     }
 
     /**
@@ -29,7 +29,7 @@ class ClientPolicy
      */
     public function view(User $user, Client $client)
     {
-        if ($user->can('View any clients')) return true;
+        if ($user->can('View all clients')) return true;
         if ($user->can('View profile')) return $user->id === $client->id;
         return false;
     }
@@ -54,7 +54,7 @@ class ClientPolicy
      */
     public function update(User $user, Client $client)
     {
-        if ($user->can('Edit any clients')) return true;
+        if ($user->can('Edit all clients')) return true;
         if ($user->can('Edit profile')) return $user->id === $client->id;
         return false;
     }
@@ -69,7 +69,7 @@ class ClientPolicy
     public function delete(User $user, Client $client)
     {
         if (! $client->canBeDeleted()) return false;
-        if ($user->can('Delete any clients')) return true;
+        if ($user->can('Delete all clients')) return true;
         if ($user->can('Delete clients')) return $user->id === $client->user->created_by;
         return false;
     }
@@ -83,7 +83,7 @@ class ClientPolicy
      */
     public function export(User $user, Client $client = null)
     {
-        return $user->can('Export any clients');
+        return $user->can('Export all clients');
     }
 
     /**
@@ -95,7 +95,7 @@ class ClientPolicy
      */
     public function import(User $user, Client $client = null)
     {
-        return $user->can('Import any clients')
+        return $user->can('Import all clients')
             || $user->can('Import clients');
     }
 }

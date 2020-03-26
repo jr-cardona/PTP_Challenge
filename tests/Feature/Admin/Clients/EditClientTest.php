@@ -2,9 +2,10 @@
 
 namespace Tests\Feature\Admin\Clients;
 
+use Tests\TestCase;
 use App\Entities\User;
 use App\Entities\Client;
-use Tests\TestCase;
+use Spatie\Permission\Models\Permission;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class EditClientTest extends TestCase
@@ -12,7 +13,7 @@ class EditClientTest extends TestCase
     use RefreshDatabase;
 
     /** @test */
-    public function guest_user_cannot_access_to_edit_clients_view()
+    public function guests_cannot_access_to_edit_clients_view()
     {
         $client = factory(Client::class)->create();
 
@@ -20,22 +21,23 @@ class EditClientTest extends TestCase
     }
 
     /** @test */
-    public function logged_in_user_can_access_to_edit_clients_view()
+    public function unauthorized_user_cannot_access_to_edit_clients_view()
     {
-        $client = factory(Client::class)->create();
         $user = factory(User::class)->create();
+        $client = factory(Client::class)->create();
 
-        $response = $this->actingAs($user)->get(route('clients.edit', $client));
-        $response->assertOk();
+        $this->actingAs($user)->get(route('clients.edit', $client))->assertStatus(403);
     }
 
     /** @test */
-    public function the_clients_edit_route_redirect_to_the_correct_view()
+    public function authorized_user_can_access_to_edit_clients_view()
     {
+        $permission = Permission::create(['name' => 'Edit all clients']);
+        $user = factory(User::class)->create()->givePermissionTo($permission);
         $client = factory(Client::class)->create();
-        $user = factory(User::class)->create();
 
         $response = $this->actingAs($user)->get(route('clients.edit', $client));
+        $response->assertOk();
         $response->assertViewIs("clients.edit");
         $response->assertSee("Editar Cliente");
     }
@@ -43,12 +45,12 @@ class EditClientTest extends TestCase
     /** @test */
     public function the_client_edit_view_has_current_information_of_a_client()
     {
+        $permission = Permission::create(['name' => 'Edit all clients']);
+        $user = factory(User::class)->create()->givePermissionTo($permission);
         $client = factory(Client::class)->create();
-        $user = factory(User::class)->create();
 
         $response = $this->actingAs($user)->get(route('clients.edit', $client));
-        $response->assertSee($client->name);
-        $response->assertSee($client->surname);
         $response->assertSee($client->document);
+        $response->assertSee($client->cellphone);
     }
 }

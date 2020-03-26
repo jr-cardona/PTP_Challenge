@@ -3,6 +3,7 @@
 namespace App\Entities;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
@@ -87,7 +88,7 @@ class Client extends Model
     /** Query Scopes */
     public function scopeId($query, $id)
     {
-        if (auth()->user()->can('View any clients') ||
+        if (auth()->user()->can('View all clients') ||
             auth()->user()->hasRole('SuperAdmin')) {
             if (trim($id) !== '') {
                 return $query->where('id', $id);
@@ -111,10 +112,20 @@ class Client extends Model
         }
     }
 
+    public function scopeCellphone($query, $cellphone)
+    {
+        if (trim($cellphone) !== '') {
+            return $query->where('cellphone', 'LIKE', "%${cellphone}%");
+        }
+    }
+
     public function scopeEmail($query, $email)
     {
         if (trim($email) !== '') {
-            return $query->where('email', 'LIKE', "%${email}%");
+            return $query->whereHas('user',
+                static function (Builder $query) use ($email) {
+                    $query->where('email', 'like' , "%${email}%");
+                });
         }
     }
 

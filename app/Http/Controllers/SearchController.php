@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Entities\Client;
 use App\Entities\User;
 use App\Entities\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Spatie\Permission\Models\Permission;
-use Spatie\Permission\Models\Role;
+use Illuminate\Auth\Access\AuthorizationException;
 
 class SearchController extends Controller
 {
@@ -15,9 +15,11 @@ class SearchController extends Controller
      * Display the specified resource filtering by name.
      * @param Request $request
      * @return
+     * @throws AuthorizationException
      */
     public function clients(Request $request)
     {
+        $this->authorize('viewAny', Client::class);
         return DB::table('users as u')
             ->selectRaw('u.id, concat(u.name, " ", u.surname) as fullname')
             ->join('clients as c', 'c.id', '=', 'u.id')
@@ -31,9 +33,11 @@ class SearchController extends Controller
      * Display the specified resource filtering by name.
      * @param Request $request
      * @return
+     * @throws AuthorizationException
      */
     public function users(Request $request)
     {
+        $this->authorize('viewAny', User::class);
         return User::selectRaw('id, concat(name, " ", surname) as fullname')
             ->whereDoesntHave('client', function($query){
                 $query->where('id', '!=', 'id');
@@ -48,9 +52,11 @@ class SearchController extends Controller
      * Display the specified resource filtering by name.
      * @param Request $request
      * @return
+     * @throws AuthorizationException
      */
     public function products(Request $request)
     {
+        $this->authorize('viewAny', Product::class);
         return Product::where('name', 'like', '%'. $request->name .'%')
             ->orderBy('name')
             ->limit('100')

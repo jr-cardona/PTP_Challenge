@@ -15,7 +15,7 @@ $factory->define(User::class, function (Faker $faker) {
         'email_verified_at' => now(),
         'password' => 'secret',
         'remember_token' => Str::random(10),
-        'created_by' => User::first()->id ?? 1,
-        'updated_by' => User::first()->id ?? 1,
+        'created_by' => User::first()->id ?? null,
+        'updated_by' => User::first()->id ?? null,
     ];
 });

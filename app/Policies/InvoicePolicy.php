@@ -17,7 +17,7 @@ class InvoicePolicy
      */
     public function viewAny(User $user, Invoice $invoice = null)
     {
-        return $user->can('View any invoices') || $user->can('View invoices');
+        return $user->can('View all invoices') || $user->can('View invoices');
     }
 
     /**
@@ -29,7 +29,7 @@ class InvoicePolicy
      */
     public function view(User $user, Invoice $invoice)
     {
-        if ($user->can('View any invoices')) {
+        if ($user->can('View all invoices')) {
             return true;
         } elseif ($user->can('View invoices')) {
             return $user->id === $invoice->created_by || $user->id === $invoice->client_id;
@@ -61,7 +61,7 @@ class InvoicePolicy
         if ($invoice->isPaid() || $invoice->isAnnulled()) {
             return false;
         }
-        if ($user->can('Edit any invoices')) {
+        if ($user->can('Edit all invoices')) {
             return true;
         }
         if ($user->can('Edit invoices')) {
@@ -82,7 +82,7 @@ class InvoicePolicy
         if ($invoice->isAnnulled()){
             return false;
         }
-        if ($user->can('Annul any invoices')){
+        if ($user->can('Annul all invoices')){
             return true;
         }
         if ($user->can('Annul invoices')) {
@@ -100,7 +100,7 @@ class InvoicePolicy
      */
     public function export(User $user, Invoice $invoice = null)
     {
-        return $user->can('Export any invoices');
+        return $user->can('Export all invoices');
     }
 
     /**
@@ -112,7 +112,7 @@ class InvoicePolicy
      */
     public function import(User $user, Invoice $invoice = null)
     {
-        return $user->can('Import any invoices') || $user->can('Import invoices');
+        return $user->can('Import all invoices') || $user->can('Import invoices');
     }
 
     /**
@@ -143,7 +143,7 @@ class InvoicePolicy
      */
     public function receive(User $user, Invoice $invoice)
     {
-        if ($invoice->isAnnulled() || empty($invoice->received_at)){
+        if ($invoice->isAnnulled() || isset($invoice->received_at)){
             return false;
         }
         if ($user->can('Receive invoices') &&

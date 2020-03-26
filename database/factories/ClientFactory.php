@@ -6,10 +6,12 @@ use App\Entities\User;
 use App\Entities\Client;
 use Faker\Generator as Faker;
 use App\Entities\TypeDocument;
+use Spatie\Permission\Models\Role;
 use Illuminate\Database\Eloquent\Factory;
 
 $factory->define(Client::class, function (Faker $faker) {
-    $user = factory(User::class)->create()->assignRole('Client');
+    $role = Role::where('name', 'Client')->first() ?? Role::create(['name' => 'Client']);
+    $user = factory(User::class)->create()->assignRole($role);
     return [
         'id' => $user->id,
         'document' => $faker->unique()->randomNumber(9),

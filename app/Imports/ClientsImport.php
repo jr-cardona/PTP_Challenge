@@ -66,7 +66,7 @@ class ClientsImport extends BaseImport implements ToModel, WithHeadingRow,
             'Dirección' => 'required|string|min:5|max:100',
             'ID Creador' => ['required','numeric',
                 function($attribute, $userId, $onFailure){
-                    if (auth()->user()->can('Import any clients')
+                    if (auth()->user()->can('Import all clients')
                         || auth()->user()->hasRole('SuperAdmin')){
                         if (User::where('id', $userId)->count() == 0) {
                             $onFailure("Este usuario no existe");
