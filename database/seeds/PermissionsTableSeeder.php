@@ -22,6 +22,8 @@ class PermissionsTableSeeder extends Seeder
 
         Permission::create(['name' => 'View all invoices']);
         Permission::create(['name' => 'View invoices']);
+        Permission::create(['name' => 'Print all invoices']);
+        Permission::create(['name' => 'Print invoices']);
         Permission::create(['name' => 'Create invoices']);
         Permission::create(['name' => 'Edit all invoices']);
         Permission::create(['name' => 'Edit invoices']);

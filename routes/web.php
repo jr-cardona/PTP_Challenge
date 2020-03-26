@@ -45,6 +45,8 @@ Route::middleware(['auth'])->group(static function () {
         ->parameters(['facturas' => 'invoice']);
     Route::get('/facturas/{invoice}/recibir/', 'InvoiceController@receivedCheck')
         ->name('invoices.receivedCheck');
+    Route::get('/facturas/{invoice}/print', 'InvoiceController@print')
+        ->name('invoices.print');
 
     Route::resource('/clientes', 'ClientController')
         ->names('clients')

@@ -152,4 +152,15 @@ class InvoicePolicy
         }
         return false;
     }
+
+    public function print(User $user, Invoice $invoice)
+    {
+        if ($user->can('Print all invoices')) {
+            return true;
+        } elseif ($user->can('Print invoices')) {
+            return $user->id === $invoice->created_by;
+        } else {
+            return false;
+        }
+    }
 }

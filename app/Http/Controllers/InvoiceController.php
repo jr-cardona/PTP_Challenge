@@ -150,4 +150,10 @@ class InvoiceController extends Controller
         return redirect()->route('invoices.show', $invoice)
             ->withSuccess(__('Marcada correctamente'));
     }
+
+    public function print(Invoice $invoice)
+    {
+        $pdf = \PDF::loadView('invoices.print', compact('invoice'));
+        return $pdf->stream();
+    }
 }
