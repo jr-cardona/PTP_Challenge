@@ -111,6 +111,13 @@ class Client extends Model
         }
     }
 
+    public function scopeCellphone($query, $cellphone)
+    {
+        if (trim($cellphone) !== '') {
+            return $query->where('cellphone', 'LIKE', "%${cellphone}%");
+        }
+    }
+
     public function scopeEmail($query, $email)
     {
         if (trim($email) !== '') {

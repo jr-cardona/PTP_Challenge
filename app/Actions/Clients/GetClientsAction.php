@@ -16,6 +16,7 @@ class GetClientsAction extends Action
             ->typedocument($request->get('type_document_id'))
             ->document($request->get('document'))
             ->email($request->get('email'))
+            ->cellphone($request->get('cellphone'))
             ->orderBy('document');
     }
 }
