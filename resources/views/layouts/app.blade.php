@@ -120,7 +120,6 @@
 
         <main class="py-4">
             <div class="container">
-                @include('partials.session-message')
                 @yield('content')
             </div>
         </main>
