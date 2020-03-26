@@ -130,7 +130,7 @@
                         <td class="text-center">{{ $product->name }}</td>
                         <td class="text-center">{{ $product->description }}</td>
                         <td class="text-center">{{ $product->pivot->quantity }}</td>
-                        <td class="text-right">{{ number_format($product->pivot->unit_price, 2) }}</td>
+                        <td class="text-right">${{ number_format($product->pivot->unit_price, 2) }}</td>
                         <td class="text-right">${{ number_format($product->pivot->unit_price * $product->pivot->quantity, 2) }}</td>
                         <td class="text-right btn-group btn-group-sm">
                             @can('update', $invoice)
@@ -165,7 +165,7 @@
                         <td class="text-right custom-header">
                             {{ __("IVA") }} ({{ Config::get('constants.vat') }})%
                         </td>
-                        <td class="text-right">${{ number_format($invoice->ivaamount, 2) }}</td>
+                        <td class="text-right">${{ number_format($invoice->iva_amount, 2) }}</td>
                     </tr>
                     <tr>
                         <td colspan="4"></td>
