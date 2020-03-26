@@ -42,7 +42,7 @@ class InvoiceProductController extends Controller
         );
 
         return redirect()->route('invoices.show', $invoice)
-            ->withSuccess(__('Detalle creado satisfactoriamente'));
+            ->with('success', ('Detalle creado satisfactoriamente'));
     }
 
     /**
@@ -74,7 +74,7 @@ class InvoiceProductController extends Controller
         $invoice->products()->updateExistingPivot($product->id, $request->validated());
 
         return redirect()->route('invoices.show', $invoice)
-            ->withSuccess(__('Detalle actualizado satisfactoriamente'));
+            ->with('success', ('Detalle actualizado satisfactoriamente'));
     }
 
     /**
@@ -90,6 +90,6 @@ class InvoiceProductController extends Controller
         $this->authorize('update', $invoice);
         $invoice->products()->detach($product->id);
 
-        return redirect()->route('invoices.show', $invoice)->withSuccess(__('Detalle eliminado satisfactoriamente'));
+        return redirect()->route('invoices.show', $invoice)->with('success', ('Detalle eliminado satisfactoriamente'));
     }
 }

@@ -71,7 +71,7 @@ class ProductController extends Controller
         $product = $action->execute(new Product(), $request);
 
         return redirect()->route('products.show', $product->id)
-            ->withSuccess(__('Producto creado satisfactoriamente'));
+            ->with('success', ('Producto creado satisfactoriamente'));
     }
 
     /**
@@ -110,7 +110,7 @@ class ProductController extends Controller
         $product = $action->execute($product, $request);
 
         return redirect()->route('products.show', $product)
-            ->withSuccess(__('Producto actualizado satisfactoriamente'));
+            ->with('success', ('Producto actualizado satisfactoriamente'));
     }
 
     /**
@@ -124,6 +124,6 @@ class ProductController extends Controller
     {
         $product->delete();
 
-        return redirect()->route('products.index')->withSuccess(__('Producto eliminado satisfactoriamente'));
+        return redirect()->route('products.index')->with('success', ('Producto eliminado satisfactoriamente'));
     }
 }

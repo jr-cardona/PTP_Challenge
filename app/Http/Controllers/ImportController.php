@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Maatwebsite\Excel\Facades\Excel;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Auth\Access\AuthorizationException;
 use Maatwebsite\Excel\Validators\ValidationException as ExcelValidationException;
@@ -14,7 +15,7 @@ class ImportController extends Controller
     /**
      * Imports a listing of the resource.
      * @param Request $request
-     * @return Response
+     * @return RedirectResponse | Response
      * @throws AuthorizationException
      * @throws ValidationException
      */
@@ -35,7 +36,7 @@ class ImportController extends Controller
             Excel::import($import, $file);
             $cant = $import->getRowCount();
 
-            return redirect()->route($redirect)->withSuccess(__("Se importaron {$cant} registros satisfactoriamente"));
+            return redirect()->route($redirect)->with('success', ("Se importaron {$cant} registros satisfactoriamente"));
         } catch (ExcelValidationException $err) {
             return $this->displayErrors($err, $redirect);
         }

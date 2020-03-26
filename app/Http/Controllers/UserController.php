@@ -77,7 +77,7 @@ class UserController extends Controller
         $user = $action->execute(new User(), $request);
 
         return redirect()->route('users.show', $user)
-            ->withSuccess(__('Usuario creado satisfactoriamente'));
+            ->with('success', ('Usuario creado satisfactoriamente'));
     }
 
     /**
@@ -123,7 +123,7 @@ class UserController extends Controller
         $user = $action->execute($user, $request);
 
         return redirect()->route('users.show', $user)
-            ->withSuccess(__('Usuario actualizado satisfactoriamente'));
+            ->with('success', ('Usuario actualizado satisfactoriamente'));
     }
 
     /**
@@ -137,7 +137,7 @@ class UserController extends Controller
     {
         $user->delete();
         return redirect()->route('users.index')
-            ->withSuccess(__('Usuario eliminado satisfactoriamente'));
+            ->with('success', ('Usuario eliminado satisfactoriamente'));
     }
 
     /**
@@ -164,9 +164,9 @@ class UserController extends Controller
         $user->update();
 
         if ($user->isClient()) return redirect()->route('clients.show', $user->client)
-            ->withSuccess(__('Contraseña actualizada satisfactoriamente'));
+            ->with('success', ('Contraseña actualizada satisfactoriamente'));
 
         return redirect()->route('users.show', $user)
-            ->withSuccess(__('Contraseña actualizada satisfactoriamente'));
+            ->with('success', ('Contraseña actualizada satisfactoriamente'));
     }
 }

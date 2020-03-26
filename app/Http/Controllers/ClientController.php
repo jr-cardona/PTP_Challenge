@@ -71,7 +71,7 @@ class ClientController extends Controller
         $client = $action->execute(new Client(), $request);
 
         return redirect()->route('clients.show', $client->id)
-            ->withSuccess(__('Cliente creado satisfactoriamente'));
+            ->with('success', ('Cliente creado satisfactoriamente'));
     }
 
     /**
@@ -112,7 +112,7 @@ class ClientController extends Controller
         $client = $action->execute($client, $request);
 
         return redirect()->route('clients.show', $client)
-            ->withSuccess(__('Cliente actualizado satisfactoriamente'));
+            ->with('success', ('Cliente actualizado satisfactoriamente'));
     }
 
     /**
@@ -126,6 +126,6 @@ class ClientController extends Controller
     {
         $client->delete();
 
-        return redirect()->route('clients.index')->withSuccess(__('Cliente eliminado satisfactoriamente'));
+        return redirect()->route('clients.index')->with('success', ('Cliente eliminado satisfactoriamente'));
     }
 }

@@ -8,6 +8,7 @@ use App\Entities\Invoice;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use App\Exports\InvoicesExport;
+use UxWeb\SweetAlert\SweetAlert;
 use Illuminate\Http\RedirectResponse;
 use App\Http\Requests\SaveInvoiceRequest;
 use App\Http\Requests\AnnulInvoiceRequest;
@@ -73,7 +74,7 @@ class InvoiceController extends Controller
         $invoice = $action->execute(new Invoice(), $request);
 
         return redirect()->route('invoices.show', $invoice)
-            ->withSuccess(__('Factura creada satisfactoriamente'));
+            ->with('success', 'Factura creada satisfactoriamente');
     }
 
     /**
@@ -115,7 +116,7 @@ class InvoiceController extends Controller
         $invoice = $action->execute($invoice, $request);
 
         return redirect()->route('invoices.show', $invoice)
-            ->withSuccess(__('Factura actualizada satisfactoriamente'));
+            ->with('success', ('Factura actualizada satisfactoriamente'));
     }
 
     /**
@@ -132,7 +133,7 @@ class InvoiceController extends Controller
         $invoice->update();
 
         return redirect()->back()
-            ->withSuccess(__('Anulada correctamente'));
+            ->with('success', ('Anulada correctamente'));
     }
 
     /**
@@ -148,7 +149,7 @@ class InvoiceController extends Controller
         $invoice->update();
 
         return redirect()->route('invoices.show', $invoice)
-            ->withSuccess(__('Marcada correctamente'));
+            ->with('success', ('Marcada correctamente'));
     }
 
     public function print(Invoice $invoice)
