@@ -35,7 +35,7 @@ class InvoiceController extends Controller
     {
         $invoices = $action->execute(new Invoice(), $request);
 
-        if($format = $request->get('format')){
+        if ($format = $request->get('format')) {
             $this->authorize('export', Invoice::class);
             return (new InvoicesExport($invoices->get()))
                 ->download('invoices-list.' . $format);
@@ -45,8 +45,14 @@ class InvoiceController extends Controller
         $count = $invoices->count();
         $invoices = $invoices->paginate($paginate);
 
-        return response()->view('invoices.index', compact(
-            'invoices', 'request', 'count', 'paginate')
+        return response()->view(
+            'invoices.index',
+            compact(
+            'invoices',
+            'request',
+            'count',
+            'paginate'
+        )
         );
     }
 
@@ -110,9 +116,11 @@ class InvoiceController extends Controller
      * @param UpdateInvoicesAction $action
      * @return RedirectResponse
      */
-    public function update(SaveInvoiceRequest $request, Invoice $invoice,
-                           UpdateInvoicesAction $action)
-    {
+    public function update(
+        SaveInvoiceRequest $request,
+        Invoice $invoice,
+        UpdateInvoicesAction $action
+    ) {
         $invoice = $action->execute($invoice, $request);
 
         return redirect()->route('invoices.show', $invoice)

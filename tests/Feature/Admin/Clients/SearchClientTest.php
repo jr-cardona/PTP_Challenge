@@ -17,14 +17,14 @@ class SearchClientTest extends TestCase
     {
         $permission = Permission::create(['name' => 'View all clients']);
         $user = factory(User::class)->create()->givePermissionTo($permission);
-        $clients = factory(User::class, 5)->create()->each(function ($u){
+        $clients = factory(User::class, 5)->create()->each(function ($u) {
             factory(Client::class)->create(['id' => $u->id]);
         });
 
         $response = $this->actingAs($user)->get(route('search.clients'));
         $response->assertSuccessful();
 
-        foreach($clients as $client){
+        foreach ($clients as $client) {
             $response->assertSeeText($client->name);
         }
 
@@ -33,11 +33,10 @@ class SearchClientTest extends TestCase
         ]));
         $response->assertSuccessful();
 
-        foreach($clients as $client){
-            if ($client->name == $clients->last()->name){
+        foreach ($clients as $client) {
+            if ($client->name == $clients->last()->name) {
                 $response->assertSeeText($client->name);
-            }
-            else {
+            } else {
                 $response->assertDontSeeText($client->name);
             }
         }

@@ -8,7 +8,9 @@ class InvoicesObserver
 {
     public function creating(Invoice $invoice)
     {
-        if (! $invoice->created_by) $invoice->created_by = auth()->user()->id;
+        if (! $invoice->created_by) {
+            $invoice->created_by = auth()->user()->id;
+        }
         $invoice->updated_by = $invoice->created_by;
         $invoice->expires_at = $invoice->issued_at->addMonth();
     }

@@ -36,7 +36,7 @@ class UserController extends Controller
     {
         $users = $action->execute(new User(), $request);
 
-        if($format = $request->get('format')){
+        if ($format = $request->get('format')) {
             $this->authorize('export', User::class);
             return (new UsersExport($users->get()))
                 ->download('users-list.' . $format);
@@ -46,8 +46,14 @@ class UserController extends Controller
         $count = $users->count();
         $users = $users->paginate($paginate);
 
-        return response()->view('users.index', compact(
-                'users', 'request', 'count', 'paginate')
+        return response()->view(
+            'users.index',
+            compact(
+            'users',
+            'request',
+            'count',
+            'paginate'
+        )
         );
     }
 
@@ -88,7 +94,9 @@ class UserController extends Controller
      */
     public function show(User $user)
     {
-        if ($user->isClient()) return redirect()->route('clients.show', $user->client);
+        if ($user->isClient()) {
+            return redirect()->route('clients.show', $user->client);
+        }
 
         return response()->view('users.show', compact('user'));
     }
@@ -101,7 +109,9 @@ class UserController extends Controller
      */
     public function edit(User $user)
     {
-        if ($user->isClient()) return redirect()->route('clients.edit', $user->client);
+        if ($user->isClient()) {
+            return redirect()->route('clients.edit', $user->client);
+        }
 
         $roles = Role::pluck('name', 'id');
         $permissions = Permission::pluck('name', 'id');
@@ -117,9 +127,11 @@ class UserController extends Controller
      * @param User $user
      * @return RedirectResponse
      */
-    public function update(UpdateUsersAction $action, User $user,
-                           SaveUserRequest $request)
-    {
+    public function update(
+        UpdateUsersAction $action,
+        User $user,
+        SaveUserRequest $request
+    ) {
         $user = $action->execute($user, $request);
 
         return redirect()->route('users.show', $user)
@@ -145,7 +157,8 @@ class UserController extends Controller
      * @return Response
      * @throws AuthorizationException
      */
-    public function editPassword(User $user){
+    public function editPassword(User $user)
+    {
         $this->authorize('update', $user);
 
         return response()->view('users.edit-password', compact('user'));
@@ -157,14 +170,17 @@ class UserController extends Controller
      * @return RedirectResponse
      * @throws AuthorizationException
      */
-    public function updatePassword(User $user, ChangePasswordRequest $request){
+    public function updatePassword(User $user, ChangePasswordRequest $request)
+    {
         $this->authorize('update', $user);
 
         $user->password = $request->input('password');
         $user->update();
 
-        if ($user->isClient()) return redirect()->route('clients.show', $user->client)
+        if ($user->isClient()) {
+            return redirect()->route('clients.show', $user->client)
             ->with('success', ('Contraseña actualizada satisfactoriamente'));
+        }
 
         return redirect()->route('users.show', $user)
             ->with('success', ('Contraseña actualizada satisfactoriamente'));

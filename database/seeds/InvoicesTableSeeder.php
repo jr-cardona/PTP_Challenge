@@ -38,22 +38,27 @@ class InvoicesTableSeeder extends Seeder
             }
 
             $invoice->save();
-            if ($productsPerInvoice > 0) $this->assignProducts($invoice, $productsPerInvoice);
+            if ($productsPerInvoice > 0) {
+                $this->assignProducts($invoice, $productsPerInvoice);
+            }
         }
     }
 
-    public function getId($i, $model, $total){
+    public function getId($i, $model, $total)
+    {
         $index = $i % $total;
         return $model[$index]->id;
     }
 
-    public function assignProducts($invoice, $total){
+    public function assignProducts($invoice, $total)
+    {
         factory(Product::class, $total)->create()->each(
-            function($product) use ($invoice){
+            function ($product) use ($invoice) {
                 $invoice->products()->attach($product->id, [
                     'quantity' => rand(1, 9),
                     'unit_price' => $product->price,
                 ]);
-            });
+            }
+        );
     }
 }

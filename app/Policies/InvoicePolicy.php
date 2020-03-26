@@ -79,10 +79,10 @@ class InvoicePolicy
      */
     public function delete(User $user, Invoice $invoice)
     {
-        if ($invoice->isAnnulled()){
+        if ($invoice->isAnnulled()) {
             return false;
         }
-        if ($user->can('Annul all invoices')){
+        if ($user->can('Annul all invoices')) {
             return true;
         }
         if ($user->can('Annul invoices')) {
@@ -128,7 +128,7 @@ class InvoicePolicy
             return false;
         }
         if ($user->can('Pay invoices') &&
-            $user->id === $invoice->client_id){
+            $user->id === $invoice->client_id) {
             return true;
         }
         return false;
@@ -143,11 +143,11 @@ class InvoicePolicy
      */
     public function receive(User $user, Invoice $invoice)
     {
-        if ($invoice->isAnnulled() || isset($invoice->received_at)){
+        if ($invoice->isAnnulled() || isset($invoice->received_at)) {
             return false;
         }
         if ($user->can('Receive invoices') &&
-            $user->id === $invoice->client_id){
+            $user->id === $invoice->client_id) {
             return true;
         }
         return false;

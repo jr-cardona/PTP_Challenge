@@ -39,7 +39,7 @@ class SearchController extends Controller
     {
         $this->authorize('viewAny', User::class);
         return User::selectRaw('id, concat(name, " ", surname) as fullname')
-            ->whereDoesntHave('client', function($query){
+            ->whereDoesntHave('client', function ($query) {
                 $query->where('id', '!=', 'id');
             })
             ->whereRaw('concat(name, " ", surname) like "%' . $request->name . '%"')

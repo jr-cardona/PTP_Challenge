@@ -73,7 +73,7 @@ class ProductPolicy
      */
     public function delete(User $user, Product $product)
     {
-        if ($product->invoices->count() > 0){
+        if ($product->invoices->count() > 0) {
             return false;
         }
         if ($user->can('Delete all products')) {

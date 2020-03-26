@@ -34,9 +34,11 @@ class ClientController extends Controller
         return $client;
     }
 
-    public function update(UpdateClientsAction $action, Client $client,
-                           SaveClientRequest $request)
-    {
+    public function update(
+        UpdateClientsAction $action,
+        Client $client,
+        SaveClientRequest $request
+    ) {
         $client = $action->execute($client, $request);
 
         return $client;

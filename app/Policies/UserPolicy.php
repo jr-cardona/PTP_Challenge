@@ -28,8 +28,12 @@ class UserPolicy
      */
     public function view(User $userAuth, User $user)
     {
-        if ($userAuth->can('View all users')) return true;
-        if ($userAuth->can('View profile')) return $userAuth->id === $user->id;
+        if ($userAuth->can('View all users')) {
+            return true;
+        }
+        if ($userAuth->can('View profile')) {
+            return $userAuth->id === $user->id;
+        }
         return false;
     }
 
@@ -53,8 +57,12 @@ class UserPolicy
      */
     public function update(User $userAuth, User $user)
     {
-        if ($userAuth->can('Edit all users')) return true;
-        if ($userAuth->can('Edit profile')) return $userAuth->id === $user->id;
+        if ($userAuth->can('Edit all users')) {
+            return true;
+        }
+        if ($userAuth->can('Edit profile')) {
+            return $userAuth->id === $user->id;
+        }
         return false;
     }
 
@@ -67,9 +75,15 @@ class UserPolicy
      */
     public function delete(User $userAuth, User $user)
     {
-        if (! $user->canBeDeleted()) return false;
-        if ($userAuth->can('Delete all users')) return true;
-        if ($userAuth->can('Delete user')) return $userAuth->id === $user->created_by;
+        if (! $user->canBeDeleted()) {
+            return false;
+        }
+        if ($userAuth->can('Delete all users')) {
+            return true;
+        }
+        if ($userAuth->can('Delete user')) {
+            return $userAuth->id === $user->created_by;
+        }
         return false;
     }
 
@@ -97,7 +111,8 @@ class UserPolicy
         return $userAuth->can('Import all users');
     }
 
-    public function syncRoles(User $userAuth, User $user = null){
+    public function syncRoles(User $userAuth, User $user = null)
+    {
         return $userAuth->can('Sync roles');
     }
 }

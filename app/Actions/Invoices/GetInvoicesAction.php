@@ -18,10 +18,12 @@ class GetInvoicesAction extends Action
             ->product($request->get('product_id'))
             ->issuedDate(
                 $request->get('issued_init'),
-                $request->get('issued_final'))
+                $request->get('issued_final')
+            )
             ->expiresDate(
                 $request->get('expires_init'),
-                $request->get('expires_final'))
+                $request->get('expires_final')
+            )
             ->state($request->get('state'))
             ->orderBy('id', 'DESC');
     }

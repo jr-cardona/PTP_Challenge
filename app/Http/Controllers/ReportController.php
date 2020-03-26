@@ -13,7 +13,8 @@ use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 class ReportController extends Controller
 {
-    public function index(){
+    public function index()
+    {
         return view('reports.index');
     }
 
@@ -21,7 +22,8 @@ class ReportController extends Controller
      * @param Request $request
      * @return View|BinaryFileResponse
      */
-    public function clients(Request $request){
+    public function clients(Request $request)
+    {
         $vat = (Config::get('constants.vat') / 100) + 1;
         $clients = DB::table('users as u')
             ->select(DB::raw('c.id, concat(u.name, " " ,u.surname) as fullname, c.cellphone,
@@ -36,7 +38,7 @@ class ReportController extends Controller
             ->orderBy('total_due', 'desc')
             ->get();
 
-        if(! empty($request->get('format'))){
+        if (! empty($request->get('format'))) {
             return (new DebtorClientsExport($clients, $vat))
                 ->download('debtor-clients-list.'.$request->get('format'));
         } else {
@@ -47,7 +49,8 @@ class ReportController extends Controller
         }
     }
 
-    public function utilities(Request $request){
+    public function utilities(Request $request)
+    {
         $vat = (Config::get('constants.vat') / 100) + 1;
         $invoices = DB::table('invoices as i')
             ->select(DB::raw('i.id, c.id as client_id, concat(u.name, " " , u.surname) as client_fullname,
@@ -63,7 +66,7 @@ class ReportController extends Controller
             ->orderBy('utility', 'desc')
             ->get();
 
-        if(! empty($request->get('format'))){
+        if (! empty($request->get('format'))) {
             return (new UtilitiesExport($invoices, $vat))
                 ->download('utilities-list.'.$request->get('format'));
         } else {

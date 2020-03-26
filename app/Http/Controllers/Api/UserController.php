@@ -33,9 +33,11 @@ class UserController extends Controller
         return $user;
     }
 
-    public function update(UpdateUsersAction $action, User $user,
-                           SaveUserRequest $request)
-    {
+    public function update(
+        UpdateUsersAction $action,
+        User $user,
+        SaveUserRequest $request
+    ) {
         $user = $action->execute($user, $request);
 
         return $user;

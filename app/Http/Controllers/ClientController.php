@@ -33,7 +33,7 @@ class ClientController extends Controller
     {
         $clients = $action->execute(new Client(), $request);
 
-        if($format = $request->get('format')){
+        if ($format = $request->get('format')) {
             $this->authorize('export', Client::class);
             return (new ClientsExport($clients->get()))
                 ->download('clients-list.' . $format);
@@ -43,8 +43,14 @@ class ClientController extends Controller
         $count = $clients->count();
         $clients = $clients->paginate($paginate);
 
-        return response()->view('clients.index', compact(
-            'clients', 'request', 'count', 'paginate')
+        return response()->view(
+            'clients.index',
+            compact(
+            'clients',
+            'request',
+            'count',
+            'paginate'
+        )
         );
     }
 
@@ -106,9 +112,11 @@ class ClientController extends Controller
      * @param Client $client
      * @return RedirectResponse
      */
-    public function update(UpdateClientsAction $action, Client $client,
-                           SaveClientRequest $request)
-    {
+    public function update(
+        UpdateClientsAction $action,
+        Client $client,
+        SaveClientRequest $request
+    ) {
         $client = $action->execute($client, $request);
 
         return redirect()->route('clients.show', $client)

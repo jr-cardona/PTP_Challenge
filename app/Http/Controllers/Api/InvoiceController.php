@@ -36,9 +36,11 @@ class InvoiceController extends Controller
         return $invoice;
     }
 
-    public function update(UpdateInvoicesAction $action, Invoice $invoice,
-                           SaveInvoiceRequest $request)
-    {
+    public function update(
+        UpdateInvoicesAction $action,
+        Invoice $invoice,
+        SaveInvoiceRequest $request
+    ) {
         $invoice = $action->execute($invoice, $request);
         return $invoice;
     }

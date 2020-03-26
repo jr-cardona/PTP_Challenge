@@ -16,7 +16,8 @@ class ExcelInvoiceTest extends TestCase
     use RefreshDatabase;
 
     /** @test */
-    public function guest_user_cannot_download_invoices_export(){
+    public function guest_user_cannot_download_invoices_export()
+    {
         factory(Invoice::class, 5)->create();
         Excel::fake();
 
@@ -25,7 +26,8 @@ class ExcelInvoiceTest extends TestCase
     }
 
     /** @test */
-    public function unauthorized_user_cannot_download_invoices_export(){
+    public function unauthorized_user_cannot_download_invoices_export()
+    {
         $user = factory(User::class)->create();
         factory(Invoice::class, 5)->create();
         Excel::fake();

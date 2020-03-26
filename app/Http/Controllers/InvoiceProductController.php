@@ -36,9 +36,12 @@ class InvoiceProductController extends Controller
     {
         $this->authorize('update', $invoice);
         $product = Product::find($request->input('product_id'));
-        $invoice->products()->attach($product->id, array_merge($request->validated(),
-                ['unit_price' => $product->price]
-            )
+        $invoice->products()->attach(
+            $product->id,
+            array_merge(
+            $request->validated(),
+            ['unit_price' => $product->price]
+        )
         );
 
         return redirect()->route('invoices.show', $invoice)

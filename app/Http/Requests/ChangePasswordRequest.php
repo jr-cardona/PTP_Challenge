@@ -39,18 +39,20 @@ class ChangePasswordRequest extends FormRequest
             $validator->after(function ($validator) {
                 if (! $this->passwordMatches()) {
                     $validator->errors()->add('current_password', 'Contraseña incorrecta');
-                } elseif($this->samePassword()) {
+                } elseif ($this->samePassword()) {
                     $validator->errors()->add('password', 'Debe ser una contraseña distinta a la actual');
                 }
             });
         }
     }
 
-    public function passwordMatches(){
+    public function passwordMatches()
+    {
         return Hash::check($this->input('current_password'), auth()->user()->password);
     }
 
-    public function samePassword(){
+    public function samePassword()
+    {
         return strcmp($this->input('current_password'), $this->input('password')) == 0;
     }
 }

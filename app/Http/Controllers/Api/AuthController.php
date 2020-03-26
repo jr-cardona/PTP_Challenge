@@ -27,7 +27,7 @@ class AuthController extends Controller
             'password' => 'required',
         ]);
 
-        if ($validator->fails()){
+        if ($validator->fails()) {
             return response()->json([
                 'success' => false,
                 'message' => 'Credenciales inválidas',
@@ -64,7 +64,8 @@ class AuthController extends Controller
      *
      * @return JsonResponse
      */
-    public function refresh() {
+    public function refresh()
+    {
         $token = JWTAuth::getToken();
         try {
             $token = JWTAuth::refresh($token);
@@ -73,14 +74,12 @@ class AuthController extends Controller
                 'success' => true,
                 'token' => $token
             ], 200);
-
         } catch (TokenExpiredException $exception) {
             return response()->json([
                 'success' => false,
                 'message' => 'Token expirado, por favor inicie sesión nuevamente',
                 'token' => $token
             ], 422);
-
         } catch (TokenBlacklistedException $exception) {
             return response()->json([
                 'success' => false,

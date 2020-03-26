@@ -35,9 +35,12 @@ class PaymentAttemptsController extends Controller
      * @throws AuthorizationException
      * @throws PlacetoPayException
      */
-    public function store(Invoice $invoice, PaymentAttempt $paymentAttempt,
-                          Request $request, PlacetoPay $placetopay)
-    {
+    public function store(
+        Invoice $invoice,
+        PaymentAttempt $paymentAttempt,
+        Request $request,
+        PlacetoPay $placetopay
+    ) {
         $this->authorize('pay', $invoice);
 
         $paymentAttempt->save();

@@ -36,4 +36,3 @@ Route::group(['middleware' => 'auth.jwt'], function () {
         ->names('users')
         ->parameters(['usuarios' => 'user']);
 });
-

@@ -22,7 +22,7 @@ class GetUsersAction extends Action
             ->select(['users.id', 'users.name', 'users.surname', 'users.email'])
             ->id($request->get('id'))
             ->email($request->get('email'))
-            ->whereDoesntHave('client', function($query){
+            ->whereDoesntHave('client', function ($query) {
                 $query->where('id', '!=', 'id');
             })
             ->orderBy('name');

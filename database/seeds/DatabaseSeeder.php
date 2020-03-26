@@ -44,7 +44,8 @@ class DatabaseSeeder extends Seeder
         }
     }
 
-    public function customCall($class, $data){
+    public function customCall($class, $data)
+    {
         $seeder = $this->resolve($class);
 
         if (isset($this->command)) {

@@ -14,8 +14,11 @@ use Maatwebsite\Excel\Imports\HeadingRowFormatter;
 
 HeadingRowFormatter::default('none');
 
-class ClientsImport extends BaseImport implements ToModel, WithHeadingRow,
-    WithValidation, WithBatchInserts
+class ClientsImport extends BaseImport implements
+    ToModel,
+    WithHeadingRow,
+    WithValidation,
+    WithBatchInserts
 {
     use Importable;
     private $rows = 0;
@@ -65,14 +68,14 @@ class ClientsImport extends BaseImport implements ToModel, WithHeadingRow,
             'Teléfono fijo' => 'nullable|numeric|digits:7',
             'Dirección' => 'required|string|min:5|max:100',
             'ID Creador' => ['required','numeric',
-                function($attribute, $userId, $onFailure){
+                function ($attribute, $userId, $onFailure) {
                     if (auth()->user()->can('Import all clients')
-                        || auth()->user()->hasRole('SuperAdmin')){
+                        || auth()->user()->hasRole('SuperAdmin')) {
                         if (User::where('id', $userId)->count() == 0) {
                             $onFailure("Este usuario no existe");
                         }
                     } elseif (auth()->user()->can('Import clients')) {
-                        if ($userId != auth()->id()){
+                        if ($userId != auth()->id()) {
                             $onFailure("No tiene permisos de importar clientes de otros usuarios");
                         }
                     } else {

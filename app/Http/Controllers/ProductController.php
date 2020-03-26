@@ -33,7 +33,7 @@ class ProductController extends Controller
     {
         $products = $action->execute(new Product(), $request);
 
-        if($format = $request->get('format')){
+        if ($format = $request->get('format')) {
             $this->authorize('export', Product::class);
             return (new ProductsExport($products->get()))
                 ->download('products-list.' . $format);
@@ -43,8 +43,14 @@ class ProductController extends Controller
         $count = $products->count();
         $products = $products->paginate($paginate);
 
-        return response()->view('products.index', compact(
-                'products', 'request', 'count', 'paginate')
+        return response()->view(
+            'products.index',
+            compact(
+            'products',
+            'request',
+            'count',
+            'paginate'
+        )
         );
     }
 
@@ -104,9 +110,11 @@ class ProductController extends Controller
      * @param Product $product
      * @return RedirectResponse
      */
-    public function update(UpdateProductsAction $action, Product $product,
-                           SaveProductRequest $request)
-    {
+    public function update(
+        UpdateProductsAction $action,
+        Product $product,
+        SaveProductRequest $request
+    ) {
         $product = $action->execute($product, $request);
 
         return redirect()->route('products.show', $product)

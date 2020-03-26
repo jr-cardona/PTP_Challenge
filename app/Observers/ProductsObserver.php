@@ -9,7 +9,9 @@ class ProductsObserver
 {
     public function creating(Product $product)
     {
-        if (! $product->created_by) $product->created_by = auth()->user()->id;
+        if (! $product->created_by) {
+            $product->created_by = auth()->user()->id;
+        }
         $product->updated_by = $product->created_by;
         $product->price = $product->cost * 1.10;
     }

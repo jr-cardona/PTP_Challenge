@@ -27,7 +27,7 @@ class SaveInvoiceProductRequest extends FormRequest
         $rules = [
             'quantity' => 'required|numeric|min:1|max:9999',
         ];
-        if ($this->method() == "POST"){
+        if ($this->method() == "POST") {
             $rules['product_id'] = ['required', 'numeric', 'exists:products,id'];
         }
         return $rules;

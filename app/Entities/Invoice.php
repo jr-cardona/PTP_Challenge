@@ -133,7 +133,8 @@ class Invoice extends Model
         return __("Factura de venta No. ").str_pad($this->id, 5, "0", STR_PAD_LEFT);
     }
 
-    public function getStateAttribute(){
+    public function getStateAttribute()
+    {
         if ($this->isAnnulled()) {
             return "Anulada";
         }
@@ -185,10 +186,12 @@ class Invoice extends Model
     public function scopeProduct($query, $product_id)
     {
         if (trim($product_id) !== '') {
-            return $query->whereHas('products',
+            return $query->whereHas(
+                'products',
                 static function (Builder $query) use ($product_id) {
-                $query->where('product_id', $product_id);
-            });
+                    $query->where('product_id', $product_id);
+                }
+            );
         }
     }
 

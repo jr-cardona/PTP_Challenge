@@ -14,8 +14,11 @@ use Maatwebsite\Excel\Imports\HeadingRowFormatter;
 
 HeadingRowFormatter::default('none');
 
-class InvoicesImport extends BaseImport implements ToModel, WithHeadingRow,
-    WithValidation, WithBatchInserts
+class InvoicesImport extends BaseImport implements
+    ToModel,
+    WithHeadingRow,
+    WithValidation,
+    WithBatchInserts
 {
     use Importable;
     private $rows = 0;
@@ -43,14 +46,14 @@ class InvoicesImport extends BaseImport implements ToModel, WithHeadingRow,
             'Descripción' => 'nullable|string|max:255',
             'ID Cliente' => 'required|numeric|exists:clients,id',
             'ID Vendedor' => ['required', 'numeric',
-                function($attribute, $userId, $onFailure){
+                function ($attribute, $userId, $onFailure) {
                     if (auth()->user()->can('Import all invoices')
-                        || auth()->user()->hasRole('SuperAdmin')){
+                        || auth()->user()->hasRole('SuperAdmin')) {
                         if (User::where('id', $userId)->count() == 0) {
                             $onFailure("Este vendedor no existe");
                         }
                     } elseif (auth()->user()->can('Import invoices')) {
-                        if ($userId != auth()->id()){
+                        if ($userId != auth()->id()) {
                             $onFailure("No tiene permisos de importar facturas de otros vendedores");
                         }
                     } else {

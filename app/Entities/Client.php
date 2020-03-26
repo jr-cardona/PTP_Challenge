@@ -122,14 +122,17 @@ class Client extends Model
     public function scopeEmail($query, $email)
     {
         if (trim($email) !== '') {
-            return $query->whereHas('user',
+            return $query->whereHas(
+                'user',
                 static function (Builder $query) use ($email) {
-                    $query->where('email', 'like' , "%${email}%");
-                });
+                    $query->where('email', 'like', "%${email}%");
+                }
+            );
         }
     }
 
-    public function canBeDeleted(){
+    public function canBeDeleted()
+    {
         return empty($this->invoices->first());
     }
 }

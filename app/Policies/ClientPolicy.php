@@ -29,8 +29,12 @@ class ClientPolicy
      */
     public function view(User $user, Client $client)
     {
-        if ($user->can('View all clients')) return true;
-        if ($user->can('View profile')) return $user->id === $client->id;
+        if ($user->can('View all clients')) {
+            return true;
+        }
+        if ($user->can('View profile')) {
+            return $user->id === $client->id;
+        }
         return false;
     }
 
@@ -54,8 +58,12 @@ class ClientPolicy
      */
     public function update(User $user, Client $client)
     {
-        if ($user->can('Edit all clients')) return true;
-        if ($user->can('Edit profile')) return $user->id === $client->id;
+        if ($user->can('Edit all clients')) {
+            return true;
+        }
+        if ($user->can('Edit profile')) {
+            return $user->id === $client->id;
+        }
         return false;
     }
 
@@ -68,9 +76,15 @@ class ClientPolicy
      */
     public function delete(User $user, Client $client)
     {
-        if (! $client->canBeDeleted()) return false;
-        if ($user->can('Delete all clients')) return true;
-        if ($user->can('Delete clients')) return $user->id === $client->user->created_by;
+        if (! $client->canBeDeleted()) {
+            return false;
+        }
+        if ($user->can('Delete all clients')) {
+            return true;
+        }
+        if ($user->can('Delete clients')) {
+            return $user->id === $client->user->created_by;
+        }
         return false;
     }
 

@@ -33,9 +33,11 @@ class ProductController extends Controller
         return $product;
     }
 
-    public function update(UpdateProductsAction $action, Product $product,
-                           SaveProductRequest $request)
-    {
+    public function update(
+        UpdateProductsAction $action,
+        Product $product,
+        SaveProductRequest $request
+    ) {
         $product = $action->execute($product, $request);
         return $product;
     }

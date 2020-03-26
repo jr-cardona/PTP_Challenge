@@ -98,12 +98,14 @@ class User extends Authenticatable implements JWTSubject
         }
     }
 
-    public function canBeDeleted(){
+    public function canBeDeleted()
+    {
         return empty($this->invoices->first()) && empty($this->products->first())
             && empty($this->users->first()) && empty($this->client);
     }
 
-    public function isClient(){
+    public function isClient()
+    {
         return isset($this->client);
     }
 

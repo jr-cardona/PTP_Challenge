@@ -16,7 +16,8 @@ class ExcelClientTest extends TestCase
     use RefreshDatabase;
 
     /** @test */
-    public function guest_user_cannot_download_clients_export(){
+    public function guest_user_cannot_download_clients_export()
+    {
         factory(Client::class, 5)->create();
         Excel::fake();
 
@@ -25,7 +26,8 @@ class ExcelClientTest extends TestCase
     }
 
     /** @test */
-    public function unauthorized_user_cannot_download_clients_export(){
+    public function unauthorized_user_cannot_download_clients_export()
+    {
         $user = factory(User::class)->create();
         factory(Client::class, 5)->create();
         Excel::fake();

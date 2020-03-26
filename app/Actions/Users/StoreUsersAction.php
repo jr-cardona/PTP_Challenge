@@ -13,7 +13,9 @@ class StoreUsersAction extends Action
     public function action(Model $user, Request $request): Model
     {
         $user = $user->create($request->validated());
-        if (auth()->user()->can('syncRoles', User::class)) $user->syncRoles($request->roles);
+        if (auth()->user()->can('syncRoles', User::class)) {
+            $user->syncRoles($request->roles);
+        }
 
         return $user;
     }
