@@ -14,31 +14,22 @@
 Auth::routes();
 
 Route::middleware(['auth'])->group(static function () {
-    Route::get('/', static function () {
-        return view('home');
-    })->name('home');
+    Route::get('/', 'HomeController@index')->name('home');
 
+    // Search
     Route::get('/clientes/buscar', 'SearchController@clients')
         ->name('search.clients');
-
     Route::get('/productos/buscar', 'SearchController@products')
         ->name('search.products');
+    Route::get('/usuarios/buscar', 'SearchController@users')
+        ->name('search.users');
+    Route::get('/permisos/buscar', 'SearchController@permissions')
+        ->name('search.permissions');
 
-    Route::get('/vendedores/buscar', 'SearchController@sellers')
-        ->name('search.sellers');
+    // Imports
+    Route::post('/importar', 'ImportController@import')->name('import');
 
-    Route::post('/clientes/importar', 'ImportController@clients')
-        ->name('import.clients');
-
-    Route::post('/facturas/importar', 'ImportController@invoices')
-        ->name('import.invoices');
-
-    Route::post('/productos/importar', 'ImportController@products')
-        ->name('import.products');
-
-    Route::post('/vendedores/importar', 'ImportController@sellers')
-        ->name('import.sellers');
-
+    // Resources
     Route::resource('/facturas/{invoice}/producto', 'InvoiceProductController')
         ->except('index', 'show')
         ->names('invoices.products')
@@ -52,6 +43,8 @@ Route::middleware(['auth'])->group(static function () {
     Route::resource('/facturas', 'InvoiceController')
         ->names('invoices')
         ->parameters(['facturas' => 'invoice']);
+    Route::get('/facturas/{invoice}/recibir/', 'InvoiceController@receivedCheck')
+        ->name('invoices.receivedCheck');
 
     Route::resource('/clientes', 'ClientController')
         ->names('clients')
@@ -61,17 +54,23 @@ Route::middleware(['auth'])->group(static function () {
         ->names('products')
         ->parameters(['productos' => 'product']);
 
-    Route::resource('/vendedores', 'SellerController')
-        ->names('sellers')
-        ->parameters(['vendedores' => 'seller']);
+    Route::resource('/usuarios', 'UserController')
+        ->names('users')
+        ->parameters(['usuarios' => 'user']);
 
-    Route::get('/facturas/received-check/{invoice}', 'InvoiceController@receivedCheck')
-        ->name('invoices.receivedCheck');
+    // Password Changes
+    Route::get('usuarios/{user}/edit-password/', 'UserController@editPassword')
+        ->name('users.edit-password');
+    Route::put('usuarios/{user}/update-password/', 'UserController@updatePassword')
+        ->name('users.update-password');
 
-    Route::get('/reportes', 'ReportController@index')
-        ->name('reports.index');
-    Route::get('/reportes/clientes', 'ReportController@clients')
-        ->name('reports.clients');
-    Route::get('/reportes/utilidades', 'ReportController@utilities')
-        ->name('reports.utilities');
+    // Reports
+    Route::group(['middleware' => ['role_or_permission:SuperAdmin|View all reports']], function () {
+        Route::get('/reportes', 'ReportController@index')
+            ->name('reports.index');
+        Route::get('/reportes/clientes', 'ReportController@clients')
+            ->name('reports.clients');
+        Route::get('/reportes/utilidades', 'ReportController@utilities')
+            ->name('reports.utilities');
+    });
 });

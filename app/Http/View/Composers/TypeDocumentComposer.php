@@ -2,7 +2,7 @@
 
 namespace App\Http\View\Composers;
 
-use App\TypeDocument;
+use App\Entities\TypeDocument;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\View\View;
 

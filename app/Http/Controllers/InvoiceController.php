@@ -3,103 +3,102 @@
 namespace App\Http\Controllers;
 
 use Config;
-use App\Invoice;
 use Carbon\Carbon;
+use App\Entities\Invoice;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use App\Exports\InvoicesExport;
+use Illuminate\Http\RedirectResponse;
 use App\Http\Requests\SaveInvoiceRequest;
+use App\Http\Requests\AnnulInvoiceRequest;
+use App\Actions\Invoices\GetInvoicesAction;
+use App\Actions\Invoices\StoreInvoicesAction;
+use App\Actions\Invoices\UpdateInvoicesAction;
+use Illuminate\Auth\Access\AuthorizationException;
 
 class InvoiceController extends Controller
 {
+    public function __construct()
+    {
+        $this->authorizeResource(Invoice::class);
+    }
+
     /**
      * Display a listing of the resource.
+     * @param GetInvoicesAction $action
      * @param Request $request
-     * @return \Illuminate\Http\Response
+     * @return Response
+     * @throws AuthorizationException
      */
-    public function index(Request $request)
+    public function index(GetInvoicesAction $action, Request $request)
     {
-        $invoices = Invoice::with(["client", "seller", "products"])
-            ->number($request->get('number'))
-            ->client($request->get('client_id'))
-            ->seller($request->get('seller_id'))
-            ->product($request->get('product_id'))
-            ->issuedDate($request->get('issued_init'), $request->get('issued_final'))
-            ->expiresDate($request->get('expires_init'), $request->get('expires_final'))
-            ->state($request->get('state'))
-            ->orderBy('id', 'DESC');
-        if(! empty($request->get('format'))){
-            return (new InvoicesExport($invoices->get()))
-                ->download('invoices-list.'.$request->get('format'));
-        } else {
-            $paginate = Config::get('constants.paginate');
-            $count = $invoices->count();
-            $invoices = $invoices->paginate($paginate);
+        $invoices = $action->execute(new Invoice(), $request);
 
-            return response()->view('invoices.index', [
-                'invoices' => $invoices,
-                'request' => $request,
-                'count' => $count,
-                'paginate' => $paginate
-            ]);
+        if($format = $request->get('format')){
+            $this->authorize('export', Invoice::class);
+            return (new InvoicesExport($invoices->get()))
+                ->download('invoices-list.' . $format);
         }
+
+        $paginate = Config::get('constants.paginate');
+        $count = $invoices->count();
+        $invoices = $invoices->paginate($paginate);
+
+        return response()->view('invoices.index', compact(
+            'invoices', 'request', 'count', 'paginate')
+        );
     }
 
     /**
      * Show the form for creating a new resource.
      *
-     * @return \Illuminate\Http\Response
+     * @param Request $request
+     * @param Invoice $invoice
+     * @return Response
      */
-    public function create(Request $request)
+    public function create(Request $request, Invoice $invoice)
     {
-        return response()->view('invoices.create', [
-            'invoice' => new Invoice(),
-            'request' => $request
-        ]);
+        return response()->view('invoices.create', compact('request', 'invoice'));
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\RedirectResponse
+     * @param SaveInvoiceRequest $request
+     * @param StoreInvoicesAction $action
+     * @return RedirectResponse
      */
-    public function store(SaveInvoiceRequest $request)
+    public function store(SaveInvoiceRequest $request, StoreInvoicesAction $action)
     {
-        $result = Invoice::create($request->validated());
+        $invoice = $action->execute(new Invoice(), $request);
 
-        return redirect()->route('invoices.show', $result->id)->withSuccess(__('Factura creada satisfactoriamente'));
+        return redirect()->route('invoices.show', $invoice)
+            ->withSuccess(__('Factura creada satisfactoriamente'));
     }
 
     /**
      * Display the specified resource.
      *
      * @param Invoice $invoice
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function show(Invoice $invoice)
     {
-        return response()->view('invoices.show', [
-            'invoice' => $invoice,
-        ]);
+        $invoice->load('products', 'paymentAttempts');
+
+        return response()->view('invoices.show', compact('invoice'));
     }
 
     /**
      * Show the form for editing the specified resource.
      *
      * @param Invoice $invoice
-     * @return \Illuminate\Http\Response | \Illuminate\Http\RedirectResponse
+     * @param Request $request
+     * @return Response | RedirectResponse
      */
-    public function edit(Invoice $invoice)
+    public function edit(Invoice $invoice, Request $request)
     {
-        if ($invoice->isPaid()) {
-            return redirect()->route('invoices.show', $invoice)->withInfo(__("La factura ya se encuentra pagada y no se puede editar"));
-        }
-        if ($invoice->isAnnulled()) {
-            return redirect()->route('invoices.show', $invoice)->withInfo(__("La factura ya se encuentra anulada y no se puede editar"));
-        }
-        return response()->view('invoices.edit', [
-            'invoice' => $invoice,
-        ]);
+        return response()->view('invoices.edit', compact('invoice', 'request'));
     }
 
     /**
@@ -107,50 +106,48 @@ class InvoiceController extends Controller
      *
      * @param SaveInvoiceRequest $request
      * @param Invoice $invoice
-     * @return \Illuminate\Http\RedirectResponse
+     * @param UpdateInvoicesAction $action
+     * @return RedirectResponse
      */
-    public function update(SaveInvoiceRequest $request, Invoice $invoice)
+    public function update(SaveInvoiceRequest $request, Invoice $invoice,
+                           UpdateInvoicesAction $action)
     {
-        if ($invoice->isPaid()) {
-            return redirect()->route('invoices.show', $invoice)->withInfo(__("La factura ya se encuentra pagada y no se puede actualizar"));
-        }
-        if ($invoice->isAnnulled()) {
-            return redirect()->route('invoices.show', $invoice)->withInfo(__("La factura ya se encuentra anulada y no se puede actualizar"));
-        }
-        $invoice->update($request->validated());
+        $invoice = $action->execute($invoice, $request);
 
-        return redirect()->route('invoices.show', $invoice)->withSuccess(__('Factura actualizada satisfactoriamente'));
+        return redirect()->route('invoices.show', $invoice)
+            ->withSuccess(__('Factura actualizada satisfactoriamente'));
     }
 
     /**
      * Remove the specified resource from storage.
      *
      * @param Invoice $invoice
-     * @return \Illuminate\Http\RedirectResponse
-     * @throws \Exception
+     * @param AnnulInvoiceRequest $request
+     * @return RedirectResponse
      */
-    public function destroy(Invoice $invoice, Request $request)
+    public function destroy(Invoice $invoice, AnnulInvoiceRequest $request)
     {
-        if (! $invoice->isAnnulled()) {
-            $now = Carbon::now();
-            $invoice->update([
-                "annulled_at" => $now,
-                "annulment_reason" => $request->get('annulment_reason'),
-            ]);
-            return redirect()->back()->withSuccess(__('Anulada correctamente'));
-        } else {
-            return redirect()->route('invoices.show', $invoice)->withError(__('Ya se encuentra anulada'));
-        }
+        $invoice->annulled_at = Carbon::now();
+        $invoice->annulment_reason = $request->input('annulment_reason');
+        $invoice->update();
+
+        return redirect()->back()
+            ->withSuccess(__('Anulada correctamente'));
     }
 
+    /**
+     * @param Invoice $invoice
+     * @return mixed
+     * @throws AuthorizationException
+     */
     public function receivedCheck(Invoice $invoice)
     {
-        if (! $invoice->isPaid() && ! $invoice->isAnnulled() && empty($invoice->received_at)) {
-            $now = Carbon::now();
-            $invoice->update(["received_at" => $now]);
-            return redirect()->route('invoices.show', $invoice)->withSuccess(__('Marcada correctamente'));
-        } else {
-            return redirect()->route('invoices.show', $invoice)->withError(__('No se puede marcar'));
-        }
+        $this->authorize('receive', $invoice);
+
+        $invoice->received_at = Carbon::now();
+        $invoice->update();
+
+        return redirect()->route('invoices.show', $invoice)
+            ->withSuccess(__('Marcada correctamente'));
     }
 }

@@ -2,9 +2,10 @@
 
 namespace Tests\Feature\Admin\Products;
 
-use App\User;
-use App\Product;
 use Tests\TestCase;
+use App\Entities\User;
+use App\Entities\Product;
+use Spatie\Permission\Models\Permission;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class StoreProductTest extends TestCase
@@ -20,7 +21,7 @@ class StoreProductTest extends TestCase
     }
 
     /** @test */
-    public function guest_user_cannot_store_products()
+    public function guests_cannot_store_products()
     {
         $data = $this->data();
 
@@ -29,23 +30,25 @@ class StoreProductTest extends TestCase
     }
 
     /** @test */
-    public function logged_in_user_can_store_products()
+    public function unauthorized_user_cannot_store_products()
     {
         $user = factory(User::class)->create();
+        $data = $this->data();
+
+        $this->actingAs($user)->post(route('products.store'), $data)
+            ->assertStatus(403);
+    }
+
+    /** @test */
+    public function authorized_user_can_store_products()
+    {
+        $permission = Permission::create(['name' => 'Create products']);
+        $user = factory(User::class)->create()->givePermissionTo($permission);
         $data = $this->data();
 
         $response = $this->actingAs($user)->post(route('products.store'), $data);
         $response->assertRedirect(route('products.show', Product::first()));
         $response->assertSessionHasNoErrors();
-    }
-
-    /** @test */
-    public function a_product_can_be_stored_in_database()
-    {
-        $user = factory(User::class)->create();
-        $data = $this->data();
-
-        $this->actingAs($user)->post(route('products.store'), $data);
         $this->assertDatabaseHas('products', $data);
     }
 
@@ -65,7 +68,8 @@ class StoreProductTest extends TestCase
         string $field,
         string $message
     ) {
-        $user = factory(User::class)->create();
+        $permission = Permission::create(['name' => 'Create products']);
+        $user = factory(User::class)->create()->givePermissionTo($permission);
         factory(Product::class)->create();
         $response =  $this->actingAs($user)->post(route('products.store'), $productData);
 

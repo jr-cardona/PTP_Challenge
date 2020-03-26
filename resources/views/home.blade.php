@@ -34,7 +34,7 @@
                     <div class="row">
                         <div class="col">
                             <strong>{{ __("Link de interés:") }} </strong>
-                            <a href="https://github.com/Jricardo745/PTP_Challenge" target="_blank">Github</a>
+                            <a href="https://github.com/Jricardo745/PTP_Challenge">Github</a>
                         </div>
                     </div>
                 </div>

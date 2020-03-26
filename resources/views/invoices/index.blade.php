@@ -10,15 +10,28 @@
     </a>
 @endsection
 @section('Actions')
-    <button type="button" class="btn btn-warning" data-route="{{ route('invoices.index') }}" data-toggle="modal" data-target="#exportModal">
-        <i class="fa fa-file"></i> {{ __("Exportar") }}
-    </button>
-    <button type="button" class="btn btn-warning" data-route="{{ route('import.invoices') }}" data-toggle="modal" data-target="#importModal">
-        <i class="fa fa-file-excel"></i> {{ __("Importar desde Excel") }}
-    </button>
-    <a class="btn btn-success" href="{{ route('invoices.create') }}">
-        <i class="fa fa-plus"></i> {{ __("Crear nueva factura") }}
-    </a>
+    @can('export', App\Entities\Invoice::class)
+        <button type="button" class="btn btn-warning"
+                data-route="{{ route('invoices.index') }}"
+                data-toggle="modal" data-target="#exportModal">
+            <i class="fa fa-file-excel"></i> {{ __("Exportar") }}
+        </button>
+    @endcan
+    @can('import', App\Entities\Invoice::class)
+        <button type="button" class="btn btn-primary"
+                data-toggle="modal"
+                data-target="#importModal"
+                data-redirect="invoices.index"
+                data-model="App\Entities\Invoice"
+                data-import-model="App\Imports\InvoicesImport">
+            <i class="fa fa-file-excel"></i> {{ __("Importar") }}
+        </button>
+    @endcan
+    @can('create', App\Entities\Invoice::class)
+        <a class="btn btn-success" href="{{ route('invoices.create') }}">
+            <i class="fa fa-plus"></i> {{ __("Crear nueva factura") }}
+        </a>
+    @endcan
 @endsection
 @section('Search')
     @include('invoices.__search_modal')
@@ -47,17 +60,21 @@
             <td class="text-center" nowrap>${{ number_format($invoice->total, 2) }}</td>
             @include('invoices.status_label')
             <td nowrap>
-                <a href="{{ route('clients.show', $invoice->client) }}" target="_blank">
+                <a @can('view', $invoice->client)
+                   href="{{ route('clients.show', $invoice->client) }}"
+                    @endcan>
                     {{ $invoice->client->fullname }}
                 </a>
             </td>
             <td nowrap>
-                <a href="{{ route('sellers.show', $invoice->seller) }}" target="_blank">
+                <a @can('view', $invoice->seller)
+                   href="{{ route('users.show', $invoice->seller) }}"
+                    @endcan>
                     {{ $invoice->seller->fullname }}
                 </a>
             </td>
             <td class="btn-group btn-group-sm" nowrap>
-                @include('invoices._buttons')
+                @include('invoices.__buttons')
             </td>
         </tr>
     @empty

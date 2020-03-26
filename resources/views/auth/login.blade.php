@@ -40,6 +40,6 @@
 @endsection
 @section('footer')
     <div class="d-flex justify-content-center links">
-        {{ __("¿No tienes una cuenta?") }}<a href="{{ route('register') }}">{{ __("Regístrate") }}</a>
+        {{ __("¿No tienes una cuenta?") }}<a href="#">{{ __("Regístrate") }}</a>
     </div>
 @endsection

@@ -30,6 +30,10 @@
                             <label for="email">{{ __("Correo electrónico") }}</label>
                             <input type="text" id="email" name="email" class="form-control" placeholder="Correo electrónico" value="{{ $request->get('email') }}">
                         </div>
+                        <div class="col">
+                            <label for="email">{{ __("Celular") }}</label>
+                            <input type="text" id="cellphone" name="cellphone" class="form-control" placeholder="Celular" value="{{ $request->get('cellphone') }}">
+                        </div>
                     </div>
                     <div class="form-group row">
                         <div class="col">

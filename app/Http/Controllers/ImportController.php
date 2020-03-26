@@ -3,87 +3,41 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Imports\InvoicesImport;
-use App\Imports\ClientsImport;
-use App\Imports\SellersImport;
-use App\Imports\ProductsImport;
+use Illuminate\Http\Response;
 use Maatwebsite\Excel\Facades\Excel;
+use Illuminate\Validation\ValidationException;
+use Illuminate\Auth\Access\AuthorizationException;
+use Maatwebsite\Excel\Validators\ValidationException as ExcelValidationException;
 
 class ImportController extends Controller
 {
     /**
      * Imports a listing of the resource.
      * @param Request $request
-     * @return \Illuminate\Http\Response | \Illuminate\Http\RedirectResponse
-     * @throws \Illuminate\Validation\ValidationException
+     * @return Response
+     * @throws AuthorizationException
+     * @throws ValidationException
      */
-    public function invoices(Request $request)
+    public function import(Request $request)
     {
-        $this->validate($request, [
-            'file' => 'required|mimes:xls,xlsx'
-        ]);
-        $file = $request->file('file');
-        try {
-            $import = new InvoicesImport();
-            Excel::import($import, $file);
-            $cant = $import->getRowCount();
-            return redirect()->route('invoices.index')->withSuccess(__("Se importaron {$cant} facturas satisfactoriamente"));
-        } catch (\Maatwebsite\Excel\Validators\ValidationException $err) {
-            return $this->displayErrors($err, 'invoices.index');
-        }
-    }
+        $this->authorize('import', $request->get('model'));
 
-    /**
-     * Imports a listing of the resource.
-     * @param Request $request
-     * @return \Illuminate\Http\Response | \Illuminate\Http\RedirectResponse
-     * @throws \Illuminate\Validation\ValidationException
-     */
-    public function clients(Request $request)
-    {
         $this->validate($request, [
             'file' => 'required|mimes:xls,xlsx'
         ]);
-        $file = $request->file('file');
-        try {
-            $import = new ClientsImport();
-            Excel::import($import, $file);
-            $cant = $import->getRowCount();
-            return redirect()->route('clients.index')->withSuccess(__("Se importaron {$cant} clientes satisfactoriamente"));
-        } catch (\Maatwebsite\Excel\Validators\ValidationException $err) {
-            return $this->displayErrors($err, 'clients.index');
-        }
-    }
 
-    public function sellers(Request $request)
-    {
-        $this->validate($request, [
-            'file' => 'required|mimes:xls,xlsx'
-        ]);
         $file = $request->file('file');
-        try {
-            $import = new SellersImport();
-            Excel::import($import, $file);
-            $cant = $import->getRowCount();
-            return redirect()->route('sellers.index')->withSuccess(__("Se importaron {$cant} vendedores satisfactoriamente"));
-        } catch (\Maatwebsite\Excel\Validators\ValidationException $err) {
-            return $this->displayErrors($err, 'sellers.index');
-        }
-    }
+        $redirect = $request->get('redirect');
+        $import = $request->input('import-model');
 
-    public function products(Request $request)
-    {
-        $this->validate($request, [
-            'file' => 'required|mimes:xls,xlsx'
-        ]);
-        $file = $request->file('file');
         try {
-            $import = new ProductsImport();
+            $import = new $import;
             Excel::import($import, $file);
             $cant = $import->getRowCount();
-            return redirect()->route('products.index')->withSuccess(__("Se importaron {$cant} productos satisfactoriamente"));
-        } catch (\Maatwebsite\Excel\Validators\ValidationException $err) {
-            return $this->displayErrors($err, 'products.index');
+
+            return redirect()->route($redirect)->withSuccess(__("Se importaron {$cant} registros satisfactoriamente"));
+        } catch (ExcelValidationException $err) {
+            return $this->displayErrors($err, $redirect);
         }
     }
 

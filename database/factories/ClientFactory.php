@@ -1,21 +1,26 @@
 <?php
 
-/** @var \Illuminate\Database\Eloquent\Factory $factory */
+/** @var Factory $factory */
 
-use App\Client;
-use App\TypeDocument;
+use App\Entities\User;
+use App\Entities\Client;
 use Faker\Generator as Faker;
+use App\Entities\TypeDocument;
+use Spatie\Permission\Models\Role;
+use Illuminate\Database\Eloquent\Factory;
 
 $factory->define(Client::class, function (Faker $faker) {
+    $role = Role::where('name', 'Client')->first() ?? Role::create(['name' => 'Client']);
+    $user = factory(User::class)->create()->assignRole($role);
     return [
-        'document' => $faker->unique()->numberBetween(10000000, 9999999999),
+        'id' => $user->id,
+        'document' => $faker->unique()->randomNumber(9),
         'type_document_id' => TypeDocument::whereIn('name', ['CC', 'NIT', 'PPN', 'TI', 'CE'])
                 ->inRandomOrder()->first()->id ?? factory(TypeDocument::class),
-        'name' => $faker->firstName,
-        'surname' => $faker->firstName,
-        'phone_number' => $faker->numberBetween(1000000, 9999999),
-        'cell_phone_number' => "3".$faker->numberBetween(100000000, 999999999),
+        'phone' => $faker->randomNumber(7),
+        'cellphone' => "3" . $faker->randomNumber(9),
         'address' => $faker->address,
-        'email' => $faker->unique()->safeEmail
+        'created_by' => $user->created_by,
+        'updated_by' => $user->created_by,
     ];
 });

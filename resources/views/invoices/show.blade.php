@@ -2,24 +2,28 @@
 @section('Title', 'Ver Factura')
 @section('Back')
     <div>
-        <a href="{{ route('invoices.index') }}" class="btn btn-secondary">
-            <i class="fa fa-arrow-left"></i> {{ __("Volver") }}
-        </a>
-        @if(! $invoice->isPaid() && ! $invoice->isAnnulled())
+        @can('viewAny', App\Entities\Invoice::class)
+            <a href="{{ route('invoices.index') }}" class="btn btn-secondary">
+                <i class="fa fa-arrow-left"></i> {{ __("Volver") }}
+            </a>
+        @endcan
+        @can('pay', $invoice)
             <a href="{{ route('invoices.payments.create', $invoice) }}" class="btn btn-success">
                 <i class="fa fa-dollar-sign"></i> {{ __("Pagar") }}
             </a>
-            @empty($invoice->received_at)
-                <a href="{{ route('invoices.receivedCheck', $invoice) }}" class="btn btn-primary">
-                    <i class="fa fa-check"></i> {{ __("Marcar como recibida") }}
-                </a>
-            @endempty
-        @endif
+        @endcan
+        @can('receive', $invoice)
+            <a href="{{ route('invoices.receivedCheck', $invoice) }}" class="btn btn-primary">
+                <i class="fa fa-check"></i> {{ __("Marcar como recibida") }}
+            </a>
+        @endcan
     </div>
     <div>
-        <a class="btn btn-success" href="{{ route('invoices.create') }}">
-            <i class="fa fa-plus"></i> {{ __("Crear nueva factura") }}
-        </a>
+        @can('create', App\Entities\Invoice::class)
+            <a class="btn btn-success" href="{{ route('invoices.create') }}">
+                <i class="fa fa-plus"></i> {{ __("Crear nueva factura") }}
+            </a>
+        @endcan
     </div>
 @endsection
 @section('Name')
@@ -27,7 +31,7 @@
     @include('invoices.__symbol')
 @endsection
 @section('Buttons')
-    @include('invoices._buttons')
+    @include('invoices.__buttons')
 @endsection
 @section('Body')
     <div class="shadow">
@@ -41,13 +45,6 @@
                 @include('invoices.status_label')
             </tr>
             <tr>
-                <td class="table-dark td-title custom-header">{{ __("Fecha de creación:") }}</td>
-                <td class="td-content">{{ $invoice->created_at->isoFormat('Y-MM-DD hh:mma') }}</td>
-
-                <td class="table-dark td-title custom-header" nowrap>{{ __("Fecha de modificación:") }}</td>
-                <td class="td-content">{{ $invoice->updated_at->isoFormat('Y-MM-DD hh:mma') }}</td>
-            </tr>
-            <tr>
                 <td class="table-dark td-title custom-header">{{ __("Fecha de expedición:") }}</td>
                 <td class="td-content">{{ $invoice->issued_at->toDateString() }}</td>
 
@@ -55,26 +52,44 @@
                 <td class="td-content">{{ $invoice->expires_at->toDateString() }}</td>
             </tr>
             <tr>
-                <td class="table-dark td-title custom-header">{{ __("IVA:") }}</td>
-                <td class="td-content">{{ Config::get('constants.vat') }}%</td>
+                <td class="table-dark td-title custom-header">{{ __("Fecha de creación:") }}</td>
+                <td class="td-content">{{ $invoice->created_at->isoFormat('Y-MM-DD hh:mma') }}</td>
 
-                <td class="table-dark td-title custom-header">{{ __("Valor total:") }}</td>
-                <td class="td-content">${{ number_format($invoice->total, 2) }}</td>
+                <td class="table-dark td-title custom-header" nowrap>{{ __("Fecha de modificación:") }}</td>
+                <td class="td-content">{{ $invoice->updated_at->isoFormat('Y-MM-DD hh:mma') }}</td>
             </tr>
             <tr>
                 <td class="table-dark td-title custom-header">{{ __("Vendedor:") }}</td>
                 <td class="td-content">
-                    <a href="{{ route('sellers.show', $invoice->seller) }}" target="_blank">
+                    <a @can('view', $invoice->seller)
+                       href="{{ route('users.show', $invoice->seller) }}"
+                        @endcan>
                         {{ $invoice->seller->fullname }}
                     </a>
                 </td>
 
+                <td class="table-dark td-title custom-header">{{ __("Modificado por:") }}</td>
+                <td class="td-content">
+                    <a @can('view', $invoice->updater)
+                       href="{{ route('users.show', $invoice->updater) }}"
+                        @endcan>
+                        {{ $invoice->updater->fullname }}
+                    </a>
+                </td>
+            </tr>
+            <tr>
                 <td class="table-dark td-title custom-header">{{ __("Cliente:") }}</td>
                 <td class="td-content">
-                    <a href="{{ route('clients.show', $invoice->client) }}" target="_blank">
+                    <a @can('view', $invoice->client)
+                       href="{{ route('clients.show', $invoice->client) }}"
+                        @endcan>
                         {{ $invoice->client->fullname }}
                     </a>
                 </td>
+
+                <td class="table-dark td-title custom-header">{{ __("IVA:") }}</td>
+                <td class="td-content">{{ Config::get('constants.vat') }}%</td>
+
             </tr>
             <tr>
                 <td class="table-dark td-title custom-header">{{ __("Descripción:") }}</td>
@@ -103,10 +118,12 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach($invoice->products as $product)
+                @forelse($invoice->products as $product)
                     <tr>
                         <td class="text-center">
-                            <a href="{{ route('products.show', $product) }}">
+                            <a @can('view', $product)
+                               href="{{ route('products.show', $product) }}"
+                                @endcan>
                                 {{ $product->id }}
                             </a>
                         </td>
@@ -116,42 +133,55 @@
                         <td class="text-right">{{ number_format($product->pivot->unit_price, 2) }}</td>
                         <td class="text-right">${{ number_format($product->pivot->unit_price * $product->pivot->quantity, 2) }}</td>
                         <td class="text-right btn-group btn-group-sm">
-                            @if(! $invoice->isPaid() && ! $invoice->isAnnulled())
+                            @can('update', $invoice)
                                 <a href="{{ route('invoices.products.edit', [$invoice, $product]) }}" class="btn text-primary">
                                     <i class="fa fa-edit"></i>
                                 </a>
                                 <button type="button" class="btn text-danger" data-route="{{ route('invoices.products.destroy', [$invoice, $product]) }}" data-toggle="modal" data-target="#confirmDeleteModal">
                                     <i class="fa fa-trash"></i>
                                 </button>
-                            @endif
+                            @endcan
                         </td>
                     </tr>
-               @endforeach
-                <tr>
-                    <td class="text-right" colspan="5">
-                        <strong>{{ __("SUBTOTAL") }}</strong>
-                    </td>
-                    <td class="text-right">${{ number_format($invoice->subtotal, 2) }}</td>
-                </tr>
-                <tr>
-                    <td class="text-right" colspan="5">
-                        <strong>{{ __("IVA") }} ({{ Config::get('constants.vat') }})%</strong>
-                    </td>
-                    <td class="text-right">${{ number_format($invoice->ivaamount, 2) }}</td>
-                </tr>
-                <tr>
-                    <td class="text-right" colspan="5">
-                        <strong>{{ __("VALOR TOTAL") }}</strong>
-                    </td>
-                    <td class="text-right">${{ number_format($invoice->total, 2) }}</td>
-                </tr>
+                @empty
+                    <tr>
+                        <td colspan="7" class="p-3">
+                            <p class="alert alert-secondary text-center">
+                                {{ __('No se encontraron productos asociados') }}
+                            </p>
+                        </td>
+                    </tr>
+                @endforelse
+                @isset($invoice->products[0])
+                    <tr>
+                        <td colspan="4"></td>
+                        <td class="text-right custom-header">
+                            {{ __("SUBTOTAL") }}
+                        </td>
+                        <td class="text-right">${{ number_format($invoice->subtotal, 2) }}</td>
+                    </tr>
+                    <tr>
+                        <td colspan="4"></td>
+                        <td class="text-right custom-header">
+                            {{ __("IVA") }} ({{ Config::get('constants.vat') }})%
+                        </td>
+                        <td class="text-right">${{ number_format($invoice->ivaamount, 2) }}</td>
+                    </tr>
+                    <tr>
+                        <td colspan="4"></td>
+                        <td class="text-right custom-header">
+                            {{ __("VALOR TOTAL") }}
+                        </td>
+                        <td class="text-right">${{ number_format($invoice->total, 2) }}</td>
+                    </tr>
+                @endisset
             </tbody>
         </table>
-        @if(! $invoice->isPaid() && ! $invoice->isAnnulled())
+        @can('update', $invoice)
             <a href="{{ route('invoices.products.create', $invoice) }}" class="btn btn-success btn-block">
                 <i class="fa fa-plus"></i> {{ __("Agregar Producto") }}
             </a>
-        @endif
+        @endcan
     </div>
     <br>
     <div class="shadow">
@@ -182,9 +212,11 @@
         </table>
     </div>
 @endsection
-@push('modals')
-    @include('invoices.__confirm_annulment_modal')
-@endpush
-@push('scripts')
-    <script src="{{ asset(mix('js/annul-modal.js')) }}"></script>
-@endpush
+@can('delete', $invoice)
+    @push('modals')
+        @include('invoices.__confirm_annulment_modal')
+    @endpush
+    @push('scripts')
+        <script src="{{ asset(mix('js/annul-modal.js')) }}"></script>
+    @endpush
+@endcan

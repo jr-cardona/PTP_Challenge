@@ -39,12 +39,12 @@
         @forelse($clients as $client)
             <tr>
                 <td class="text-center">
-                    <a href="{{ route('clients.show', $client->id) }}" target="_blank">
+                    <a href="{{ route('clients.show', $client->id) }}">
                         {{ $client->fullname }}
                     </a>
                 </td>
-                <td class="text-center">{{ $client->cell_phone_number }}</td>
-                <td class="text-center">{{ $client->phone_number }}</td>
+                <td class="text-center">{{ $client->cellphone }}</td>
+                <td class="text-center">{{ $client->phone }}</td>
                 <td class="text-center">{{ $client->address }}</td>
                 <td class="text-right">${{ number_format($client->total_due * $vat, 2) }}</td>
             </tr>

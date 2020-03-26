@@ -3,126 +3,127 @@
 namespace App\Http\Controllers;
 
 use Config;
-use App\Product;
+use Exception;
+use App\Entities\Product;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use App\Exports\ProductsExport;
+use Illuminate\Http\RedirectResponse;
 use App\Http\Requests\SaveProductRequest;
+use App\Actions\Products\GetProductsAction;
+use App\Actions\Products\StoreProductsAction;
+use App\Actions\Products\UpdateProductsAction;
+use Illuminate\Auth\Access\AuthorizationException;
 
 class ProductController extends Controller
 {
+    public function __construct()
+    {
+        $this->authorizeResource(Product::class);
+    }
+
     /**
      * Display a listing of the resource.
+     * @param GetProductsAction $action
      * @param Request $request
-     * @return \Illuminate\Http\Response
+     * @return Response
+     * @throws AuthorizationException
      */
-    public function index(Request $request)
+    public function index(GetProductsAction $action, Request $request)
     {
-        $products = Product::id($request->get('id'))
-            ->orderBy('id');
-        if(! empty($request->get('format'))){
-            return (new ProductsExport($products->get()))
-                ->download('products-list.'.$request->get('format'));
-        } else {
-            $paginate = Config::get('constants.paginate');
-            $count = $products->count();
-            $products = $products->paginate($paginate);
+        $products = $action->execute(new Product(), $request);
 
-            return response()->view('products.index', [
-                'products' => $products,
-                'request' => $request,
-                'count' => $count,
-                'paginate' => $paginate,
-            ]);
+        if($format = $request->get('format')){
+            $this->authorize('export', Product::class);
+            return (new ProductsExport($products->get()))
+                ->download('products-list.' . $format);
         }
+
+        $paginate = Config::get('constants.paginate');
+        $count = $products->count();
+        $products = $products->paginate($paginate);
+
+        return response()->view('products.index', compact(
+                'products', 'request', 'count', 'paginate')
+        );
     }
 
     /**
      * Show the form for creating a new resource.
      *
-     * @return \Illuminate\Http\Response
+     * @param Product $product
+     * @return Response
      */
-    public function create()
+    public function create(Product $product)
     {
-        return response()->view('products.create', [
-            'product' => new Product()
-        ]);
+        return response()->view('products.create', compact('product'));
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\RedirectResponse
+     * @param StoreProductsAction $action
+     * @param SaveProductRequest $request
+     * @return RedirectResponse
      */
-    public function store(SaveProductRequest $request)
+    public function store(StoreProductsAction $action, SaveProductRequest $request)
     {
-        $result = Product::create(array_merge(
-            $request->validated(), [
-                'price' => $request->get('cost') * 1.10
-            ])
-        );
+        $product = $action->execute(new Product(), $request);
 
-        return redirect()->route('products.show', $result->id)->withSuccess(__('Producto creado satisfactoriamente'));
+        return redirect()->route('products.show', $product->id)
+            ->withSuccess(__('Producto creado satisfactoriamente'));
     }
 
     /**
      * Display the specified resource.
      *
      * @param Product $product
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function show(Product $product)
     {
-        return response()->view('products.show', [
-            'product' => $product,
-            'side_effect' => ''
-        ]);
+        return response()->view('products.show', compact('product'));
     }
 
     /**
      * Show the form for editing the specified resource.
      *
      * @param Product $product
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function edit(Product $product)
     {
-        return response()->view('products.edit', [
-            'product' => $product
-        ]);
+        return response()->view('products.edit', compact('product'));
     }
 
     /**
      * Update the specified resource in storage.
      *
+     * @param UpdateProductsAction $action
      * @param SaveProductRequest $request
      * @param Product $product
-     * @return \Illuminate\Http\RedirectResponse
+     * @return RedirectResponse
      */
-    public function update(SaveProductRequest $request, Product $product)
+    public function update(UpdateProductsAction $action, Product $product,
+                           SaveProductRequest $request)
     {
-        $product->update(array_merge(
-            $request->validated(), [
-            'price' => $request->get('cost') * 1.10
-        ]));
+        $product = $action->execute($product, $request);
 
-        return redirect()->route('products.show', $product)->withSuccess(__('Producto actualizado satisfactoriamente'));
+        return redirect()->route('products.show', $product)
+            ->withSuccess(__('Producto actualizado satisfactoriamente'));
     }
 
     /**
      * Remove the specified resource from storage.
      *
      * @param Product $product
-     * @return \Illuminate\Http\RedirectResponse
-     * @throws \Exception
+     * @return RedirectResponse
+     * @throws Exception
      */
     public function destroy(Product $product)
     {
-        if ($product->invoices->count() > 0){
-            return redirect()->back()->withError(__('No se puede eliminar, hay facturas asociadas con este producto'));
-        } else{
-            $product->delete();
-            return redirect()->route('products.index')->withSuccess(__('Producto eliminado satisfactoriamente'));
-        }
+        $product->delete();
+
+        return redirect()->route('products.index')->withSuccess(__('Producto eliminado satisfactoriamente'));
     }
 }

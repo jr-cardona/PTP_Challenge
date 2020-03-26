@@ -21,7 +21,7 @@
                     <i class="fa fa-times"></i> {{ __("Cerrar") }}
                 </button>
                 <button type="submit" form="searchForm" id="assign-format" class="btn btn-warning">
-                    <i class="fa fa-file"></i> {{ __("Exportar") }}
+                    <i class="fa fa-file-excel"></i> {{ __("Exportar") }}
                 </button>
             </div>
         </div>

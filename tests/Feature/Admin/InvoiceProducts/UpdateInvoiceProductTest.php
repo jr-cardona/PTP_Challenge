@@ -2,11 +2,12 @@
 
 namespace Tests\Feature\Admin\InvoiceProducts;
 
-use App\User;
-use App\Invoice;
-use App\Product;
 use Carbon\Carbon;
 use Tests\TestCase;
+use App\Entities\User;
+use App\Entities\Invoice;
+use App\Entities\Product;
+use Spatie\Permission\Models\Permission;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class UpdateInvoiceProductTest extends TestCase
@@ -14,79 +15,101 @@ class UpdateInvoiceProductTest extends TestCase
     use RefreshDatabase;
 
     /** @test */
-    public function guest_user_cannot_update_invoice_products()
+    public function guests_cannot_update_invoice_products()
     {
-        $data = $this->data();
+        $data1 = $this->data1();
+        $data2 = $this->data2();
         $product = factory(Product::class)->create();
         $invoice = factory(Invoice::class)->create();
-        $invoice->products()->attach($product->id, ['quantity' => 1, 'unit_price' => 1]);
+        $invoice->products()->attach($product->id, $data1);
 
-        $this->put(route('invoices.products.update', [$invoice, $product]), $data)
+        $this->put(route('invoices.products.update', [$invoice, $product]), $data2)
             ->assertRedirect('login');
-        $this->assertDatabaseMissing('invoice_product', $data);
+        $this->assertDatabaseMissing('invoice_product', $data2);
     }
 
     /** @test */
-    public function logged_in_user_cannot_update_details_for_paid_invoices_view()
+    public function unauthorized_user_cannot_update_invoice_details()
     {
-        $data = $this->data();
+        $permission = Permission::create(['name' => 'Edit all invoices']);
+        $user = factory(User::class)->create();
+        $data1 = $this->data1();
+        $data2 = $this->data2();
+        $product = factory(Product::class)->create();
+        $invoice = factory(Invoice::class)->create();
+        $invoice->products()->attach($product->id, $data1);
+
+        $this->actingAs($user)->put(route('invoices.products.update', [$invoice, $product]), $data2)
+            ->assertStatus(403);
+        $this->assertDatabaseMissing('invoice_product', $data2);
+    }
+
+    /** @test */
+    public function authorized_user_cannot_update_details_for_paid_invoices_view()
+    {
+        $permission = Permission::create(['name' => 'Edit all invoices']);
+        $user = factory(User::class)->create()->givePermissionTo($permission);
+        $data1 = $this->data1();
+        $data2 = $this->data2();
         $product = factory(Product::class)->create();
         $invoice = factory(Invoice::class)->create(["paid_at" => Carbon::now()]);
-        $invoice->products()->attach($product->id, ['quantity' => 1, 'unit_price' => 1]);
-        $user = factory(User::class)->create();
+        $invoice->products()->attach($product->id, $data1);
 
-        $response = $this->actingAs($user)->put(route('invoices.products.update', [$invoice, $product]), $data);
-        $response->assertRedirect(route('invoices.show', $invoice));
+        $this->actingAs($user)->put(route('invoices.products.update', [$invoice, $product]), $data2)
+            ->assertStatus(403);
+        $this->assertDatabaseMissing('invoice_product', $data2);
     }
 
     /** @test */
-    public function logged_in_user_cannot_update_details_for_annulled_invoices_view()
+    public function authorized_user_cannot_update_details_for_annulled_invoices_view()
     {
-        $data = $this->data();
+        $permission = Permission::create(['name' => 'Edit all invoices']);
+        $user = factory(User::class)->create()->givePermissionTo($permission);
+        $data1 = $this->data1();
+        $data2 = $this->data2();
         $product = factory(Product::class)->create();
         $invoice = factory(Invoice::class)->create(["annulled_at" => Carbon::now()]);
-        $invoice->products()->attach($product->id, ['quantity' => 1, 'unit_price' => 1]);
-        $user = factory(User::class)->create();
+        $invoice->products()->attach($product->id, $data1);
 
-        $response = $this->actingAs($user)->put(route('invoices.products.update', [$invoice, $product]), $data);
+        $this->actingAs($user)->put(route('invoices.products.update', [$invoice, $product]), $data2)
+            ->assertStatus(403);
+        $this->assertDatabaseMissing('invoice_product', $data2);
+    }
+
+    /** @test */
+    public function authorized_user_can_update_invoice_products()
+    {
+        $permission = Permission::create(['name' => 'Edit all invoices']);
+        $user = factory(User::class)->create()->givePermissionTo($permission);
+        $data1 = $this->data1();
+        $data2 = $this->data2();
+        $product = factory(Product::class)->create();
+        $invoice = factory(Invoice::class)->create();
+        $invoice->products()->attach($product->id, $data1);
+
+        $response = $this->actingAs($user)->put(route('invoices.products.update', [$invoice, $product]), $data2);
         $response->assertRedirect(route('invoices.show', $invoice));
-    }
-
-    /** @test */
-    public function logged_in_user_can_update_invoice_products()
-    {
-        $data = $this->data();
-        $user = factory(User::class)->create();
-        $product = factory(Product::class)->create();
-        $invoice = factory(Invoice::class)->create();
-        $invoice->products()->attach($product->id, ['quantity' => 1, 'unit_price' => 1]);
-
-        $response = $this->actingAs($user)->put(route('invoices.products.update', [$invoice, $product]), $data)
-            ->assertRedirect(route('invoices.show', $invoice));
         $response->assertSessionHasNoErrors();
-    }
-
-    /** @test */
-    public function data_product_can_be_updated_in_database()
-    {
-        $data = $this->data();
-        $user = factory(User::class)->create();
-        $product = factory(Product::class)->create();
-        $invoice = factory(Invoice::class)->create();
-        $invoice->products()->attach($product->id, [
-            'quantity' => 1,
-            'unit_price' => $product->price,
-        ]);
-
-        $this->actingAs($user)->put(route('invoices.products.update', [$invoice, $product]), $data);
-        $this->assertDatabaseHas('invoice_product', $data);
+        $this->assertDatabaseHas('invoice_product', $data2);
     }
 
     /**
      * An array with valid invoice_product data
      * @return array
      */
-    public function data()
+    public function data1()
+    {
+        return [
+            'quantity' => 1,
+            'unit_price' => 1,
+        ];
+    }
+
+    /**
+     * An array with valid invoice_product data
+     * @return array
+     */
+    public function data2()
     {
         return [
             'quantity' => 100,

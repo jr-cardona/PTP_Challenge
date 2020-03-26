@@ -27,36 +27,38 @@
                 <!-- Left Side Of Navbar -->
                 @auth
                 <ul class="navbar-nav mr-auto">
-                    <li class="nav-item">
-                        <a href="{{ route('invoices.index') }}"
-                           class="nav-link {{ request()->segment(1) == 'facturas' ? 'active' : '' }}">
-                            <i class="fa fa-file-invoice-dollar"></i> {{ __("Facturas") }}
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="{{ route('clients.index') }}"
-                           class="nav-link {{ request()->segment(1) == 'clientes' ? 'active' : '' }}">
-                            <i class="fa fa-users"></i> {{ __("Clientes") }}
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="{{ route('sellers.index') }}"
-                           class="nav-link {{ request()->segment(1) == 'vendedores' ? 'active' : '' }}">
-                            <i class="fa fa-user-tie"></i> {{ __("Vendedores") }}
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="{{ route('products.index') }}"
-                           class="nav-link {{ request()->segment(1) == 'productos' ? 'active' : '' }}">
-                            <i class="fa fa-barcode"></i> {{ __("Productos") }}
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="{{ route('reports.index') }}"
-                           class="nav-link {{ request()->segment(1) == 'reportes' ? 'active' : '' }}">
-                            <i class="fa fa-registered"></i> {{ __("Reportes") }}
-                        </a>
-                    </li>
+                    @can('viewAny', App\Entities\Invoice::class)
+                        <li class="nav-item">
+                            <a href="{{ route('invoices.index') }}"
+                               class="nav-link {{ request()->segment(1) == 'facturas' ? 'active' : '' }}">
+                                <i class="fa fa-file-invoice-dollar"></i> {{ __("Facturas") }}
+                            </a>
+                        </li>
+                    @endcan
+                    @can('viewAny', App\Entities\Client::class)
+                        <li class="nav-item">
+                            <a href="{{ route('clients.index') }}"
+                               class="nav-link {{ request()->segment(1) == 'clientes' ? 'active' : '' }}">
+                                <i class="fa fa-users"></i> {{ __("Clientes") }}
+                            </a>
+                        </li>
+                    @endcan
+                    @can('viewAny', App\Entities\Product::class)
+                        <li class="nav-item">
+                            <a href="{{ route('products.index') }}"
+                               class="nav-link {{ request()->segment(1) == 'productos' ? 'active' : '' }}">
+                                <i class="fa fa-barcode"></i> {{ __("Productos") }}
+                            </a>
+                        </li>
+                    @endcan
+                    @if(auth()->user()->can('View all reports') || auth()->user()->hasRole('SuperAdmin'))
+                        <li class="nav-item">
+                            <a href="{{ route('reports.index') }}"
+                               class="nav-link {{ request()->segment(1) == 'reportes' ? 'active' : '' }}">
+                                <i class="fa fa-registered"></i> {{ __("Reportes") }}
+                            </a>
+                        </li>
+                    @endif
                 </ul>
                 @endauth
                 <!-- Right Side Of Navbar -->
@@ -72,18 +74,40 @@
                             </li>
                         @endif
                     @else
+                        @can('viewAny', App\Entities\User::class)
+                            <li class="nav-item">
+                                <a href="{{ route('users.index') }}"
+                                   class="nav-link {{ request()->segment(1) == 'usuarios' ? 'active' : '' }}">
+                                    <i class="fa fa-user-tie"></i> {{ __("Usuarios") }}
+                                </a>
+                            </li>
+                        @endcan
                         <li class="nav-item dropdown">
                             <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
-                                {{ Auth::user()->name }} <span class="caret"></span>
+                                {{ auth()->user()->fullname }} <span class="caret"></span>
                             </a>
 
                             <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+                                @can('view', auth()->user())
+                                    <a class="dropdown-item" href="{{ route('users.show', auth()->user()) }}">
+                                        <i class="fa fa-user-tie"></i> {{ __("Mi perfil") }}
+                                    </a>
+                                @endcan
+                                @can('update', auth()->user())
+                                    <a class="dropdown-item" href="{{ route('users.edit', auth()->user()) }}">
+                                        <i class="fa fa-user-edit"></i> {{ __("Editar perfil") }}
+                                    </a>
+                                @endcan
+                                @can('update', auth()->user())
+                                    <a class="dropdown-item" href="{{ route('users.edit-password', auth()->user()) }}">
+                                        <i class="fa fa-key"></i> {{ __("Editar contraseña") }}
+                                    </a>
+                                @endcan
                                 <a class="dropdown-item" href="{{ route('logout') }}"
                                    onclick="event.preventDefault();
                                                  document.getElementById('logout-form').submit();">
-                                    {{ __('Logout') }}
+                                    <i class="fa fa-sign-out-alt"></i> {{ __('Cerrar sesión') }}
                                 </a>
-
                                 <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
                                     @csrf
                                 </form>

@@ -13,6 +13,10 @@ class AuthServiceProvider extends ServiceProvider
      * @var array
      */
     protected $policies = [
+        'App\Entities\Invoice' => 'App\Policies\InvoicePolicy',
+        'App\Entities\Client' => 'App\Policies\ClientPolicy',
+        'App\Entities\Product' => 'App\Policies\ProductPolicy',
+        'App\Entities\User' => 'App\Policies\UserPolicy',
     ];
 
     /**
@@ -23,5 +27,9 @@ class AuthServiceProvider extends ServiceProvider
     public function boot()
     {
         $this->registerPolicies();
+
+        Gate::before(function ($user, $ability) {
+            return $user->hasRole('SuperAdmin') ? true : null;
+        });
     }
 }

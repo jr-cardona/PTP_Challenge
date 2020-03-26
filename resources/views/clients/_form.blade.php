@@ -2,7 +2,8 @@
 <div class="row">
     <div class="col form-group">
         <label for="name" class="required">{{ __("Nombre") }}</label>
-        <input type="text" name="name" id="name" value="{{ old('name', $client->name) }}" required minlength="3" maxlength="50"
+        <input type="text" name="name" id="name" value="{{ old('name', $client->name) }}"
+               required minlength="3" maxlength="50"
                class="form-control @error('name') is-invalid @enderror" placeholder="Ingresa el nombre">
         @error('name')
             <span class="invalid-feedback" role="alert">
@@ -15,8 +16,9 @@
         @enderror
     </div>
     <div class="col form-group">
-        <label for="surname" class="required">{{ __("Apellido") }}</label>
-        <input type="text" name="surname" id="surname" value="{{ old('surname', $client->surname) }}" required minlength="3" maxlength="50"
+        <label for="surname" class="required">{{ __("Apellidos") }}</label>
+        <input type="text" name="surname" id="surname" value="{{ old('surname', $client->surname ?? '') }}"
+               required minlength="3" maxlength="50"
                class="form-control @error('surname') is-invalid @enderror" placeholder="Ingresa el apellido">
         @error('surname')
             <span class="invalid-feedback" role="alert">
@@ -34,7 +36,8 @@
                 class="form-control @error('type_document_id') is-invalid @enderror">
             <option value="">{{ __("Ingresa el tipo de documento") }} </option>
             @foreach($type_documents as $type_document)
-                <option value="{{ $type_document->id }}" {{ old('type_document_id', $client->type_document_id) == $type_document->id ? 'selected' : '' }}>
+                <option value="{{ $type_document->id }}"
+                    {{ old('type_document_id', $client->type_document_id) == $type_document->id ? 'selected' : '' }}>
                     {{ $type_document->fullname }}
                 </option>
             @endforeach
@@ -51,7 +54,8 @@
     <div class="col">
         <label for="document" class="required">{{ __("Número de documento") }}</label>
         <input type="tel" name="document" id="document" value="{{ old('document', $client->document) }}"
-               class="form-control @error('document') is-invalid @enderror" placeholder="Ingresa el número de documento" required minlength="8" maxlength="10">
+               class="form-control @error('document') is-invalid @enderror" placeholder="Ingresa el número de documento"
+               required minlength="8" maxlength="10">
         @error('document')
             <span class="invalid-feedback" role="alert">
                 <strong>{{ $message }}</strong>
@@ -63,10 +67,10 @@
         @enderror
     </div>
     <div class="col">
-        <label for="phone_number">{{ __("Número telefónico") }}</label>
-        <input type="tel" name="phone_number" id="phone_number" value="{{ old('phone_number', $client->phone_number) }}"
-               class="form-control @error('phone_number') is-invalid @enderror" placeholder="Ingresa el número telefónico">
-        @error('phone_number')
+        <label for="phone">{{ __("Número telefónico") }}</label>
+        <input type="tel" name="phone" id="phone" value="{{ old('phone', $client->phone) }}"
+               class="form-control @error('phone') is-invalid @enderror" placeholder="Ingresa el número telefónico">
+        @error('phone')
             <span class="invalid-feedback" role="alert">
                 <strong>{{ $message }}</strong>
             </span>
@@ -77,10 +81,11 @@
         @enderror
     </div>
     <div class="col">
-        <label for="cell_phone_number" class="required">{{ __("Número de celular") }}</label>
-        <input type="tel" name="cell_phone_number" id="cell_phone_number" value="{{ old('cell_phone_number', $client->cell_phone_number) }}"
-               class="form-control @error('cell_phone_number') is-invalid @enderror" placeholder="Ingresa el número de celular" required minlength="10" maxlength="10">
-        @error('cell_phone_number')
+        <label for="cellphone" class="required">{{ __("Número de celular") }}</label>
+        <input type="tel" name="cellphone" id="cellphone" value="{{ old('cellphone', $client->cellphone) }}"
+               class="form-control @error('cellphone') is-invalid @enderror" placeholder="Ingresa el número de celular"
+               required minlength="10" maxlength="10">
+        @error('cellphone')
             <span class="invalid-feedback" role="alert">
                 <strong>{{ $message }}</strong>
             </span>
@@ -95,7 +100,8 @@
 <div class="row">
     <div class="col">
         <label for="address" class="required">{{ __("Dirección") }}</label>
-        <input type="text" name="address" id="address" value="{{ old('address', $client->address) }}" required minlength="5" maxlength="100"
+        <input type="text" name="address" id="address" value="{{ old('address', $client->address) }}"
+               required minlength="5" maxlength="100"
                class="form-control @error('address') is-invalid @enderror" placeholder="Ingresa la dirección">
         @error('address')
         <span class="invalid-feedback" role="alert">
@@ -109,7 +115,8 @@
     </div>
     <div class="col">
         <label for="email" class="required">{{ __("Email") }}</label>
-        <input type="email" name="email" id="email" value="{{ old('email', $client->email) }}" required minlength="5" maxlength="100"
+        <input type="email" name="email" id="email" value="{{ old('email', $client->email ?? '') }}"
+               required minlength="5" maxlength="100"
                class="form-control @error('email') is-invalid @enderror" placeholder="Ingresa el correo electrónico">
         @error('email')
             <span class="invalid-feedback" role="alert">

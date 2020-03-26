@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Product;
-use App\Invoice;
-use App\Http\Requests\StoreInvoiceProductRequest;
-use App\Http\Requests\UpdateInvoiceProductRequest;
+use App\Entities\Product;
+use App\Entities\Invoice;
+use Illuminate\Http\Response;
+use Illuminate\Http\RedirectResponse;
+use App\Http\Requests\SaveInvoiceProductRequest;
+use Illuminate\Auth\Access\AuthorizationException;
 
 class InvoiceProductController extends Controller
 {
@@ -13,43 +15,34 @@ class InvoiceProductController extends Controller
      * Show the form for creating a new resource.
      *
      * @param Invoice $invoice
-     * @return \Illuminate\Http\Response | \Illuminate\Http\RedirectResponse
+     * @return Response | RedirectResponse
+     * @throws AuthorizationException
      */
     public function create(Invoice $invoice)
     {
-        if ($invoice->isPaid()) {
-            return redirect()->route('invoices.show', $invoice)->withInfo(__("La factura ya se encuentra pagada y no se puede editar"));
-        }
-        if ($invoice->isAnnulled()) {
-            return redirect()->route('invoices.show', $invoice)->withInfo(__("La factura ya se encuentra anulada y no se puede editar"));
-        }
-        return response()->view('invoices.products.create', [
-                'invoice' => $invoice,
-        ]);
+        $this->authorize('update', $invoice);
+        return response()->view('invoices.products.create', compact('invoice'));
     }
 
     /**
      * Store a newly created resource in storage.
      *
      * @param Invoice $invoice
-     * @param StoreInvoiceProductRequest $request
-     * @return \Illuminate\Http\RedirectResponse
+     * @param SaveInvoiceProductRequest $request
+     * @return RedirectResponse
+     * @throws AuthorizationException
      */
-    public function store(Invoice $invoice, StoreInvoiceProductRequest $request)
+    public function store(Invoice $invoice, SaveInvoiceProductRequest $request)
     {
-        if ($invoice->isPaid()) {
-            return redirect()->route('invoices.show', $invoice)->withInfo(__("La factura ya se encuentra pagada y no se puede editar"));
-        }
-        if ($invoice->isAnnulled()) {
-            return redirect()->route('invoices.show', $invoice)->withInfo(__("La factura ya se encuentra anulada y no se puede editar"));
-        }
-        $product = Product::find($request->get('product_id'));
+        $this->authorize('update', $invoice);
+        $product = Product::find($request->input('product_id'));
         $invoice->products()->attach($product->id, array_merge($request->validated(),
                 ['unit_price' => $product->price]
             )
         );
 
-        return redirect()->route('invoices.show', $invoice)->withSuccess(__('Detalle creado satisfactoriamente'));
+        return redirect()->route('invoices.show', $invoice)
+            ->withSuccess(__('Detalle creado satisfactoriamente'));
     }
 
     /**
@@ -57,20 +50,13 @@ class InvoiceProductController extends Controller
      *
      * @param Invoice $invoice
      * @param Product $product
-     * @return \Illuminate\Http\Response | \Illuminate\Http\RedirectResponse
+     * @return Response | RedirectResponse
+     * @throws AuthorizationException
      */
     public function edit(Invoice $invoice, Product $product)
     {
-        if ($invoice->isPaid()) {
-            return redirect()->route('invoices.show', $invoice)->withInfo(__("La factura ya se encuentra pagada y no se puede editar"));
-        }
-        if ($invoice->isAnnulled()) {
-            return redirect()->route('invoices.show', $invoice)->withInfo(__("La factura ya se encuentra anulada y no se puede editar"));
-        }
-        return response()->view('invoices.products.edit', [
-            'invoice' => $invoice,
-            'product' => $product
-        ]);
+        $this->authorize('update', $invoice);
+        return response()->view('invoices.products.edit', compact('invoice', 'product'));
     }
 
     /**
@@ -78,20 +64,17 @@ class InvoiceProductController extends Controller
      *
      * @param Invoice $invoice
      * @param Product $product
-     * @param UpdateInvoiceProductRequest $request
-     * @return \Illuminate\Http\RedirectResponse
+     * @param SaveInvoiceProductRequest $request
+     * @return RedirectResponse
+     * @throws AuthorizationException
      */
-    public function update(Invoice $invoice, Product $product, UpdateInvoiceProductRequest $request)
+    public function update(Invoice $invoice, Product $product, SaveInvoiceProductRequest $request)
     {
-        if ($invoice->isPaid()) {
-            return redirect()->route('invoices.show', $invoice)->withInfo(__("La factura ya se encuentra pagada y no se puede editar"));
-        }
-        if ($invoice->isAnnulled()) {
-            return redirect()->route('invoices.show', $invoice)->withInfo(__("La factura ya se encuentra anulada y no se puede editar"));
-        }
+        $this->authorize('update', $invoice);
         $invoice->products()->updateExistingPivot($product->id, $request->validated());
 
-        return redirect()->route('invoices.show', $invoice)->withSuccess(__('Detalle actualizado satisfactoriamente'));
+        return redirect()->route('invoices.show', $invoice)
+            ->withSuccess(__('Detalle actualizado satisfactoriamente'));
     }
 
     /**
@@ -99,17 +82,12 @@ class InvoiceProductController extends Controller
      *
      * @param Invoice $invoice
      * @param Product $product
-     * @return \Illuminate\Http\RedirectResponse
-     * @throws \Exception
+     * @return RedirectResponse
+     * @throws AuthorizationException
      */
     public function destroy(Invoice $invoice, Product $product)
     {
-        if ($invoice->isPaid()) {
-            return redirect()->route('invoices.show', $invoice)->withInfo(__("La factura ya se encuentra pagada y no se puede editar"));
-        }
-        if ($invoice->isAnnulled()) {
-            return redirect()->route('invoices.show', $invoice)->withInfo(__("La factura ya se encuentra anulada y no se puede editar"));
-        }
+        $this->authorize('update', $invoice);
         $invoice->products()->detach($product->id);
 
         return redirect()->route('invoices.show', $invoice)->withSuccess(__('Detalle eliminado satisfactoriamente'));

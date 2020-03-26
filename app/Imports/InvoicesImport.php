@@ -2,8 +2,9 @@
 
 namespace App\Imports;
 
-use App\Invoice;
 use Carbon\Carbon;
+use App\Entities\User;
+use App\Entities\Invoice;
 use Maatwebsite\Excel\Concerns\ToModel;
 use Maatwebsite\Excel\Concerns\Importable;
 use Maatwebsite\Excel\Concerns\WithValidation;
@@ -13,7 +14,8 @@ use Maatwebsite\Excel\Imports\HeadingRowFormatter;
 
 HeadingRowFormatter::default('none');
 
-class InvoicesImport extends BaseImport implements ToModel, WithHeadingRow, WithValidation, WithBatchInserts
+class InvoicesImport extends BaseImport implements ToModel, WithHeadingRow,
+    WithValidation, WithBatchInserts
 {
     use Importable;
     private $rows = 0;
@@ -27,7 +29,8 @@ class InvoicesImport extends BaseImport implements ToModel, WithHeadingRow, With
             'received_at' => Carbon::create($row['Fecha de recibo']),
             'description' => $row['Descripción'],
             'client_id' => $row['ID Cliente'],
-            'seller_id' => $row['ID Vendedor'],
+            'created_by' => $row['ID Vendedor'],
+            'updated_by' => $row['ID Vendedor'],
         ]);
     }
 
@@ -39,7 +42,22 @@ class InvoicesImport extends BaseImport implements ToModel, WithHeadingRow, With
             'Fecha de recibo' => 'nullable|date|after:issued_at|before:expires_at',
             'Descripción' => 'nullable|string|max:255',
             'ID Cliente' => 'required|numeric|exists:clients,id',
-            'ID Vendedor' => 'required|numeric|exists:sellers,id',
+            'ID Vendedor' => ['required', 'numeric',
+                function($attribute, $userId, $onFailure){
+                    if (auth()->user()->can('Import all invoices')
+                        || auth()->user()->hasRole('SuperAdmin')){
+                        if (User::where('id', $userId)->count() == 0) {
+                            $onFailure("Este vendedor no existe");
+                        }
+                    } elseif (auth()->user()->can('Import invoices')) {
+                        if ($userId != auth()->id()){
+                            $onFailure("No tiene permisos de importar facturas de otros vendedores");
+                        }
+                    } else {
+                        $onFailure("No tiene permisos de importar facturas");
+                    }
+                }
+            ]
         ];
     }
 

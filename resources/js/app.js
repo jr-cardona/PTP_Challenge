@@ -35,9 +35,9 @@ const app = new Vue({
             "id": $('#old_client_id').val(),
             "fullname" : $('#old_client_fullname').val(),
         },
-        old_seller_values: {
-            "id": $('#old_seller_id').val(),
-            "fullname" : $('#old_seller_fullname').val(),
+        old_user_values: {
+            "id": $('#old_created_by').val(),
+            "fullname" : $('#old_user_fullname').val(),
         },
         old_product_values: {
             "id": $('#old_product_id').val(),
@@ -55,10 +55,10 @@ const app = new Vue({
                 loading(false);
             });
         },
-        searchSeller(search, loading) {
+        searchUser(search, loading) {
             loading(true);
             fetch(
-                `/vendedores/buscar?name=${escape(search)}`
+                `/usuarios/buscar?name=${escape(search)}`
             ).then(res => {
                 res.json().then(json => (this.options = json));
                 loading(false);
