@@ -35,10 +35,10 @@
             </tr>
             <tr>
                 <td class="table-dark td-title">{{ __("Creado por:")}}</td>
-                <td class="td-content">{{ $user->creator->fullname }}</td>
+                <td class="td-content">{{ $user->creator->fullname ?? 'NN' }}</td>
 
                 <td class="table-dark td-title">{{ __("Modificado por:")}}</td>
-                <td class="td-content">{{ $user->updater->fullname }}</td>
+                <td class="td-content">{{ $user->updater->fullname ?? 'NN' }}</td>
             </tr>
             <tr>
                 <td class="table-dark td-title">{{ __("Correo electrónico:")}}</td>

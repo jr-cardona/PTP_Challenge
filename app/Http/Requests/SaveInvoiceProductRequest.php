@@ -52,7 +52,7 @@ class SaveInvoiceProductRequest extends FormRequest
         $invoice_product = DB::table('products as p')
             ->join('invoice_product as ip', 'ip.product_id', '=', 'p.id')
             ->join('invoices as i', 'i.id', '=', 'ip.invoice_id')
-            ->where('p.id', request('product_id'))
+            ->where('p.id', $this->product_id)
             ->where('i.id', $this->invoice->id)
             ->get();
 

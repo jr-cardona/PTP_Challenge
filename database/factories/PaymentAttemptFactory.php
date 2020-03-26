@@ -15,7 +15,7 @@ $factory->define(PaymentAttempt::class, function (Faker $faker) {
         'amount' => $faker->randomNumber(),
         'requestID' => $faker->randomNumber(),
         'processUrl' => $faker->url,
-        'created_by' => User::first()->id,
-        'updated_by' => User::first()->id,
+        'created_by' => User::first()->id ?? factory(User::class),
+        'updated_by' => User::first()->id ?? factory(User::class),
     ];
 });
