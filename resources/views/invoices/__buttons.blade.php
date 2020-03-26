@@ -1,3 +1,8 @@
+@can('print', $invoice)
+    <a href="{{ route('invoices.print', $invoice) }}" class="btn btn-danger" title="Imprimir">
+        <i class="fa fa-file-pdf"></i>@routeIs('invoices.show', $invoice) {{ __("Imprimir") }} @endif
+    </a>
+@endcan
 @can('update', $invoice)
     <a href="{{ route('invoices.edit', $invoice) }}" class="btn btn-primary" title="Editar">
         <i class="fa fa-edit"></i>@routeIs('invoices.show', $invoice) {{ __("Editar") }} @endif
