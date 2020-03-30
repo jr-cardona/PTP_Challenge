@@ -1,0 +1,44 @@
+.custom-header
+{
+    background-color: #0c5460;
+    color: white;
+}
+
+.required:after
+{
+    color: red;
+    content: " *";
+}
+.td-title
+{
+    width: 15%;
+    white-space: nowrap;
+}
+.td-content
+{
+    width: 35%;
+}
+.v-select .vs__dropdown-toggle
+{
+    border: none;
+}
+.vs__actions
+{
+    padding: 0 1px 0 1px !important;
+}
+.fa-check-circle
+{
+    color: darkgreen;
+}
+.fa-exclamation-triangle
+{
+    color: red;
+}
+.fa-ban
+{
+    color: gold;
+}
+.container
+{
+    max-width: 1300px;
+}

@@ -2,7 +2,7 @@
 
 namespace App\Http\View\Composers;
 
-use App\TypeDocument;
+use App\Entities\TypeDocument;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\View\View;
 
@@ -20,7 +20,8 @@ class TypeDocumentComposer
 
     public function compose(View $view)
     {
-        $type_documents = $this->type_documents->orderBy('fullname', 'asc')->select('id', 'fullname')->get();
-        return $view->with('type_documents', $type_documents);
+        $view->with('type_documents', Cache::remember('type_documents.enabled', 600, function () {
+            return $this->type_documents::all();
+        }));
     }
 }

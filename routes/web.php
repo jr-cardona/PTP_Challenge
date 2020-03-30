@@ -13,21 +13,40 @@
 
 Auth::routes();
 
-Route::middleware(['auth'])->group(function (){
-    Route::get('/', 'HomeController@index');
-    Route::get('/home', 'HomeController@index')->name('home');
-    Route::get('/clientes/buscar', 'ClientController@search')->name('clients.search');
-    Route::get('/vendedores/buscar', 'SellerController@search')->name('sellers.search');
-    Route::get('/productos/buscar', 'ProductController@search')->name('prodcuts.search');
+Route::middleware(['auth'])->group(static function () {
+    Route::get('/', 'HomeController@index')->name('home');
 
-    Route::resource('/facturas/{invoice}/detalle', 'InvoiceProductController')
+    // Search
+    Route::get('/clientes/buscar', 'SearchController@clients')
+        ->name('search.clients');
+    Route::get('/productos/buscar', 'SearchController@products')
+        ->name('search.products');
+    Route::get('/usuarios/buscar', 'SearchController@users')
+        ->name('search.users');
+    Route::get('/permisos/buscar', 'SearchController@permissions')
+        ->name('search.permissions');
+
+    // Imports
+    Route::post('/importar', 'ImportController@import')->name('import');
+
+    // Resources
+    Route::resource('/facturas/{invoice}/producto', 'InvoiceProductController')
         ->except('index', 'show')
-        ->names('invoiceDetails')
-        ->parameters(['detalle' => 'product']);
+        ->names('invoices.products')
+        ->parameters(['producto' => 'product']);
+
+    Route::resource('/facturas/{invoice}/pagar', 'PaymentAttemptsController')
+        ->only('create', 'store', 'show')
+        ->names('invoices.payments')
+        ->parameters(['pagar' => 'paymentAttempt']);
 
     Route::resource('/facturas', 'InvoiceController')
         ->names('invoices')
         ->parameters(['facturas' => 'invoice']);
+    Route::get('/facturas/{invoice}/recibir/', 'InvoiceController@receivedCheck')
+        ->name('invoices.receivedCheck');
+    Route::get('/facturas/{invoice}/print', 'InvoiceController@print')
+        ->name('invoices.print');
 
     Route::resource('/clientes', 'ClientController')
         ->names('clients')
@@ -37,11 +56,23 @@ Route::middleware(['auth'])->group(function (){
         ->names('products')
         ->parameters(['productos' => 'product']);
 
-    Route::resource('/vendedores', 'SellerController')
-        ->names('sellers')
-        ->parameters(['vendedores' => 'seller']);
+    Route::resource('/usuarios', 'UserController')
+        ->names('users')
+        ->parameters(['usuarios' => 'user']);
 
-    Route::get('invoices-export-excel', 'InvoiceController@exportExcel')->name('invoices.exportExcel');
-    Route::post('invoices-import-excel', 'InvoiceController@importExcel')->name('invoices.importExcel');
+    // Password Changes
+    Route::get('usuarios/{user}/edit-password/', 'UserController@editPassword')
+        ->name('users.edit-password');
+    Route::put('usuarios/{user}/update-password/', 'UserController@updatePassword')
+        ->name('users.update-password');
+
+    // Reports
+    Route::group(['middleware' => ['role_or_permission:SuperAdmin|View all reports']], function () {
+        Route::get('/reportes', 'ReportController@index')
+            ->name('reports.index');
+        Route::get('/reportes/clientes', 'ReportController@clients')
+            ->name('reports.clients');
+        Route::get('/reportes/utilidades', 'ReportController@utilities')
+            ->name('reports.utilities');
+    });
 });
-

@@ -2,115 +2,138 @@
 
 namespace App\Http\Controllers;
 
-use App\Client;
-use App\TypeDocument;
+use Config;
+use Exception;
+use App\Entities\Client;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
+use App\Exports\ClientsExport;
+use Illuminate\Http\RedirectResponse;
 use App\Http\Requests\SaveClientRequest;
+use App\Actions\Clients\GetClientsAction;
+use App\Actions\Clients\StoreClientsAction;
+use App\Actions\Clients\UpdateClientsAction;
+use Illuminate\Auth\Access\AuthorizationException;
 
 class ClientController extends Controller
 {
+    public function __construct()
+    {
+        $this->authorizeResource(Client::class);
+    }
+
     /**
      * Display a listing of the resource.
+     * @param GetClientsAction $action
      * @param Request $request
-     * @return \Illuminate\Http\Response
+     * @return Response
+     * @throws AuthorizationException
      */
-    public function index(Request $request) {
-        $clients = Client::orderBy('name')
-            ->client($request->get('client_id'))
-            ->typedocument($request->get('type_document_id'))
-            ->document($request->get('document'))
-            ->email($request->get('email'))
-            ->paginate(10);
-        return response()->view('clients.index', [
-            'clients' => $clients,
-            'request' => $request,
-            'side_effect' => __('Se borrarán todas sus facturas asociadas')
-        ]);
+    public function index(GetClientsAction $action, Request $request)
+    {
+        $clients = $action->execute(new Client(), $request);
+
+        if ($format = $request->get('format')) {
+            $this->authorize('export', Client::class);
+            return (new ClientsExport($clients->get()))
+                ->download('clients-list.' . $format);
+        }
+
+        $paginate = Config::get('constants.paginate');
+        $count = $clients->count();
+        $clients = $clients->paginate($paginate);
+
+        return response()->view(
+            'clients.index',
+            compact(
+            'clients',
+            'request',
+            'count',
+            'paginate'
+        )
+        );
     }
 
     /**
      * Show the form for creating a new resource.
      *
-     * @return \Illuminate\Http\Response
+     * @param Client $client
+     * @return Response
      */
-    public function create() {
-        return response()->view('clients.create', [
-            'client' => new Client,
-        ]);
+    public function create(Client $client)
+    {
+        return response()->view('clients.create', compact('client'));
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\RedirectResponse
+     * @param StoreClientsAction $action
+     * @param SaveClientRequest $request
+     * @return RedirectResponse
      */
-    public function store(SaveClientRequest $request) {
-        Client::create($request->validated());
+    public function store(StoreClientsAction $action, SaveClientRequest $request)
+    {
+        $client = $action->execute(new Client(), $request);
 
-        return redirect()->route('clients.index')->with('message', __('Cliente creado satisfactoriamente'));
+        return redirect()->route('clients.show', $client->id)
+            ->with('success', ('Cliente creado satisfactoriamente'));
     }
 
     /**
      * Display the specified resource.
      *
      * @param Client $client
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
-    public function show(Client $client) {
-        return response()->view('clients.show', [
-            'client' => $client,
-            'side_effect' => __('Se borrarán todas sus facturas asociadas')
-        ]);
+    public function show(Client $client)
+    {
+        $client->load('invoices.products');
+
+        return response()->view('clients.show', compact('client'));
     }
 
     /**
      * Show the form for editing the specified resource.
      *
      * @param Client $client
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
-    public function edit(Client $client) {
-        return response()->view('clients.edit', [
-            'client' => $client,
-        ]);
+    public function edit(Client $client)
+    {
+        return response()->view('clients.edit', compact('client'));
     }
 
     /**
      * Update the specified resource in storage.
      *
+     * @param UpdateClientsAction $action
      * @param SaveClientRequest $request
      * @param Client $client
-     * @return \Illuminate\Http\RedirectResponse
+     * @return RedirectResponse
      */
-    public function update(SaveClientRequest $request, Client $client) {
-        $client->update($request->validated());
+    public function update(
+        UpdateClientsAction $action,
+        Client $client,
+        SaveClientRequest $request
+    ) {
+        $client = $action->execute($client, $request);
 
-        return redirect()->route('clients.show', $client)->with('message', __('Cliente actualizado satisfactoriamente'));
+        return redirect()->route('clients.show', $client)
+            ->with('success', ('Cliente actualizado satisfactoriamente'));
     }
 
     /**
      * Remove the specified resource from storage.
      *
      * @param Client $client
-     * @return \Illuminate\Http\RedirectResponse
-     * @throws \Exception
+     * @return RedirectResponse
+     * @throws Exception
      */
-    public function destroy(Client $client) {
+    public function destroy(Client $client)
+    {
         $client->delete();
 
-        return redirect()->route('clients.index')->with('message', __('Cliente eliminado satisfactoriamente'));
-    }
-
-    /**
-     * Display the specified resource filtering by name.
-     * @param Request $request
-     */
-    public function search(Request $request) {
-        $clients = Client::where('name', 'like', '%'. $request->name .'%')
-            ->orderBy('name')
-            ->limit('100')
-            ->get();
-        echo $clients;
+        return redirect()->route('clients.index')->with('success', ('Cliente eliminado satisfactoriamente'));
     }
 }

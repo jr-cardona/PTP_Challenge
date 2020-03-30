@@ -4,20 +4,20 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <title>@yield('title')</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="{{ mix('css/app.css') }}">
-
+    <link rel="stylesheet" href="{{ mix('css/custom.css') }}">
 </head>
-<body>
+<body style="background-color: floralwhite">
     @stack('modals')
     <div id="app" class="container">
-        <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
+        <nav class="navbar navbar-expand-md navbar-dark shadow-sm" style="background-color: #0c5460;">
             <a class="navbar-brand" href="{{ route('home') }}">
-                {{ config('app.name') }}
+                <img src="https://dev.placetopay.com/web/wp-content/uploads/2019/02/p2p-logo_White.svg" class="attachment-120x120 size-120x120" width="120px">
             </a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">
                 <span class="navbar-toggler-icon"></span>
@@ -25,21 +25,42 @@
 
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <!-- Left Side Of Navbar -->
-                <ul class="nav nav-pills">
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ route('invoices.index') }}">{{ __("Facturas") }}</a>
-                    </li>
-                    <li>
-                        <a class="nav-link" href="{{ route('clients.index') }}">{{ __("Clientes") }}</a>
-                    </li>
-                    <li>
-                        <a class="nav-link" href="{{ route('sellers.index') }}">{{ __("Vendedores") }}</a>
-                    </li>
-                    <li>
-                        <a class="nav-link" href="{{ route('products.index') }}">{{ __("Productos") }}</a>
-                    </li>
+                @auth
+                <ul class="navbar-nav mr-auto">
+                    @can('viewAny', App\Entities\Invoice::class)
+                        <li class="nav-item">
+                            <a href="{{ route('invoices.index') }}"
+                               class="nav-link {{ request()->segment(1) == 'facturas' ? 'active' : '' }}">
+                                <i class="fa fa-file-invoice-dollar"></i> {{ __("Facturas") }}
+                            </a>
+                        </li>
+                    @endcan
+                    @can('viewAny', App\Entities\Client::class)
+                        <li class="nav-item">
+                            <a href="{{ route('clients.index') }}"
+                               class="nav-link {{ request()->segment(1) == 'clientes' ? 'active' : '' }}">
+                                <i class="fa fa-users"></i> {{ __("Clientes") }}
+                            </a>
+                        </li>
+                    @endcan
+                    @can('viewAny', App\Entities\Product::class)
+                        <li class="nav-item">
+                            <a href="{{ route('products.index') }}"
+                               class="nav-link {{ request()->segment(1) == 'productos' ? 'active' : '' }}">
+                                <i class="fa fa-barcode"></i> {{ __("Productos") }}
+                            </a>
+                        </li>
+                    @endcan
+                    @if(auth()->user()->can('View all reports') || auth()->user()->hasRole('SuperAdmin'))
+                        <li class="nav-item">
+                            <a href="{{ route('reports.index') }}"
+                               class="nav-link {{ request()->segment(1) == 'reportes' ? 'active' : '' }}">
+                                <i class="fa fa-registered"></i> {{ __("Reportes") }}
+                            </a>
+                        </li>
+                    @endif
                 </ul>
-
+                @endauth
                 <!-- Right Side Of Navbar -->
                 <ul class="navbar-nav ml-auto">
                     <!-- Authentication Links -->
@@ -53,18 +74,40 @@
                             </li>
                         @endif
                     @else
+                        @can('viewAny', App\Entities\User::class)
+                            <li class="nav-item">
+                                <a href="{{ route('users.index') }}"
+                                   class="nav-link {{ request()->segment(1) == 'usuarios' ? 'active' : '' }}">
+                                    <i class="fa fa-user-tie"></i> {{ __("Usuarios") }}
+                                </a>
+                            </li>
+                        @endcan
                         <li class="nav-item dropdown">
                             <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
-                                {{ Auth::user()->name }} <span class="caret"></span>
+                                {{ auth()->user()->fullname }} <span class="caret"></span>
                             </a>
 
                             <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+                                @can('view', auth()->user())
+                                    <a class="dropdown-item" href="{{ route('users.show', auth()->user()) }}">
+                                        <i class="fa fa-user-tie"></i> {{ __("Mi perfil") }}
+                                    </a>
+                                @endcan
+                                @can('update', auth()->user())
+                                    <a class="dropdown-item" href="{{ route('users.edit', auth()->user()) }}">
+                                        <i class="fa fa-user-edit"></i> {{ __("Editar perfil") }}
+                                    </a>
+                                @endcan
+                                @can('update', auth()->user())
+                                    <a class="dropdown-item" href="{{ route('users.edit-password', auth()->user()) }}">
+                                        <i class="fa fa-key"></i> {{ __("Editar contraseña") }}
+                                    </a>
+                                @endcan
                                 <a class="dropdown-item" href="{{ route('logout') }}"
                                    onclick="event.preventDefault();
                                                  document.getElementById('logout-form').submit();">
-                                    {{ __('Logout') }}
+                                    <i class="fa fa-sign-out-alt"></i> {{ __('Cerrar sesión') }}
                                 </a>
-
                                 <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
                                     @csrf
                                 </form>
@@ -77,17 +120,14 @@
 
         <main class="py-4">
             <div class="container">
-                @include('partials.session-message')
                 @yield('content')
             </div>
         </main>
     </div>
-    <script src="https://unpkg.com/vue@latest"></script>
-    <script src="https://unpkg.com/vue-select@latest"></script>
-    <link rel="stylesheet" href="https://unpkg.com/vue-select@latest/dist/vue-select.css">
     <script src="{{ asset(mix('js/manifest.js')) }}"></script>
     <script src="{{ asset(mix('js/vendor.js')) }}"></script>
     <script src="{{ asset(mix('js/app.js')) }}"></script>
     @stack('scripts')
+    @include('sweet::alert')
 </body>
 </html>
