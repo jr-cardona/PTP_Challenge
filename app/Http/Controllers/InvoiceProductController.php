@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Product;
-use App\Invoice;
-use App\Http\Requests\StoreInvoiceDetailRequest;
-use App\Http\Requests\UpdateInvoiceDetailRequest;
+use App\Entities\Product;
+use App\Entities\Invoice;
+use Illuminate\Http\Response;
+use Illuminate\Http\RedirectResponse;
+use App\Http\Requests\SaveInvoiceProductRequest;
+use Illuminate\Auth\Access\AuthorizationException;
 
 class InvoiceProductController extends Controller
 {
@@ -13,27 +15,37 @@ class InvoiceProductController extends Controller
      * Show the form for creating a new resource.
      *
      * @param Invoice $invoice
-     * @return \Illuminate\Http\Response
+     * @return Response | RedirectResponse
+     * @throws AuthorizationException
      */
     public function create(Invoice $invoice)
     {
-        return response()->view('invoices.details.create', [
-            'invoice' => $invoice,
-        ]);
+        $this->authorize('update', $invoice);
+        return response()->view('invoices.products.create', compact('invoice'));
     }
 
     /**
      * Store a newly created resource in storage.
      *
      * @param Invoice $invoice
-     * @param StoreInvoiceDetailRequest $request
-     * @return \Illuminate\Http\RedirectResponse
+     * @param SaveInvoiceProductRequest $request
+     * @return RedirectResponse
+     * @throws AuthorizationException
      */
-    public function store(Invoice $invoice, StoreInvoiceDetailRequest $request)
+    public function store(Invoice $invoice, SaveInvoiceProductRequest $request)
     {
-        $invoice->products()->attach(request('product_id'), $request->validated());
+        $this->authorize('update', $invoice);
+        $product = Product::find($request->input('product_id'));
+        $invoice->products()->attach(
+            $product->id,
+            array_merge(
+            $request->validated(),
+            ['unit_price' => $product->price]
+        )
+        );
 
-        return redirect()->route('invoices.show', $invoice)->with('message', 'Detalle creado satisfactoriamente');
+        return redirect()->route('invoices.show', $invoice)
+            ->with('success', ('Detalle creado satisfactoriamente'));
     }
 
     /**
@@ -41,14 +53,13 @@ class InvoiceProductController extends Controller
      *
      * @param Invoice $invoice
      * @param Product $product
-     * @return \Illuminate\Http\Response
+     * @return Response | RedirectResponse
+     * @throws AuthorizationException
      */
     public function edit(Invoice $invoice, Product $product)
     {
-        return response()->view('invoices.details.edit', [
-            'invoice' => $invoice,
-            'product' => $product
-        ]);
+        $this->authorize('update', $invoice);
+        return response()->view('invoices.products.edit', compact('invoice', 'product'));
     }
 
     /**
@@ -56,14 +67,17 @@ class InvoiceProductController extends Controller
      *
      * @param Invoice $invoice
      * @param Product $product
-     * @param UpdateInvoiceDetailRequest $request
-     * @return \Illuminate\Http\RedirectResponse
+     * @param SaveInvoiceProductRequest $request
+     * @return RedirectResponse
+     * @throws AuthorizationException
      */
-    public function update(Invoice $invoice, Product $product, UpdateInvoiceDetailRequest $request)
+    public function update(Invoice $invoice, Product $product, SaveInvoiceProductRequest $request)
     {
+        $this->authorize('update', $invoice);
         $invoice->products()->updateExistingPivot($product->id, $request->validated());
 
-        return redirect()->route('invoices.show', $invoice)->with('message', 'Detalle actualizado satisfactoriamente');
+        return redirect()->route('invoices.show', $invoice)
+            ->with('success', ('Detalle actualizado satisfactoriamente'));
     }
 
     /**
@@ -71,13 +85,14 @@ class InvoiceProductController extends Controller
      *
      * @param Invoice $invoice
      * @param Product $product
-     * @return \Illuminate\Http\RedirectResponse
-     * @throws \Exception
+     * @return RedirectResponse
+     * @throws AuthorizationException
      */
     public function destroy(Invoice $invoice, Product $product)
     {
+        $this->authorize('update', $invoice);
         $invoice->products()->detach($product->id);
 
-        return redirect()->route('invoices.show', $invoice)->with('message', 'Detalle eliminado satisfactoriamente');
+        return redirect()->route('invoices.show', $invoice)->with('success', ('Detalle eliminado satisfactoriamente'));
     }
 }

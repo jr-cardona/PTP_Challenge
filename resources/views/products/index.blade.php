@@ -1,63 +1,84 @@
 @extends('layouts.index')
 @section('Title', 'Productos')
-@section('Name', 'Productos')
-@section('Create')
-    <a class="btn btn-success" href="{{ route('products.create') }}">{{ __("Crear nuevo producto") }}</a>
+@section('Name')
+    {{ __("Productos") }}
+    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#searchModal">
+        <i class="fa fa-filter"></i>
+    </button>
+    <a href="{{ route('products.index') }}" class="btn btn-danger">
+        <i class="fa fa-undo"></i>
+    </a>
+@endsection
+@section('Actions')
+    @can('export', App\Entities\Product::class)
+        <button type="button" class="btn btn-warning"
+                data-route="{{ route('products.index') }}"
+                data-toggle="modal" data-target="#exportModal">
+            <i class="fa fa-file-excel"></i> {{ __("Exportar") }}
+        </button>
+    @endcan
+    @can('import', App\Entities\Product::class)
+        <button type="button" class="btn btn-primary"
+                data-toggle="modal"
+                data-target="#importModal"
+                data-redirect="products.index"
+                data-model="App\Entities\Product"
+                data-import-model="App\Imports\ProductsImport">
+            <i class="fa fa-file-excel"></i> {{ __("Importar") }}
+        </button>
+    @endcan
+    @can('create', App\Entities\Product::class)
+        <a class="btn btn-success" href="{{ route('products.create') }}">
+            <i class="fa fa-plus"></i> {{ __("Crear nuevo producto") }}
+        </a>
+    @endcan
 @endsection
 @section('Search')
-    <form action="{{ route('products.index') }}" method="get">
-        <div class="form-group row">
-            <div class="col-md-3">
-                <label>{{ __("Nombre") }}</label>
-                <input type="hidden" id="old_product_name" name="old_product_name" value="{{ $request->get('product') }}">
-                <input type="hidden" id="old_product_id" name="old_product_id" value="{{ $request->get('product_id') }}">
-                <v-select v-model="old_product_values" label="name" :filterable="false" :options="options" @search="searchProduct"
-                          class="form-control">
-                    <template slot="no-options">
-                        {{ __("Ingresa el nombre...") }}
-                    </template>
-                </v-select>
-                <input type="hidden" name="product" id="product" :value="(old_product_values) ? old_product_values.name : '' ">
-                <input type="hidden" name="product_id" id="product_id" :value="(old_product_values) ? old_product_values.id : '' ">
-            </div>
-        </div>
-        <div class="form-group row">
-            <div class="col-md-3 btn-group btn-group-sm">
-                <button type="submit" class="btn btn-primary">
-                    <i class="fa fa-search"></i> {{ __("Buscar") }}
-                </button>
-                <a href="{{ route('products.index') }}" class="btn btn-danger">
-                    <i class="fa fa-undo"></i> {{ __("Limpiar") }}
-                </a>
-            </div>
-        </div>
-    </form>
+    @include('products.__search_modal')
 @endsection
 @section('Header')
-    <th scope="col">{{ __("Código") }}</th>
-    <th scope="col">{{ __("Nombre") }}</th>
-    <th scope="col">{{ __("Precio unitario") }}</th>
-    <th scope="col" nowrap>{{ __("Fecha de creación") }}</th>
-    <th scope="col" nowrap>{{ __("Fecha de modificación") }}</th>
-    <th scope="col" nowrap>{{ __("Opciones") }}</th>
+    <th class="text-center" nowrap>{{ __("Código") }}</th>
+    <th class="text-center" nowrap>{{ __("Nombre") }}</th>
+    <th class="text-center" nowrap>{{ __("Costo") }}</th>
+    <th class="text-center" nowrap>{{ __("Precio") }}</th>
+    <th class="text-center" nowrap>{{ __("Fecha de creación") }}</th>
+    <th class="text-center" nowrap>{{ __("Creado por") }}</th>
+    <th class="text-center" nowrap>{{ __("Opciones") }}</th>
 @endsection
 @section('Body')
-    @foreach($products as $product)
+    @forelse($products as $product)
         <tr class="text-center">
             <td>{{ $product->id }}</td>
             <td>
-                <a href="{{ route('products.show', $product) }}">
+                <a @can('view', $product)
+                   href="{{ route('products.show', $product) }}"
+                    @endcan>
                     {{ $product->name }}
                 </a>
             </td>
-            <td nowrap>$ {{ number_format($product->unit_price, 2) }}</td>
-            <td nowrap>{{ $product->created_at }}</td>
-            <td nowrap>{{ $product->updated_at }}</td>
+            <td nowrap>$ {{ number_format($product->cost, 2) }}</td>
+            <td nowrap>$ {{ number_format($product->price, 2) }}</td>
+            <td nowrap>{{ $product->created_at->isoFormat('Y-MM-DD hh:mma') }}</td>
+            <td nowrap>
+                <a @can('view', $product->creator)
+                   href="{{ route('users.show', $product->creator) }}"
+                    @endcan>
+                    {{ $product->creator->fullname }}
+                </a>
+            </td>
             <td class="btn-group btn-group-sm" nowrap>
                 @include('products._buttons')
             </td>
         </tr>
-    @endforeach
+    @empty
+        <tr>
+            <td colspan="6" class="p-3">
+                <p class="alert alert-secondary text-center">
+                    {{ __('No se encontraron productos') }}
+                </p>
+            </td>
+        </tr>
+    @endforelse
 @endsection
 @section('Links')
     {{ $products->appends($request->all())->links() }}

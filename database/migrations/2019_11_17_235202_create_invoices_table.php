@@ -15,19 +15,20 @@ class CreateInvoicesTable extends Migration
     {
         Schema::create('invoices', function (Blueprint $table) {
             $table->increments('id');
-            $table->timestamps();
-            $table->dateTime('issued_at');
-            $table->dateTime('overdued_at');
+            $table->date('issued_at');
+            $table->date('expires_at')->nullable();
+            $table->dateTime('paid_at')->nullable();
+            $table->dateTime('annulled_at')->nullable();
             $table->dateTime('received_at')->nullable();
-            $table->float('vat')->unsigned();
             $table->string('description')->nullable();
-            $table->unsignedInteger('state_id');
+            $table->string('annulment_reason')->nullable();
             $table->unsignedInteger('client_id');
-            $table->unsignedInteger('seller_id');
-            $table->string('number')->nullable()->unique();
-            $table->foreign('state_id')->references('id')->on('states')->onDelete('cascade');
+            $table->unsignedInteger('created_by');
+            $table->unsignedInteger('updated_by');
+            $table->timestamps();
             $table->foreign('client_id')->references('id')->on('clients')->onDelete('cascade');
-            $table->foreign('seller_id')->references('id')->on('sellers')->onDelete('cascade');
+            $table->foreign('created_by')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('updated_by')->references('id')->on('users')->onDelete('cascade');
         });
     }
 

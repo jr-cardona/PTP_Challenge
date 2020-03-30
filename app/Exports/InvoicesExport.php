@@ -2,16 +2,67 @@
 
 namespace App\Exports;
 
-use App\Invoice;
-use Illuminate\Contracts\View\View;
-use Maatwebsite\Excel\Concerns\FromView;
+use Config;
+use Illuminate\Contracts\Queue\ShouldQueue;
+use Maatwebsite\Excel\Concerns\Exportable;
+use Maatwebsite\Excel\Concerns\WithMapping;
+use Maatwebsite\Excel\Concerns\WithHeadings;
+use Illuminate\Contracts\Support\Responsable;
+use Maatwebsite\Excel\Concerns\FromCollection;
 
-class InvoicesExport implements FromView
+class InvoicesExport implements FromCollection, Responsable, WithHeadings, WithMapping, ShouldQueue
 {
-    public function view(): View
+    use Exportable;
+
+    private $invoices;
+
+    public function __construct($invoices)
     {
-        return view('exports.invoices', [
-            'invoices' => Invoice::all()
-        ]);
+        $this->invoices = $invoices;
+    }
+
+    public function collection()
+    {
+        return $this->invoices;
+    }
+
+    public function map($invoice): array
+    {
+        return [
+            $invoice->fullname,
+            $invoice->state,
+            $invoice->created_at,
+            $invoice->updated_at,
+            $invoice->issued_at->toDateString(),
+            $invoice->expires_at->toDateString(),
+            $invoice->received_at,
+            Config::get('constants.vat'),
+            $invoice->total,
+            $invoice->description,
+            $invoice->client->fullname,
+            $invoice->seller->name,
+            $invoice->client_id,
+            $invoice->created_by,
+        ];
+    }
+
+    public function headings(): array
+    {
+        return [
+            'Título',
+            'Estado',
+            'Fecha de creación',
+            'Fecha de modificación',
+            'Fecha de expedición',
+            'Fecha de vencimiento',
+            'Fecha de recibo',
+            'IVA',
+            'Total',
+            'Descripción',
+            'Cliente',
+            'Vendedor',
+            'ID Cliente',
+            'ID Vendedor',
+        ];
     }
 }

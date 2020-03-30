@@ -1,22 +1,25 @@
 <?php
 
-/** @var \Illuminate\Database\Eloquent\Factory $factory */
+/** @var Factory $factory */
 
-use App\Client;
-use App\Seller;
-use App\Invoice;
+use Carbon\Carbon;
+use App\Entities\User;
+use App\Entities\Client;
+use App\Entities\Invoice;
 use Faker\Generator as Faker;
+use Spatie\Permission\Models\Role;
+use Illuminate\Database\Eloquent\Factory;
 
 $factory->define(Invoice::class, function (Faker $faker) {
-    $issued_at = $faker->dateTime;
-    $overdued_at = $faker->dateTimeBetween($issued_at, now());
+    $start_date = Carbon::now()->subWeek();
+    $final_date = Carbon::now();
+    $role = Role::where('name', 'Seller')->first() ?? Role::create(['name' => 'Seller']);
+    $seller = User::Role($role)->inRandomOrder()->first();
     return [
-        'issued_at' => $issued_at,
-        'overdued_at' => $overdued_at,
-        'description' => $faker->text,
-        'vat' => $faker->numberBetween(0,100),
-        'state_id' => $faker->numberBetween(1,3),
+        'issued_at' => $faker->dateTimeBetween($start_date, $final_date),
+        'description' => $faker->realText(30),
         'client_id' => factory(Client::class),
-        'seller_id' => factory(Seller::class)
+        'created_by' => $seller->id ?? factory(User::class),
+        'updated_by' => $seller->id ?? factory(User::class),
     ];
 });
