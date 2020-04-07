@@ -12,14 +12,16 @@ class EditPasswordTest extends TestCase
     use RefreshDatabase;
 
     /** @test */
-    public function guest_cannot_access_to_edit_password_view(){
+    public function guest_cannot_access_to_edit_password_view()
+    {
         $user = factory(User::class)->create();
 
         $this->get(route('users.edit-password', $user))->assertRedirect(route('login'));
     }
 
     /** @test */
-    public function unauthorized_user_cannot_access_to_edit_password_view(){
+    public function unauthorized_user_cannot_access_to_edit_password_view()
+    {
         $user = factory(User::class)->create();
         $authUser = factory(User::class)->create();
 
@@ -28,7 +30,8 @@ class EditPasswordTest extends TestCase
     }
 
     /** @test */
-    public function authorized_user_can_access_to_edit_password_view(){
+    public function authorized_user_can_access_to_edit_password_view()
+    {
         $permission = Permission::create(['name' => 'Edit profile']);
         $user = factory(User::class)->create()->givePermissionTo($permission);
 

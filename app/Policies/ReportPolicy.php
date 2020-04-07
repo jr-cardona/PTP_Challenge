@@ -29,12 +29,10 @@ class ReportPolicy
 
     public function download(User $user, Report $report)
     {
-        if ($user->can('reports.download.all'))
-        {
+        if ($user->can('reports.download.all')) {
             return true;
         }
-        if ($user->can('reports.download.associated'))
-        {
+        if ($user->can('reports.download.associated')) {
             return $user->id === $report->created_by;
         }
         return false;
@@ -42,12 +40,10 @@ class ReportPolicy
 
     public function delete(User $user, Report $report)
     {
-        if ($user->can('reports.delete.all'))
-        {
+        if ($user->can('reports.delete.all')) {
             return true;
         }
-        if ($user->can('reports.delete.associated'))
-        {
+        if ($user->can('reports.delete.associated')) {
             return $user->id === $report->created_by;
         }
         return false;

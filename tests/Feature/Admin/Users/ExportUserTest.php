@@ -47,8 +47,9 @@ class ExportUserTest extends TestCase
             ->assertRedirect(route('users.index'));
 
         Excel::matchByRegex();
-        Excel::assertQueued('/users_\d{4}\-\d{2}\-\d{2}\_\d{2}\-\d{2}\-\d{2}\.xlsx/',
-            function(UsersExport $export) use ($users) {
+        Excel::assertQueued(
+            '/users_\d{4}\-\d{2}\-\d{2}\_\d{2}\-\d{2}\-\d{2}\.xlsx/',
+            function (UsersExport $export) use ($users) {
                 return $export->query()->get()->contains($users->random());
             }
         );

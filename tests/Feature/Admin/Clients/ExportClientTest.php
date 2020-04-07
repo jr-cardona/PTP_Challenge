@@ -48,8 +48,9 @@ class ExportClientTest extends TestCase
             ->assertRedirect(route('clients.index'));
 
         Excel::matchByRegex();
-        Excel::assertQueued('/clients_\d{4}\-\d{2}\-\d{2}\_\d{2}\-\d{2}\-\d{2}\.xlsx/',
-            function(ClientsExport $export) use ($clients) {
+        Excel::assertQueued(
+            '/clients_\d{4}\-\d{2}\-\d{2}\_\d{2}\-\d{2}\-\d{2}\.xlsx/',
+            function (ClientsExport $export) use ($clients) {
                 return $export->query()->get()->contains($clients->random());
             }
         );

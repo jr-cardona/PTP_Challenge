@@ -48,8 +48,9 @@ class ExportProductTest extends TestCase
             ->assertRedirect(route('products.index'));
 
         Excel::matchByRegex();
-        Excel::assertQueued('/products_\d{4}\-\d{2}\-\d{2}\_\d{2}\-\d{2}\-\d{2}\.xlsx/',
-            function(ProductsExport $export) use ($products) {
+        Excel::assertQueued(
+            '/products_\d{4}\-\d{2}\-\d{2}\_\d{2}\-\d{2}\-\d{2}\.xlsx/',
+            function (ProductsExport $export) use ($products) {
                 return $export->query()->get()->contains($products->random());
             }
         );

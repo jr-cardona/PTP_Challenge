@@ -48,8 +48,9 @@ class ExportInvoiceTest extends TestCase
             ->assertRedirect(route('invoices.index'));
 
         Excel::matchByRegex();
-        Excel::assertQueued('/invoices_\d{4}\-\d{2}\-\d{2}\_\d{2}\-\d{2}\-\d{2}\.xlsx/',
-            function(InvoicesExport $export) use ($invoices) {
+        Excel::assertQueued(
+            '/invoices_\d{4}\-\d{2}\-\d{2}\_\d{2}\-\d{2}\-\d{2}\.xlsx/',
+            function (InvoicesExport $export) use ($invoices) {
                 return $export->query()->get()->contains($invoices->random());
             }
         );

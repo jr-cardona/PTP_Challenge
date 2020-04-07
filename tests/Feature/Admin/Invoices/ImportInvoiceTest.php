@@ -90,7 +90,8 @@ class ImportInvoiceTest extends TestCase
         $response->assertViewIs('imports.errors');
     }
 
-    public function file($type){
+    public function file($type)
+    {
         return UploadedFile::fake()->createWithContent(
             $type . 'InvoicesList.xlsx',
             file_get_contents(

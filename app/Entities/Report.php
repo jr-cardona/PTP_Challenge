@@ -9,19 +9,23 @@ class Report extends Model
     protected $fillable = ['file_path', 'created_by'];
     protected $perPage = 10;
 
-    public function user(){
+    public function user()
+    {
         return $this->belongsTo(User::class, 'created_by');
     }
 
-    public function getExtensionAttribute(){
+    public function getExtensionAttribute()
+    {
         return explode('.', $this->file_path)[1];
     }
 
-    public function getFilePrefixAttribute(){
+    public function getFilePrefixAttribute()
+    {
         return explode('_', $this->file_path)[0] . $this->id;
     }
 
-    public function getFileNameAttribute(){
+    public function getFileNameAttribute()
+    {
         return $this->file_prefix . '.' . $this->extension;
     }
 }

@@ -36,7 +36,8 @@ class ExportController extends Controller
      * @return RedirectResponse
      * @throws AuthorizationException
      */
-    public function invoices(){
+    public function invoices()
+    {
         $this->authorize('export', Invoice::class);
 
         $now = Carbon::now()->isoFormat('YYYY-MM-DD_HH-mm-ss');
@@ -56,7 +57,8 @@ class ExportController extends Controller
      * @return RedirectResponse
      * @throws AuthorizationException
      */
-    public function clients(GetClientsAction $action){
+    public function clients(GetClientsAction $action)
+    {
         $this->authorize('export', Client::class);
 
         $now = Carbon::now()->isoFormat('YYYY-MM-DD_HH-mm-ss');
@@ -77,7 +79,8 @@ class ExportController extends Controller
      * @return RedirectResponse
      * @throws AuthorizationException
      */
-    public function products(GetProductsAction $action){
+    public function products(GetProductsAction $action)
+    {
         $this->authorize('export', Product::class);
 
         $now = Carbon::now()->isoFormat('YYYY-MM-DD_HH-mm-ss');
@@ -97,7 +100,8 @@ class ExportController extends Controller
      * @return RedirectResponse
      * @throws AuthorizationException
      */
-    public function users(GetUsersAction $action){
+    public function users(GetUsersAction $action)
+    {
         $this->authorize('export', User::class);
 
         $now = Carbon::now()->isoFormat('YYYY-MM-DD_HH-mm-ss');

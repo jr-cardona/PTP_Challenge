@@ -12,10 +12,9 @@ class GetInvoicesAction extends Action
     {
         $authUser = auth()->user() ?? $request['authUser'];
 
-        if ($authUser->can('viewAll', Invoice::class)){
+        if ($authUser->can('viewAll', Invoice::class)) {
             $invoice = $invoice->allSellers($request['created_by'] ?? '')
                 ->allClients($request['client_id'] ?? '');
-
         } elseif ($authUser->can('viewAssociated', Invoice::class)) {
             $invoice = $authUser->isClient() ? $invoice->clientId($authUser) : $invoice->sellerId($authUser);
         }

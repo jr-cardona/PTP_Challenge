@@ -12,9 +12,9 @@ class GetProductsAction extends Action
     {
         $authUser = auth()->user() ?? $request['authUser'];
 
-        if ($authUser->can('viewAll', Product::class)){
+        if ($authUser->can('viewAll', Product::class)) {
             $product = $product->id($request['id'] ?? '');
-        } elseif ($authUser->can('viewAssociated', Product::class)){
+        } elseif ($authUser->can('viewAssociated', Product::class)) {
             $product = $product->creatorId($authUser);
         }
 
