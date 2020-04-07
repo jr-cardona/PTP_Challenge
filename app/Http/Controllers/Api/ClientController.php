@@ -19,13 +19,13 @@ class ClientController extends Controller
 
     public function index(GetClientsAction $action, Request $request)
     {
-        $clients = $action->execute(new Client(), $request);
+        $clients = $action->execute(new Client(), $request->all());
         return $clients->get();
     }
 
     public function store(StoreClientsAction $action, SaveClientRequest $request)
     {
-        return $action->execute(new Client(), $request);
+        return $action->execute(new Client(), $request->validated());
     }
 
     public function show(Client $client)
@@ -39,14 +39,14 @@ class ClientController extends Controller
         Client $client,
         SaveClientRequest $request
     ) {
-        $client = $action->execute($client, $request);
+        $client = $action->execute($client, $request->validated());
 
         return $client;
     }
 
     public function destroy(Client $client)
     {
-        $client->delete();
+        $client->user->delete();
 
         return response()->json([
             'success' => true,

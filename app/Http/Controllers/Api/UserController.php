@@ -19,13 +19,13 @@ class UserController extends Controller
 
     public function index(GetUsersAction $action, Request $request)
     {
-        $users = $action->execute(new User(), $request);
+        $users = $action->execute(new User(), $request->all());
         return $users->get();
     }
 
     public function store(StoreUsersAction $action, SaveUserRequest $request)
     {
-        return $action->execute(new User(), $request);
+        return $action->execute(new User(), $request->validated());
     }
 
     public function show(User $user)
@@ -38,7 +38,7 @@ class UserController extends Controller
         User $user,
         SaveUserRequest $request
     ) {
-        $user = $action->execute($user, $request);
+        $user = $action->execute($user, $request->validated());
 
         return $user;
     }
