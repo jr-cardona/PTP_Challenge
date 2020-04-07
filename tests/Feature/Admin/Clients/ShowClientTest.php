@@ -49,7 +49,7 @@ class ShowClientTest extends TestCase
         $user = factory(User::class)->create()->givePermissionTo($permission);
         $client = factory(Client::class)->create();
 
-        $response = $this->actingAs($user)->get(route('clients.index'));
+        $response = $this->actingAs($user)->get(route('clients.show', $client));
         $response->assertSeeText($client->fullname);
         $response->assertSeeText($client->document);
         $response->assertSeeText($client->email);

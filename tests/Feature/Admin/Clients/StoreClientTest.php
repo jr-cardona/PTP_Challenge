@@ -57,7 +57,7 @@ class StoreClientTest extends TestCase
         $response->assertRedirect(route('clients.show', Client::first()));
         $response->assertSessionHasNoErrors();
         $this->assertDatabaseHas('clients', [
-            'document' => $data["document"]
+            'document' => $data['document']
         ]);
     }
 
