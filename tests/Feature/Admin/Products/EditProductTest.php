@@ -35,7 +35,7 @@ class EditProductTest extends TestCase
     public function authorized_user_can_access_to_edit_products_view()
     {
         $product = factory(Product::class)->create();
-        $permission = Permission::create(['name' => 'Edit all products']);
+        $permission = Permission::create(['name' => 'products.edit.all']);
         $user = factory(User::class)->create()->givePermissionTo($permission);
 
         $response = $this->actingAs($user)->get(route('products.edit', $product));
@@ -48,7 +48,7 @@ class EditProductTest extends TestCase
     public function the_product_edit_view_has_current_information_of_a_product()
     {
         $product = factory(Product::class)->create();
-        $permission = Permission::create(['name' => 'Edit all products']);
+        $permission = Permission::create(['name' => 'products.edit.all']);
         $user = factory(User::class)->create()->givePermissionTo($permission);
 
         $response = $this->actingAs($user)->get(route('products.edit', $product));

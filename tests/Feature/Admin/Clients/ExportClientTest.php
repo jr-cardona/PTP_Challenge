@@ -38,7 +38,7 @@ class ExportClientTest extends TestCase
     /** @test */
     public function authorized_user_can_export_clients()
     {
-        $permission = Permission::create(['name' => 'Export all clients']);
+        $permission = Permission::create(['name' => 'clients.export.all']);
         $user = factory(User::class)->create()->givePermissionTo($permission);
         $clients = factory(Client::class, 5)->create();
         Excel::fake();

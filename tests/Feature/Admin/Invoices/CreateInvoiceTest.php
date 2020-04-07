@@ -28,7 +28,7 @@ class CreateInvoiceTest extends TestCase
     /** @test */
     public function user_can_access_to_create_invoices_view()
     {
-        $permission = Permission::create(['name' => 'Create invoices']);
+        $permission = Permission::create(['name' => 'invoices.create']);
         $user = factory(User::class)->create()->givePermissionTo($permission);
 
         $response = $this->actingAs($user)->get(route('invoices.create'));
@@ -40,7 +40,7 @@ class CreateInvoiceTest extends TestCase
     /** @test */
     public function create_invoices_view_contains_fields_to_create_an_invoice()
     {
-        $permission = Permission::create(['name' => 'Create invoices']);
+        $permission = Permission::create(['name' => 'invoices.create']);
         $user = factory(User::class)->create()->givePermissionTo($permission);
 
         $response = $this->actingAs($user)->get(route('invoices.create'));

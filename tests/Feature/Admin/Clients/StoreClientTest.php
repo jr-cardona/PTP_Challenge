@@ -48,7 +48,7 @@ class StoreClientTest extends TestCase
     /** @test */
     public function authorized_user_can_store_clients()
     {
-        $permission = Permission::create(['name' => 'Create clients']);
+        $permission = Permission::create(['name' => 'clients.create']);
         Role::create(['name' => 'Client']);
         $user = factory(User::class)->create()->givePermissionTo($permission);
         $data = $this->data();
@@ -77,7 +77,7 @@ class StoreClientTest extends TestCase
         string $field,
         string $message
     ) {
-        $permission = Permission::create(['name' => 'Create clients']);
+        $permission = Permission::create(['name' => 'clients.create']);
         $user = factory(User::class)->create()->givePermissionTo($permission);
 
         $client = factory(User::class)->create(['email' => 'repeated@email.com']);

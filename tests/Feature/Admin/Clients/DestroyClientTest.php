@@ -42,7 +42,7 @@ class DestroyClientTest extends TestCase
     /** @test */
     public function authorized_user_cannot_delete_clients_with_invoices_assigned()
     {
-        $permission = Permission::create(['name' => 'Delete all clients']);
+        $permission = Permission::create(['name' => 'clients.delete.all']);
         $user = factory(User::class)->create()->givePermissionTo($permission);
         $client = factory(Client::class)->create();
         factory(Invoice::class)->create(["client_id" => $client->id]);
@@ -58,7 +58,7 @@ class DestroyClientTest extends TestCase
     /** @test */
     public function authorized_user_can_delete_clients_without_invoices_assigned()
     {
-        $permission = Permission::create(['name' => 'Delete all clients']);
+        $permission = Permission::create(['name' => 'clients.delete.all']);
         $user = factory(User::class)->create()->givePermissionTo($permission);
         $client = factory(Client::class)->create();
 

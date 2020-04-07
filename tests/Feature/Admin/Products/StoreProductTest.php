@@ -42,7 +42,7 @@ class StoreProductTest extends TestCase
     /** @test */
     public function authorized_user_can_store_products()
     {
-        $permission = Permission::create(['name' => 'Create products']);
+        $permission = Permission::create(['name' => 'products.create']);
         $user = factory(User::class)->create()->givePermissionTo($permission);
         $data = $this->data();
 
@@ -68,7 +68,7 @@ class StoreProductTest extends TestCase
         string $field,
         string $message
     ) {
-        $permission = Permission::create(['name' => 'Create products']);
+        $permission = Permission::create(['name' => 'products.create']);
         $user = factory(User::class)->create()->givePermissionTo($permission);
         factory(Product::class)->create();
         $response =  $this->actingAs($user)->post(route('products.store'), $productData);

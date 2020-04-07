@@ -29,7 +29,7 @@ class CreateProductTest extends TestCase
     /** @test */
     public function authorized_user_can_access_to_create_products_view()
     {
-        $permission = Permission::create(['name' => 'Create products']);
+        $permission = Permission::create(['name' => 'products.create']);
         $user = factory(User::class)->create()->givePermissionTo($permission);
 
         $response = $this->actingAs($user)->get(route('products.create'));
@@ -41,7 +41,7 @@ class CreateProductTest extends TestCase
     /** @test */
     public function create_products_view_contains_fields_to_create_a_product()
     {
-        $permission = Permission::create(['name' => 'Create products']);
+        $permission = Permission::create(['name' => 'products.create']);
         $user = factory(User::class)->create()->givePermissionTo($permission);
 
         $response = $this->actingAs($user)->get(route('products.create'));

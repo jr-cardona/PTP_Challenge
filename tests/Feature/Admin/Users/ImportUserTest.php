@@ -55,7 +55,7 @@ class ImportUserTest extends TestCase
      */
     public function authorized_user_can_import_users()
     {
-        $permission = Permission::create(['name' => 'Import all users']);
+        $permission = Permission::create(['name' => 'users.import.all']);
         $user = factory(User::class)->create(['id' => 2])->givePermissionTo($permission);
 
         $response = $this
@@ -74,7 +74,7 @@ class ImportUserTest extends TestCase
     /** @test */
     public function users_cannot_be_imported_due_validation_errors()
     {
-        $permission = Permission::create(['name' => 'Import all users']);
+        $permission = Permission::create(['name' => 'users.import.all']);
         $user = factory(User::class)->create()->givePermissionTo($permission);
 
         $response = $this

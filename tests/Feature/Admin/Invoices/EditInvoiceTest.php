@@ -34,7 +34,7 @@ class EditInvoiceTest extends TestCase
     /** @test */
     public function authorized_user_cannot_access_to_edit_paid_invoices_view()
     {
-        $permission = Permission::create(['name' => 'Edit all invoices']);
+        $permission = Permission::create(['name' => 'invoices.edit.all']);
         $user = factory(User::class)->create()->givePermissionTo($permission);
         $invoice = factory(Invoice::class)->create(["paid_at" => Carbon::now()]);
 
@@ -45,7 +45,7 @@ class EditInvoiceTest extends TestCase
     /** @test */
     public function authorized_user_cannot_access_to_edit_annulled_invoices_view()
     {
-        $permission = Permission::create(['name' => 'Edit all invoices']);
+        $permission = Permission::create(['name' => 'invoices.edit.all']);
         $user = factory(User::class)->create()->givePermissionTo($permission);
         $invoice = factory(Invoice::class)->create(["annulled_at" => Carbon::now()]);
 
@@ -56,7 +56,7 @@ class EditInvoiceTest extends TestCase
     /** @test */
     public function user_can_access_to_edit_invoices_view()
     {
-        $permission = Permission::create(['name' => 'Edit all invoices']);
+        $permission = Permission::create(['name' => 'invoices.edit.all']);
         $user = factory(User::class)->create()->givePermissionTo($permission);
         $invoice = factory(Invoice::class)->create();
 
@@ -69,7 +69,7 @@ class EditInvoiceTest extends TestCase
     /** @test */
     public function the_invoice_edit_view_has_current_information_of_an_invoice()
     {
-        $permission = Permission::create(['name' => 'Edit all invoices']);
+        $permission = Permission::create(['name' => 'invoices.edit.all']);
         $user = factory(User::class)->create()->givePermissionTo($permission);
         $invoice = factory(Invoice::class)->create();
 

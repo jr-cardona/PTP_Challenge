@@ -43,7 +43,7 @@ class UpdatePasswordTest extends TestCase
     public function authorized_user_can_change_password()
     {
         $data = $this->data();
-        $permission = Permission::create(['name' => 'Edit profile']);
+        $permission = Permission::create(['name' => 'users.edit.profile']);
         $user = factory(User::class)->create(['password' => 'secret'])
             ->givePermissionTo($permission);
 
@@ -68,7 +68,7 @@ class UpdatePasswordTest extends TestCase
         string $field,
         string $message
     ) {
-        $permission = Permission::create(['name' => 'Edit profile']);
+        $permission = Permission::create(['name' => 'users.edit.profile']);
         $user = factory(User::class)->create(['password' => 'actualsecret'])
             ->givePermissionTo($permission);
 

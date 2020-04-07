@@ -33,7 +33,7 @@ class ShowUserTest extends TestCase
     public function authorized_user_can_access_to_a_specific_user()
     {
         $user = factory(User::class)->create();
-        $permission = Permission::create(['name' => 'View all users']);
+        $permission = Permission::create(['name' => 'users.list.all']);
         $authUser = factory(User::class)->create()->givePermissionTo($permission);
 
         $response = $this->actingAs($authUser)->get(route('users.show', $user));
@@ -46,7 +46,7 @@ class ShowUserTest extends TestCase
     public function the_user_show_view_has_a_user()
     {
         $user = factory(User::class)->create();
-        $permission = Permission::create(['name' => 'View all users']);
+        $permission = Permission::create(['name' => 'users.list.all']);
         $authUser = factory(User::class)->create()->givePermissionTo($permission);
 
         $response = $this->actingAs($authUser)->get(route('users.index'));

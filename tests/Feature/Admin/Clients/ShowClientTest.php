@@ -32,7 +32,7 @@ class ShowClientTest extends TestCase
     /** @test */
     public function authorized_user_can_access_to_a_specific_client()
     {
-        $permission = Permission::create(['name' => 'View all clients']);
+        $permission = Permission::create(['name' => 'clients.list.all']);
         $user = factory(User::class)->create()->givePermissionTo($permission);
         $client = factory(Client::class)->create();
 
@@ -45,7 +45,7 @@ class ShowClientTest extends TestCase
     /** @test */
     public function the_client_show_view_has_a_client()
     {
-        $permission = Permission::create(['name' => 'View all clients']);
+        $permission = Permission::create(['name' => 'clients.list.all']);
         $user = factory(User::class)->create()->givePermissionTo($permission);
         $client = factory(Client::class)->create();
 

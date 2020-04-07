@@ -35,7 +35,7 @@ class ShowProductTest extends TestCase
     public function authorized_user_can_access_to_a_specific_product()
     {
         $product = factory(Product::class)->create();
-        $permission = Permission::create(['name' => 'View all products']);
+        $permission = Permission::create(['name' => 'products.list.all']);
         $user = factory(User::class)->create()->givePermissionTo($permission);
 
         $response = $this->actingAs($user)->get(route('products.show', $product));
@@ -48,7 +48,7 @@ class ShowProductTest extends TestCase
     public function the_product_show_view_has_a_product()
     {
         $product = factory(Product::class)->create();
-        $permission = Permission::create(['name' => 'View all products']);
+        $permission = Permission::create(['name' => 'products.list.all']);
         $user = factory(User::class)->create()->givePermissionTo($permission);
 
         $response = $this->actingAs($user)->get(route('products.index'));

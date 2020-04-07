@@ -38,7 +38,7 @@ class ExportInvoiceTest extends TestCase
     /** @test */
     public function authorized_user_can_export_invoices()
     {
-        $permission = Permission::create(['name' => 'Export all invoices']);
+        $permission = Permission::create(['name' => 'invoices.export.all']);
         $user = factory(User::class)->create()->givePermissionTo($permission);
         $invoices = factory(Invoice::class, 5)->create();
         Excel::fake();

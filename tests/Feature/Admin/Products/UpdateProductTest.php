@@ -37,7 +37,7 @@ class UpdateProductTest extends TestCase
     public function authorized_user_can_update_products()
     {
         $product = factory(Product::class)->create();
-        $permission = Permission::create(['name' => 'Edit all products']);
+        $permission = Permission::create(['name' => 'products.edit.all']);
         $user = factory(User::class)->create()->givePermissionTo($permission);
         $data = $this->data();
 

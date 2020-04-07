@@ -15,7 +15,7 @@ class SearchClientTest extends TestCase
     /** @test */
     public function clients_can_be_searched_by_name()
     {
-        $permission = Permission::create(['name' => 'View all clients']);
+        $permission = Permission::create(['name' => 'clients.list.all']);
         $user = factory(User::class)->create()->givePermissionTo($permission);
         $clients = factory(User::class, 5)->create()->each(function ($u) {
             factory(Client::class)->create(['id' => $u->id]);

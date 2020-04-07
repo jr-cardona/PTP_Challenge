@@ -55,7 +55,7 @@ class ImportInvoiceTest extends TestCase
      */
     public function authorized_user_can_import_invoices()
     {
-        $permission = Permission::create(['name' => 'Import all invoices']);
+        $permission = Permission::create(['name' => 'invoices.import.all']);
         $user = factory(User::class)->create(['id' => 2])->givePermissionTo($permission);
 
         $response = $this
@@ -74,7 +74,7 @@ class ImportInvoiceTest extends TestCase
     /** @test */
     public function invoices_cannot_be_imported_due_validation_errors()
     {
-        $permission = Permission::create(['name' => 'Import all invoices']);
+        $permission = Permission::create(['name' => 'invoices.import.all']);
         $user = factory(User::class)->create()->givePermissionTo($permission);
 
         $response = $this

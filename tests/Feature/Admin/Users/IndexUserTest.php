@@ -29,7 +29,7 @@ class IndexUserTest extends TestCase
     /** @test */
     public function authorized_user_can_access_to_users_index()
     {
-        $permission = Permission::create(['name' => 'View all users']);
+        $permission = Permission::create(['name' => 'users.list.all']);
         $authUser = factory(User::class)->create()->givePermissionTo($permission);
 
         $response = $this->actingAs($authUser)->get(route('users.index'));
@@ -42,7 +42,7 @@ class IndexUserTest extends TestCase
     public function the_index_of_users_has_users()
     {
         factory(User::class, 5)->create();
-        $permission = Permission::create(['name' => 'View all users']);
+        $permission = Permission::create(['name' => 'users.list.all']);
         $authUser = factory(User::class)->create()->givePermissionTo($permission);
 
         $response = $this->actingAs($authUser)->get(route('users.index'));
@@ -54,7 +54,7 @@ class IndexUserTest extends TestCase
     public function the_index_of_users_has_user_paginated()
     {
         factory(User::class, 5)->create();
-        $permission = Permission::create(['name' => 'View all users']);
+        $permission = Permission::create(['name' => 'users.list.all']);
         $authUser = factory(User::class)->create()->givePermissionTo($permission);
 
         $response = $this->actingAs($authUser)->get(route('users.index'));
@@ -67,7 +67,7 @@ class IndexUserTest extends TestCase
     /** @test */
     public function users_can_be_found_by_id()
     {
-        $permission = Permission::create(['name' => 'View all users']);
+        $permission = Permission::create(['name' => 'users.list.all']);
         $authUser = factory(User::class)->create()->givePermissionTo($permission);
         $user1 = factory(User::class)->create();
         $user2 = factory(User::class)->create();
@@ -87,7 +87,7 @@ class IndexUserTest extends TestCase
     /** @test */
     public function users_can_be_found_by_email()
     {
-        $permission = Permission::create(['name' => 'View all users']);
+        $permission = Permission::create(['name' => 'users.list.all']);
         $authUser = factory(User::class)->create()->givePermissionTo($permission);
         $user1 = factory(User::class)->create();
         $user2 = factory(User::class)->create();

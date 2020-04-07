@@ -39,7 +39,7 @@ class UpdateInvoiceTest extends TestCase
     /** @test */
     public function authorized_user_cannot_update_paid_invoices()
     {
-        $permission = Permission::create(['name' => 'Edit all invoices']);
+        $permission = Permission::create(['name' => 'invoices.edit.all']);
         $user = factory(User::class)->create()->givePermissionTo($permission);
         $invoice = factory(Invoice::class)->create(["paid_at" => Carbon::now()]);
         $data = $this->data();
@@ -52,7 +52,7 @@ class UpdateInvoiceTest extends TestCase
     /** @test */
     public function authorized_user_cannot_update_annulled_invoices()
     {
-        $permission = Permission::create(['name' => 'Edit all invoices']);
+        $permission = Permission::create(['name' => 'invoices.edit.all']);
         $user = factory(User::class)->create()->givePermissionTo($permission);
         $invoice = factory(Invoice::class)->create(["annulled_at" => Carbon::now()]);
         $data = $this->data();
@@ -65,7 +65,7 @@ class UpdateInvoiceTest extends TestCase
     /** @test */
     public function authorized_user_can_update_invoices()
     {
-        $permission = Permission::create(['name' => 'Edit all invoices']);
+        $permission = Permission::create(['name' => 'invoices.edit.all']);
         $user = factory(User::class)->create()->givePermissionTo($permission);
         $invoice = factory(Invoice::class)->create();
         $data = $this->data();
@@ -90,7 +90,7 @@ class UpdateInvoiceTest extends TestCase
     /** @test */
     public function authorized_user_can_check_invoices_as_received()
     {
-        $permission = Permission::create(['name' => 'Receive invoices']);
+        $permission = Permission::create(['name' => 'invoices.receive.associated']);
         $user = factory(User::class)->create()->givePermissionTo($permission);
         $client = factory(Client::class)->create(['id' => $user->id]);
         $invoice = factory(Invoice::class)->create(['client_id' => $client->id]);

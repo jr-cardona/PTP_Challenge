@@ -31,7 +31,7 @@ class IndexProductTest extends TestCase
     /** @test */
     public function authorized_user_can_access_to_products_index()
     {
-        $permission = Permission::create(['name' => 'View all products']);
+        $permission = Permission::create(['name' => 'products.list.all']);
         $user = factory(User::class)->create()->givePermissionTo($permission);
 
         $response = $this->actingAs($user)->get(route('products.index'));
@@ -44,7 +44,7 @@ class IndexProductTest extends TestCase
     public function the_index_of_products_has_products()
     {
         factory(Product::class, 5)->create();
-        $permission = Permission::create(['name' => 'View all products']);
+        $permission = Permission::create(['name' => 'products.list.all']);
         $user = factory(User::class)->create()->givePermissionTo($permission);
 
         $response = $this->actingAs($user)->get(route('products.index'));
@@ -55,7 +55,7 @@ class IndexProductTest extends TestCase
     public function the_index_of_products_has_product_paginated()
     {
         factory(Product::class, 5)->create();
-        $permission = Permission::create(['name' => 'View all products']);
+        $permission = Permission::create(['name' => 'products.list.all']);
         $user = factory(User::class)->create()->givePermissionTo($permission);
 
         $response = $this->actingAs($user)->get(route('products.index'));
@@ -68,7 +68,7 @@ class IndexProductTest extends TestCase
     /** @test */
     public function display_message_to_the_user_when_no_products_where_found()
     {
-        $permission = Permission::create(['name' => 'View all products']);
+        $permission = Permission::create(['name' => 'products.list.all']);
         $user = factory(User::class)->create()->givePermissionTo($permission);
 
         $response = $this->actingAs($user)->get(route('products.index'));
@@ -78,7 +78,7 @@ class IndexProductTest extends TestCase
     /** @test */
     public function products_can_be_found_by_id()
     {
-        $permission = Permission::create(['name' => 'View all products']);
+        $permission = Permission::create(['name' => 'products.list.all']);
         $user = factory(User::class)->create()->givePermissionTo($permission);
         $product1 = factory(Product::class)->create();
         $product2 = factory(Product::class)->create();

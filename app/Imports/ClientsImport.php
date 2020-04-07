@@ -71,12 +71,12 @@ class ClientsImport extends BaseImport implements
             'Dirección' => 'required|string|min:5|max:100',
             'ID Creador' => ['required','numeric',
                 function ($attribute, $userId, $onFailure) {
-                    if (auth()->user()->can('Import all clients')
+                    if (auth()->user()->can('clients.import.all')
                         || auth()->user()->hasRole('SuperAdmin')) {
                         if (User::where('id', $userId)->count() == 0) {
                             $onFailure("Este usuario no existe");
                         }
-                    } elseif (auth()->user()->can('Import clients')) {
+                    } elseif (auth()->user()->can('clients.import.associated')) {
                         if ($userId != auth()->id()) {
                             $onFailure("No tiene permisos de importar clientes de otros usuarios");
                         }

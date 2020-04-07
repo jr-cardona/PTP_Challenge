@@ -39,7 +39,7 @@ class CreatePaymentAttemptTest extends TestCase
     /** @test */
     public function authorized_user_cannot_access_to_create_payment_attempts_view_for_a_paid_invoice()
     {
-        $permission = Permission::create(['name' => 'Pay invoices']);
+        $permission = Permission::create(['name' => 'invoices.pay.associated']);
         $user = factory(User::class)->create()->givePermissionTo($permission);
         $invoice = factory(Invoice::class)->create(["paid_at" => Carbon::now()]);
 
@@ -50,7 +50,7 @@ class CreatePaymentAttemptTest extends TestCase
     /** @test */
     public function authorized_user_cannot_access_to_create_payment_attempts_view_for_a_annulled_invoice()
     {
-        $permission = Permission::create(['name' => 'Pay invoices']);
+        $permission = Permission::create(['name' => 'invoices.pay.associated']);
         $user = factory(User::class)->create()->givePermissionTo($permission);
         $invoice = factory(Invoice::class)->create(["annulled_at" => Carbon::now()]);
 
@@ -61,7 +61,7 @@ class CreatePaymentAttemptTest extends TestCase
     /** @test */
     public function authorized_user_cannot_access_to_create_payment_attempts_view_for_a_invoice_without_products()
     {
-        $permission = Permission::create(['name' => 'Pay invoices']);
+        $permission = Permission::create(['name' => 'invoices.pay.associated']);
         $user = factory(User::class)->create()->givePermissionTo($permission);
         $invoice = factory(Invoice::class)->create();
 
@@ -72,7 +72,7 @@ class CreatePaymentAttemptTest extends TestCase
     /** @test */
     public function authorized_user_cannot_access_to_create_payment_attempts_view_for_a_unassociated_invoice()
     {
-        $permission = Permission::create(['name' => 'Pay invoices']);
+        $permission = Permission::create(['name' => 'invoices.pay.associated']);
         $user = factory(User::class)->create()->givePermissionTo($permission);
         $invoice = factory(Invoice::class)->create();
         $product = factory(Product::class)->create();
@@ -85,7 +85,7 @@ class CreatePaymentAttemptTest extends TestCase
     /** @test */
     public function authorized_user_can_access_to_create_payment_attempts_view_for_a_valid_invoice()
     {
-        $permission = Permission::create(['name' => 'Pay invoices']);
+        $permission = Permission::create(['name' => 'invoices.pay.associated']);
         $user = factory(User::class)->create()->givePermissionTo($permission);
         $client = factory(Client::class)->create(['id' => $user->id]);
         $invoice = factory(Invoice::class)->create(['client_id' => $client->id]);

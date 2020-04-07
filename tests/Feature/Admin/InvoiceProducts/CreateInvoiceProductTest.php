@@ -34,7 +34,7 @@ class CreateInvoiceProductTest extends TestCase
     /** @test */
     public function authorized_user_cannot_access_to_create_details_for_paid_invoices_view()
     {
-        $permission = Permission::create(['name' => 'Edit all invoices']);
+        $permission = Permission::create(['name' => 'invoices.edit.all']);
         $user = factory(User::class)->create()->givePermissionTo($permission);
         $invoice = factory(Invoice::class)->create(["paid_at" => Carbon::now()]);
 
@@ -45,7 +45,7 @@ class CreateInvoiceProductTest extends TestCase
     /** @test */
     public function authorized_user_cannot_access_to_create_details_for_annulled_invoices_view()
     {
-        $permission = Permission::create(['name' => 'Edit all invoices']);
+        $permission = Permission::create(['name' => 'invoices.edit.all']);
         $user = factory(User::class)->create()->givePermissionTo($permission);
         $invoice = factory(Invoice::class)->create(["annulled_at" => Carbon::now()]);
 
@@ -56,7 +56,7 @@ class CreateInvoiceProductTest extends TestCase
     /** @test */
     public function authorized_user_can_access_to_create_invoice_products_view()
     {
-        $permission = Permission::create(['name' => 'Edit all invoices']);
+        $permission = Permission::create(['name' => 'invoices.edit.all']);
         $user = factory(User::class)->create()->givePermissionTo($permission);
         $invoice = factory(Invoice::class)->create();
 
@@ -69,7 +69,7 @@ class CreateInvoiceProductTest extends TestCase
     /** @test */
     public function create_invoice_products_view_contains_fields_to_create_an_invoice_detail()
     {
-        $permission = Permission::create(['name' => 'Edit all invoices']);
+        $permission = Permission::create(['name' => 'invoices.edit.all']);
         $user = factory(User::class)->create()->givePermissionTo($permission);
         $invoice = factory(Invoice::class)->create();
 

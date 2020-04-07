@@ -32,7 +32,7 @@ class IndexInvoiceTest extends TestCase
     /** @test */
     public function authorized_user_can_access_to_invoices_index()
     {
-        $permission = Permission::create(['name' => 'View all invoices']);
+        $permission = Permission::create(['name' => 'invoices.list.all']);
         $user = factory(User::class)->create()->givePermissionTo($permission);
 
         $response = $this->actingAs($user)->get(route('invoices.index'));
@@ -45,7 +45,7 @@ class IndexInvoiceTest extends TestCase
     public function the_index_of_invoices_has_invoices()
     {
         factory(Invoice::class, 5)->create();
-        $permission = Permission::create(['name' => 'View all invoices']);
+        $permission = Permission::create(['name' => 'invoices.list.all']);
         $user = factory(User::class)->create()->givePermissionTo($permission);
 
         $this->actingAs($user)->get(route('invoices.index'))
@@ -56,7 +56,7 @@ class IndexInvoiceTest extends TestCase
     public function the_index_of_invoices_has_invoice_paginated()
     {
         factory(Invoice::class, 5)->create();
-        $permission = Permission::create(['name' => 'View all invoices']);
+        $permission = Permission::create(['name' => 'invoices.list.all']);
         $user = factory(User::class)->create()->givePermissionTo($permission);
 
         $response = $this->actingAs($user)->get(route('invoices.index'));
@@ -69,7 +69,7 @@ class IndexInvoiceTest extends TestCase
     /** @test */
     public function display_message_to_the_user_when_no_invoices_where_found()
     {
-        $permission = Permission::create(['name' => 'View all invoices']);
+        $permission = Permission::create(['name' => 'invoices.list.all']);
         $user = factory(User::class)->create()->givePermissionTo($permission);
 
         $response = $this->actingAs($user)->get(route('invoices.index'));
@@ -79,7 +79,7 @@ class IndexInvoiceTest extends TestCase
     /** @test */
     public function invoices_can_be_found_by_issued_init_and_issued_final()
     {
-        $permission = Permission::create(['name' => 'View all invoices']);
+        $permission = Permission::create(['name' => 'invoices.list.all']);
         $user = factory(User::class)->create()->givePermissionTo($permission);
         $invoice1 = factory(Invoice::class)->create(['issued_at' => Carbon::now()->subWeek()]);
         $invoice2 = factory(Invoice::class)->create(['issued_at' => Carbon::now()->addWeek()]);
@@ -102,7 +102,7 @@ class IndexInvoiceTest extends TestCase
     /** @test */
     public function invoices_can_be_found_by_expires_init_and_expires_final()
     {
-        $permission = Permission::create(['name' => 'View all invoices']);
+        $permission = Permission::create(['name' => 'invoices.list.all']);
         $user = factory(User::class)->create()->givePermissionTo($permission);
         $invoice1 = factory(Invoice::class)->create(['issued_at' => Carbon::now()->subWeek()]);
         $invoice2 = factory(Invoice::class)->create(['issued_at' => Carbon::now()->addWeek()]);
@@ -125,7 +125,7 @@ class IndexInvoiceTest extends TestCase
     /** @test */
     public function invoices_can_be_found_by_number()
     {
-        $permission = Permission::create(['name' => 'View all invoices']);
+        $permission = Permission::create(['name' => 'invoices.list.all']);
         $user = factory(User::class)->create()->givePermissionTo($permission);
         $invoice1 = factory(Invoice::class)->create();
         $invoice2 = factory(Invoice::class)->create();
@@ -145,7 +145,7 @@ class IndexInvoiceTest extends TestCase
     /** @test */
     public function invoices_can_be_found_by_product()
     {
-        $permission = Permission::create(['name' => 'View all invoices']);
+        $permission = Permission::create(['name' => 'invoices.list.all']);
         $user = factory(User::class)->create()->givePermissionTo($permission);
         $invoices = factory(Invoice::class, 5)->create()->each(function ($invoice) {
             $product = factory(Product::class)->create();
@@ -170,7 +170,7 @@ class IndexInvoiceTest extends TestCase
     /** @test */
     public function invoices_can_be_found_by_client()
     {
-        $permission = Permission::create(['name' => 'View all invoices']);
+        $permission = Permission::create(['name' => 'invoices.list.all']);
         $user = factory(User::class)->create()->givePermissionTo($permission);
         $invoice1 = factory(Invoice::class)->create();
         $invoice2 = factory(Invoice::class)->create();
@@ -190,7 +190,7 @@ class IndexInvoiceTest extends TestCase
     /** @test */
     public function invoices_can_be_found_by_seller()
     {
-        $permission = Permission::create(['name' => 'View all invoices']);
+        $permission = Permission::create(['name' => 'invoices.list.all']);
         $user = factory(User::class)->create()->givePermissionTo($permission);
         $invoice1 = factory(Invoice::class)->create();
         $invoice2 = factory(Invoice::class)->create();

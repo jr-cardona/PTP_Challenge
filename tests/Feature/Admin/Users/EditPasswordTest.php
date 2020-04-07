@@ -32,7 +32,7 @@ class EditPasswordTest extends TestCase
     /** @test */
     public function authorized_user_can_access_to_edit_password_view()
     {
-        $permission = Permission::create(['name' => 'Edit profile']);
+        $permission = Permission::create(['name' => 'users.edit.profile']);
         $user = factory(User::class)->create()->givePermissionTo($permission);
 
         $response = $this->actingAs($user)->get(route('users.edit-password', $user));

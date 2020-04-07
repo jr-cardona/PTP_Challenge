@@ -31,7 +31,7 @@ class UpdateInvoiceProductTest extends TestCase
     /** @test */
     public function unauthorized_user_cannot_update_invoice_details()
     {
-        $permission = Permission::create(['name' => 'Edit all invoices']);
+        $permission = Permission::create(['name' => 'invoices.edit.all']);
         $user = factory(User::class)->create();
         $data1 = $this->data1();
         $data2 = $this->data2();
@@ -47,7 +47,7 @@ class UpdateInvoiceProductTest extends TestCase
     /** @test */
     public function authorized_user_cannot_update_details_for_paid_invoices_view()
     {
-        $permission = Permission::create(['name' => 'Edit all invoices']);
+        $permission = Permission::create(['name' => 'invoices.edit.all']);
         $user = factory(User::class)->create()->givePermissionTo($permission);
         $data1 = $this->data1();
         $data2 = $this->data2();
@@ -63,7 +63,7 @@ class UpdateInvoiceProductTest extends TestCase
     /** @test */
     public function authorized_user_cannot_update_details_for_annulled_invoices_view()
     {
-        $permission = Permission::create(['name' => 'Edit all invoices']);
+        $permission = Permission::create(['name' => 'invoices.edit.all']);
         $user = factory(User::class)->create()->givePermissionTo($permission);
         $data1 = $this->data1();
         $data2 = $this->data2();
@@ -79,7 +79,7 @@ class UpdateInvoiceProductTest extends TestCase
     /** @test */
     public function authorized_user_can_update_invoice_products()
     {
-        $permission = Permission::create(['name' => 'Edit all invoices']);
+        $permission = Permission::create(['name' => 'invoices.edit.all']);
         $user = factory(User::class)->create()->givePermissionTo($permission);
         $data1 = $this->data1();
         $data2 = $this->data2();

@@ -29,7 +29,7 @@ class CreateUserTest extends TestCase
     /** @test */
     public function authorized_user_can_access_to_create_users_view()
     {
-        $permission = Permission::create(['name' => 'Create users']);
+        $permission = Permission::create(['name' => 'users.create']);
         $user = factory(User::class)->create()->givePermissionTo($permission);
 
         $response = $this->actingAs($user)->get(route('users.create'));
@@ -41,7 +41,7 @@ class CreateUserTest extends TestCase
     /** @test */
     public function create_users_view_contains_fields_to_create_a_user()
     {
-        $permission = Permission::create(['name' => 'Create users']);
+        $permission = Permission::create(['name' => 'users.create']);
         $user = factory(User::class)->create()->givePermissionTo($permission);
 
         $response = $this->actingAs($user)->get(route('users.create'));

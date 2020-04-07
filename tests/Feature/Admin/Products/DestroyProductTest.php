@@ -43,7 +43,7 @@ class DestroyProductTest extends TestCase
     /** @test */
     public function authorized_user_cannot_delete_products_with_invoices_assigned()
     {
-        $permission = Permission::create(['name' => 'Delete all products']);
+        $permission = Permission::create(['name' => 'products.delete.all']);
         $user = factory(User::class)->create()->givePermissionTo($permission);
         $product = factory(Product::class)->create();
         factory(Invoice::class)->create()->products()->attach($product, [
@@ -63,7 +63,7 @@ class DestroyProductTest extends TestCase
     public function authorized_user_can_delete_products()
     {
         $this->withoutExceptionHandling();
-        $permission = Permission::create(['name' => 'Delete all products']);
+        $permission = Permission::create(['name' => 'products.delete.all']);
         $user = factory(User::class)->create()->givePermissionTo($permission);
         $product = factory(Product::class)->create();
 

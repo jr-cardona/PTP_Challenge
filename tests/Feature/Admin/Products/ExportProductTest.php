@@ -38,7 +38,7 @@ class ExportProductTest extends TestCase
     /** @test */
     public function authorized_user_can_export_products()
     {
-        $permission = Permission::create(['name' => 'Export all products']);
+        $permission = Permission::create(['name' => 'products.export.all']);
         $user = factory(User::class)->create()->givePermissionTo($permission);
         $products = factory(Product::class, 5)->create();
         Excel::fake();

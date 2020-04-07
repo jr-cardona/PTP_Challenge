@@ -27,7 +27,7 @@ class CreateClientTest extends TestCase
     /** @test */
     public function authorized_user_can_access_to_create_clients_view()
     {
-        $permission = Permission::create(['name' => 'Create clients']);
+        $permission = Permission::create(['name' => 'clients.create']);
         $user = factory(User::class)->create()->givePermissionTo($permission);
 
         $response = $this->actingAs($user)->get(route('clients.create'));
@@ -39,7 +39,7 @@ class CreateClientTest extends TestCase
     /** @test */
     public function create_clients_view_contains_fields_to_create_a_client()
     {
-        $permission = Permission::create(['name' => 'Create clients']);
+        $permission = Permission::create(['name' => 'clients.create']);
         $user = factory(User::class)->create()->givePermissionTo($permission);
 
         $response = $this->actingAs($user)->get(route('clients.create'));

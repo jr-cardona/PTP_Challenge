@@ -49,7 +49,7 @@ class StoreInvoiceProductTest extends TestCase
     /** @test */
     public function authorized_user_cannot_store_details_for_paid_invoices()
     {
-        $permission = Permission::create(['name' => 'Edit all invoices']);
+        $permission = Permission::create(['name' => 'invoices.edit.all']);
         $user = factory(User::class)->create()->givePermissionTo($permission);
         $invoice = factory(Invoice::class)->create(['paid_at' => Carbon::now()]);
 
@@ -63,7 +63,7 @@ class StoreInvoiceProductTest extends TestCase
     /** @test */
     public function authorized_user_cannot_store_details_for_annulled_invoices()
     {
-        $permission = Permission::create(['name' => 'Edit all invoices']);
+        $permission = Permission::create(['name' => 'invoices.edit.all']);
         $user = factory(User::class)->create()->givePermissionTo($permission);
         $invoice = factory(Invoice::class)->create(['annulled_at' => Carbon::now()]);
 
@@ -78,7 +78,7 @@ class StoreInvoiceProductTest extends TestCase
     public function authorized_user_can_store_invoice_products()
     {
         $data = $this->data();
-        $permission = Permission::create(['name' => 'Edit all invoices']);
+        $permission = Permission::create(['name' => 'invoices.edit.all']);
         $user = factory(User::class)->create()->givePermissionTo($permission);
         $invoice = factory(Invoice::class)->create();
 
@@ -104,7 +104,7 @@ class StoreInvoiceProductTest extends TestCase
         string $field,
         string $message
     ) {
-        $permission = Permission::create(['name' => 'Edit all invoices']);
+        $permission = Permission::create(['name' => 'invoices.edit.all']);
         $user = factory(User::class)->create()->givePermissionTo($permission);
         $invoice = factory(Invoice::class)->create();
         $product = factory(Product::class)->create();

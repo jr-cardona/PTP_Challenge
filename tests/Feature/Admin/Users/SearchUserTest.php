@@ -14,7 +14,7 @@ class SearchUserTest extends TestCase
     /** @test */
     public function users_can_be_searched_by_name()
     {
-        $permission = Permission::create(['name' => 'View all users']);
+        $permission = Permission::create(['name' => 'users.list.all']);
         $authUser = factory(User::class)->create()->givePermissionTo($permission);
         factory(User::class)->create(["name" => "aaa"]);
         factory(User::class)->create(["name" => "bbb"]);

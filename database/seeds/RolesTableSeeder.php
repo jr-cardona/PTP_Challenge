@@ -25,45 +25,45 @@ class RolesTableSeeder extends Seeder
             ->givePermissionTo(Permission::all());
 
         Role::create(['name' => 'Seller'])
-            ->givePermissionTo('View invoices')
-            ->givePermissionTo('Create invoices')
-            ->givePermissionTo('Edit invoices')
-            ->givePermissionTo('Import invoices')
-            ->givePermissionTo('Export all invoices')
-            ->givePermissionTo('View all clients')
-            ->givePermissionTo('Create clients')
-            ->givePermissionTo('Edit clients')
-            ->givePermissionTo('Delete clients')
-            ->givePermissionTo('Export all clients')
-            ->givePermissionTo('Import clients')
-            ->givePermissionTo('View profile')
-            ->givePermissionTo('Edit profile')
+            ->givePermissionTo('invoices.list.associated')
+            ->givePermissionTo('invoices.create')
+            ->givePermissionTo('invoices.edit.associated')
+            ->givePermissionTo('invoices.import.associated')
+            ->givePermissionTo('invoices.export.all')
+            ->givePermissionTo('clients.list.all')
+            ->givePermissionTo('clients.create')
+            ->givePermissionTo('clients.edit.associated')
+            ->givePermissionTo('clients.delete.associated')
+            ->givePermissionTo('clients.export.all')
+            ->givePermissionTo('clients.import.associated')
+            ->givePermissionTo('users.view.profile')
+            ->givePermissionTo('users.edit.profile')
             ->givePermissionTo('reports.list.associated')
             ->givePermissionTo('reports.download.associated');
 
         Role::create(['name' => 'Client'])
-            ->givePermissionTo('View invoices')
-            ->givePermissionTo('Pay invoices')
-            ->givePermissionTo('Receive invoices')
-            ->givePermissionTo('View profile')
-            ->givePermissionTo('Edit profile');
+            ->givePermissionTo('invoices.list.associated')
+            ->givePermissionTo('invoices.pay.associated')
+            ->givePermissionTo('invoices.receive.associated')
+            ->givePermissionTo('users.view.profile')
+            ->givePermissionTo('users.edit.profile');
 
         Role::create(['name' => 'Accountant'])
-            ->givePermissionTo('View all invoices')
-            ->givePermissionTo('Export all invoices')
+            ->givePermissionTo('invoices.list.all')
+            ->givePermissionTo('invoices.export.all')
             ->givePermissionTo('reports.general.list.all')
             ->givePermissionTo('reports.general.export')
-            ->givePermissionTo('View profile')
-            ->givePermissionTo('Edit profile');
+            ->givePermissionTo('users.view.profile')
+            ->givePermissionTo('users.edit.profile');
 
         Role::create(['name' => 'Stock'])
-            ->givePermissionTo('View all products')
-            ->givePermissionTo('Create products')
-            ->givePermissionTo('Edit all products')
-            ->givePermissionTo('Delete all products')
-            ->givePermissionTo('Export all products')
-            ->givePermissionTo('Import all products')
-            ->givePermissionTo('View profile')
-            ->givePermissionTo('Edit profile');
+            ->givePermissionTo('products.list.all')
+            ->givePermissionTo('products.create')
+            ->givePermissionTo('products.edit.all')
+            ->givePermissionTo('products.delete.all')
+            ->givePermissionTo('products.export.all')
+            ->givePermissionTo('products.import.all')
+            ->givePermissionTo('users.view.profile')
+            ->givePermissionTo('users.edit.profile');
     }
 }

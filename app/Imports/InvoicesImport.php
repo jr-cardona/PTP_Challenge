@@ -47,12 +47,12 @@ class InvoicesImport extends BaseImport implements
             'ID Cliente' => 'required|numeric|exists:clients,id',
             'ID Vendedor' => ['required', 'numeric',
                 function ($attribute, $userId, $onFailure) {
-                    if (auth()->user()->can('Import all invoices')
+                    if (auth()->user()->can('invoices.import.all')
                         || auth()->user()->hasRole('SuperAdmin')) {
                         if (User::where('id', $userId)->count() == 0) {
                             $onFailure("Este vendedor no existe");
                         }
-                    } elseif (auth()->user()->can('Import invoices')) {
+                    } elseif (auth()->user()->can('invoices.import.associated')) {
                         if ($userId != auth()->id()) {
                             $onFailure("No tiene permisos de importar facturas de otros vendedores");
                         }

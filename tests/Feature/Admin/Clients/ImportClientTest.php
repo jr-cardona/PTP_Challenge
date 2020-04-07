@@ -57,7 +57,7 @@ class ImportClientTest extends TestCase
     public function authorized_user_can_import_clients()
     {
         factory(TypeDocument::class)->create();
-        $permission = Permission::create(['name' => 'Import all clients']);
+        $permission = Permission::create(['name' => 'clients.import.all']);
         $user = factory(User::class)->create(['id' => 2])->givePermissionTo($permission);
 
         $response = $this
@@ -76,7 +76,7 @@ class ImportClientTest extends TestCase
     /** @test */
     public function clients_cannot_be_imported_due_validation_errors()
     {
-        $permission = Permission::create(['name' => 'Import all clients']);
+        $permission = Permission::create(['name' => 'clients.import.all']);
         $user = factory(User::class)->create()->givePermissionTo($permission);
 
         $response = $this

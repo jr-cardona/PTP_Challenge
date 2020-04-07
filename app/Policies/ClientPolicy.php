@@ -12,25 +12,25 @@ class ClientPolicy
 
     public function viewAll(User $user, Client $client = null)
     {
-        return $user->can('View all clients');
+        return $user->can('clients.list.all');
     }
 
     public function viewAssociated(User $user, Client $client = null)
     {
-        return $user->can('View clients');
+        return $user->can('clients.list.associated');
     }
 
     public function viewAny(User $user, Client $client = null)
     {
-        return $user->can('View all clients') || $user->can('View clients');
+        return $user->can('clients.list.all') || $user->can('clients.list.associated');
     }
 
     public function view(User $user, Client $client)
     {
-        if ($user->can('View all clients')) {
+        if ($user->can('clients.list.all')) {
             return true;
         }
-        if ($user->can('View profile')) {
+        if ($user->can('users.view.profile')) {
             return $user->id === $client->id;
         }
         return false;
@@ -38,15 +38,15 @@ class ClientPolicy
 
     public function create(User $user, Client $client = null)
     {
-        return $user->can('Create clients');
+        return $user->can('clients.create');
     }
 
     public function update(User $user, Client $client)
     {
-        if ($user->can('Edit all clients')) {
+        if ($user->can('clients.edit.all')) {
             return true;
         }
-        if ($user->can('Edit profile')) {
+        if ($user->can('users.edit.profile')) {
             return $user->id === $client->id;
         }
         return false;
@@ -57,10 +57,10 @@ class ClientPolicy
         if (! $client->canBeDeleted()) {
             return false;
         }
-        if ($user->can('Delete all clients')) {
+        if ($user->can('clients.delete.all')) {
             return true;
         }
-        if ($user->can('Delete clients')) {
+        if ($user->can('clients.delete.associated')) {
             return $user->id === $client->user->created_by;
         }
         return false;
@@ -68,12 +68,12 @@ class ClientPolicy
 
     public function export(User $user, Client $client = null)
     {
-        return $user->can('Export all clients');
+        return $user->can('clients.export.all');
     }
 
     public function import(User $user, Client $client = null)
     {
-        return $user->can('Import all clients')
-            || $user->can('Import clients');
+        return $user->can('clients.import.all')
+            || $user->can('clients.import.associated');
     }
 }

@@ -58,7 +58,7 @@ class ImportProductTest extends TestCase
      */
     public function authorized_user_can_import_products()
     {
-        $permission = Permission::create(['name' => 'Import all products']);
+        $permission = Permission::create(['name' => 'products.import.all']);
         $user = factory(User::class)->create(['id' => 2])->givePermissionTo($permission);
 
         $response = $this
@@ -77,7 +77,7 @@ class ImportProductTest extends TestCase
     /** @test */
     public function products_cannot_be_imported_due_validation_errors()
     {
-        $permission = Permission::create(['name' => 'Import all products']);
+        $permission = Permission::create(['name' => 'products.import.all']);
         $user = factory(User::class)->create()->givePermissionTo($permission);
 
         $response = $this

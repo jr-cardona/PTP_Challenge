@@ -36,7 +36,7 @@ class UpdateUserTest extends TestCase
     public function authorized_user_can_update_users()
     {
         $user = factory(User::class)->create();
-        $permission = Permission::create(['name' => 'Edit all users']);
+        $permission = Permission::create(['name' => 'users.edit.all']);
         $authUser = factory(User::class)->create()->givePermissionTo($permission);
         $data = $this->data();
 

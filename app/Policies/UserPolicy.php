@@ -16,7 +16,7 @@ class UserPolicy
      */
     public function viewAny(User $userAuth, User $user = null)
     {
-        return $userAuth->can('View all users');
+        return $userAuth->can('users.list.all');
     }
 
     /**
@@ -28,10 +28,10 @@ class UserPolicy
      */
     public function view(User $userAuth, User $user)
     {
-        if ($userAuth->can('View all users')) {
+        if ($userAuth->can('users.list.all')) {
             return true;
         }
-        if ($userAuth->can('View profile')) {
+        if ($userAuth->can('users.view.profile')) {
             return $userAuth->id === $user->id;
         }
         return false;
@@ -45,7 +45,7 @@ class UserPolicy
      */
     public function create(User $userAuth, User $user = null)
     {
-        return $userAuth->can('Create users');
+        return $userAuth->can('users.create');
     }
 
     /**
@@ -57,10 +57,10 @@ class UserPolicy
      */
     public function update(User $userAuth, User $user)
     {
-        if ($userAuth->can('Edit all users')) {
+        if ($userAuth->can('users.edit.all')) {
             return true;
         }
-        if ($userAuth->can('Edit profile')) {
+        if ($userAuth->can('users.edit.profile')) {
             return $userAuth->id === $user->id;
         }
         return false;
@@ -78,10 +78,10 @@ class UserPolicy
         if (! $user->canBeDeleted()) {
             return false;
         }
-        if ($userAuth->can('Delete all users')) {
+        if ($userAuth->can('users.delete.all')) {
             return true;
         }
-        if ($userAuth->can('Delete user')) {
+        if ($userAuth->can('users.delete.associated')) {
             return $userAuth->id === $user->created_by;
         }
         return false;
@@ -96,7 +96,7 @@ class UserPolicy
      */
     public function export(User $userAuth, User $user = null)
     {
-        return $userAuth->can('Export all users');
+        return $userAuth->can('users.export.all');
     }
 
     /**
@@ -108,11 +108,11 @@ class UserPolicy
      */
     public function import(User $userAuth, User $user = null)
     {
-        return $userAuth->can('Import all users');
+        return $userAuth->can('users.import.all');
     }
 
     public function syncRoles(User $userAuth, User $user = null)
     {
-        return $userAuth->can('Sync roles');
+        return $userAuth->can('users.sync.roles');
     }
 }

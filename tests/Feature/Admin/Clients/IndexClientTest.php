@@ -30,7 +30,7 @@ class IndexClientTest extends TestCase
     /** @test */
     public function authorized_user_can_access_to_clients_index()
     {
-        $permission = Permission::create(['name' => 'View all clients']);
+        $permission = Permission::create(['name' => 'clients.list.all']);
         $user = factory(User::class)->create()->givePermissionTo($permission);
 
         $response = $this->actingAs($user)->get(route('clients.index'));
@@ -43,7 +43,7 @@ class IndexClientTest extends TestCase
     public function the_index_of_clients_has_clients()
     {
         factory(Client::class, 5)->create();
-        $permission = Permission::create(['name' => 'View all clients']);
+        $permission = Permission::create(['name' => 'clients.list.all']);
         $user = factory(User::class)->create()->givePermissionTo($permission);
 
         $this->actingAs($user)->get(route('clients.index'))->assertViewHas('clients');
@@ -53,7 +53,7 @@ class IndexClientTest extends TestCase
     public function the_index_of_clients_has_client_paginated()
     {
         factory(Client::class, 5)->create();
-        $permission = Permission::create(['name' => 'View all clients']);
+        $permission = Permission::create(['name' => 'clients.list.all']);
         $user = factory(User::class)->create()->givePermissionTo($permission);
 
         $response = $this->actingAs($user)->get(route('clients.index'));
@@ -66,7 +66,7 @@ class IndexClientTest extends TestCase
     /** @test */
     public function display_message_to_the_user_when_no_clients_where_found()
     {
-        $permission = Permission::create(['name' => 'View all clients']);
+        $permission = Permission::create(['name' => 'clients.list.all']);
         $user = factory(User::class)->create()->givePermissionTo($permission);
 
         $this->actingAs($user)->get(route('clients.index'))
@@ -76,7 +76,7 @@ class IndexClientTest extends TestCase
     /** @test */
     public function clients_can_be_found_by_id()
     {
-        $permission = Permission::create(['name' => 'View all clients']);
+        $permission = Permission::create(['name' => 'clients.list.all']);
         $user = factory(User::class)->create()->givePermissionTo($permission);
         $client1 = factory(Client::class)->create();
         $client2 = factory(Client::class)->create();
@@ -96,7 +96,7 @@ class IndexClientTest extends TestCase
     /** @test */
     public function clients_can_be_found_by_type_document()
     {
-        $permission = Permission::create(['name' => 'View all clients']);
+        $permission = Permission::create(['name' => 'clients.list.all']);
         $user = factory(User::class)->create()->givePermissionTo($permission);
         $client1 = factory(Client::class)->create();
         $client2 = factory(Client::class)->create();
@@ -116,7 +116,7 @@ class IndexClientTest extends TestCase
     /** @test */
     public function clients_can_be_found_by_document()
     {
-        $permission = Permission::create(['name' => 'View all clients']);
+        $permission = Permission::create(['name' => 'clients.list.all']);
         $user = factory(User::class)->create()->givePermissionTo($permission);
         $client1 = factory(Client::class)->create();
         $client2 = factory(Client::class)->create();
@@ -136,7 +136,7 @@ class IndexClientTest extends TestCase
     /** @test */
     public function clients_can_be_found_by_cellphone()
     {
-        $permission = Permission::create(['name' => 'View all clients']);
+        $permission = Permission::create(['name' => 'clients.list.all']);
         $user = factory(User::class)->create()->givePermissionTo($permission);
         $client1 = factory(Client::class)->create();
         $client2 = factory(Client::class)->create();
@@ -156,7 +156,7 @@ class IndexClientTest extends TestCase
     /** @test */
     public function clients_can_be_found_by_email()
     {
-        $permission = Permission::create(['name' => 'View all clients']);
+        $permission = Permission::create(['name' => 'clients.list.all']);
         $user = factory(User::class)->create()->givePermissionTo($permission);
         $client1 = factory(Client::class)->create();
         $client2 = factory(Client::class)->create();

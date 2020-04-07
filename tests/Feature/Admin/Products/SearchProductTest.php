@@ -15,7 +15,7 @@ class SearchProductTest extends TestCase
     /** @test */
     public function product_can_be_searched_by_name()
     {
-        $permission = Permission::create(['name' => 'View all products']);
+        $permission = Permission::create(['name' => 'products.list.all']);
         $user = factory(User::class)->create()->givePermissionTo($permission);
         factory(Product::class)->create(["name" => "aaa"]);
         factory(Product::class)->create(["name" => "bbb"]);

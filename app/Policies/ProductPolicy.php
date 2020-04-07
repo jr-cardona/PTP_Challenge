@@ -12,25 +12,25 @@ class ProductPolicy
 
     public function viewAll(User $user, Product $invoice = null)
     {
-        return $user->can('View all products');
+        return $user->can('products.list.all');
     }
 
     public function viewAssociated(User $user, Product $invoice = null)
     {
-        return $user->can('View products');
+        return $user->can('products.list.associated');
     }
 
     public function viewAny(User $user, Product $product = null)
     {
-        return $user->can('View all products') || $user->can('View products');
+        return $user->can('products.list.all') || $user->can('products.list.associated');
     }
 
     public function view(User $user, Product $product)
     {
-        if ($user->can('View all products')) {
+        if ($user->can('products.list.all')) {
             return true;
         }
-        if ($user->can('View products')) {
+        if ($user->can('products.list.associated')) {
             return $user->id === $product->created_by;
         }
         return false;
@@ -38,15 +38,15 @@ class ProductPolicy
 
     public function create(User $user, Product $product = null)
     {
-        return $user->can('Create products');
+        return $user->can('products.create');
     }
 
     public function update(User $user, Product $product)
     {
-        if ($user->can('Edit all products')) {
+        if ($user->can('products.edit.all')) {
             return true;
         }
-        if ($user->can('Edit products')) {
+        if ($user->can('products.edit.associated')) {
             return $user->id === $product->user->created_by;
         }
         return false;
@@ -57,10 +57,10 @@ class ProductPolicy
         if ($product->invoices->count() > 0) {
             return false;
         }
-        if ($user->can('Delete all products')) {
+        if ($user->can('products.delete.all')) {
             return true;
         }
-        if ($user->can('Delete products')) {
+        if ($user->can('products.delete.associated')) {
             return $user->id === $product->user->created_by;
         }
         return false;
@@ -68,11 +68,11 @@ class ProductPolicy
 
     public function export(User $user, Product $product = null)
     {
-        return $user->can('Export all products');
+        return $user->can('products.export.all');
     }
 
     public function import(User $user, Product $product = null)
     {
-        return $user->can('Import all products');
+        return $user->can('products.import.all');
     }
 }

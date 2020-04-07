@@ -40,7 +40,7 @@ class UpdateClientTest extends TestCase
     public function authorized_user_can_update_clients()
     {
         $client = factory(Client::class)->create();
-        $permission = Permission::create(['name' => 'Edit all clients']);
+        $permission = Permission::create(['name' => 'clients.edit.all']);
         $user = factory(User::class)->create()->givePermissionTo($permission);
 
         $data = $this->data();

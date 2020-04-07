@@ -36,7 +36,7 @@ class DestroyUserTest extends TestCase
     /** @test */
     public function authorized_user_can_delete_users()
     {
-        $permission = Permission::create(['name' => 'Delete all users']);
+        $permission = Permission::create(['name' => 'users.delete.all']);
         $authUser = factory(User::class)->create()->givePermissionTo($permission);
         $user = factory(User::class)->create();
 

@@ -42,7 +42,7 @@ class DestroyInvoiceTest extends TestCase
     /** @test */
     public function authorized_user_can_annul_invoices()
     {
-        $permission = Permission::create(['name' => 'Annul all invoices']);
+        $permission = Permission::create(['name' => 'invoices.annul.all']);
         $user = factory(User::class)->create()->givePermissionTo($permission);
         $invoice = factory(Invoice::class)->create();
 

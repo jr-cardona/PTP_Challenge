@@ -43,7 +43,7 @@ class StoreInvoiceTest extends TestCase
     /** @test */
     public function authorized_user_can_store_invoices()
     {
-        $permission = Permission::create(['name' => 'Create invoices']);
+        $permission = Permission::create(['name' => 'invoices.create']);
         $user = factory(User::class)->create()->givePermissionTo($permission);
         $data = $this->data();
 
@@ -69,7 +69,7 @@ class StoreInvoiceTest extends TestCase
         string $field,
         string $message
     ) {
-        $permission = Permission::create(['name' => 'Create invoices']);
+        $permission = Permission::create(['name' => 'invoices.create']);
         $user = factory(User::class)->create()->givePermissionTo($permission);
         $response =  $this->actingAs($user)->post(route('invoices.store'), $invoiceData);
 

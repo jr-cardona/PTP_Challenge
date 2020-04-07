@@ -41,7 +41,7 @@ class StoreUserTest extends TestCase
     /** @test */
     public function authorized_user_can_store_users()
     {
-        $permission = Permission::create(['name' => 'Create users']);
+        $permission = Permission::create(['name' => 'users.create']);
         $authUser = factory(User::class)->create()->givePermissionTo($permission);
         $data = $this->data();
 
@@ -67,7 +67,7 @@ class StoreUserTest extends TestCase
         string $field,
         string $message
     ) {
-        $permission = Permission::create(['name' => 'Create users']);
+        $permission = Permission::create(['name' => 'users.create']);
         $authUser = factory(User::class)->create()->givePermissionTo($permission);
         factory(User::class)->create(['email' => "repeated@email.com"]);
         $response =  $this->actingAs($authUser)->post(route('users.store'), $userData);

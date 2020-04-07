@@ -12,25 +12,25 @@ class InvoicePolicy
 
     public function viewAll(User $user, Invoice $invoice = null)
     {
-        return $user->can('View all invoices');
+        return $user->can('invoices.list.all');
     }
 
     public function viewAssociated(User $user, Invoice $invoice = null)
     {
-        return $user->can('View invoices');
+        return $user->can('invoices.list.associated');
     }
 
     public function viewAny(User $user, Invoice $invoice = null)
     {
-        return $user->can('View all invoices') || $user->can('View invoices');
+        return $user->can('invoices.list.all') || $user->can('invoices.list.associated');
     }
 
     public function view(User $user, Invoice $invoice)
     {
-        if ($user->can('View all invoices')) {
+        if ($user->can('invoices.list.all')) {
             return true;
         }
-        if ($user->can('View invoices')) {
+        if ($user->can('invoices.list.associated')) {
             return $user->id === $invoice->created_by || $user->id === $invoice->client_id;
         }
         return false;
@@ -38,7 +38,7 @@ class InvoicePolicy
 
     public function create(User $user, Invoice $invoice = null)
     {
-        return $user->can('Create invoices');
+        return $user->can('invoices.create');
     }
 
     public function update(User $user, Invoice $invoice)
@@ -46,10 +46,10 @@ class InvoicePolicy
         if ($invoice->isPaid() || $invoice->isAnnulled()) {
             return false;
         }
-        if ($user->can('Edit all invoices')) {
+        if ($user->can('invoices.edit.all')) {
             return true;
         }
-        if ($user->can('Edit invoices')) {
+        if ($user->can('invoices.edit.associated')) {
             return $user->id === $invoice->created_by;
         }
         return false;
@@ -60,10 +60,10 @@ class InvoicePolicy
         if ($invoice->isAnnulled()) {
             return false;
         }
-        if ($user->can('Annul all invoices')) {
+        if ($user->can('invoices.annul.all')) {
             return true;
         }
-        if ($user->can('Annul invoices')) {
+        if ($user->can('invoices.annul.associated')) {
             return $user->id === $invoice->created_by;
         }
         return false;
@@ -71,12 +71,12 @@ class InvoicePolicy
 
     public function export(User $user, Invoice $invoice = null)
     {
-        return $user->can('Export all invoices');
+        return $user->can('invoices.export.all');
     }
 
     public function import(User $user, Invoice $invoice = null)
     {
-        return $user->can('Import all invoices') || $user->can('Import invoices');
+        return $user->can('invoices.import.all') || $user->can('invoices.import.associated');
     }
 
     public function pay(User $user, Invoice $invoice)
@@ -84,9 +84,11 @@ class InvoicePolicy
         if ($invoice->isPaid() || $invoice->isAnnulled() || $invoice->total == 0) {
             return false;
         }
-        if ($user->can('Pay invoices') &&
-            $user->id === $invoice->client_id) {
+        if ($user->can('invoices.pay.all')) {
             return true;
+        }
+        if ($user->can('invoices.pay.associated')) {
+            return $user->id === $invoice->client_id;
         }
         return false;
     }
@@ -96,9 +98,11 @@ class InvoicePolicy
         if ($invoice->isAnnulled() || isset($invoice->received_at)) {
             return false;
         }
-        if ($user->can('Receive invoices') &&
-            $user->id === $invoice->client_id) {
+        if ($user->can('invoices.receive.all')) {
             return true;
+        }
+        if ($user->can('invoices.receive.associated')) {
+            return $user->id === $invoice->client_id;
         }
         return false;
     }
@@ -108,10 +112,10 @@ class InvoicePolicy
         if ($invoice->isAnnulled()) {
             return false;
         }
-        if ($user->can('Print all invoices')) {
+        if ($user->can('invoices.print.all')) {
             return true;
         }
-        if ($user->can('Print invoices')) {
+        if ($user->can('invoices.print.associated')) {
             return $user->id === $invoice->created_by;
         }
         return false;

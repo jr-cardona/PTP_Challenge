@@ -34,7 +34,7 @@ class ShowInvoiceTest extends TestCase
     public function authorized_user_can_access_to_a_specific_invoice()
     {
         $invoice = factory(Invoice::class)->create();
-        $permission = Permission::create(['name' => 'View all invoices']);
+        $permission = Permission::create(['name' => 'invoices.list.all']);
         $user = factory(User::class)->create()->givePermissionTo($permission);
 
         $response = $this->actingAs($user)->get(route('invoices.show', $invoice));
@@ -47,7 +47,7 @@ class ShowInvoiceTest extends TestCase
     public function the_invoice_show_view_has_information_of_an_invoice()
     {
         $invoice = factory(Invoice::class)->create();
-        $permission = Permission::create(['name' => 'View all invoices']);
+        $permission = Permission::create(['name' => 'invoices.list.all']);
         $user = factory(User::class)->create()->givePermissionTo($permission);
 
         $response = $this->actingAs($user)->get(route('invoices.index'));

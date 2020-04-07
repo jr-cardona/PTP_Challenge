@@ -32,7 +32,7 @@ class EditClientTest extends TestCase
     /** @test */
     public function authorized_user_can_access_to_edit_clients_view()
     {
-        $permission = Permission::create(['name' => 'Edit all clients']);
+        $permission = Permission::create(['name' => 'clients.edit.all']);
         $user = factory(User::class)->create()->givePermissionTo($permission);
         $client = factory(Client::class)->create();
 
@@ -45,7 +45,7 @@ class EditClientTest extends TestCase
     /** @test */
     public function the_client_edit_view_has_current_information_of_a_client()
     {
-        $permission = Permission::create(['name' => 'Edit all clients']);
+        $permission = Permission::create(['name' => 'clients.edit.all']);
         $user = factory(User::class)->create()->givePermissionTo($permission);
         $client = factory(Client::class)->create();
 
