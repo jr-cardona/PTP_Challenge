@@ -3,27 +3,32 @@
 namespace App\Exports;
 
 use Config;
-use Illuminate\Contracts\Queue\ShouldQueue;
+use App\Entities\Invoice;
+use Maatwebsite\Excel\Concerns\FromQuery;
 use Maatwebsite\Excel\Concerns\Exportable;
+use App\Actions\Invoices\GetInvoicesAction;
 use Maatwebsite\Excel\Concerns\WithMapping;
+use Illuminate\Contracts\Queue\ShouldQueue;
 use Maatwebsite\Excel\Concerns\WithHeadings;
-use Illuminate\Contracts\Support\Responsable;
-use Maatwebsite\Excel\Concerns\FromCollection;
 
-class InvoicesExport implements FromCollection, Responsable, WithHeadings, WithMapping, ShouldQueue
+class InvoicesExport implements FromQuery, WithHeadings, WithMapping, ShouldQueue
 {
     use Exportable;
 
-    private $invoices;
+    protected $filters;
+    protected $authUser;
 
-    public function __construct($invoices)
+    public function __construct($filters, $authUser)
     {
-        $this->invoices = $invoices;
+        $this->filters = $filters;
+        $this->authUser = $authUser;
     }
 
-    public function collection()
+    public function query()
     {
-        return $this->invoices;
+        return (new GetInvoicesAction)->execute(new Invoice(), array_merge($this->filters, [
+            'authUser' => $this->authUser
+        ]));
     }
 
     public function map($invoice): array

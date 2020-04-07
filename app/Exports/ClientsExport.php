@@ -2,27 +2,32 @@
 
 namespace App\Exports;
 
+use App\Entities\Client;
+use Maatwebsite\Excel\Concerns\FromQuery;
+use App\Actions\Clients\GetClientsAction;
 use Maatwebsite\Excel\Concerns\Exportable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Maatwebsite\Excel\Concerns\WithMapping;
+use Illuminate\Contracts\Queue\ShouldQueue;
 use Maatwebsite\Excel\Concerns\WithHeadings;
-use Illuminate\Contracts\Support\Responsable;
-use Maatwebsite\Excel\Concerns\FromCollection;
 
-class ClientsExport implements FromCollection, Responsable, WithHeadings, WithMapping, ShouldQueue
+class ClientsExport implements FromQuery, WithHeadings, WithMapping, ShouldQueue
 {
     use Exportable;
 
-    private $clients;
+    protected $filters;
+    protected $authUser;
 
-    public function __construct($clients)
+    public function __construct($filters, $authUser)
     {
-        $this->clients = $clients;
+        $this->filters = $filters;
+        $this->authUser = $authUser;
     }
 
-    public function collection()
+    public function query()
     {
-        return $this->clients;
+        return (new GetClientsAction)->execute(new Client(), array_merge($this->filters, [
+            'authUser' => $this->authUser
+        ]));
     }
 
     public function map($client): array
