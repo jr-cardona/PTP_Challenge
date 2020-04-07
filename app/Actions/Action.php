@@ -2,17 +2,16 @@
 
 namespace App\Actions;
 
-use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\Model;
 
 abstract class Action implements ActionContract
 {
     /**
      * @param Model $model
-     * @param Request $request
+     * @param array $request
      * @return mixed
      */
-    public function execute(Model $model, Request $request)
+    public function execute(Model $model, array $request)
     {
         return $this->action($model, $request);
     }

@@ -1,17 +1,15 @@
 <?php
 
-
 namespace App\Actions\Products;
 
 use App\Actions\Action;
-use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\Model;
 
 class UpdateProductsAction extends Action
 {
-    public function action(Model $invoice, Request $request): Model
+    public function action(Model $invoice, array $request): Model
     {
-        $invoice->update($request->validated());
+        $invoice->update($request);
         return $invoice;
     }
 }
