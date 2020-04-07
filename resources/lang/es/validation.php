@@ -199,6 +199,9 @@ return [
         'product_id'            => 'producto',
         'seller_id'             => 'vendedor',
         'file'                  => 'archivo',
-        'annulment_reason'      => 'motivo de anulación'
+        'annulment_reason'      => 'motivo de anulación',
+        'per_page'              => 'Registros por página',
+        'new_password'          => 'contraseña nueva',
+        'current_password'      => 'contraseña actual',
     ],
 ];
