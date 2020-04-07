@@ -30,6 +30,16 @@
                             <label for="email">{{ __("Correo electrónico") }}</label>
                             <input type="text" id="email" name="email" class="form-control" placeholder="Correo electrónico" value="{{ $request->get('email') }}">
                         </div>
+                        <div class="col">
+                            <label for="per_page">{{ __("Registros por página") }}</label>
+                            <select id="per_page" name="per_page" class="form-control">
+                                @for($i = 10; $i <= 100; $i += 10)
+                                    <option value="{{ $i }}" {{ $users->perPage() == $i ? 'selected' : '' }}>
+                                        {{ $i }}
+                                    </option>
+                                @endfor
+                            </select>
+                        </div>
                     </div>
                 </form>
             </div>

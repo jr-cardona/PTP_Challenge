@@ -40,9 +40,9 @@
                             <label for="type_document_id">{{ __("Tipo de documento") }}</label>
                             <select id="type_document_id" name="type_document_id" class="form-control">
                                 <option value="">--</option>
-                                @foreach($type_documents as $type_document)
-                                    <option value="{{ $type_document->id }}" {{ $request->get('type_document_id') == $type_document->id ? 'selected' : ''}}>
-                                        {{ $type_document->fullname }}
+                                @foreach($typeDocuments as $typeDocument)
+                                    <option value="{{ $typeDocument->id }}" {{ $request->get('type_document_id') == $typeDocument->id ? 'selected' : ''}}>
+                                        {{ $typeDocument->fullname }}
                                     </option>
                                 @endforeach
                             </select>
@@ -50,6 +50,18 @@
                         <div class="col">
                             <label for="document">{{ __("Número de documento") }}</label>
                             <input type="number" id="document" name="document" class="form-control" placeholder="No. Documento" value="{{ $request->get('document') }}">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col">
+                            <label for="per_page">{{ __("Registros por página") }}</label>
+                            <select id="per_page" name="per_page" class="form-control">
+                                @for($i = 10; $i <= 100; $i += 10)
+                                    <option value="{{ $i }}" {{ $clients->perPage() == $i ? 'selected' : '' }}>
+                                        {{ $i }}
+                                    </option>
+                                @endfor
+                            </select>
                         </div>
                     </div>
                 </form>

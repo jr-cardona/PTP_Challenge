@@ -33,10 +33,10 @@
                         <input id="product_price" name="product_price" class="form-control" readonly="readonly"
                                :value="(old_product_values) ? old_product_values.price : '' ">
                     </div>
-                    @include('invoices.products._form', ['quantity' => ""])
+                    @include('invoices.products.__form', ['quantity' => ""])
                 </div>
                 <br>
-                @include('invoices.products._buttons')
+                @include('invoices.products.__buttons')
             </form>
         </div>
     </div>

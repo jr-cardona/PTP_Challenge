@@ -8,7 +8,7 @@
         <div class="card-body">
             <form action="{{ route('products.update', $product) }}" class="form-group" method="POST">
                 @method('PUT')
-                @include('products._form')
+                @include('products.__form')
                 <div class="form-group">
                     <button type="submit" class="btn btn-success">
                         <i class="fa fa-save"></i> {{ __("Actualizar") }}

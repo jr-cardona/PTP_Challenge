@@ -8,7 +8,7 @@
                 </button>
             </div>
             <div class="modal-body">
-                <form id="searchForm" action="{{ route('reports.clients') }}" method="get">
+                <form id="searchForm" action="{{ route('reports.debtorClients') }}" method="get">
                     <input type="hidden" id="format" name="format">
                 </form>
             </div>

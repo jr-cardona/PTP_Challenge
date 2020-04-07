@@ -1,26 +1,17 @@
 @extends('layouts.show')
 @section('Title', 'Ver Producto')
 @section('Back')
-    <div>
-        @can('viewAny', App\Entities\Product::class)
-            <a href="{{ route('products.index') }}" class="btn btn-secondary">
-                <i class="fa fa-arrow-left"></i> {{ __("Volver") }}
-            </a>
-        @endcan
-    </div>
-    <div>
-        @can('create', App\Entities\Product::class)
-            <a class="btn btn-success" href="{{ route('products.create') }}">
-                <i class="fa fa-plus"></i> {{ __("Crear nuevo producto") }}
-            </a>
-        @endcan
-    </div>
+    @can('viewAny', App\Entities\Product::class)
+        <a href="{{ route('products.index') }}" class="btn btn-secondary">
+            <i class="fa fa-arrow-left"></i> {{ __("Volver") }}
+        </a>
+    @endcan
 @endsection
 @section('Name')
     {{ $product->name }}
 @endsection
 @section('Buttons')
-    @include('products._buttons')
+    @include('products.__buttons')
 @endsection
 @section('Body')
     <div class="shadow">

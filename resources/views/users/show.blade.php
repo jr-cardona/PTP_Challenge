@@ -1,26 +1,17 @@
 @extends('layouts.show')
 @section('Title', 'Ver Vendedor')
 @section('Back')
-    <div>
-        @can('viewAny', App\Entities\User::class)
-            <a href="{{ route('users.index') }}" class="btn btn-secondary">
-                <i class="fa fa-arrow-left"></i> {{ __("Volver") }}
-            </a>
-        @endcan
-    </div>
-    <div>
-        @can('create', App\Entities\User::class)
-            <a class="btn btn-success" href="{{ route('users.create') }}">
-                <i class="fa fa-plus"></i> {{ __("Crear nuevo usuario") }}
-            </a>
-        @endcan
-    </div>
+    @can('viewAny', App\Entities\User::class)
+        <a href="{{ route('users.index') }}" class="btn btn-secondary">
+            <i class="fa fa-arrow-left"></i> {{ __("Volver") }}
+        </a>
+    @endcan
 @endsection
 @section('Name')
     {{ $user->fullname }}
 @endsection
 @section('Buttons')
-    @include('users._buttons')
+    @include('users.__buttons')
 @endsection
 @section('Body')
     <div class="shadow">

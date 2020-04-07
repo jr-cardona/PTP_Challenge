@@ -4,19 +4,10 @@
 @endsection
 <div></div>
 @section('content')
-    @if(count($errors) > 0)
-        <div class="alert alert-danger">
-            <ul>
-                @foreach($errors->all() as $error)
-                    <li>{{ $error }}</li>
-                @endforeach
-            </ul>
-        </div>
-    @endif
     @include('reports.clients.__search_modal')
     <div class="card-header justify-content-between d-flex">
         <div class="col-md-3">
-            <a href="{{ route('reports.index') }}" class="btn btn-secondary">
+            <a href="{{ route('reports.general') }}" class="btn btn-secondary">
                 <i class="fa fa-arrow-left"></i> {{ __("Volver") }}
             </a>
         </div>
