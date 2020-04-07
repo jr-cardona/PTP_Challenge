@@ -18,6 +18,8 @@ class Product extends Model
         'updated_by',
     ];
 
+    protected $perPage = 10;
+
     /**
      * Relation between products and invoices
      * @return BelongsToMany
@@ -48,19 +50,13 @@ class Product extends Model
     /** Query Scopes */
     public function scopeId($query, $id)
     {
-        if (trim($id) !== '') {
+        if (trim($id)) {
             return $query->where('id', $id);
         }
     }
 
-    public function scopeCreator($query)
+    public function scopeCreatorId($query, $authUser)
     {
-        if (auth()->user()->can('View all products') || auth()->user()->hasRole('SuperAdmin')) {
-            return $query;
-        } elseif (auth()->user()->hasPermissionTo('View products')) {
-            $query->where('created_by', auth()->user()->id);
-        } else {
-            return $query->where('created_by', '-1');
-        }
+        return $query->where('created_by', $authUser);
     }
 }

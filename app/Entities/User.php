@@ -31,6 +31,8 @@ class User extends Authenticatable implements JWTSubject
         'email_verified_at' => 'datetime',
     ];
 
+    protected $perPage = 10;
+
     public function invoices(): HasMany
     {
         return $this->hasMany(Invoice::class, 'created_by');
@@ -86,14 +88,14 @@ class User extends Authenticatable implements JWTSubject
     /** Query Scopes */
     public function scopeId($query, $id)
     {
-        if (trim($id) !== "") {
+        if (trim($id)) {
             return $query->where('id', $id);
         }
     }
 
     public function scopeEmail($query, $email)
     {
-        if (trim($email) !== '') {
+        if (trim($email)) {
             return $query->where('email', 'LIKE', "%${email}%");
         }
     }

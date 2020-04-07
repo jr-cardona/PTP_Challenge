@@ -35,6 +35,8 @@ class Invoice extends Model
         'paid_at' => 'date:Y-m-d',
     ];
 
+    protected $perPage = 10;
+
     /**
      * Relation between invoices and clients
      * @return BelongsTo
@@ -149,43 +151,41 @@ class Invoice extends Model
         }
     }
 
-    /** Query Scopes */
-    public function scopeNumber($query, $number)
+    // Scopes
+    public function scopeAllSellers($query, $sellerId)
     {
-        if (trim($number) !== '') {
-            return $query->where('id', 'LIKE', "%${number}%");
+        if (trim($sellerId)) {
+            return $query->where('created_by', $sellerId);
         }
     }
 
-    public function scopeClient($query, $clientId)
+    public function scopeAllClients($query, $clientId)
     {
-        if (trim($clientId) !== '') {
+        if (trim($clientId)) {
             return $query->where('client_id', $clientId);
         }
     }
 
-    public function scopeSeller($query, $sellerId)
+    public function scopeSellerId($query, $authUser)
     {
-        if (auth()->user()->can('View all invoices') ||
-            auth()->user()->hasRole('SuperAdmin')) {
-            if (trim($sellerId) !== '') {
-                return $query->where('created_by', $sellerId);
-            }
-            return $query;
+        return $query->where('created_by', $authUser->id);
+    }
+
+    public function scopeClientId($query, $authUser)
+    {
+        return $query->where('client_id', $authUser->id);
+    }
+
+    public function scopeNumber($query, $number)
+    {
+        if (trim($number)) {
+            return $query->where('id', 'LIKE', "%${number}%");
         }
-        if (auth()->user()->can('View invoices')) {
-            if (auth()->user()->isClient()) {
-                return $query->where('client_id', auth()->user()->id);
-            } else {
-                return $query->where('created_by', auth()->user()->id);
-            }
-        }
-        return $query->where('created_by', '-1');
     }
 
     public function scopeProduct($query, $product_id)
     {
-        if (trim($product_id) !== '') {
+        if (trim($product_id)) {
             return $query->whereHas(
                 'products',
                 static function (Builder $query) use ($product_id) {
@@ -197,14 +197,14 @@ class Invoice extends Model
 
     public function scopeIssuedDate($query, $issued_init, $issued_final)
     {
-        if (trim($issued_init) !== '' && trim($issued_final) !== '') {
+        if (trim($issued_init) && trim($issued_final)) {
             return $query->whereBetween('issued_at', [$issued_init, $issued_final]);
         }
     }
 
     public function scopeExpiresDate($query, $expires_init, $expires_final)
     {
-        if (trim($expires_init) !== '' && trim($expires_final) !== '') {
+        if (trim($expires_init) && trim($expires_final)) {
             return $query->whereBetween('expires_at', [$expires_init, $expires_final]);
         }
     }
