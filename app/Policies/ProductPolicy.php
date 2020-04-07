@@ -10,49 +10,37 @@ class ProductPolicy
 {
     use HandlesAuthorization;
 
-    /**
-     * @param User $user
-     * @param Product $product
-     * @return bool
-     */
-    public function viewAny(User $user, Product $product = null)
+    public function viewAll(User $user, Product $invoice = null)
     {
         return $user->can('View all products');
     }
 
-    /**
-     * Determine whether the user can view products.
-     *
-     * @param User $user
-     * @param Product $product
-     * @return mixed
-     */
+    public function viewAssociated(User $user, Product $invoice = null)
+    {
+        return $user->can('View products');
+    }
+
+    public function viewAny(User $user, Product $product = null)
+    {
+        return $user->can('View all products') || $user->can('View products');
+    }
+
     public function view(User $user, Product $product)
     {
         if ($user->can('View all products')) {
             return true;
         }
+        if ($user->can('View products')) {
+            return $user->id === $product->created_by;
+        }
         return false;
     }
 
-    /**
-     * Determine whether the user can create products.
-     *
-     * @param User $user
-     * @return mixed
-     */
     public function create(User $user, Product $product = null)
     {
         return $user->can('Create products');
     }
 
-    /**
-     * Determine whether the user can update products.
-     *
-     * @param User $user
-     * @param Product $product
-     * @return mixed
-     */
     public function update(User $user, Product $product)
     {
         if ($user->can('Edit all products')) {
@@ -64,13 +52,6 @@ class ProductPolicy
         return false;
     }
 
-    /**
-     * Determine whether the user can delete products.
-     *
-     * @param User $user
-     * @param Product $product
-     * @return mixed
-     */
     public function delete(User $user, Product $product)
     {
         if ($product->invoices->count() > 0) {
@@ -85,25 +66,11 @@ class ProductPolicy
         return false;
     }
 
-    /**
-     * Determine whether the user can export products.
-     *
-     * @param User $user
-     * @param Product $product
-     * @return mixed
-     */
     public function export(User $user, Product $product = null)
     {
         return $user->can('Export all products');
     }
 
-    /**
-     * Determine whether the user can import products.
-     *
-     * @param User $user
-     * @param Product $product
-     * @return mixed
-     */
     public function import(User $user, Product $product = null)
     {
         return $user->can('Import all products');
