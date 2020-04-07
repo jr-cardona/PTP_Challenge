@@ -2,18 +2,15 @@
 
 namespace App\Http\Controllers;
 
-use Config;
 use Exception;
 use App\Entities\Product;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use App\Exports\ProductsExport;
 use Illuminate\Http\RedirectResponse;
 use App\Http\Requests\SaveProductRequest;
 use App\Actions\Products\GetProductsAction;
 use App\Actions\Products\StoreProductsAction;
 use App\Actions\Products\UpdateProductsAction;
-use Illuminate\Auth\Access\AuthorizationException;
 
 class ProductController extends Controller
 {
@@ -27,31 +24,13 @@ class ProductController extends Controller
      * @param GetProductsAction $action
      * @param Request $request
      * @return Response
-     * @throws AuthorizationException
      */
     public function index(GetProductsAction $action, Request $request)
     {
-        $products = $action->execute(new Product(), $request);
+        $products = $action->execute(new Product(), $request->all())
+            ->paginate($request->get('per_page'));
 
-        if ($format = $request->get('format')) {
-            $this->authorize('export', Product::class);
-            return (new ProductsExport($products->get()))
-                ->download('products-list.' . $format);
-        }
-
-        $paginate = Config::get('constants.paginate');
-        $count = $products->count();
-        $products = $products->paginate($paginate);
-
-        return response()->view(
-            'products.index',
-            compact(
-            'products',
-            'request',
-            'count',
-            'paginate'
-        )
-        );
+        return response()->view('products.index', compact('products', 'request'));
     }
 
     /**
@@ -74,7 +53,7 @@ class ProductController extends Controller
      */
     public function store(StoreProductsAction $action, SaveProductRequest $request)
     {
-        $product = $action->execute(new Product(), $request);
+        $product = $action->execute(new Product(), $request->validated());
 
         return redirect()->route('products.show', $product->id)
             ->with('success', ('Producto creado satisfactoriamente'));
@@ -115,7 +94,7 @@ class ProductController extends Controller
         Product $product,
         SaveProductRequest $request
     ) {
-        $product = $action->execute($product, $request);
+        $product = $action->execute($product, $request->validated());
 
         return redirect()->route('products.show', $product)
             ->with('success', ('Producto actualizado satisfactoriamente'));
