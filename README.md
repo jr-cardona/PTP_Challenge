@@ -22,7 +22,7 @@ Welcome! In this repository you can find the source code of the project based on
                                                 <li>mysql -u root</li>
                                                 <li>create database ptp_challenge;</li>
                                                 <li>exit</li>
-                                                <li>php artisan migrate --seed</li>
+                                                <li>php artisan db:seed</li>
                                                 </ul>
 4. To finish and deploy the application, run the command:<ul>
                                                          <li>php artisan optimize:clear</li>
