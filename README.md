@@ -25,10 +25,8 @@ Welcome! In this repository you can find the source code of the project based on
                                                 <li>php artisan migrate --seed</li>
                                                 </ul>
 4. To finish and deploy the application, run the command:<ul>
-                                                         <li>php artisan config:cache</li>
-                                                         <li>php artisan config:clear</li>
-                                                         <li>php artisan cache:clear</li>
+                                                         <li>php artisan optimize:clear</li>
                                                          <li>php artisan serve</li>
                                                          </ul>
 5. Go to the generated link.
-6. Register and Login.
+6. Login. (user: admin@example.com, password: secret).
