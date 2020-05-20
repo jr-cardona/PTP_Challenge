@@ -2,9 +2,10 @@
 
 namespace Tests\Feature\Admin\Products;
 
-use App\User;
-use App\Product;
 use Tests\TestCase;
+use App\Entities\User;
+use App\Entities\Product;
+use Spatie\Permission\Models\Permission;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class UpdateProductTest extends TestCase
@@ -12,7 +13,7 @@ class UpdateProductTest extends TestCase
     use RefreshDatabase;
 
     /** @test */
-    public function guest_user_cannot_update_products()
+    public function guests_cannot_update_products()
     {
         $product = factory(Product::class)->create();
         $data = $this->data();
@@ -22,25 +23,27 @@ class UpdateProductTest extends TestCase
     }
 
     /** @test */
-    public function logged_in_user_can_update_products()
+    public function unauthorized_user_cannot_update_products()
     {
         $product = factory(Product::class)->create();
         $user = factory(User::class)->create();
+        $data = $this->data();
+
+        $this->actingAs($user)->put(route('products.update', $product), $data)
+            ->assertStatus(403);
+    }
+
+    /** @test */
+    public function authorized_user_can_update_products()
+    {
+        $product = factory(Product::class)->create();
+        $permission = Permission::create(['name' => 'Edit all products']);
+        $user = factory(User::class)->create()->givePermissionTo($permission);
         $data = $this->data();
 
         $response = $this->actingAs($user)->put(route('products.update', $product), $data);
         $response->assertRedirect(route('products.show', $product));
         $response->assertSessionHasNoErrors();
-    }
-
-    /** @test */
-    public function data_product_can_be_updated_in_database()
-    {
-        $product = factory(Product::class)->create();
-        $user = factory(User::class)->create();
-        $data = $this->data();
-
-        $this->actingAs($user)->put(route('products.update', $product), $data);
         $this->assertDatabaseHas('products', $data);
     }
 
@@ -52,7 +55,7 @@ class UpdateProductTest extends TestCase
     {
         return [
             'name' => 'Test Name',
-            'unit_price' => 1000,
+            'cost' => 1000,
         ];
     }
 }

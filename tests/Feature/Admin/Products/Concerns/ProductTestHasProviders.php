@@ -17,7 +17,7 @@ trait ProductTestHasProviders
     {
         $this->baseData = [
             'name' => 'Test Name',
-            'unit_price' => 1000,
+            'cost' => 1000,
         ];
     }
 
@@ -49,25 +49,25 @@ trait ProductTestHasProviders
                 'name',
                 'nombre no debe ser mayor que 30 caracteres.'
             ],
-            'unit_price field is null' => [
-                array_replace_recursive($this->baseData, ['unit_price' => null]),
-                'unit_price',
-                'El campo precio unitario es obligatorio.'
+            'cost field is null' => [
+                array_replace_recursive($this->baseData, ['cost' => null]),
+                'cost',
+                'El campo costo es obligatorio.'
             ],
-            'unit_price field is not numeric' => [
-                array_replace_recursive($this->baseData, ['unit_price' => 'Invalid numeric test']),
-                'unit_price',
-                'precio unitario debe ser numérico.'
+            'cost field is not numeric' => [
+                array_replace_recursive($this->baseData, ['cost' => 'Invalid numeric test']),
+                'cost',
+                'costo debe ser numérico.'
             ],
-            'unit_price field is too low' => [
-                array_replace_recursive($this->baseData, ['unit_price' => 0]),
-                'unit_price',
-                'El tamaño de precio unitario debe ser de al menos 1.'
+            'cost field is too low' => [
+                array_replace_recursive($this->baseData, ['cost' => 0]),
+                'cost',
+                'El tamaño de costo debe ser de al menos 1.'
             ],
-            'unit_price field is too high' => [
-                array_replace_recursive($this->baseData, ['unit_price' => 10000000]),
-                'unit_price',
-                'precio unitario no debe ser mayor a 9999999.'
+            'cost field is too high' => [
+                array_replace_recursive($this->baseData, ['cost' => 10000000]),
+                'cost',
+                'costo no debe ser mayor a 9999999.'
             ],
             'description field is not a string' => [
                 array_replace_recursive($this->baseData, ['description' => 1]),

@@ -2,7 +2,7 @@
 
 namespace Tests\Feature\Admin\InvoiceProducts\Concerns;
 
-use App\Product;
+use App\Entities\Product;
 use Illuminate\Support\Str;
 
 trait InvoiceProductTestHasProviders
@@ -16,11 +16,9 @@ trait InvoiceProductTestHasProviders
 
     public function __construct()
     {
-        factory(Product::class)->create();
         $this->baseData = [
-            'product_id' => Product::first()->id,
+            'product_id' => 1,
             'quantity' => 1,
-            'unit_price' => 1,
         ];
     }
 
@@ -47,11 +45,6 @@ trait InvoiceProductTestHasProviders
                 'product_id',
                 'producto es inválido.'
             ],
-            'product_id is repeated' => [
-                $this->baseData,
-                'product_id',
-                '¡Este producto ya se encuentra registrado en la factura!'
-            ],
             'quantity field is null' => [
                 array_replace_recursive($this->baseData, ['quantity' => null]),
                 'quantity',
@@ -71,21 +64,6 @@ trait InvoiceProductTestHasProviders
                 array_replace_recursive($this->baseData, ['quantity' => 10000]),
                 'quantity',
                 'cantidad no debe ser mayor a 9999.'
-            ],
-            'unit_price field is not numeric' => [
-                array_replace_recursive($this->baseData, ['unit_price' => 'Invalid numeric test']),
-                'unit_price',
-                'precio unitario debe ser numérico.'
-            ],
-            'unit_price field is too low' => [
-                array_replace_recursive($this->baseData, ['unit_price' => 0]),
-                'unit_price',
-                'El tamaño de precio unitario debe ser de al menos 1.'
-            ],
-            'unit_price field is too high' => [
-                array_replace_recursive($this->baseData, ['unit_price' => 10000000]),
-                'unit_price',
-                'precio unitario no debe ser mayor a 9999999.'
             ],
         ];
     }

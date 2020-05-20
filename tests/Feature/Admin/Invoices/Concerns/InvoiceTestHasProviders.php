@@ -2,9 +2,8 @@
 
 namespace Tests\Feature\Admin\Invoices\Concerns;
 
-use App\Client;
-use App\Seller;
 use Carbon\Carbon;
+use App\Entities\Client;
 use Illuminate\Support\Str;
 
 trait InvoiceTestHasProviders
@@ -19,11 +18,9 @@ trait InvoiceTestHasProviders
     public function __construct()
     {
         $client = factory(Client::class)->create();
-        $seller = factory(Seller::class)->create();
         $this->baseData = [
             'issued_at' => Carbon::now()->toDateString(),
             'client_id' => $client->id,
-            'seller_id' => $seller->id,
         ];
     }
 
@@ -69,21 +66,6 @@ trait InvoiceTestHasProviders
                 array_replace_recursive($this->baseData, ['client_id' => -1]),
                 'client_id',
                 'cliente es inválido.'
-            ],
-            'seller_id field is null' => [
-                array_replace_recursive($this->baseData, ['seller_id' => null]),
-                'seller_id',
-                'El campo vendedor es obligatorio.'
-            ],
-            'seller_id field is not numeric' => [
-                array_replace_recursive($this->baseData, ['seller_id' => 'Invalid numeric test']),
-                'seller_id',
-                'vendedor debe ser numérico.'
-            ],
-            'seller_id field not exists' => [
-                array_replace_recursive($this->baseData, ['seller_id' => -1]),
-                'seller_id',
-                'vendedor es inválido.'
             ],
             'description field is not a string' => [
                 array_replace_recursive($this->baseData, ['description' => 1]),

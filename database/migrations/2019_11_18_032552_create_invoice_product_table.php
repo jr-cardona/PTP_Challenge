@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Database\Migrations\Migration;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Database\Migrations\Migration;
 
 class CreateInvoiceProductTable extends Migration
 {
@@ -15,11 +15,11 @@ class CreateInvoiceProductTable extends Migration
     {
         Schema::create('invoice_product', function (Blueprint $table) {
             $table->increments('id');
-            $table->timestamps();
             $table->smallInteger('quantity')->unsigned();
-            $table->float('unit_price', 11, 2)->unsigned();
+            $table->unsignedDecimal('unit_price', 11, 2);
             $table->unsignedInteger('invoice_id');
             $table->unsignedInteger('product_id');
+            $table->timestamps();
             $table->foreign('invoice_id')->references('id')->on('invoices')->onDelete('cascade');
             $table->foreign('product_id')->references('id')->on('products')->onDelete('cascade');
         });

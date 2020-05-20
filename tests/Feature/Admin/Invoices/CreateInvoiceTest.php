@@ -2,8 +2,9 @@
 
 namespace Tests\Feature\Admin\Invoices;
 
-use App\User;
 use Tests\TestCase;
+use App\Entities\User;
+use Spatie\Permission\Models\Permission;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class CreateInvoiceTest extends TestCase
@@ -11,26 +12,27 @@ class CreateInvoiceTest extends TestCase
     use RefreshDatabase;
 
     /** @test */
-    public function guest_user_cannot_access_to_create_invoices_view()
+    public function guests_cannot_access_to_create_invoices_view()
     {
         $this->get(route('invoices.create'))->assertRedirect(route('login'));
     }
 
     /** @test */
-    public function logged_in_user_can_access_to_create_invoices_view()
+    public function unauthorized_user_cannot_access_to_create_invoices_view()
     {
         $user = factory(User::class)->create();
 
-        $response = $this->actingAs($user)->get(route('invoices.create'));
-        $response->assertOk();
+        $this->actingAs($user)->get(route('invoices.create'))->assertStatus(403);
     }
 
     /** @test */
-    public function the_invoices_create_route_redirect_to_the_correct_view()
+    public function user_can_access_to_create_invoices_view()
     {
-        $user = factory(User::class)->create();
+        $permission = Permission::create(['name' => 'Create invoices']);
+        $user = factory(User::class)->create()->givePermissionTo($permission);
 
         $response = $this->actingAs($user)->get(route('invoices.create'));
+        $response->assertOk();
         $response->assertViewIs("invoices.create");
         $response->assertSee("Crear Factura");
     }
@@ -38,7 +40,8 @@ class CreateInvoiceTest extends TestCase
     /** @test */
     public function create_invoices_view_contains_fields_to_create_an_invoice()
     {
-        $user = factory(User::class)->create();
+        $permission = Permission::create(['name' => 'Create invoices']);
+        $user = factory(User::class)->create()->givePermissionTo($permission);
 
         $response = $this->actingAs($user)->get(route('invoices.create'));
         $response->assertSee("Fecha de Expedición");

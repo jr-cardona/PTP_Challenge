@@ -1,9 +1,12 @@
 {
+    "/js/annul-modal.js": "/js/annul-modal.js",
     "/js/app.js": "/js/app.js",
     "/css/app.css": "/css/app.css",
     "/css/auth.css": "/css/auth.css",
+    "/css/error.css": "/css/error.css",
     "/css/custom.css": "/css/custom.css",
     "/js/delete-modal.js": "/js/delete-modal.js",
+    "/js/export-modal.js": "/js/export-modal.js",
     "/js/import-modal.js": "/js/import-modal.js",
     "/js/manifest.js": "/js/manifest.js",
     "/js/vendor.js": "/js/vendor.js"

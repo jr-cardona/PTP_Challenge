@@ -1,34 +1,43 @@
 @extends('layouts.index')
 @section('Title', 'Clientes')
-@section('Name')
-    {{ __("Clientes") }}
+@section('Left-buttons')
     <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#searchModal">
-        <i class="fa fa-filter"></i>
+        <i class="fa fa-filter"></i> {{ __("Filtrar") }}
     </button>
     <a href="{{ route('clients.index') }}" class="btn btn-danger">
-        <i class="fa fa-undo"></i>
+        <i class="fa fa-undo"></i> {{ __("Limpiar") }}
     </a>
-@endsection
-@section('Actions')
-    <a class="btn btn-secondary" href="{{ route('export.clients') }}">
-        <i class="fa fa-file-excel"></i> {{ __("Exportar a Excel") }}
-    </a>
-    <button type="button" class="btn btn-warning" data-route="{{ route('import.clients') }}" data-toggle="modal" data-target="#importModal">
-        <i class="fa fa-file-excel"></i> {{ __("Importar desde Excel") }}
-    </button>
-    <a class="btn btn-success" href="{{ route('clients.create') }}">
-        <i class="fa fa-plus"></i> {{ __("Crear nuevo cliente") }}
-    </a>
-@endsection
-@section('Search')
     @include('clients.__search_modal')
+@endsection
+@section('Name')
+    {{ __("Clientes") }}
+@endsection
+@section('Right-buttons')
+    @can('export', App\Entities\Client::class)
+        <button type="button" class="btn btn-success"
+                data-toggle="modal"
+                data-target="#exportModal"
+                data-route="{{ route('clients.export') }}">
+            <i class="fa fa-file-download"></i> {{ __("Exportar") }}
+        </button>
+    @endcan
+@endsection
+@section('Paginator')
+    @include('partials.__pagination', [
+        'from'  => $clients->firstItem() ?? 0,
+        'to'    => $clients->lastItem() ?? 0,
+        'total' => $clients->total(),
+    ])
+@endsection
+@section('Links')
+    {{ $clients->appends($request->all())->links() }}
 @endsection
 @section('Header')
     <th class="text-center" nowrap>{{ __("Nombre completo") }}</th>
-    <th class="text-center" nowrap>{{ __("Tipo de documento") }}</th>
-    <th class="text-center" nowrap>{{ __("Número de documento") }}</th>
+    <th class="text-center" nowrap>{{ __("Documento") }}</th>
     <th class="text-center" nowrap>{{ __("Correo electrónico") }}</th>
     <th class="text-center" nowrap>{{ __("Celular") }}</th>
+    <th class="text-center" nowrap>{{ __("Creado por") }}</th>
     <th></th>
 @endsection
 @section('Body')
@@ -37,12 +46,12 @@
             <td>
                 <a href="{{ route('clients.show', $client) }}">{{ $client->fullname }}</a>
             </td>
-            <td>{{ $client->type_document->name }}</td>
-            <td>{{ $client->document }}</td>
+            <td>{{ $client->type_document->name . ". " . $client->document }}</td>
             <td>{{ $client->email }}</td>
-            <td>{{ $client->cell_phone_number }}</td>
+            <td>{{ $client->cellphone }}</td>
+            <td>{{ $client->creator->fullname }}</td>
             <td class="btn-group btn-group-sm" nowrap>
-                @include('clients._buttons')
+                @include('clients.__buttons')
             </td>
         </tr>
     @empty
@@ -54,7 +63,4 @@
             </td>
         </tr>
     @endforelse
-@endsection
-@section('Links')
-    {{ $clients->appends($request->all())->links() }}
 @endsection

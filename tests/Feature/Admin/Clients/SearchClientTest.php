@@ -2,9 +2,10 @@
 
 namespace Tests\Feature\Admin\Clients;
 
-use App\User;
-use App\Client;
 use Tests\TestCase;
+use App\Entities\User;
+use App\Entities\Client;
+use Spatie\Permission\Models\Permission;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class SearchClientTest extends TestCase
@@ -14,21 +15,30 @@ class SearchClientTest extends TestCase
     /** @test */
     public function clients_can_be_searched_by_name()
     {
-        $user = factory(User::class)->create();
-        factory(Client::class)->create(["name" => "aaa"]);
-        factory(Client::class)->create(["name" => "bbb"]);
-        factory(Client::class)->create(["name" => "ccc"]);
+        $permission = Permission::create(['name' => 'View all clients']);
+        $user = factory(User::class)->create()->givePermissionTo($permission);
+        $clients = factory(User::class, 5)->create()->each(function ($u) {
+            factory(Client::class)->create(['id' => $u->id]);
+        });
 
         $response = $this->actingAs($user)->get(route('search.clients'));
         $response->assertSuccessful();
-        $response->assertSeeText("aaa");
-        $response->assertSeeText("bbb");
-        $response->assertSeeText("ccc");
 
-        $response = $this->actingAs($user)->get(route('search.clients', ['name' => "ccc"]));
+        foreach ($clients as $client) {
+            $response->assertSeeText($client->name);
+        }
+
+        $response = $this->actingAs($user)->get(route('search.clients', [
+            'name' => $clients->last()->name
+        ]));
         $response->assertSuccessful();
-        $response->assertDontSeeText("aaa");
-        $response->assertDontSeeText("bbb");
-        $response->assertSeeText("ccc");
+
+        foreach ($clients as $client) {
+            if ($client->name == $clients->last()->name) {
+                $response->assertSeeText($client->name);
+            } else {
+                $response->assertDontSeeText($client->name);
+            }
+        }
     }
 }

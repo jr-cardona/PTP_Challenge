@@ -2,9 +2,10 @@
 
 namespace Tests\Feature\Admin\Clients;
 
-use App\Client;
-use App\User;
+use App\Entities\Client;
 use Tests\TestCase;
+use App\Entities\User;
+use Spatie\Permission\Models\Permission;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class ShowClientTest extends TestCase
@@ -12,7 +13,7 @@ class ShowClientTest extends TestCase
     use RefreshDatabase;
 
     /** @test */
-    public function guest_user_cannot_access_to_a_specific_client()
+    public function guests_cannot_access_to_a_specific_client()
     {
         $client = factory(Client::class)->create();
 
@@ -20,22 +21,23 @@ class ShowClientTest extends TestCase
     }
 
     /** @test */
-    public function logged_in_user_can_access_to_a_specific_client()
+    public function unauthorized_user_cannot_access_to_a_specific_client()
     {
-        $client = factory(Client::class)->create();
         $user = factory(User::class)->create();
+        $client = factory(Client::class)->create();
 
-        $response = $this->actingAs($user)->get(route('clients.show', $client));
-        $response->assertOk();
+        $this->actingAs($user)->get(route('clients.show', $client))->assertStatus(403);
     }
 
     /** @test */
-    public function the_clients_show_route_redirect_to_the_correct_view()
+    public function authorized_user_can_access_to_a_specific_client()
     {
+        $permission = Permission::create(['name' => 'View all clients']);
+        $user = factory(User::class)->create()->givePermissionTo($permission);
         $client = factory(Client::class)->create();
-        $user = factory(User::class)->create();
 
         $response = $this->actingAs($user)->get(route('clients.show', $client));
+        $response->assertOk();
         $response->assertViewIs("clients.show");
         $response->assertSee("Clientes");
     }
@@ -43,11 +45,13 @@ class ShowClientTest extends TestCase
     /** @test */
     public function the_client_show_view_has_a_client()
     {
+        $permission = Permission::create(['name' => 'View all clients']);
+        $user = factory(User::class)->create()->givePermissionTo($permission);
         $client = factory(Client::class)->create();
-        $user = factory(User::class)->create();
 
-        $response = $this->actingAs($user)->get(route('clients.index'));
+        $response = $this->actingAs($user)->get(route('clients.show', $client));
         $response->assertSeeText($client->fullname);
         $response->assertSeeText($client->document);
+        $response->assertSeeText($client->email);
     }
 }

@@ -1,27 +1,36 @@
 @extends('layouts.index')
 @section('Title', 'Facturas')
+@section('Left-buttons')
+    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#searchModal">
+        <i class="fa fa-filter"></i> {{ __("Filtrar") }}
+    </button>
+    <a class="btn btn-danger" href="{{ route('invoices.index') }}">
+        <i class="fa fa-undo"></i> {{ __("Limpiar") }}
+    </a>
+    @include('invoices.__search_modal')
+@endsection
 @section('Name')
     {{ __("Facturas") }}
-    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#searchModal">
-        <i class="fa fa-filter"></i>
-    </button>
-    <a href="{{ route('invoices.index') }}" class="btn btn-danger">
-        <i class="fa fa-undo"></i>
-    </a>
 @endsection
-@section('Actions')
-    <a class="btn btn-secondary" href="{{ route('export.invoices') }}">
-        <i class="fa fa-file-excel"></i> {{ __("Exportar a Excel") }}
-    </a>
-    <button type="button" class="btn btn-warning" data-route="{{ route('import.invoices') }}" data-toggle="modal" data-target="#importModal">
-        <i class="fa fa-file-excel"></i> {{ __("Importar desde Excel") }}
-    </button>
-    <a class="btn btn-success" href="{{ route('invoices.create') }}">
-        <i class="fa fa-plus"></i> {{ __("Crear nueva factura") }}
-    </a>
+@section('Right-buttons')
+    @can('export', App\Entities\Invoice::class)
+        <button type="button" class="btn btn-success"
+                data-toggle="modal"
+                data-target="#exportModal"
+                data-route="{{ route('invoices.export') }}">
+            <i class="fa fa-file-download"></i> {{ __("Exportar") }}
+        </button>
+    @endcan
 @endsection
-@section('Search')
-    @include('invoices.__search_modal')
+@section('Paginator')
+    @include('partials.__pagination', [
+        'from'  => $invoices->firstItem() ?? 0,
+        'to'    => $invoices->lastItem() ?? 0,
+        'total' => $invoices->total(),
+    ])
+@endsection
+@section('Links')
+    {{ $invoices->appends($request->all())->links() }}
 @endsection
 @section('Header')
     <th class="text-center" nowrap>{{ __("Título") }}</th>
@@ -39,9 +48,7 @@
             <td nowrap>
                 <a href="{{ route('invoices.show', $invoice) }}">
                     {{ $invoice->fullname }}
-                    @if($invoice->isPaid())
-                        <i class="fa fa-check-circle"></i>
-                    @endif
+                    @include('invoices.__symbol')
                 </a>
             </td>
             <td class="text-center" nowrap>{{ $invoice->issued_at->toDateString() }}</td>
@@ -49,17 +56,21 @@
             <td class="text-center" nowrap>${{ number_format($invoice->total, 2) }}</td>
             @include('invoices.status_label')
             <td nowrap>
-                <a href="{{ route('clients.show', $invoice->client) }}" target="_blank">
+                <a @can('view', $invoice->client)
+                   href="{{ route('clients.show', $invoice->client) }}"
+                    @endcan>
                     {{ $invoice->client->fullname }}
                 </a>
             </td>
             <td nowrap>
-                <a href="{{ route('sellers.show', $invoice->seller) }}" target="_blank">
+                <a @can('view', $invoice->seller)
+                   href="{{ route('users.show', $invoice->seller) }}"
+                    @endcan>
                     {{ $invoice->seller->fullname }}
                 </a>
             </td>
             <td class="btn-group btn-group-sm" nowrap>
-                @include('invoices._buttons')
+                @include('invoices.__buttons')
             </td>
         </tr>
     @empty
@@ -72,6 +83,9 @@
         </tr>
     @endforelse
 @endsection
-@section('Links')
-    {{ $invoices->appends($request->all())->links() }}
-@endsection
+@push('modals')
+    @include('invoices.__confirm_annulment_modal')
+@endpush
+@push('scripts')
+    <script src="{{ asset(mix('js/annul-modal.js')) }}"></script>
+@endpush

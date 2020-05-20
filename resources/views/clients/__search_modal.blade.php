@@ -9,6 +9,7 @@
             </div>
             <div class="modal-body">
                 <form id="searchForm" action="{{ route('clients.index') }}" method="get">
+                    <input type="hidden" id="format" name="format">
                     <div class="form-group row">
                         <div class="col">
                             <label>{{ __("Nombre") }}</label>
@@ -29,15 +30,19 @@
                             <label for="email">{{ __("Correo electrónico") }}</label>
                             <input type="text" id="email" name="email" class="form-control" placeholder="Correo electrónico" value="{{ $request->get('email') }}">
                         </div>
+                        <div class="col">
+                            <label for="email">{{ __("Celular") }}</label>
+                            <input type="text" id="cellphone" name="cellphone" class="form-control" placeholder="Celular" value="{{ $request->get('cellphone') }}">
+                        </div>
                     </div>
                     <div class="form-group row">
                         <div class="col">
                             <label for="type_document_id">{{ __("Tipo de documento") }}</label>
                             <select id="type_document_id" name="type_document_id" class="form-control">
                                 <option value="">--</option>
-                                @foreach($type_documents as $type_document)
-                                    <option value="{{ $type_document->id }}" {{ $request->get('type_document_id') == $type_document->id ? 'selected' : ''}}>
-                                        {{ $type_document->fullname }}
+                                @foreach($typeDocuments as $typeDocument)
+                                    <option value="{{ $typeDocument->id }}" {{ $request->get('type_document_id') == $typeDocument->id ? 'selected' : ''}}>
+                                        {{ $typeDocument->fullname }}
                                     </option>
                                 @endforeach
                             </select>
@@ -47,11 +52,23 @@
                             <input type="number" id="document" name="document" class="form-control" placeholder="No. Documento" value="{{ $request->get('document') }}">
                         </div>
                     </div>
+                    <div class="form-group row">
+                        <div class="col">
+                            <label for="per_page">{{ __("Registros por página") }}</label>
+                            <select id="per_page" name="per_page" class="form-control">
+                                @for($i = 10; $i <= 100; $i += 10)
+                                    <option value="{{ $i }}" {{ $clients->perPage() == $i ? 'selected' : '' }}>
+                                        {{ $i }}
+                                    </option>
+                                @endfor
+                            </select>
+                        </div>
+                    </div>
                 </form>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">
-                    <i class="fa fa-times"></i> Cerrar
+                    <i class="fa fa-times"></i> {{ __("Cerrar") }}
                 </button>
                 <button type="submit" form="searchForm" class="btn btn-primary">
                     <i class="fa fa-search"></i> {{ __("Buscar") }}

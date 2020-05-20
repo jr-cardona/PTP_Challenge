@@ -15,7 +15,6 @@ class ViewServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        //
     }
 
     /**
@@ -25,9 +24,9 @@ class ViewServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        // Compose a list of Types document
+        // Compose a list of Type documents
         View::composer(
-            ['clients._form', 'clients.index', 'sellers._form', 'sellers.index'],
+            ['clients.__form', 'clients.index', 'users.__form', 'users.index'],
             TypeDocumentComposer::class
         );
     }

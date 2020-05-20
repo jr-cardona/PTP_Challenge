@@ -2,37 +2,56 @@
 
 namespace App\Http\Controllers;
 
-use App\Invoice;
 use Carbon\Carbon;
-use App\PaymentAttempt;
+use App\Entities\Invoice;
+use Illuminate\View\View;
 use Illuminate\Http\Request;
+use App\Entities\PaymentAttempt;
 use Dnetix\Redirection\PlacetoPay;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Auth\Access\AuthorizationException;
+use Dnetix\Redirection\Exceptions\PlacetoPayException;
 
 class PaymentAttemptsController extends Controller
 {
+    /**
+     * @param Invoice $invoice
+     * @return View
+     * @throws AuthorizationException
+     */
     public function create(Invoice $invoice)
     {
-        if ($invoice->isPaid()) {
-            return redirect()->route('invoices.show', $invoice)->withError(__("La factura ya se encuentra pagada"));
-        } elseif ($invoice->isExpired()) {
-            return redirect()->route('invoices.show', $invoice)->withError(__("La factura ya se encuentra vencida"));
-        } elseif ($invoice->total == 0) {
-            return redirect()->route('invoices.show', $invoice)->withInfo(__("La factura no tiene productos a pagar, intente nuevamente"));
-        }
+        $this->authorize('pay', $invoice);
+
         return view('invoices.payments.create', compact('invoice'));
     }
 
-    public function store(Invoice $invoice, Request $request, PlacetoPay $placetopay)
-    {
-        $paymentAttempt = PaymentAttempt::create();
+    /**
+     * @param PaymentAttempt $paymentAttempt
+     * @param Invoice $invoice
+     * @param Request $request
+     * @param PlacetoPay $placetopay
+     * @return RedirectResponse
+     * @throws AuthorizationException
+     * @throws PlacetoPayException
+     */
+    public function store(
+        Invoice $invoice,
+        PaymentAttempt $paymentAttempt,
+        Request $request,
+        PlacetoPay $placetopay
+    ) {
+        $this->authorize('pay', $invoice);
+
+        $paymentAttempt->save();
         $request_c = [
             "buyer" => [
-                "name" => $invoice->client->name,
-                "surname" => $invoice->client->surname,
-                "email" => $invoice->client->email,
+                "name" => $invoice->client->user->name,
+                "surname" => $invoice->client->user->surname,
+                "email" => $invoice->client->user->email,
                 "documentType" => $invoice->client->type_document->name,
                 "document" => $invoice->client->document,
-                "mobile" => $invoice->client->cell_phone_number,
+                "mobile" => $invoice->client->cellphone,
                 "address" => [
                     "street" => $invoice->client->address,
                 ]
@@ -51,29 +70,33 @@ class PaymentAttemptsController extends Controller
             'returnUrl' => route('invoices.payments.show', [$invoice, $paymentAttempt]),
         ];
         $response = $placetopay->request($request_c);
-        //dd($response);
+
         if ($response->isSuccessful()) {
-            // STORE THE $response->requestId() and $response->processUrl() on your DB associated with the payment order
             $paymentAttempt->update([
                 'invoice_id' => $invoice->id,
                 'requestID' => $response->requestId(),
                 'processUrl' => $response->processUrl(),
                 'status' => $response->status()->status(),
             ]);
-            // Redirect the client to the processUrl or display it on the JS extension
             return redirect()->away($response->processUrl());
-        } else {
-            // There was some error so check the message and log it
-            dd($response->status()->message());
         }
     }
 
+    /**
+     * @param Invoice $invoice
+     * @param PaymentAttempt $paymentAttempt
+     * @param PlacetoPay $placetopay
+     * @return View
+     * @throws AuthorizationException
+     */
     public function show(Invoice $invoice, PaymentAttempt $paymentAttempt, PlacetoPay $placetopay)
     {
+        $this->authorize('pay', $invoice);
+
         $response = $placetopay->query($paymentAttempt->requestID);
         $paymentAttempt->update([
             'status' => $response->status()->status(),
-            'amount' => $response->request->payment()->amount()->total()
+            'amount' => $response->request()->payment()->amount()->total()
         ]);
         if ($paymentAttempt->status == 'APPROVED') {
             $invoice->update([

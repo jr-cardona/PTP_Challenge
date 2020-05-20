@@ -34,12 +34,16 @@
             {{ __("Recuérdame") }}
         </div>
         <div class="form-group">
-            <input type="submit" value="Ingresar" class="btn float-right login_btn">
+            <button type="submit" class="btn btn-block btn-login mt-4">
+                {{ __('Ingresar') }}
+            </button>
         </div>
     </form>
 @endsection
 @section('footer')
     <div class="d-flex justify-content-center links">
-        {{ __("¿No tienes una cuenta?") }}<a href="{{ route('register') }}">{{ __("Regístrate") }}</a>
+        {{ __("¿Olvidaste la contraseña?") }}<a href="{{ route('password.request') }}">
+            {{ __("Click aquí") }}
+        </a>
     </div>
 @endsection

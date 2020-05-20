@@ -2,8 +2,9 @@
 
 namespace Tests\Feature\Admin\Products;
 
-use App\User;
 use Tests\TestCase;
+use App\Entities\User;
+use Spatie\Permission\Models\Permission;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class CreateProductTest extends TestCase
@@ -11,26 +12,28 @@ class CreateProductTest extends TestCase
     use RefreshDatabase;
 
     /** @test */
-    public function guest_user_cannot_access_to_create_products_view()
+    public function guests_cannot_access_to_create_products_view()
     {
         $this->get(route('products.create'))->assertRedirect(route('login'));
     }
 
     /** @test */
-    public function logged_in_user_can_access_to_create_products_view()
+    public function unauthorized_user_cannot_access_to_create_products_view()
     {
         $user = factory(User::class)->create();
 
-        $response = $this->actingAs($user)->get(route('products.create'));
-        $response->assertOk();
+        $this->actingAs($user)->get(route('products.create'))
+            ->assertStatus(403);
     }
 
     /** @test */
-    public function the_products_create_route_redirect_to_the_correct_view()
+    public function authorized_user_can_access_to_create_products_view()
     {
-        $user = factory(User::class)->create();
+        $permission = Permission::create(['name' => 'Create products']);
+        $user = factory(User::class)->create()->givePermissionTo($permission);
 
         $response = $this->actingAs($user)->get(route('products.create'));
+        $response->assertOk();
         $response->assertViewIs("products.create");
         $response->assertSee("Crear Producto");
     }
@@ -38,11 +41,12 @@ class CreateProductTest extends TestCase
     /** @test */
     public function create_products_view_contains_fields_to_create_a_product()
     {
-        $user = factory(User::class)->create();
+        $permission = Permission::create(['name' => 'Create products']);
+        $user = factory(User::class)->create()->givePermissionTo($permission);
 
         $response = $this->actingAs($user)->get(route('products.create'));
         $response->assertSee("Nombre");
-        $response->assertSee("Precio unitario");
+        $response->assertSee("Costo");
         $response->assertSee("Descripción");
         $response->assertSee(route('products.store'));
     }

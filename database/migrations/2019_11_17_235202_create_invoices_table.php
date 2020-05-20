@@ -18,13 +18,17 @@ class CreateInvoicesTable extends Migration
             $table->date('issued_at');
             $table->date('expires_at')->nullable();
             $table->dateTime('paid_at')->nullable();
+            $table->dateTime('annulled_at')->nullable();
             $table->dateTime('received_at')->nullable();
             $table->string('description')->nullable();
+            $table->string('annulment_reason')->nullable();
             $table->unsignedInteger('client_id');
-            $table->unsignedInteger('seller_id');
-            $table->foreign('client_id')->references('id')->on('clients')->onDelete('cascade');
-            $table->foreign('seller_id')->references('id')->on('sellers')->onDelete('cascade');
+            $table->unsignedInteger('created_by');
+            $table->unsignedInteger('updated_by');
             $table->timestamps();
+            $table->foreign('client_id')->references('id')->on('clients')->onDelete('cascade');
+            $table->foreign('created_by')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('updated_by')->references('id')->on('users')->onDelete('cascade');
         });
     }
 

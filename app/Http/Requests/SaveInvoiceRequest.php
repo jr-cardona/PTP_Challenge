@@ -29,7 +29,6 @@ class SaveInvoiceRequest extends FormRequest
         return [
             'issued_at' => 'required|date|after_or_equal:' . $start_date . '|before_or_equal:' . $final_date,
             'client_id' => 'required|numeric|exists:clients,id',
-            'seller_id' => 'required|numeric|exists:sellers,id',
             'description' => 'nullable|string|max:255'
         ];
     }

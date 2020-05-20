@@ -2,7 +2,7 @@
 
 namespace App\Imports;
 
-use App\Product;
+use App\Entities\Product;
 use Maatwebsite\Excel\Concerns\ToModel;
 use Maatwebsite\Excel\Concerns\Importable;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
@@ -23,16 +23,19 @@ class ProductsImport extends BaseImport implements ToModel, WithHeadingRow, With
         return new Product([
             'name' => $row['Nombre'],
             'description' => $row['Descripción'],
-            'unit_price' => $row['Precio unitario'],
+            'cost' => $row['Costo'],
+            'price' => $row['Costo'] * 1.10,
+            'created_by' => auth()->user()->id,
+            'updated_by' => auth()->user()->id,
         ]);
     }
 
     public function rules(): array
     {
-        return[
+        return [
             'Nombre' => 'required',
             'Descripción' => 'required',
-            'Precio unitario' => 'required',
+            'Costo' => 'required|numeric|min:1|max:9999999',
         ];
     }
 

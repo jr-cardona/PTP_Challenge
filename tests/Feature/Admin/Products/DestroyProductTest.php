@@ -2,9 +2,11 @@
 
 namespace Tests\Feature\Admin\Products;
 
-use App\User;
-use App\Product;
 use Tests\TestCase;
+use App\Entities\User;
+use App\Entities\Product;
+use App\Entities\Invoice;
+use Spatie\Permission\Models\Permission;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class DestroyProductTest extends TestCase
@@ -12,11 +14,12 @@ class DestroyProductTest extends TestCase
     use RefreshDatabase;
 
     /** @test */
-    public function guest_user_cannot_delete_products()
+    public function guests_cannot_delete_products()
     {
         $product = factory(Product::class)->create();
 
-        $this->delete(route('products.destroy', $product))->assertRedirect(route('login'));
+        $this->delete(route('products.destroy', $product))
+            ->assertRedirect(route('login'));
 
         $this->assertDatabaseHas('products', [
             'id' => $product->id,
@@ -24,32 +27,49 @@ class DestroyProductTest extends TestCase
     }
 
     /** @test */
-    public function logged_in_user_can_delete_products()
+    public function unauthorized_user_cannot_delete_products()
     {
         $user = factory(User::class)->create();
         $product = factory(Product::class)->create();
 
-        $response = $this->actingAs($user)->delete(route('products.destroy', $product));
-        $response->assertRedirect();
+        $this->actingAs($user)->delete(route('products.destroy', $product))
+            ->assertStatus(403);
+
+        $this->assertDatabaseHas('products', [
+            'id' => $product->id
+        ]);
     }
 
     /** @test */
-    public function when_deleted_a_product_should_redirect_to_products_index_view()
+    public function authorized_user_cannot_delete_products_with_invoices_assigned()
     {
-        $user = factory(User::class)->create();
+        $permission = Permission::create(['name' => 'Delete all products']);
+        $user = factory(User::class)->create()->givePermissionTo($permission);
         $product = factory(Product::class)->create();
+        factory(Invoice::class)->create()->products()->attach($product, [
+            'quantity' => 1,
+            'unit_price' => $product->price,
+        ]);
 
-        $response = $this->actingAs($user)->delete(route('products.destroy', $product));
-        $response->assertRedirect(route('products.index'));
+        $this->actingAs($user)->delete(route('products.destroy', $product))
+            ->assertStatus(403);
+
+        $this->assertDatabaseHas('products', [
+            'id' => $product->id
+        ]);
     }
 
     /** @test */
-    public function a_product_can_be_deleted_from_database()
+    public function authorized_user_can_delete_products()
     {
-        $user = factory(User::class)->create();
+        $this->withoutExceptionHandling();
+        $permission = Permission::create(['name' => 'Delete all products']);
+        $user = factory(User::class)->create()->givePermissionTo($permission);
         $product = factory(Product::class)->create();
 
-        $this->actingAs($user)->delete(route('products.destroy', $product));
+        $this->actingAs($user)->delete(route('products.destroy', $product))
+            ->assertRedirect(route('products.index'));
+
         $this->assertDatabaseMissing('products', [
             'id' => $product->id
         ]);

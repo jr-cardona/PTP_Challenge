@@ -9,6 +9,7 @@
             </div>
             <div class="modal-body">
                 <form id="searchForm" action="{{ route('products.index') }}" method="get">
+                    <input type="hidden" id="format" name="format">
                     <div class="form-group row">
                         <div class="col">
                             <label>{{ __("Nombre") }}</label>
@@ -24,11 +25,23 @@
                             <input type="hidden" name="id" id="id" :value="(old_product_values) ? old_product_values.id : '' ">
                         </div>
                     </div>
+                    <div class="form-group row">
+                        <div class="col">
+                            <label for="per_page">{{ __("Registros por página") }}</label>
+                            <select id="per_page" name="per_page" class="form-control">
+                                @for($i = 10; $i <= 100; $i += 10)
+                                    <option value="{{ $i }}" {{ $products->perPage() == $i ? 'selected' : '' }}>
+                                        {{ $i }}
+                                    </option>
+                                @endfor
+                            </select>
+                        </div>
+                    </div>
                 </form>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">
-                    <i class="fa fa-times"></i> Cerrar
+                    <i class="fa fa-times"></i> {{ __("Cerrar") }}
                 </button>
                 <button type="submit" form="searchForm" class="btn btn-primary">
                     <i class="fa fa-search"></i> {{ __("Buscar") }}

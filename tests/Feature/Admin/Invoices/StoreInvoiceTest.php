@@ -2,12 +2,12 @@
 
 namespace Tests\Feature\Admin\Invoices;
 
-use App\User;
-use App\Client;
-use App\Seller;
-use App\Invoice;
 use Carbon\Carbon;
 use Tests\TestCase;
+use App\Entities\User;
+use App\Entities\Client;
+use App\Entities\Invoice;
+use Spatie\Permission\Models\Permission;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class StoreInvoiceTest extends TestCase
@@ -23,7 +23,7 @@ class StoreInvoiceTest extends TestCase
     }
 
     /** @test */
-    public function guest_user_cannot_store_invoices()
+    public function guests_cannot_store_invoices()
     {
         $data = $this->data();
 
@@ -32,33 +32,24 @@ class StoreInvoiceTest extends TestCase
     }
 
     /** @test */
-    public function logged_in_user_can_store_invoices()
+    public function unauthorized_user_cannot_store_invoices()
     {
         $user = factory(User::class)->create();
         $data = $this->data();
 
-        $response = $this->actingAs($user)->post(route('invoices.store'), $data);
-        $response->assertRedirect();
+        $this->actingAs($user)->post(route('invoices.store'), $data)->assertStatus(403);
     }
 
     /** @test */
-    public function when_stored_an_invoice_should_redirect_to_his_show_view_without_errors()
+    public function authorized_user_can_store_invoices()
     {
-        $user = factory(User::class)->create();
+        $permission = Permission::create(['name' => 'Create invoices']);
+        $user = factory(User::class)->create()->givePermissionTo($permission);
         $data = $this->data();
 
         $response = $this->actingAs($user)->post(route('invoices.store'), $data);
         $response->assertRedirect(route('invoices.show', Invoice::first()));
         $response->assertSessionHasNoErrors();
-    }
-
-    /** @test */
-    public function an_invoice_can_be_stored_in_database()
-    {
-        $user = factory(User::class)->create();
-        $data = $this->data();
-
-        $this->actingAs($user)->post(route('invoices.store'), $data);
         $this->assertDatabaseHas('invoices', $data);
     }
 
@@ -78,7 +69,8 @@ class StoreInvoiceTest extends TestCase
         string $field,
         string $message
     ) {
-        $user = factory(User::class)->create();
+        $permission = Permission::create(['name' => 'Create invoices']);
+        $user = factory(User::class)->create()->givePermissionTo($permission);
         $response =  $this->actingAs($user)->post(route('invoices.store'), $invoiceData);
 
         $response->assertSessionHasErrors([$field => $message]);
@@ -91,11 +83,9 @@ class StoreInvoiceTest extends TestCase
     public function data()
     {
         $client = factory(Client::class)->create();
-        $seller = factory(Seller::class)->create();
         return [
             'issued_at' => Carbon::now()->toDateString(),
             'client_id' => $client->id,
-            'seller_id' => $seller->id,
         ];
     }
 }
