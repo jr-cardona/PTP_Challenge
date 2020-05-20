@@ -17,8 +17,7 @@
 <div id="app">
     <nav class="custom-header navbar navbar-expand-md navbar-dark shadow-sm">
         <a class="navbar-brand" href="{{ route('home') }}">
-            <img src="{{ URL::asset('storage/p2p-logo_White.svg') }}"
-                 width="120px" alt="">
+            <img src="https://static.placetopay.com/placetopay-logo-white.svg" class="attachment-0x0 size-0x0" width="120px">
         </a>
         <button class="navbar-toggler" type="button" data-toggle="collapse"
                 data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
