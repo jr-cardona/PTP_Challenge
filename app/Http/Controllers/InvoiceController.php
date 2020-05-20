@@ -2,15 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use Config;
 use Carbon\Carbon;
 use App\Entities\Invoice;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use App\Exports\InvoicesExport;
-use UxWeb\SweetAlert\SweetAlert;
 use Illuminate\Http\RedirectResponse;
 use App\Http\Requests\SaveInvoiceRequest;
+use App\Http\Requests\IndexInvoiceRequest;
 use App\Http\Requests\AnnulInvoiceRequest;
 use App\Actions\Invoices\GetInvoicesAction;
 use App\Actions\Invoices\StoreInvoicesAction;
@@ -27,33 +25,15 @@ class InvoiceController extends Controller
     /**
      * Display a listing of the resource.
      * @param GetInvoicesAction $action
-     * @param Request $request
+     * @param IndexInvoiceRequest $request
      * @return Response
-     * @throws AuthorizationException
      */
-    public function index(GetInvoicesAction $action, Request $request)
+    public function index(GetInvoicesAction $action, IndexInvoiceRequest $request)
     {
-        $invoices = $action->execute(new Invoice(), $request);
+        $invoices = $action->execute(new Invoice(), $request->all())
+            ->paginate($request->get('per_page'));
 
-        if ($format = $request->get('format')) {
-            $this->authorize('export', Invoice::class);
-            return (new InvoicesExport($invoices->get()))
-                ->download('invoices-list.' . $format);
-        }
-
-        $paginate = Config::get('constants.paginate');
-        $count = $invoices->count();
-        $invoices = $invoices->paginate($paginate);
-
-        return response()->view(
-            'invoices.index',
-            compact(
-            'invoices',
-            'request',
-            'count',
-            'paginate'
-        )
-        );
+        return response()->view('invoices.index', compact('invoices', 'request'));
     }
 
     /**
@@ -77,8 +57,7 @@ class InvoiceController extends Controller
      */
     public function store(SaveInvoiceRequest $request, StoreInvoicesAction $action)
     {
-        $invoice = $action->execute(new Invoice(), $request);
-
+        $invoice = $action->execute(new Invoice(), $request->validated());
         return redirect()->route('invoices.show', $invoice)
             ->with('success', 'Factura creada satisfactoriamente');
     }
@@ -101,7 +80,7 @@ class InvoiceController extends Controller
      *
      * @param Invoice $invoice
      * @param Request $request
-     * @return Response | RedirectResponse
+     * @return Response
      */
     public function edit(Invoice $invoice, Request $request)
     {
@@ -121,7 +100,7 @@ class InvoiceController extends Controller
         Invoice $invoice,
         UpdateInvoicesAction $action
     ) {
-        $invoice = $action->execute($invoice, $request);
+        $invoice = $action->execute($invoice, $request->validated());
 
         return redirect()->route('invoices.show', $invoice)
             ->with('success', ('Factura actualizada satisfactoriamente'));
@@ -160,8 +139,15 @@ class InvoiceController extends Controller
             ->with('success', ('Marcada correctamente'));
     }
 
+    /**
+     * @param Invoice $invoice
+     * @return mixed
+     * @throws AuthorizationException
+     */
     public function print(Invoice $invoice)
     {
+        $this->authorize('print', $invoice);
+
         $pdf = \PDF::loadView('invoices.print', compact('invoice'));
         return $pdf->stream();
     }

@@ -11,10 +11,10 @@
 |
 */
 
-Auth::routes();
+Auth::routes(['register' => false]);
 
 Route::middleware(['auth'])->group(static function () {
-    Route::get('/', 'HomeController@index')->name('home');
+    Route::view('/', 'home')->name('home');
 
     // Search
     Route::get('/clientes/buscar', 'SearchController@clients')
@@ -29,7 +29,17 @@ Route::middleware(['auth'])->group(static function () {
     // Imports
     Route::post('/importar', 'ImportController@import')->name('import');
 
-    // Resources
+    // Exports
+    Route::get('/facturas/exportar', 'ExportController@invoices')
+        ->name('invoices.export');
+    Route::get('/clientes/exportar', 'ExportController@clients')
+        ->name('clients.export');
+    Route::get('/productos/exportar', 'ExportController@products')
+        ->name('products.export');
+    Route::get('/usuarios/exportar', 'ExportController@users')
+        ->name('users.export');
+
+    // Invoices
     Route::resource('/facturas/{invoice}/producto', 'InvoiceProductController')
         ->except('index', 'show')
         ->names('invoices.products')
@@ -45,17 +55,20 @@ Route::middleware(['auth'])->group(static function () {
         ->parameters(['facturas' => 'invoice']);
     Route::get('/facturas/{invoice}/recibir/', 'InvoiceController@receivedCheck')
         ->name('invoices.receivedCheck');
-    Route::get('/facturas/{invoice}/print', 'InvoiceController@print')
+    Route::get('/facturas/{invoice}/imprimir', 'InvoiceController@print')
         ->name('invoices.print');
 
+    // Clients
     Route::resource('/clientes', 'ClientController')
         ->names('clients')
         ->parameters(['clientes' => 'client']);
 
+    // Products
     Route::resource('/productos', 'ProductController')
         ->names('products')
         ->parameters(['productos' => 'product']);
 
+    // Users
     Route::resource('/usuarios', 'UserController')
         ->names('users')
         ->parameters(['usuarios' => 'user']);
@@ -67,12 +80,24 @@ Route::middleware(['auth'])->group(static function () {
         ->name('users.update-password');
 
     // Reports
-    Route::group(['middleware' => ['role_or_permission:SuperAdmin|View all reports']], function () {
-        Route::get('/reportes', 'ReportController@index')
-            ->name('reports.index');
-        Route::get('/reportes/clientes', 'ReportController@clients')
-            ->name('reports.clients');
-        Route::get('/reportes/utilidades', 'ReportController@utilities')
-            ->name('reports.utilities');
-    });
+    Route::get('/reportes', 'ReportController@general')
+        ->name('reports.general');
+    Route::get('/reportes/clientes-deudores', 'ReportController@debtorClients')
+        ->name('reports.debtorClients');
+    Route::get('/reportes/utilidades', 'ReportController@utilities')
+        ->name('reports.utilities');
+    Route::get('/reportes/generados', 'ReportController@generated')
+        ->name('reports.generated');
+    Route::get('/reportes/{report}', 'ReportController@download')
+        ->name('reports.download');
+    Route::delete('/reportes/{report}', 'ReportController@destroy')
+        ->name('reports.destroy');
+
+    // Notifications
+    Route::get('/notificaciones', 'NotificationController@index')
+        ->name('notifications.index');
+    Route::put('/notificaciones/{id}', 'NotificationController@read')
+        ->name('notifications.read');
+    Route::delete('/notificaciones/{id}', 'NotificationController@destroy')
+        ->name('notifications.destroy');
 });

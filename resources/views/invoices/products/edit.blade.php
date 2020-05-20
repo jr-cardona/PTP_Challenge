@@ -21,12 +21,12 @@
                             {{ $product->price }}
                         </span>
                     </div>
-                    @include('invoices.products._form', [
+                    @include('invoices.products.__form', [
                         'quantity' => $invoice->products->find($product->id)->pivot->quantity,
                     ])
                 </div>
                 <br>
-                @include('invoices.products._buttons')
+                @include('invoices.products.__buttons')
             </form>
         </div>
     </div>

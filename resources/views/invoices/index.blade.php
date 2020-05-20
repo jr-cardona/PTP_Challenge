@@ -1,40 +1,36 @@
 @extends('layouts.index')
 @section('Title', 'Facturas')
+@section('Left-buttons')
+    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#searchModal">
+        <i class="fa fa-filter"></i> {{ __("Filtrar") }}
+    </button>
+    <a class="btn btn-danger" href="{{ route('invoices.index') }}">
+        <i class="fa fa-undo"></i> {{ __("Limpiar") }}
+    </a>
+    @include('invoices.__search_modal')
+@endsection
 @section('Name')
     {{ __("Facturas") }}
-    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#searchModal">
-        <i class="fa fa-filter"></i>
-    </button>
-    <a href="{{ route('invoices.index') }}" class="btn btn-danger">
-        <i class="fa fa-undo"></i>
-    </a>
 @endsection
-@section('Actions')
+@section('Right-buttons')
     @can('export', App\Entities\Invoice::class)
-        <button type="button" class="btn btn-warning"
-                data-route="{{ route('invoices.index') }}"
-                data-toggle="modal" data-target="#exportModal">
-            <i class="fa fa-file-excel"></i> {{ __("Exportar") }}
-        </button>
-    @endcan
-    @can('import', App\Entities\Invoice::class)
-        <button type="button" class="btn btn-primary"
+        <button type="button" class="btn btn-success"
                 data-toggle="modal"
-                data-target="#importModal"
-                data-redirect="invoices.index"
-                data-model="App\Entities\Invoice"
-                data-import-model="App\Imports\InvoicesImport">
-            <i class="fa fa-file-excel"></i> {{ __("Importar") }}
+                data-target="#exportModal"
+                data-route="{{ route('invoices.export') }}">
+            <i class="fa fa-file-download"></i> {{ __("Exportar") }}
         </button>
-    @endcan
-    @can('create', App\Entities\Invoice::class)
-        <a class="btn btn-success" href="{{ route('invoices.create') }}">
-            <i class="fa fa-plus"></i> {{ __("Crear nueva factura") }}
-        </a>
     @endcan
 @endsection
-@section('Search')
-    @include('invoices.__search_modal')
+@section('Paginator')
+    @include('partials.__pagination', [
+        'from'  => $invoices->firstItem() ?? 0,
+        'to'    => $invoices->lastItem() ?? 0,
+        'total' => $invoices->total(),
+    ])
+@endsection
+@section('Links')
+    {{ $invoices->appends($request->all())->links() }}
 @endsection
 @section('Header')
     <th class="text-center" nowrap>{{ __("Título") }}</th>
@@ -86,9 +82,6 @@
             </td>
         </tr>
     @endforelse
-@endsection
-@section('Links')
-    {{ $invoices->appends($request->all())->links() }}
 @endsection
 @push('modals')
     @include('invoices.__confirm_annulment_modal')

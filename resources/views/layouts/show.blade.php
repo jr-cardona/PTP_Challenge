@@ -2,17 +2,19 @@
 @section('title')
     @yield('Title')
 @endsection
-<div></div>
 @section('content')
-    <div class="d-flex justify-content-between">
-        @yield('Back')
-    </div>
-    <p></p>
     <div class="card shadow">
-        <div class="card-header d-flex justify-content-between">
-            <h3 class="card-title mb-0">@yield('Name')</h3>
-            <div>
-                <div class="btn-group btn-group-sm">
+        <div class="card-header">
+            <div class="row">
+                <div class="col btn-group-sm">
+                    @yield('Back')
+                </div>
+                <div class="col">
+                    <h3 class="card-title mb-0 text-center text-nowrap">
+                        @yield('Name')
+                    </h3>
+                </div>
+                <div class="col text-right btn-group-sm">
                     @yield('Buttons')
                 </div>
             </div>

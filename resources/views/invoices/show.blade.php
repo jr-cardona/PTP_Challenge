@@ -1,30 +1,21 @@
 @extends('layouts.show')
 @section('Title', 'Ver Factura')
 @section('Back')
-    <div>
-        @can('viewAny', App\Entities\Invoice::class)
-            <a href="{{ route('invoices.index') }}" class="btn btn-secondary">
-                <i class="fa fa-arrow-left"></i> {{ __("Volver") }}
-            </a>
-        @endcan
-        @can('pay', $invoice)
-            <a href="{{ route('invoices.payments.create', $invoice) }}" class="btn btn-success">
-                <i class="fa fa-dollar-sign"></i> {{ __("Pagar") }}
-            </a>
-        @endcan
-        @can('receive', $invoice)
-            <a href="{{ route('invoices.receivedCheck', $invoice) }}" class="btn btn-primary">
-                <i class="fa fa-check"></i> {{ __("Marcar como recibida") }}
-            </a>
-        @endcan
-    </div>
-    <div>
-        @can('create', App\Entities\Invoice::class)
-            <a class="btn btn-success" href="{{ route('invoices.create') }}">
-                <i class="fa fa-plus"></i> {{ __("Crear nueva factura") }}
-            </a>
-        @endcan
-    </div>
+    @can('viewAny', App\Entities\Invoice::class)
+        <a href="{{ route('invoices.index') }}" class="btn btn-secondary">
+            <i class="fa fa-arrow-left"></i> {{ __("Volver") }}
+        </a>
+    @endcan
+    @can('pay', $invoice)
+        <a href="{{ route('invoices.payments.create', $invoice) }}" class="btn btn-success">
+            <i class="fa fa-dollar-sign"></i> {{ __("Pagar") }}
+        </a>
+    @endcan
+    @can('receive', $invoice)
+        <a href="{{ route('invoices.receivedCheck', $invoice) }}" class="btn btn-primary">
+            <i class="fa fa-check"></i> {{ __("Marcar como recibida") }}
+        </a>
+    @endcan
 @endsection
 @section('Name')
     {{ $invoice->fullname }}
@@ -39,7 +30,7 @@
         <table class="table table-sm">
             <tr>
                 <td class="table-dark td-title custom-header">{{ __("Fecha de recibo:") }}</td>
-                <td class="td-content">{{ $invoice->received_at == '' ? "Sin fecha" : $invoice->received_at->isoFormat('Y-MM-DD hh:mma') }}</td>
+                <td class="td-content">{{ $invoice->received_at ?? 'Sin fecha' }}</td>
 
                 <td class="table-dark td-title custom-header">{{ __("Estado:") }}</td>
                 @include('invoices.status_label')
@@ -114,7 +105,7 @@
                     <th class="text-center" nowrap>{{ __("CANTIDAD") }}</th>
                     <th class="text-right" nowrap>{{ __("PRECIO UNITARIO") }}</th>
                     <th class="text-right" nowrap>{{ __("PRECIO TOTAL") }}</th>
-                    <th class="text-center"></th>
+                    <th class="text-center" style="width: 7%"></th>
                 </tr>
             </thead>
             <tbody>
@@ -132,12 +123,12 @@
                         <td class="text-center">{{ $product->pivot->quantity }}</td>
                         <td class="text-right">${{ number_format($product->pivot->unit_price, 2) }}</td>
                         <td class="text-right">${{ number_format($product->pivot->unit_price * $product->pivot->quantity, 2) }}</td>
-                        <td class="text-right btn-group btn-group-sm">
+                        <td class="text-right">
                             @can('update', $invoice)
-                                <a href="{{ route('invoices.products.edit', [$invoice, $product]) }}" class="btn text-primary">
+                                <a href="{{ route('invoices.products.edit', [$invoice, $product]) }}" class="btn btn-sm text-primary">
                                     <i class="fa fa-edit"></i>
                                 </a>
-                                <button type="button" class="btn text-danger" data-route="{{ route('invoices.products.destroy', [$invoice, $product]) }}" data-toggle="modal" data-target="#confirmDeleteModal">
+                                <button type="button" class="btn btn-sm text-danger" data-route="{{ route('invoices.products.destroy', [$invoice, $product]) }}" data-toggle="modal" data-target="#confirmDeleteModal">
                                     <i class="fa fa-trash"></i>
                                 </button>
                             @endcan

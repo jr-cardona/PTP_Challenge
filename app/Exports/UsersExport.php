@@ -2,27 +2,32 @@
 
 namespace App\Exports;
 
+use App\Entities\User;
+use App\Actions\Users\GetUsersAction;
+use Maatwebsite\Excel\Concerns\FromQuery;
 use Maatwebsite\Excel\Concerns\Exportable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Maatwebsite\Excel\Concerns\WithMapping;
 use Maatwebsite\Excel\Concerns\WithHeadings;
-use Illuminate\Contracts\Support\Responsable;
-use Maatwebsite\Excel\Concerns\FromCollection;
 
-class UsersExport implements FromCollection, Responsable, WithHeadings, WithMapping, ShouldQueue
+class UsersExport implements FromQuery, WithHeadings, WithMapping, ShouldQueue
 {
     use Exportable;
 
-    private $users;
+    protected $filters;
+    protected $authUser;
 
-    public function __construct($users)
+    public function __construct($filters, $authUser)
     {
-        $this->users = $users;
+        $this->filters = $filters;
+        $this->authUser = $authUser;
     }
 
-    public function collection()
+    public function query()
     {
-        return $this->users;
+        return (new GetUsersAction)->execute(new User(), array_merge($this->filters, [
+            'authUser' => $this->authUser
+        ]));
     }
 
     public function map($user): array

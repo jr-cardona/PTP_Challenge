@@ -19,13 +19,13 @@ class ProductController extends Controller
 
     public function index(GetProductsAction $action, Request $request)
     {
-        $products = $action->execute(new Product(), $request);
+        $products = $action->execute(new Product(), $request->all());
         return $products->get();
     }
 
     public function store(StoreProductsAction $action, SaveProductRequest $request)
     {
-        return $action->execute(new Product(), $request);
+        return $action->execute(new Product(), $request->validated());
     }
 
     public function show(Product $product)
@@ -38,7 +38,7 @@ class ProductController extends Controller
         Product $product,
         SaveProductRequest $request
     ) {
-        $product = $action->execute($product, $request);
+        $product = $action->execute($product, $request->validated());
         return $product;
     }
 

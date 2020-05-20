@@ -37,7 +37,9 @@ class RolesTableSeeder extends Seeder
             ->givePermissionTo('Export all clients')
             ->givePermissionTo('Import clients')
             ->givePermissionTo('View profile')
-            ->givePermissionTo('Edit profile');
+            ->givePermissionTo('Edit profile')
+            ->givePermissionTo('reports.list.associated')
+            ->givePermissionTo('reports.download.associated');
 
         Role::create(['name' => 'Client'])
             ->givePermissionTo('View invoices')
@@ -49,8 +51,8 @@ class RolesTableSeeder extends Seeder
         Role::create(['name' => 'Accountant'])
             ->givePermissionTo('View all invoices')
             ->givePermissionTo('Export all invoices')
-            ->givePermissionTo('View all reports')
-            ->givePermissionTo('Export reports')
+            ->givePermissionTo('reports.general.list.all')
+            ->givePermissionTo('reports.general.export')
             ->givePermissionTo('View profile')
             ->givePermissionTo('Edit profile');
 

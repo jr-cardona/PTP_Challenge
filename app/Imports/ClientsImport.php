@@ -41,6 +41,8 @@ class ClientsImport extends BaseImport implements
             'cellphone' => $row['Teléfono celular'],
             'phone' => $row['Teléfono fijo'],
             'address' => $row['Dirección'],
+            'created_by' => $row['ID Creador'],
+            'updated_by' => $row['ID Creador'],
         ]);
     }
 

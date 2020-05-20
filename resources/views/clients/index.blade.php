@@ -1,40 +1,36 @@
 @extends('layouts.index')
 @section('Title', 'Clientes')
-@section('Name')
-    {{ __("Clientes") }}
+@section('Left-buttons')
     <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#searchModal">
-        <i class="fa fa-filter"></i>
+        <i class="fa fa-filter"></i> {{ __("Filtrar") }}
     </button>
     <a href="{{ route('clients.index') }}" class="btn btn-danger">
-        <i class="fa fa-undo"></i>
+        <i class="fa fa-undo"></i> {{ __("Limpiar") }}
     </a>
-@endsection
-@section('Actions')
-    @can('export', App\Entities\Client::class)
-        <button type="button" class="btn btn-warning"
-                data-route="{{ route('clients.index') }}"
-                data-toggle="modal" data-target="#exportModal">
-            <i class="fa fa-file-excel"></i> {{ __("Exportar") }}
-        </button>
-    @endcan
-    @can('import', App\Entities\Client::class)
-        <button type="button" class="btn btn-primary"
-                data-toggle="modal"
-                data-target="#importModal"
-                data-redirect="clients.index"
-                data-model="App\Entities\Client"
-                data-import-model="App\Imports\ClientsImport">
-            <i class="fa fa-file-excel"></i> {{ __("Importar") }}
-        </button>
-    @endcan
-    @can('create', App\Entities\Client::class)
-        <a class="btn btn-success" href="{{ route('clients.create') }}">
-            <i class="fa fa-plus"></i> {{ __("Crear nuevo cliente") }}
-        </a>
-    @endcan
-@endsection
-@section('Search')
     @include('clients.__search_modal')
+@endsection
+@section('Name')
+    {{ __("Clientes") }}
+@endsection
+@section('Right-buttons')
+    @can('export', App\Entities\Client::class)
+        <button type="button" class="btn btn-success"
+                data-toggle="modal"
+                data-target="#exportModal"
+                data-route="{{ route('clients.export') }}">
+            <i class="fa fa-file-download"></i> {{ __("Exportar") }}
+        </button>
+    @endcan
+@endsection
+@section('Paginator')
+    @include('partials.__pagination', [
+        'from'  => $clients->firstItem() ?? 0,
+        'to'    => $clients->lastItem() ?? 0,
+        'total' => $clients->total(),
+    ])
+@endsection
+@section('Links')
+    {{ $clients->appends($request->all())->links() }}
 @endsection
 @section('Header')
     <th class="text-center" nowrap>{{ __("Nombre completo") }}</th>
@@ -55,7 +51,7 @@
             <td>{{ $client->cellphone }}</td>
             <td>{{ $client->creator->fullname }}</td>
             <td class="btn-group btn-group-sm" nowrap>
-                @include('clients._buttons')
+                @include('clients.__buttons')
             </td>
         </tr>
     @empty
@@ -67,7 +63,4 @@
             </td>
         </tr>
     @endforelse
-@endsection
-@section('Links')
-    {{ $clients->appends($request->all())->links() }}
 @endsection

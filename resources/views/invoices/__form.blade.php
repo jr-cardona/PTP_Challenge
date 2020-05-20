@@ -59,6 +59,3 @@
         @enderror
     </div>
 </div>
-@push('scripts')
-    <script src="{{ asset(mix('js/app.js')) }}"></script>
-@endpush

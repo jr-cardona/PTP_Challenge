@@ -21,13 +21,13 @@ class InvoiceController extends Controller
 
     public function index(GetInvoicesAction $action, Request $request)
     {
-        $invoices = $action->execute(new Invoice(), $request);
+        $invoices = $action->execute(new Invoice(), $request->all());
         return $invoices->get();
     }
 
     public function store(StoreInvoicesAction $action, SaveInvoiceRequest $request)
     {
-        return $action->execute(new Invoice(), $request);
+        return $action->execute(new Invoice(), $request->validated());
     }
 
     public function show(Invoice $invoice)
@@ -41,7 +41,7 @@ class InvoiceController extends Controller
         Invoice $invoice,
         SaveInvoiceRequest $request
     ) {
-        $invoice = $action->execute($invoice, $request);
+        $invoice = $action->execute($invoice, $request->validated());
         return $invoice;
     }
 

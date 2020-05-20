@@ -26,7 +26,7 @@ class ChangePasswordRequest extends FormRequest
     {
         return [
             'current_password' => 'required',
-            'password' => 'required|confirmed|min:8',
+            'new_password' => 'required|confirmed|min:8',
         ];
     }
 
@@ -35,12 +35,14 @@ class ChangePasswordRequest extends FormRequest
      */
     public function withValidator($validator)
     {
-        if ($this->filled('password') || $this->filled('current_password')) {
+        if ($this->filled('new_password') || $this->filled('current_password')) {
             $validator->after(function ($validator) {
                 if (! $this->passwordMatches()) {
-                    $validator->errors()->add('current_password', 'Contraseña incorrecta');
-                } elseif ($this->samePassword()) {
-                    $validator->errors()->add('password', 'Debe ser una contraseña distinta a la actual');
+                    $validator->errors()->add('current_password', __('Contraseña incorrecta.'));
+                }
+                if ($this->samePassword()) {
+                    $validator->errors()
+                        ->add('new_password', __('Debe ser una contraseña distinta a la actual.'));
                 }
             });
         }
@@ -53,6 +55,6 @@ class ChangePasswordRequest extends FormRequest
 
     public function samePassword()
     {
-        return strcmp($this->input('current_password'), $this->input('password')) == 0;
+        return $this->input('current_password') === $this->input('new_password');
     }
 }

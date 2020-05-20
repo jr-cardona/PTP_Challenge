@@ -25,6 +25,18 @@
                             <input type="hidden" name="id" id="id" :value="(old_product_values) ? old_product_values.id : '' ">
                         </div>
                     </div>
+                    <div class="form-group row">
+                        <div class="col">
+                            <label for="per_page">{{ __("Registros por página") }}</label>
+                            <select id="per_page" name="per_page" class="form-control">
+                                @for($i = 10; $i <= 100; $i += 10)
+                                    <option value="{{ $i }}" {{ $products->perPage() == $i ? 'selected' : '' }}>
+                                        {{ $i }}
+                                    </option>
+                                @endfor
+                            </select>
+                        </div>
+                    </div>
                 </form>
             </div>
             <div class="modal-footer">

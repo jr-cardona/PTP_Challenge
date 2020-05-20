@@ -1,40 +1,36 @@
 @extends('layouts.index')
 @section('Title', 'Productos')
-@section('Name')
-    {{ __("Productos") }}
+@section('Left-buttons')
     <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#searchModal">
-        <i class="fa fa-filter"></i>
+        <i class="fa fa-filter"></i> {{ __("Filtrar") }}
     </button>
     <a href="{{ route('products.index') }}" class="btn btn-danger">
-        <i class="fa fa-undo"></i>
+        <i class="fa fa-undo"></i> {{ __("Limpiar") }}
     </a>
-@endsection
-@section('Actions')
-    @can('export', App\Entities\Product::class)
-        <button type="button" class="btn btn-warning"
-                data-route="{{ route('products.index') }}"
-                data-toggle="modal" data-target="#exportModal">
-            <i class="fa fa-file-excel"></i> {{ __("Exportar") }}
-        </button>
-    @endcan
-    @can('import', App\Entities\Product::class)
-        <button type="button" class="btn btn-primary"
-                data-toggle="modal"
-                data-target="#importModal"
-                data-redirect="products.index"
-                data-model="App\Entities\Product"
-                data-import-model="App\Imports\ProductsImport">
-            <i class="fa fa-file-excel"></i> {{ __("Importar") }}
-        </button>
-    @endcan
-    @can('create', App\Entities\Product::class)
-        <a class="btn btn-success" href="{{ route('products.create') }}">
-            <i class="fa fa-plus"></i> {{ __("Crear nuevo producto") }}
-        </a>
-    @endcan
-@endsection
-@section('Search')
     @include('products.__search_modal')
+@endsection
+@section('Name')
+    {{ __("Productos") }}
+@endsection
+@section('Right-buttons')
+    @can('export', App\Entities\Product::class)
+        <button type="button" class="btn btn-success"
+                data-toggle="modal"
+                data-target="#exportModal"
+                data-route="{{ route('products.export') }}">
+            <i class="fa fa-file-download"></i> {{ __("Exportar") }}
+        </button>
+    @endcan
+@endsection
+@section('Paginator')
+    @include('partials.__pagination', [
+        'from'  => $products->firstItem() ?? 0,
+        'to'    => $products->lastItem() ?? 0,
+        'total' => $products->total(),
+    ])
+@endsection
+@section('Links')
+    {{ $products->appends($request->all())->links() }}
 @endsection
 @section('Header')
     <th class="text-center" nowrap>{{ __("Código") }}</th>
@@ -43,7 +39,7 @@
     <th class="text-center" nowrap>{{ __("Precio") }}</th>
     <th class="text-center" nowrap>{{ __("Fecha de creación") }}</th>
     <th class="text-center" nowrap>{{ __("Creado por") }}</th>
-    <th class="text-center" nowrap>{{ __("Opciones") }}</th>
+    <th></th>
 @endsection
 @section('Body')
     @forelse($products as $product)
@@ -67,19 +63,16 @@
                 </a>
             </td>
             <td class="btn-group btn-group-sm" nowrap>
-                @include('products._buttons')
+                @include('products.__buttons')
             </td>
         </tr>
     @empty
         <tr>
-            <td colspan="6" class="p-3">
+            <td colspan="7" class="p-3">
                 <p class="alert alert-secondary text-center">
                     {{ __('No se encontraron productos') }}
                 </p>
             </td>
         </tr>
     @endforelse
-@endsection
-@section('Links')
-    {{ $products->appends($request->all())->links() }}
 @endsection

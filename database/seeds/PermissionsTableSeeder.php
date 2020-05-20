@@ -36,6 +36,7 @@ class PermissionsTableSeeder extends Seeder
         Permission::create(['name' => 'Receive invoices']);
 
         Permission::create(['name' => 'View all clients']);
+        Permission::create(['name' => 'View clients']);
         Permission::create(['name' => 'Create clients']);
         Permission::create(['name' => 'Edit all clients']);
         Permission::create(['name' => 'Edit clients']);
@@ -63,7 +64,13 @@ class PermissionsTableSeeder extends Seeder
         Permission::create(['name' => 'Import all users']);
         Permission::create(['name' => 'Sync roles']);
 
-        Permission::create(['name' => 'View all reports']);
-        Permission::create(['name' => 'Export reports']);
+        Permission::create(['name' => 'reports.general.list.all']);
+        Permission::create(['name' => 'reports.general.export']);
+        Permission::create(['name' => 'reports.list.all']);
+        Permission::create(['name' => 'reports.list.associated']);
+        Permission::create(['name' => 'reports.download.all']);
+        Permission::create(['name' => 'reports.download.associated']);
+        Permission::create(['name' => 'reports.delete.all']);
+        Permission::create(['name' => 'reports.delete.associated']);
     }
 }

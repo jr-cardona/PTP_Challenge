@@ -1,15 +1,13 @@
 <?php
 
-
 namespace App\Actions\Users;
 
 use App\Actions\Action;
-use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\Model;
 
 class GetUsersAction extends Action
 {
-    public function action(Model $user, Request $request)
+    public function action(Model $user, array $request)
     {
         return $user->with([
             'invoices:id,created_by',
@@ -20,8 +18,8 @@ class GetUsersAction extends Action
             'permissions'
         ])
             ->select(['users.id', 'users.name', 'users.surname', 'users.email'])
-            ->id($request->get('id'))
-            ->email($request->get('email'))
+            ->id($request['id'] ?? '')
+            ->email($request['email'] ?? '')
             ->whereDoesntHave('client', function ($query) {
                 $query->where('id', '!=', 'id');
             })

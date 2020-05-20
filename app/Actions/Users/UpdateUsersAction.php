@@ -1,20 +1,18 @@
 <?php
 
-
 namespace App\Actions\Users;
 
-use App\Actions\Action;
 use App\Entities\User;
-use Illuminate\Http\Request;
+use App\Actions\Action;
 use Illuminate\Database\Eloquent\Model;
 
 class UpdateUsersAction extends Action
 {
-    public function action(Model $user, Request $request): Model
+    public function action(Model $user, array $request): Model
     {
-        $user->update($request->validated());
+        $user->update($request);
         if (auth()->user()->can('syncRoles', User::class)) {
-            $user->syncRoles($request->roles);
+            $user->syncRoles($request['roles']);
         }
 
         return $user;

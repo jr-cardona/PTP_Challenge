@@ -1,7 +1,7 @@
 <?php
 
-use Illuminate\Database\Seeder;
 use App\Entities\TypeDocument;
+use Illuminate\Database\Seeder;
 
 class TypeDocumentsTableSeeder extends Seeder
 {

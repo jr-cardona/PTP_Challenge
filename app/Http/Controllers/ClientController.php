@@ -2,18 +2,15 @@
 
 namespace App\Http\Controllers;
 
-use Config;
 use Exception;
 use App\Entities\Client;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use App\Exports\ClientsExport;
 use Illuminate\Http\RedirectResponse;
 use App\Http\Requests\SaveClientRequest;
 use App\Actions\Clients\GetClientsAction;
 use App\Actions\Clients\StoreClientsAction;
 use App\Actions\Clients\UpdateClientsAction;
-use Illuminate\Auth\Access\AuthorizationException;
 
 class ClientController extends Controller
 {
@@ -27,31 +24,13 @@ class ClientController extends Controller
      * @param GetClientsAction $action
      * @param Request $request
      * @return Response
-     * @throws AuthorizationException
      */
     public function index(GetClientsAction $action, Request $request)
     {
-        $clients = $action->execute(new Client(), $request);
+        $clients = $action->execute(new Client(), $request->all())
+            ->paginate($request->get('per_page'));
 
-        if ($format = $request->get('format')) {
-            $this->authorize('export', Client::class);
-            return (new ClientsExport($clients->get()))
-                ->download('clients-list.' . $format);
-        }
-
-        $paginate = Config::get('constants.paginate');
-        $count = $clients->count();
-        $clients = $clients->paginate($paginate);
-
-        return response()->view(
-            'clients.index',
-            compact(
-            'clients',
-            'request',
-            'count',
-            'paginate'
-        )
-        );
+        return response()->view('clients.index', compact('clients', 'request'));
     }
 
     /**
@@ -74,7 +53,7 @@ class ClientController extends Controller
      */
     public function store(StoreClientsAction $action, SaveClientRequest $request)
     {
-        $client = $action->execute(new Client(), $request);
+        $client = $action->execute(new Client(), $request->validated());
 
         return redirect()->route('clients.show', $client->id)
             ->with('success', ('Cliente creado satisfactoriamente'));
@@ -89,8 +68,9 @@ class ClientController extends Controller
     public function show(Client $client)
     {
         $client->load('invoices.products');
+        $invoices = $client->invoices()->simplePaginate();
 
-        return response()->view('clients.show', compact('client'));
+        return response()->view('clients.show', compact('client', 'invoices'));
     }
 
     /**
@@ -117,7 +97,7 @@ class ClientController extends Controller
         Client $client,
         SaveClientRequest $request
     ) {
-        $client = $action->execute($client, $request);
+        $client = $action->execute($client, $request->validated());
 
         return redirect()->route('clients.show', $client)
             ->with('success', ('Cliente actualizado satisfactoriamente'));
@@ -132,7 +112,7 @@ class ClientController extends Controller
      */
     public function destroy(Client $client)
     {
-        $client->delete();
+        $client->user->delete();
 
         return redirect()->route('clients.index')->with('success', ('Cliente eliminado satisfactoriamente'));
     }

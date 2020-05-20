@@ -8,7 +8,7 @@
         <div class="card-body">
             <form action="{{ route('clients.update', $client) }}" class="form-group" method="POST">
                 @method('PUT')
-                @include('clients._form')
+                @include('clients.__form')
                 <div class="form-group">
                     <button type="submit" class="btn btn-success">
                         <i class="fa fa-save"></i> {{ __("Guardar") }}

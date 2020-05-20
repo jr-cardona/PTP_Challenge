@@ -39,9 +39,9 @@ class InvoiceProductController extends Controller
         $invoice->products()->attach(
             $product->id,
             array_merge(
-            $request->validated(),
-            ['unit_price' => $product->price]
-        )
+                $request->validated(),
+                ['unit_price' => $product->price]
+            )
         );
 
         return redirect()->route('invoices.show', $invoice)

@@ -25,31 +25,33 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <label for="password" class="required">
-                        {{ __("Nueva contraseña") }}
+                    <label for="new_password" class="required">
+                        {{ __("Contraseña nueva") }}
                     </label>
                     <div class="input-group form-group">
                         <div class="input-group-prepend">
                             <span class="input-group-text"><i class="fas fa-key"></i></span>
                         </div>
-                        <input id="password" name="password" type="password" placeholder="Ingresa la contraseña" autocomplete="new-password"
-                               class="form-control @error('password') is-invalid @enderror" required>
-                        @error('password')
+                        <input id="new_password" name="new_password" type="password" placeholder="Ingresa la contraseña"
+                               autocomplete="new_password" minlength="8"
+                               class="form-control @error('new_password') is-invalid @enderror" required>
+                        @error('new_password')
                         <span class="invalid-feedback" role="alert">
                             <strong>{{ $message }}</strong>
                         </span>
                         @enderror
                     </div>
                 </div>
-                <label for="password_confirmation" class="required">
-                    {{ __("Confirmar contraseña") }}
+                <label for="new_password_confirmation" class="required">
+                    {{ __("Confirmar contraseña nueva") }}
                 </label>
                 <div class="form-group">
                     <div class="input-group form-group">
                         <div class="input-group-prepend">
                             <span class="input-group-text"><i class="fas fa-key"></i></span>
                         </div>
-                        <input id="password_confirmation" name="password_confirmation" type="password" placeholder="Confirma la contraseña" autocomplete="new-password"
+                        <input id="new_password_confirmation" name="new_password_confirmation" type="password"
+                               placeholder="Confirma la contraseña" autocomplete="new_password"
                                class="form-control" required>
                     </div>
                 </div>

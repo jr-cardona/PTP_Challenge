@@ -1,40 +1,36 @@
 @extends('layouts.index')
 @section('Title', 'Usuarios')
-@section('Name')
-    {{ __("Usuarios") }}
+@section('Left-buttons')
     <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#searchModal">
-        <i class="fa fa-filter"></i>
+        <i class="fa fa-filter"></i> {{ __("Filtrar") }}
     </button>
     <a href="{{ route('users.index') }}" class="btn btn-danger">
-        <i class="fa fa-undo"></i>
+        <i class="fa fa-undo"></i> {{ __("Limpiar") }}
     </a>
-@endsection
-@section('Actions')
-    @can('export', App\Entities\User::class)
-        <button type="button" class="btn btn-warning"
-                data-route="{{ route('users.index') }}"
-                data-toggle="modal" data-target="#exportModal">
-            <i class="fa fa-file-excel"></i> {{ __("Exportar") }}
-        </button>
-    @endcan
-    @can('import', App\Entities\User::class)
-        <button type="button" class="btn btn-primary"
-                data-toggle="modal"
-                data-target="#importModal"
-                data-redirect="users.index"
-                data-model="App\Entities\User"
-                data-import-model="App\Imports\UsersImport">
-            <i class="fa fa-file-excel"></i> {{ __("Importar") }}
-        </button>
-    @endcan
-    @can('create', App\Entities\User::class)
-        <a class="btn btn-success" href="{{ route('users.create') }}">
-            <i class="fa fa-plus"></i> {{ __("Crear nuevo usuario") }}
-        </a>
-    @endcan
-@endsection
-@section('Search')
     @include('users.__search_modal')
+@endsection
+@section('Name')
+    {{ __("Usuarios") }}
+@endsection
+@section('Right-buttons')
+    @can('export', App\Entities\User::class)
+        <button type="button" class="btn btn-success"
+                data-toggle="modal"
+                data-target="#exportModal"
+                data-route="{{ route('users.export') }}">
+            <i class="fa fa-file-download"></i> {{ __("Exportar") }}
+        </button>
+    @endcan
+@endsection
+@section('Paginator')
+    @include('partials.__pagination', [
+        'from'  => $users->firstItem() ?? 0,
+        'to'    => $users->lastItem() ?? 0,
+        'total' => $users->total(),
+    ])
+@endsection
+@section('Links')
+    {{ $users->appends($request->all())->links() }}
 @endsection
 @section('Header')
     <th class="text-center" nowrap>{{ __("Nombre completo") }}</th>
@@ -53,7 +49,7 @@
             <td>{{ $user->email }}</td>
             <td>{{ $user->getRoleNames()->implode(', ') }}</td>
             <td class="btn-group btn-group-sm" nowrap>
-                @include('users._buttons')
+                @include('users.__buttons')
             </td>
         </tr>
     @empty
@@ -65,7 +61,4 @@
             </td>
         </tr>
     @endforelse
-@endsection
-@section('Links')
-    {{ $users->appends($request->all())->links() }}
 @endsection

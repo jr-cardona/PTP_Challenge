@@ -1,16 +1,14 @@
 <?php
 
-
 namespace App\Actions\Invoices;
 
 use App\Actions\Action;
-use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\Model;
 
 class StoreInvoicesAction extends Action
 {
-    public function action(Model $invoice, Request $request): Model
+    public function action(Model $invoice, array $request)
     {
-        return $invoice->create($request->validated());
+        return $invoice->create($request);
     }
 }

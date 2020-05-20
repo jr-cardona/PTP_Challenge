@@ -11,13 +11,19 @@
                 <form id="import" action="{{ route('import') }}"
                       method="post" enctype="multipart/form-data">
                     @csrf()
-                    <input type="file" name="file" required
-                           accept=".csv,
-                           application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,
-                           application/vnd.ms-excel">
+                    <div class="custom-file">
+                        <input type="file" name="file"
+                               accept=".csv,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,
+                               application/vnd.ms-excel"
+                               class="custom-file-input" id="validatedCustomFile" required>
+                        <label class="custom-file-label" for="validatedCustomFile">
+                            {{ __("Selecciona el archivo") }}
+                        </label>
+                        <div class="invalid-feedback">{{ __("Archivo inválido") }}</div>
+                    </div>
                     <input type="hidden" id="model" name="model">
                     <input type="hidden" id="redirect" name="redirect">
-                    <input type="hidden" id="import-model" name="import-model">
+                    <input type="hidden" id="import_model" name="import_model">
                 </form>
             </div>
             <div class="modal-footer">

@@ -8,19 +8,28 @@
                 </button>
             </div>
             <div class="modal-body">
-                <label for="select_format">{{ __("Selecciona el formato") }}</label>
-                <select class="custom-select" id="select_format" name="select_format">
-                    <option value="">--</option>
-                    <option value="xlsx">{{ __("XLSX") }}</option>
-                    <option value="csv">{{ __("CSV") }}</option>
-                    <option value="tsv">{{ __("TSV") }}</option>
-                </select>
+                <form id="export">
+                    <label for="extension">{{ __("Selecciona el formato") }}</label>
+                    <select class="custom-select" id="extension" name="extension">
+                        <option value="">--</option>
+                        <option value="xlsx">{{ __("XLSX") }}</option>
+                        <option value="csv">{{ __("CSV") }}</option>
+                        <option value="tsv">{{ __("TSV") }}</option>
+                    </select>
+                    @isset($request)
+                        @foreach($request->all() as $attribute => $value)
+                            <input type="hidden" name="filters[{{ $attribute }}]" value="{{ $value }}">
+                        @endforeach
+                    @else
+                        <input type="hidden" name="filters[]">
+                    @endisset
+                </form>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">
                     <i class="fa fa-times"></i> {{ __("Cerrar") }}
                 </button>
-                <button type="submit" form="searchForm" id="assign-format" class="btn btn-warning">
+                <button type="submit" class="btn btn-warning" form="export">
                     <i class="fa fa-file-excel"></i> {{ __("Exportar") }}
                 </button>
             </div>

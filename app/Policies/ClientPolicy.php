@@ -10,23 +10,21 @@ class ClientPolicy
 {
     use HandlesAuthorization;
 
-    /**
-     * @param User $user
-     * @param Client $client
-     * @return bool
-     */
-    public function viewAny(User $user, Client $client = null)
+    public function viewAll(User $user, Client $client = null)
     {
         return $user->can('View all clients');
     }
 
-    /**
-     * Determine whether the user can view clients.
-     *
-     * @param User $user
-     * @param Client $client
-     * @return mixed
-     */
+    public function viewAssociated(User $user, Client $client = null)
+    {
+        return $user->can('View clients');
+    }
+
+    public function viewAny(User $user, Client $client = null)
+    {
+        return $user->can('View all clients') || $user->can('View clients');
+    }
+
     public function view(User $user, Client $client)
     {
         if ($user->can('View all clients')) {
@@ -38,24 +36,11 @@ class ClientPolicy
         return false;
     }
 
-    /**
-     * Determine whether the user can create clients.
-     *
-     * @param User $user
-     * @return mixed
-     */
     public function create(User $user, Client $client = null)
     {
         return $user->can('Create clients');
     }
 
-    /**
-     * Determine whether the user can update clients.
-     *
-     * @param User $user
-     * @param Client $client
-     * @return mixed
-     */
     public function update(User $user, Client $client)
     {
         if ($user->can('Edit all clients')) {
@@ -67,13 +52,6 @@ class ClientPolicy
         return false;
     }
 
-    /**
-     * Determine whether the user can delete clients.
-     *
-     * @param User $user
-     * @param Client $client
-     * @return mixed
-     */
     public function delete(User $user, Client $client)
     {
         if (! $client->canBeDeleted()) {
@@ -88,25 +66,11 @@ class ClientPolicy
         return false;
     }
 
-    /**
-     * Determine whether the user can export clients.
-     *
-     * @param User $user
-     * @param Client $client
-     * @return mixed
-     */
     public function export(User $user, Client $client = null)
     {
         return $user->can('Export all clients');
     }
 
-    /**
-     * Determine whether the user can import clients.
-     *
-     * @param User $user
-     * @param Client $client
-     * @return mixed
-     */
     public function import(User $user, Client $client = null)
     {
         return $user->can('Import all clients')

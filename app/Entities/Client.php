@@ -20,6 +20,8 @@ class Client extends Model
         'updated_by',
     ];
 
+    protected $perPage = 10;
+
     public $incrementing = false;
 
     /**
@@ -88,40 +90,40 @@ class Client extends Model
     /** Query Scopes */
     public function scopeId($query, $id)
     {
-        if (auth()->user()->can('View all clients') ||
-            auth()->user()->hasRole('SuperAdmin')) {
-            if (trim($id) !== '') {
-                return $query->where('id', $id);
-            }
-            return $query;
+        if (trim($id)) {
+            return $query->where('id', $id);
         }
-        return $query->where('id', '-1');
+    }
+
+    public function scopeCreatorId($query, $authUser)
+    {
+        return $query->where('created_by', $authUser);
     }
 
     public function scopeTypeDocument($query, $type_document_id)
     {
-        if (trim($type_document_id) !== '') {
+        if (trim($type_document_id)) {
             return $query->where('type_document_id', $type_document_id);
         }
     }
 
     public function scopeDocument($query, $document)
     {
-        if (trim($document) !== '') {
+        if (trim($document)) {
             return $query->where('document', 'LIKE', "%${document}%");
         }
     }
 
     public function scopeCellphone($query, $cellphone)
     {
-        if (trim($cellphone) !== '') {
+        if (trim($cellphone)) {
             return $query->where('cellphone', 'LIKE', "%${cellphone}%");
         }
     }
 
     public function scopeEmail($query, $email)
     {
-        if (trim($email) !== '') {
+        if (trim($email)) {
             return $query->whereHas(
                 'user',
                 static function (Builder $query) use ($email) {

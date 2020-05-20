@@ -2,47 +2,40 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Maatwebsite\Excel\Facades\Excel;
+use App\Http\Requests\ImportRequest;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Validation\ValidationException;
 use Illuminate\Auth\Access\AuthorizationException;
-use Maatwebsite\Excel\Validators\ValidationException as ExcelValidationException;
+use Maatwebsite\Excel\Validators\ValidationException;
 
 class ImportController extends Controller
 {
     /**
      * Imports a listing of the resource.
-     * @param Request $request
+     * @param ImportRequest $request
      * @return RedirectResponse | Response
      * @throws AuthorizationException
-     * @throws ValidationException
      */
-    public function import(Request $request)
+    public function import(ImportRequest $request)
     {
-        $this->authorize('import', $request->get('model'));
-
-        $this->validate($request, [
-            'file' => 'required|mimes:xls,xlsx'
-        ]);
+        $this->authorize('import', $request->input('model'));
 
         $file = $request->file('file');
-        $redirect = $request->get('redirect');
-        $import = $request->input('import-model');
+        $import = $request->input('import_model');
 
         try {
             $import = new $import;
             Excel::import($import, $file);
             $cant = $import->getRowCount();
 
-            return redirect()->route($redirect)->with('success', ("Se importaron {$cant} registros satisfactoriamente"));
-        } catch (ExcelValidationException $err) {
-            return $this->displayErrors($err, $redirect);
+            return redirect()->back()->with('success', ("Se importaron {$cant} registros satisfactoriamente"));
+        } catch (ValidationException $err) {
+            return $this->displayErrors($err);
         }
     }
 
-    public function displayErrors($err, $route)
+    public function displayErrors($err)
     {
         $failures_unsorted = $err->failures();
         $failures_sorted = array();
@@ -51,7 +44,6 @@ class ImportController extends Controller
         }
         return response()->view('imports.errors', [
             'failures' => $failures_sorted,
-            'route' => $route
         ]);
     }
 }

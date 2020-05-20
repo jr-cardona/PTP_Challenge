@@ -30,31 +30,13 @@ class UserController extends Controller
      * @param GetUsersAction $action
      * @param Request $request
      * @return Response
-     * @throws AuthorizationException
      */
     public function index(GetUsersAction $action, Request $request)
     {
-        $users = $action->execute(new User(), $request);
+        $users = $action->execute(new User(), $request->all())
+            ->paginate($request->get('per_page'));
 
-        if ($format = $request->get('format')) {
-            $this->authorize('export', User::class);
-            return (new UsersExport($users->get()))
-                ->download('users-list.' . $format);
-        }
-
-        $paginate = Config::get('constants.paginate');
-        $count = $users->count();
-        $users = $users->paginate($paginate);
-
-        return response()->view(
-            'users.index',
-            compact(
-            'users',
-            'request',
-            'count',
-            'paginate'
-        )
-        );
+        return response()->view('users.index', compact('users', 'request'));
     }
 
     /**
@@ -80,7 +62,9 @@ class UserController extends Controller
      */
     public function store(StoreUsersAction $action, SaveUserRequest $request)
     {
-        $user = $action->execute(new User(), $request);
+        $user = $action->execute(new User(), array_merge($request->validated(), [
+            'roles' => $request->roles
+        ]));
 
         return redirect()->route('users.show', $user)
             ->with('success', ('Usuario creado satisfactoriamente'));
@@ -132,7 +116,9 @@ class UserController extends Controller
         User $user,
         SaveUserRequest $request
     ) {
-        $user = $action->execute($user, $request);
+        $user = $action->execute($user, array_merge($request->validated(), [
+            'roles' => $request->roles
+        ]));
 
         return redirect()->route('users.show', $user)
             ->with('success', ('Usuario actualizado satisfactoriamente'));
@@ -174,7 +160,7 @@ class UserController extends Controller
     {
         $this->authorize('update', $user);
 
-        $user->password = $request->input('password');
+        $user->password = $request->input('new_password');
         $user->update();
 
         if ($user->isClient()) {
