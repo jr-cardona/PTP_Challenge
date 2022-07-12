@@ -20,7 +20,11 @@ class CreateTypeDocumentsTable extends Migration
             $table->timestamps();
         });
 
-        Artisan::call('db:seed', ['--class' => 'TypeDocumentsTableSeeder', '--force' => true]);
+
+        Artisan::call('db:seed', [
+            '--class' => TypeDocumentsTableSeeder::class,
+            '--force' => true,
+        ]);
     }
 
     /**
