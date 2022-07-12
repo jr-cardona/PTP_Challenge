@@ -63,8 +63,13 @@ This invoice system is thought as a very small CRM when you can manage clients, 
 * Bootstrap.
 
 ## Get started
+There are multiple ways of getting started:
 
-### Requirements
+### Demo
+You can enter to [heroku deployed demo](https://ptp-invoice-system.herokuapp.com/login).
+
+### Installation
+#### Requirements
 - PHP ^7.2
 - HTTP server with PHP support (eg: Apache, Nginx, Caddy)
 - Composer
@@ -72,7 +77,7 @@ This invoice system is thought as a very small CRM when you can manage clients, 
 - MySQL
 - Node
 
-### Installation
+#### Instructions
 After clone the repository, open terminal and run the following commands:
 ```bash
 cd invoice-system
@@ -87,6 +92,8 @@ mysql -u root
 CREATE DATABASE invoice_system;
 exit;
 ```
+If you use want other database configurations, be sure to configure your `.env` file correctly.
+
 Migrate tables and seed some fake data:
 ```bash
 php artisan db:seed
