@@ -16,8 +16,6 @@ class DatabaseSeeder extends Seeder
         if ($this->command->confirm('Do you wish to refresh migration before seeding, it will clear all old data ?')) {
             $this->command->call('migrate:fresh');
             $this->command->info("Data cleared, starting from blank database.");
-        } else {
-            $this->command->call('migrate');
         }
 
         $this->call([
@@ -29,7 +27,7 @@ class DatabaseSeeder extends Seeder
 
         $totalClients = (int) $this->command->ask('How many clients do you need ?', 10);
         if ($totalClients > 0) {
-            $this->command->info("Creating {$totalClients} clients...");
+            $this->command->info("Creating $totalClients clients...");
             $clients = factory(Client::class, $totalClients)->create();
             $invoicesPerClient = (int) $this->command->ask('How many invoices per client do you need ?', 2);
             if ($invoicesPerClient > 0) {

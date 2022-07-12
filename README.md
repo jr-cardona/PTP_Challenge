@@ -46,9 +46,10 @@ This invoice system is thought as a very small CRM when you can manage clients, 
 * Integration with PlacetoPay payment gateway to pay invoices.
 * Transaction control status of invoices.
 * Visualization of historic payment attempts of invoices and their details.
-* Generation and download of reports supporting different formats like xlsx, csv, tsv using Queue Jobs.
+* Generation and download of reports supporting different formats like xlsx, csv, tsv.
 * Manage ACL Roles and Permissions.
 * Responsive design.
+* Notifications to inform ready exports to be downloaded.
 
 ### Technologies and methodologies
 
@@ -59,12 +60,19 @@ This invoice system is thought as a very small CRM when you can manage clients, 
 * Usage of preprocessors to build users views (SASS).
 * Usage of Laravel Mix to build project assets (CSS, JS).
 * Validation of all user entered data to preserve DB integrity using Form Requests.
+* Use of Queue Jobs to manage modules and reports exports.
 * Usage Vue 2 to manage autocomplete relational inputs.
+* Usage Vue 2 to manage notifications.
 * Bootstrap.
 
 ## Get started
+There are multiple ways of getting started:
 
-### Requirements
+### Demo
+You can enter to [heroku deployed demo](https://ptp-invoice-system.herokuapp.com/login).
+
+### Installation
+#### Requirements
 - PHP ^7.2
 - HTTP server with PHP support (eg: Apache, Nginx, Caddy)
 - Composer
@@ -72,7 +80,7 @@ This invoice system is thought as a very small CRM when you can manage clients, 
 - MySQL
 - Node
 
-### Installation
+#### Instructions
 After clone the repository, open terminal and run the following commands:
 ```bash
 cd invoice-system
@@ -87,11 +95,13 @@ mysql -u root
 CREATE DATABASE invoice_system;
 exit;
 ```
+If you use want other database configurations, be sure to configure your `.env` file correctly.
+
 Migrate tables and seed some fake data:
 ```bash
 php artisan db:seed
 ```
-You will be asked if you want to refresh all data and choose how many clients and invoices per client will be created.
+You will be asked if you want to refresh all data and choose how many clients, invoices per client and products per invoice will be created.
 
 To finish and serve the application, you should execute:
 ```bash
