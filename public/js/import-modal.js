@@ -1,0 +1,1 @@
+(window.webpackJsonp=window.webpackJsonp||[]).push([[5],{54:function(t,e,a){t.exports=a(55)},55:function(t,e){$("#importModal").on("show.bs.modal",(function(t){$("#model").attr("value",$(t.relatedTarget).data("model")),$("#redirect").attr("value",$(t.relatedTarget).data("redirect")),$("#import_model").attr("value",$(t.relatedTarget).data("import_model"))}))}},[[54,0]]]);

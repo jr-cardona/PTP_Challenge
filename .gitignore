@@ -1,13 +1,10 @@
 /node_modules
 /public/hot
 /public/storage
-/public/js
 /public/fonts
-/public/css
 /storage/*.key
 /storage/debugbar
 /vendor
-/.tests
 .env
 .env.backup
 .phpunit.result.cache
@@ -16,5 +13,3 @@ Homestead.yaml
 npm-debug.log
 yarn-error.log
 /.idea
-/.tests
-*.html

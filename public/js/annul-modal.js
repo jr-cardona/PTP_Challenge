@@ -1,0 +1,1 @@
+(window.webpackJsonp=window.webpackJsonp||[]).push([[1],{52:function(n,o,t){n.exports=t(53)},53:function(n,o){$("#confirmAnnulmentModal").on("show.bs.modal",(function(n){$("#annulForm").attr("action",$(n.relatedTarget).data("route"))}))}},[[52,0]]]);
