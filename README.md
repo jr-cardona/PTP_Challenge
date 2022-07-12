@@ -38,14 +38,15 @@ This invoice system is thought as a very small CRM when you can manage clients, 
 * List, create, see, update and delete invoices.
 * List, create, see, update and delete clients.
 * List, create, see, update and delete products.
-* Import and export invoices.
-* Import and export clients.
-* Import and export products.
+* Import and export invoices supporting different formats like xlsx, csv, tsv.
+* Import and export clients supporting different formats like xlsx, csv, tsv.
+* Import and export products supporting different formats like xlsx, csv, tsv.
+* Generate invoices PDF.
 * Search, filter and paginate invoices, clients and products.
 * Integration with PlacetoPay payment gateway to pay invoices.
 * Transaction control status of invoices.
 * Visualization of historic payment attempts of invoices and their details.
-* Generation and download of reports on different formats (xlsx, csv, tsv) using Queue Jobs.
+* Generation and download of reports supporting different formats like xlsx, csv, tsv using Queue Jobs.
 * Manage ACL Roles and Permissions.
 
 ### Technologies and methodologies
@@ -57,6 +58,7 @@ This invoice system is thought as a very small CRM when you can manage clients, 
 * Usage of preprocessors to build users views (SASS).
 * Usage of Laravel Mix to build project assets (CSS, JS).
 * Validation of all user entered data to preserve DB integrity using Form Requests.
+* Usage Vue 2 to manage autocomplete relational inputs. 
 
 ## Get started
 
