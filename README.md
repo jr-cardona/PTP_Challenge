@@ -1,32 +1,108 @@
-<p align="center"><img src="https://res.cloudinary.com/dtfbvvkyp/image/upload/v1566331377/laravel-logolockup-cmyk-red.svg" width="400"></p>
+<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400"></a></p>
+
+<p>
+<h1 align="center">Invoice System Manager</h1>
 
 <p align="center">
-<a href="https://travis-ci.org/laravel/framework"><img src="https://travis-ci.org/laravel/framework.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://poser.pugx.org/laravel/framework/d/total.svg" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://poser.pugx.org/laravel/framework/v/stable.svg" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://poser.pugx.org/laravel/framework/license.svg" alt="License"></a>
+<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
+<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
+<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
+<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
 </p>
 
-# Place to Pay Junior Challenge
-Welcome! In this repository you can find the source code of the project based on a facturation system made with the Laravel 6 framework.
+In this repository you can find the source code of the project based on a invoice system made with Laravel 6 framework.
 
-## Instructions for setup.
-1. Install a server side application. Example: Xampp, Wamp, Lampp, Laragon, etc.
-2. Clone the repository on the root. (htdocs for xampp, www for laragon and wamp, etc).
-3. Open terminal and run the following commands:<ul>
-                                                <li>cd PTP_Challenge</li>
-                                                <li>composer install</li>
-                                                <li>npm install</li>
-                                                <li>cp .env.example .env</li>
-                                                <li>php artisan key:generate</li>
-                                                <li>mysql -u root</li>
-                                                <li>create database ptp_challenge;</li>
-                                                <li>exit</li>
-                                                <li>php artisan db:seed</li>
-                                                </ul>
-4. To finish and deploy the application, run the command:<ul>
-                                                         <li>php artisan optimize:clear</li>
-                                                         <li>php artisan serve</li>
-                                                         </ul>
-5. Go to the generated link.
-6. Login. (user: admin@example.com, password: secret).
+- [Introduction](#introduction)
+    - [Features](#features)
+    - [Technologies](#technologies)
+- [Get started](#get-started)
+    - [Requirements](#requirements)
+    - [Installation](#installation)
+- [License](#license)
+
+## Introduction
+
+This invoice system is thought as a very small CRM when you can manage clients, products and invoices. These clients can have an user to enter to the system and see/pay their invoices and manage their personal information. 
+
+<p align="center">
+
+![Screenshot of the application](docs/images/main-app.png)
+
+</p>
+
+### Features
+
+* API REST.
+* Session manage. Login via WEB or API with JWT
+* Multi login (admin and clients).
+* List, create, see, update and delete invoices.
+* List, create, see, update and delete clients.
+* List, create, see, update and delete products.
+* Import and export invoices.
+* Import and export clients.
+* Import and export products.
+* Search, filter and paginate invoices, clients and products.
+* Integration with PlacetoPay payment gateway to pay invoices.
+* Transaction control status of invoices.
+* Visualization of historic payment attempts of invoices and their details.
+* Generation and download of reports on different formats (xlsx, csv, tsv) using Queue Jobs.
+* Manage ACL Roles and Permissions.
+
+### Technologies and methodologies
+
+* PHP with Laravel 6 Framework and MySQL Database.
+* GITFLOW.
+* PSR 1, PSR 4, PSR 12 standard coding styles.
+* Test Driven Development (TDD) with PHPUnit.
+* Usage of preprocessors to build users views (SASS).
+* Usage of Laravel Mix to build project assets (CSS, JS).
+* Validation of all user entered data to preserve DB integrity using Form Requests.
+
+## Get started
+
+### Requirements
+- PHP ^7.2
+- HTTP server with PHP support (eg: Apache, Nginx, Caddy)
+- Composer
+- Git
+- MySQL
+- Node
+
+### Installation
+After clone the repository, open terminal and run the following commands:
+```bash
+cd invoice-system
+composer install
+npm install && npm run prod
+cp .env.example .env
+php artisan key:generate
+```
+Create database. For example in MySQL with root user:
+```bash
+mysql -u root
+CREATE DATABASE invoice_system;
+exit;
+```
+Migrate tables and seed some fake data:
+```bash
+php artisan db:seed
+```
+You will be asked if you want to refresh all data and choose how many clients and invoices per client will be created.
+
+To finish and serve the application, you should execute:
+```bash
+php artisan optimize:clear
+php artisan serve
+```
+
+Also, you can configure a virtual host in your machine instead use laravel serve application.
+
+And admin default user will be created with the following credentials:
+* User: admin@example.com
+* Password: secret
+
+## License
+
+Copyright © 2022
+
+Licensed under [MIT license](LICENSE.md).
