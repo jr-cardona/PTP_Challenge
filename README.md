@@ -48,6 +48,7 @@ This invoice system is thought as a very small CRM when you can manage clients, 
 * Visualization of historic payment attempts of invoices and their details.
 * Generation and download of reports supporting different formats like xlsx, csv, tsv using Queue Jobs.
 * Manage ACL Roles and Permissions.
+* Responsive design.
 
 ### Technologies and methodologies
 
@@ -58,7 +59,8 @@ This invoice system is thought as a very small CRM when you can manage clients, 
 * Usage of preprocessors to build users views (SASS).
 * Usage of Laravel Mix to build project assets (CSS, JS).
 * Validation of all user entered data to preserve DB integrity using Form Requests.
-* Usage Vue 2 to manage autocomplete relational inputs. 
+* Usage Vue 2 to manage autocomplete relational inputs.
+* Bootstrap.
 
 ## Get started
 
