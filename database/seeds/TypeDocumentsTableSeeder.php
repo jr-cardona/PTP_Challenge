@@ -12,25 +12,27 @@ class TypeDocumentsTableSeeder extends Seeder
      */
     public function run()
     {
-        TypeDocument::create([
-            'name' => 'CC',
-            'fullname' => 'Cédula de ciudadanía'
-        ]);
-        TypeDocument::create([
-            'name' => 'NIT',
-            'fullname' => 'NIT'
-        ]);
-        TypeDocument::create([
-            'name' => 'TI',
-            'fullname' => 'Tarjeta de identidad'
-        ]);
-        TypeDocument::create([
-            'name' => 'PPN',
-            'fullname' => 'Pasaporte'
-        ]);
-        TypeDocument::create([
-            'name' => 'CE',
-            'fullname' => 'Cédula de extranjería'
-        ]);
+        if (DB::table('type_documents')->count() === 0) {
+            TypeDocument::create([
+                'name' => 'CC',
+                'fullname' => 'Cédula de ciudadanía'
+            ]);
+            TypeDocument::create([
+                'name' => 'NIT',
+                'fullname' => 'NIT'
+            ]);
+            TypeDocument::create([
+                'name' => 'TI',
+                'fullname' => 'Tarjeta de identidad'
+            ]);
+            TypeDocument::create([
+                'name' => 'PPN',
+                'fullname' => 'Pasaporte'
+            ]);
+            TypeDocument::create([
+                'name' => 'CE',
+                'fullname' => 'Cédula de extranjería'
+            ]);
+        }
     }
 }

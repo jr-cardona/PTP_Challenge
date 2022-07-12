@@ -19,12 +19,6 @@ class CreateTypeDocumentsTable extends Migration
             $table->string('fullname');
             $table->timestamps();
         });
-
-
-        Artisan::call('db:seed', [
-            '--class' => TypeDocumentsTableSeeder::class,
-            '--force' => true,
-        ]);
     }
 
     /**

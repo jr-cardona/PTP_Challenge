@@ -101,7 +101,7 @@ Migrate tables and seed some fake data:
 ```bash
 php artisan db:seed
 ```
-You will be asked if you want to refresh all data and choose how many clients and invoices per client will be created.
+You will be asked if you want to refresh all data and choose how many clients, invoices per client and products per invoice will be created.
 
 To finish and serve the application, you should execute:
 ```bash

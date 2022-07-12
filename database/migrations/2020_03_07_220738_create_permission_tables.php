@@ -91,15 +91,6 @@ class CreatePermissionTables extends Migration
         app('cache')
             ->store(config('permission.cache.store') != 'default' ? config('permission.cache.store') : null)
             ->forget(config('permission.cache.key'));
-
-        Artisan::call('db:seed', [
-            '--class' => 'PermissionsTableSeeder',
-            '--force' => true,
-        ]);
-        Artisan::call('db:seed', [
-            '--class' => 'RolesTableSeeder',
-            '--force' => true,
-        ]);
     }
 
     /**
